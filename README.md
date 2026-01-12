@@ -6,61 +6,98 @@
 
 ```
 dotfiles/
-├── .aliases          # シェルエイリアス
-├── .zshrc            # Zsh設定
-├── claude/           # Claude Code設定
-│   ├── CLAUDE.md     # ユーザー指示
-│   └── settings.json # 設定
-├── antigravity/      # Antigravity (VS Code系) 設定
+├── .aliases            # シェルエイリアス
+├── .zshrc              # Zsh設定
+├── .vim/               # Vim設定
+│   ├── colors/
+│   └── pack/
+├── antigravity/        # Antigravity設定
 │   ├── settings.json
 │   ├── keybindings.json
-│   └── extensions.txt  # 拡張機能リスト
-├── vscode/           # VS Code設定
+│   └── extensions.txt
+├── claude/             # Claude Code設定
+│   ├── CLAUDE.md
+│   └── settings.json
+├── cursor/             # Cursor設定
 │   ├── settings.json
-│   └── extensions.txt  # 拡張機能リスト
-├── git/              # Git設定
-│   └── .gitconfig
-├── ghostty/          # Ghosttyターミナル設定
+│   ├── keybindings.json
+│   └── extensions.txt
+├── docker/             # Docker設定
+│   └── config.json
+├── fish/               # Fish shell設定
+│   ├── config.fish
+│   └── conf.d/
+├── gh/                 # GitHub CLI設定
+│   └── config.yml
+├── ghostty/            # Ghosttyターミナル設定
 │   ├── config
 │   └── shaders/
-│       └── bloom.glsl
-└── oh-my-zsh-setup.md  # Oh My Zshセットアップ手順
+├── git/                # Git設定
+│   └── .gitconfig
+├── nvim/               # Neovim設定
+│   ├── init.vim
+│   └── pack/
+├── starship/           # Starshipプロンプト設定
+│   └── starship.toml
+├── vscode/             # VS Code設定
+│   ├── settings.json
+│   └── extensions.txt
+└── oh-my-zsh-setup.md
 ```
 
 ## シンボリックリンク
 
 このdotfilesを使用するには、以下のシンボリックリンクを作成してください。
 
-### Zsh
+### Shell
 ```bash
+# Zsh
 ln -sf ~/dotfiles/.zshrc ~/.zshrc
 ln -sf ~/dotfiles/.aliases ~/.aliases
+
+# Fish
+ln -sf ~/dotfiles/fish ~/.config/fish
+
+# Starship
+ln -sf ~/dotfiles/starship/starship.toml ~/.config/starship.toml
 ```
 
-### Claude Code
+### Editors
 ```bash
+# Vim
+ln -sf ~/dotfiles/.vim ~/.vim
+
+# Neovim
+ln -sf ~/dotfiles/nvim ~/.config/nvim
+
+# VS Code
+ln -sf ~/dotfiles/vscode/settings.json ~/Library/Application\ Support/Code/User/settings.json
+
+# Cursor
+ln -sf ~/dotfiles/cursor/settings.json ~/Library/Application\ Support/Cursor/User/settings.json
+ln -sf ~/dotfiles/cursor/keybindings.json ~/Library/Application\ Support/Cursor/User/keybindings.json
+
+# Antigravity
+ln -sf ~/dotfiles/antigravity/settings.json ~/Library/Application\ Support/Antigravity/User/settings.json
+ln -sf ~/dotfiles/antigravity/keybindings.json ~/Library/Application\ Support/Antigravity/User/keybindings.json
+
+# Claude Code
 ln -sf ~/dotfiles/claude/CLAUDE.md ~/.claude/CLAUDE.md
 ln -sf ~/dotfiles/claude/settings.json ~/.claude/settings.json
 ```
 
-### Antigravity
+### Tools
 ```bash
-ln -sf ~/dotfiles/antigravity/settings.json ~/Library/Application\ Support/Antigravity/User/settings.json
-ln -sf ~/dotfiles/antigravity/keybindings.json ~/Library/Application\ Support/Antigravity/User/keybindings.json
-```
-
-### VS Code
-```bash
-ln -sf ~/dotfiles/vscode/settings.json ~/Library/Application\ Support/Code/User/settings.json
-```
-
-### Git
-```bash
+# Git
 ln -sf ~/dotfiles/git/.gitconfig ~/.gitconfig
-```
 
-### Ghostty
-```bash
+# GitHub CLI
+ln -sf ~/dotfiles/gh/config.yml ~/.config/gh/config.yml
+
+# Docker
+ln -sf ~/dotfiles/docker/config.json ~/.docker/config.json
+
+# Ghostty
 mkdir -p ~/.config/ghostty
 ln -sf ~/dotfiles/ghostty/config ~/.config/ghostty/config
 ln -sf ~/dotfiles/ghostty/shaders ~/.config/ghostty/shaders
@@ -69,7 +106,7 @@ ln -sf ~/dotfiles/ghostty/shaders ~/.config/ghostty/shaders
 ## セットアップ
 
 ```bash
-git clone <repository-url> ~/dotfiles
+git clone https://github.com/otake-shol/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 # 上記のシンボリックリンクコマンドを実行
 ```

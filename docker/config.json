@@ -1,0 +1,9 @@
+{
+	"auths": {
+		"registry.heroku.com": {}
+	},
+	"credsStore": "desktop",
+	"experimental": "disabled",
+	"stackOrchestrator": "swarm",
+	"currentContext": "desktop-linux"
+}

@@ -1,0 +1,10 @@
+# 一般
+alias ls="ls -la"
+alias tm="tmux a"
+
+# neovim設定
+alias vi="nvim"
+alias vim="nvim"
+alias view="nvim -R"
+alias zshconfig="vim ~/.zshrc"
+alias ohmyzsh="vim ~/.oh-my-zsh"

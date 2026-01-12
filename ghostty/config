@@ -1,0 +1,40 @@
+# Ghostty Configuration
+
+# Theme
+theme = "Sonokai"
+background-opacity = 0.80
+background-blur-radius = 0
+
+# Font settings
+font-family = "JetBrainsMono"
+font-size = 13
+font-feature = calt, liga, dlig
+
+# Window settings
+window-padding-x = 10
+window-padding-y = 10
+window-decoration = true
+
+# Cursor
+cursor-style = block
+cursor-style-blink = true
+
+shell-integration-features = cursor, sudo, title
+
+# Shell integration
+shell-integration = detect
+
+# Clipboard
+clipboard-read = allow
+clipboard-write = allow
+
+# Scrollback
+scrollback-limit = 10000
+
+# Mouse
+mouse-hide-while-typing = true
+
+# マウス操作（スクロール）を滑らかに
+mouse-scroll-multiplier = 0.5
+
+

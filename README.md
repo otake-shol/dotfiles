@@ -15,6 +15,9 @@ dotfiles/
 │   ├── settings.json
 │   ├── keybindings.json
 │   └── extensions.txt  # 拡張機能リスト
+├── vscode/           # VS Code設定
+│   ├── settings.json
+│   └── extensions.txt  # 拡張機能リスト
 ├── git/              # Git設定
 │   └── .gitconfig
 ├── ghostty/          # Ghosttyターミナル設定
@@ -44,6 +47,11 @@ ln -sf ~/dotfiles/claude/settings.json ~/.claude/settings.json
 ```bash
 ln -sf ~/dotfiles/antigravity/settings.json ~/Library/Application\ Support/Antigravity/User/settings.json
 ln -sf ~/dotfiles/antigravity/keybindings.json ~/Library/Application\ Support/Antigravity/User/keybindings.json
+```
+
+### VS Code
+```bash
+ln -sf ~/dotfiles/vscode/settings.json ~/Library/Application\ Support/Code/User/settings.json
 ```
 
 ### Git

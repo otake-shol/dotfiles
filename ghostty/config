@@ -1,40 +1,91 @@
 # Ghostty Configuration
 
-# Theme
-theme = "Sonokai"
+# ========================================
+# Shift+Enter設定（環境によっては必要）
+# ========================================
+# 通常は不要ですが、Shift+Enterが効かない場合は以下を追加
+# keybind = shift+enter=text:\n
+
+
+# ========================================
+# フォント設定
+# ========================================
+
+# Nerd Fontを使用（アイコン表示に対応）
+font-family = "JetBrains Mono"
+font-size = 14
+font-feature = calt, liga, dlig
+
+# ========================================
+# テーマ設定
+# ========================================
+
+# ダーク/ライトモードで自動切り替え
+theme = TokyoNight
 background-opacity = 0.80
 background-blur-radius = 0
 
-# Font settings
-font-family = "JetBrainsMono"
-font-size = 13
-font-feature = calt, liga, dlig
+# ========================================
+# ウィンドウ設定
+# ========================================
 
-# Window settings
-window-padding-x = 10
-window-padding-y = 10
+# 起動時のウィンドウサイズ
+window-height = 40
+window-width = 160
+
+# パディング（読みやすさ向上）
+window-padding-x = 16
+window-padding-y = 16
 window-decoration = true
 
-# Cursor
+# ウィンドウ状態を保存
+window-save-state = always
+
+# macOS: タイトルバースタイル
+macos-titlebar-style = tabs
+
+# ========================================
+# カーソル設定
+# ========================================
+
 cursor-style = block
 cursor-style-blink = true
 
-shell-integration-features = cursor, sudo, title
+# ========================================
+# シェル統合
+# ========================================
 
-# Shell integration
+# シェル統合を有効化
 shell-integration = detect
+shell-integration-features = cursor,sudo,title
+
 
 # Clipboard
 clipboard-read = allow
 clipboard-write = allow
 
-# Scrollback
+# スクロールバック行数（大量出力に対応）
 scrollback-limit = 10000
 
-# Mouse
+# マウス関連
 mouse-hide-while-typing = true
+mouse-scroll-multiplier = 2
 
-# マウス操作（スクロール）を滑らかに
-mouse-scroll-multiplier = 0.5
+# ========================================
+# その他
+# ========================================
+background-blur = true
+adjust-cell-height = 2
+font-thicken = true
+keybind = ctrl+h=goto_split:left
+keybind = ctrl+l=goto_split:right
+window-inherit-working-directory = true
+shell-integration = detect
+quick-terminal-position = "right"
+quick-terminal-screen = "main"
+quick-terminal-animation-duration = 0.3
+keybind = "cmd+shift+t=toggle_quick_terminal"
+clipboard-trim-trailing-spaces = true
+window-new-tab-position = current
 
 

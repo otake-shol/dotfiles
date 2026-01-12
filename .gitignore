@@ -7,3 +7,6 @@
 
 # Claude Code plugins marketplace (managed externally)
 .claude/plugins/marketplaces/
+
+# Serena tool internal files
+.serena/

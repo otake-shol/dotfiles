@@ -2,236 +2,165 @@
 
 個人用の設定ファイル管理リポジトリ
 
-## セットアップガイド（ハンズオン）
+## クイックスタート
 
-このガイドに従って、ゼロから開発環境をセットアップしていきます。
-
-### Step 1: リポジトリのクローン
+最小限の手順で基本的な環境をセットアップします。
 
 ```bash
+# 1. リポジトリのクローン
 git clone https://github.com/otake-shol/dotfiles.git ~/dotfiles
 cd ~/dotfiles
+
+# 2. Homebrewの確認（未インストールの場合はインストール）
+which brew || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# 3. 基本設定のシンボリックリンク作成
+ln -sf ~/dotfiles/.zshrc ~/.zshrc
+ln -sf ~/dotfiles/.aliases ~/.aliases
+ln -sf ~/dotfiles/git/.gitconfig ~/.gitconfig
+
+# 4. 設定の反映
+source ~/.zshrc
 ```
 
-### Step 2: Homebrewのインストール
+これで基本的な環境が整います。より詳細なセットアップは以下の手順を参照してください。
 
-Homebrewがインストールされていない場合は、まずインストールします。
+---
 
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
+## 詳細セットアップ手順
 
-### Step 3: Oh My Zsh + Powerlevel10kのセットアップ
+### 1. Oh My Zsh + Powerlevel10k
 
-> 参考: https://zenn.dev/collabostyle/articles/6d668b46627d64
+より見やすく使いやすいターミナル環境を構築します。
 
-#### 3-1. Oh My Zshのインストール
+**1-1. Oh My Zshのインストール**
 
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 
-実行後、`~/.zshrc` が自動生成されます。
-
-#### 3-2. Nerd Fontのインストール
-
-Powerlevel10kの正しい表示にはNerd Font対応フォントが必要です。
-
-**Homebrewでインストール（推奨）:**
+**1-2. Nerd Fontのインストール**
 
 ```bash
 brew install --cask font-meslo-lg-nerd-font
 ```
 
-**手動でインストール:**
+インストール後、ターミナルのフォント設定を「MesloLGS Nerd Font」に変更してください。
 
-1. [Nerd Fonts Releases](https://github.com/ryanoasis/nerd-fonts/releases/latest) にアクセス
-2. Assetsから `Meslo.zip` をダウンロード
-3. 解凍して以下の4つのフォントをインストール:
-   - MesloLGSNerdFont-Regular.ttf
-   - MesloLGSNerdFont-Bold.ttf
-   - MesloLGSNerdFont-Italic.ttf
-   - MesloLGSNerdFont-BoldItalic.ttf
-
-**フォントの設定:**
-
-ターミナル（GhosttyやiTerm2など）のフォント設定を「MesloLGS Nerd Font」に変更してください。
-
-#### 3-3. Powerlevel10kのインストール
+**1-3. Powerlevel10kとプラグインのインストール**
 
 ```bash
+# Powerlevel10k
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \
   ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-```
 
-#### 3-4. Zshプラグインのインストール
-
-```bash
-# zsh-autosuggestions（コマンド履歴から自動補完）
+# zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-autosuggestions \
   ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
-# zsh-syntax-highlighting（コマンドの色分け表示）
+# zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-syntax-highlighting \
   ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 ```
 
-**プラグインの説明:**
-
-| プラグイン | 説明 |
-|-----------|------|
-| git | Gitの補完とエイリアス |
-| z | よく使うディレクトリへの高速移動 |
-| colored-man-pages | manページのカラー表示 |
-| zsh-autosuggestions | 過去のコマンド履歴から自動補完を提案 |
-| zsh-syntax-highlighting | 入力中のコマンドを色分け表示 |
-
-#### 3-5. dotfilesの.zshrcをシンボリックリンク
-
-```bash
-# 元の.zshrcをバックアップ（必要に応じて）
-mv ~/.zshrc ~/.zshrc.backup
-
-# dotfilesの.zshrcをシンボリックリンク
-ln -sf ~/dotfiles/.zshrc ~/.zshrc
-ln -sf ~/dotfiles/.aliases ~/.aliases
-```
-
-このdotfilesの`.zshrc`には、以下の設定が既に含まれています：
-- `ZSH_THEME="powerlevel10k/powerlevel10k"`
-- プラグインの有効化（git、z、colored-man-pages、zsh-autosuggestions、zsh-syntax-highlighting）
-
-#### 3-6. 設定の反映
+**1-4. 設定の反映**
 
 ```bash
 source ~/.zshrc
 ```
 
-または新しいターミナルを開きます。初回起動時、Powerlevel10kのセットアップウィザードが起動します。
+初回起動時、Powerlevel10kのセットアップウィザードが起動します。
 
-### Step 4: ターミナルのインストール
+### 2. ターミナル
+
+**Ghosttyのインストールと設定**
 
 ```bash
-# Ghostty（高速でモダンなターミナル）
+# インストール
 brew install --cask ghostty
-```
 
-Ghosttyの設定ファイルをシンボリックリンク:
-
-```bash
+# 設定ファイルのシンボリックリンク
 mkdir -p ~/.config/ghostty
 ln -sf ~/dotfiles/ghostty/config ~/.config/ghostty/config
 ln -sf ~/dotfiles/ghostty/shaders ~/.config/ghostty/shaders
 ```
 
-### Step 5: Fish Shellのインストール（オプション）
+### 3. エディタ
+
+**VS Code**
 
 ```bash
-# Fish shell
-brew install fish
-```
-
-Fishの設定をシンボリックリンク:
-
-```bash
-# Fish
-ln -sf ~/dotfiles/fish ~/.config/fish
-```
-
-### Step 6: エディタのインストール
-
-```bash
-# VS Code
 brew install --cask visual-studio-code
-
-# Cursor
-brew install --cask cursor
-
-# Antigravity
-brew install --cask antigravity
-
-# Claude Code CLI
-brew install claude
+ln -sf ~/dotfiles/vscode/settings.json ~/Library/Application\ Support/Code/User/settings.json
 ```
 
-エディタの設定をシンボリックリンク:
+**Cursor**
 
 ```bash
-# VS Code
-ln -sf ~/dotfiles/vscode/settings.json ~/Library/Application\ Support/Code/User/settings.json
-
-# Cursor
+brew install --cask cursor
 ln -sf ~/dotfiles/cursor/settings.json ~/Library/Application\ Support/Cursor/User/settings.json
 ln -sf ~/dotfiles/cursor/keybindings.json ~/Library/Application\ Support/Cursor/User/keybindings.json
+```
 
-# Antigravity
+**Antigravity**
+
+```bash
+brew install --cask antigravity
 ln -sf ~/dotfiles/antigravity/settings.json ~/Library/Application\ Support/Antigravity/User/settings.json
 ln -sf ~/dotfiles/antigravity/keybindings.json ~/Library/Application\ Support/Antigravity/User/keybindings.json
+```
 
-# Claude Code
+**Claude Code CLI**
+
+```bash
+brew install claude
 ln -sf ~/dotfiles/.claude/CLAUDE.md ~/.claude/CLAUDE.md
 ln -sf ~/dotfiles/.claude/settings.json ~/.claude/settings.json
 ln -sf ~/dotfiles/.claude/agents ~/.claude/agents
 ln -sf ~/dotfiles/.claude/plugins ~/.claude/plugins
 ```
 
-### Step 7: 開発ツールのインストール
+### 4. 開発ツール
+
+**Git**
 
 ```bash
-# Git（最新版）
 brew install git
-
-# git-secrets（AWS認証情報の誤コミット防止）
-brew install git-secrets
-
-# GitHub CLI
-brew install gh
-
-# Docker Desktop
-brew install --cask docker
+ln -sf ~/dotfiles/git/.gitconfig ~/.gitconfig
 ```
 
-開発ツールの設定をシンボリックリンク:
+**GitHub CLI**
 
 ```bash
-# Git
-ln -sf ~/dotfiles/git/.gitconfig ~/.gitconfig
-
-# GitHub CLI
+brew install gh
 mkdir -p ~/.config/gh
 ln -sf ~/dotfiles/gh/config.yml ~/.config/gh/config.yml
-
-# Docker
-mkdir -p ~/.docker
-ln -sf ~/dotfiles/docker/config.json ~/.docker/config.json
 ```
 
-git-secretsの初期設定:
+**git-secrets（AWS認証情報の誤コミット防止）**
 
 ```bash
+brew install git-secrets
 git secrets --install ~/.git-templates/git-secrets
 git secrets --register-aws --global
 ```
 
-### Step 8: バージョン管理ツールのインストール
+### 5. バージョン管理ツール
+
+**asdf（複数言語のバージョン管理）**
 
 ```bash
-# asdf（複数言語のバージョン管理）
 brew install asdf
-
-# nvm（Node.jsバージョン管理）
-brew install nvm
 ```
 
-nvmの設定（`.zshrc`で既に設定済み）:
+**nvm（Node.jsバージョン管理）**
 
 ```bash
+brew install nvm
 mkdir -p ~/.nvm
 ```
 
-### 完了！
-
-これで開発環境のセットアップが完了しました。新しいターミナルを開いて動作を確認してください。
+nvmの設定は`.zshrc`で既に設定済みです。
 
 ## 構成ファイル一覧
 
@@ -242,7 +171,6 @@ dotfiles/
 ├── .claude/            # Claude Code設定
 │   ├── CLAUDE.md
 │   ├── settings.json
-│   ├── settings.local.json
 │   ├── agents/
 │   └── plugins/
 ├── antigravity/        # Antigravity設定
@@ -253,11 +181,6 @@ dotfiles/
 │   ├── settings.json
 │   ├── keybindings.json
 │   └── extensions.txt
-├── docker/             # Docker設定
-│   └── config.json
-├── fish/               # Fish shell設定
-│   ├── config.fish
-│   └── conf.d/
 ├── gh/                 # GitHub CLI設定
 │   └── config.yml
 ├── ghostty/            # Ghosttyターミナル設定
@@ -269,3 +192,10 @@ dotfiles/
     ├── settings.json
     └── extensions.txt
 ```
+
+## 参考リンク
+
+- [Oh My Zsh](https://ohmyz.sh/)
+- [Powerlevel10k](https://github.com/romkatv/powerlevel10k)
+- [Nerd Fonts](https://www.nerdfonts.com/)
+- [Ghostty](https://ghostty.org/)

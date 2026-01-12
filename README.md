@@ -11,6 +11,8 @@ dotfiles/
 ├── claude/           # Claude Code設定
 │   ├── CLAUDE.md     # ユーザー指示
 │   └── settings.json # 設定
+├── git/              # Git設定
+│   └── .gitconfig
 ├── ghostty/          # Ghosttyターミナル設定
 │   ├── config
 │   └── shaders/
@@ -32,6 +34,11 @@ ln -sf ~/dotfiles/.aliases ~/.aliases
 ```bash
 ln -sf ~/dotfiles/claude/CLAUDE.md ~/.claude/CLAUDE.md
 ln -sf ~/dotfiles/claude/settings.json ~/.claude/settings.json
+```
+
+### Git
+```bash
+ln -sf ~/dotfiles/git/.gitconfig ~/.gitconfig
 ```
 
 ### Ghostty

@@ -59,6 +59,12 @@ cask "arc"             # モダンなChromiumベースブラウザ
 cask "readdle-spark"   # メールクライアント
 cask "ticktick"        # ToDoリスト・タスク管理
 
+# コミュニケーション
+cask "slack"           # チームコミュニケーション
+
+# デザイン
+cask "figma"           # デザインツール・プロトタイピング
+
 # AI・開発
 cask "claude"          # Claude CLI
 

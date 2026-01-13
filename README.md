@@ -113,6 +113,34 @@ git commit -m "Add <package-name>"
 
 ---
 
+## 🌐 ブラウザ拡張機能管理
+
+ブラウザ拡張機能のリストを `browser-extensions/` ディレクトリで管理しています。
+
+### 拡張機能リスト
+
+- **Arc**: [browser-extensions/arc.md](browser-extensions/arc.md)
+- **Chrome**: [browser-extensions/chrome.md](browser-extensions/chrome.md)
+- **Firefox**: [browser-extensions/firefox.md](browser-extensions/firefox.md)
+
+### 拡張機能の追加
+
+```bash
+# 1. ブラウザストアから拡張機能をインストール
+# 2. 該当するファイルに拡張機能情報を追記
+vim ~/dotfiles/browser-extensions/arc.md
+
+# 3. コミット
+cd ~/dotfiles
+git add browser-extensions/
+git commit -m "Add [extension name] to [browser] extensions"
+git push
+```
+
+詳細は [docs/BROWSER_EXTENSIONS.md](docs/BROWSER_EXTENSIONS.md) を参照してください。
+
+---
+
 ## 詳細セットアップ手順
 
 ### 1. Oh My Zsh + Powerlevel10k
@@ -269,13 +297,18 @@ dotfiles/
 │   ├── settings.json
 │   ├── keybindings.json
 │   └── extensions.txt
+├── browser-extensions/ # ブラウザ拡張機能リスト
+│   ├── arc.md
+│   ├── chrome.md
+│   └── firefox.md
 ├── cursor/             # Cursor設定
 │   ├── settings.json
 │   ├── keybindings.json
 │   └── extensions.txt
 ├── docs/               # ドキュメント
 │   ├── APPS.md         # アプリケーション一覧
-│   ├── DOTFILES_MANAGER.md  # アプリ追加エージェントの使い方
+│   ├── BROWSER_EXTENSIONS.md  # ブラウザ拡張機能管理ガイド
+│   ├── DOTFILES_MANAGER.md    # アプリ追加エージェントの使い方
 │   └── SETUP.md        # 詳細セットアップ手順
 ├── gh/                 # GitHub CLI設定
 │   └── config.yml

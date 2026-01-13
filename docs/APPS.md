@@ -206,6 +206,23 @@ brew bundle --file=Brewfile.full
 
 ---
 
+## 🌐 ブラウザ拡張機能
+
+ブラウザ拡張機能の詳細な管理方法は [docs/BROWSER_EXTENSIONS.md](BROWSER_EXTENSIONS.md) を参照してください。
+
+### 生産性向上
+
+#### Vimium
+- **用途**: ブラウザでVimキーバインドを使用
+- **対応ブラウザ**: Chrome, Edge, Firefox
+- **説明**: キーボードだけでブラウジング可能。リンクナビゲーション、タブ切り替え、ページスクロールなどをVimライクに操作
+- **インストール**:
+  - Chrome: https://chrome.google.com/webstore/detail/vimium/dbepggeogbaibhgnhhndojpepiihcmeb
+  - Firefox: https://addons.mozilla.org/firefox/addon/vimium-ff/
+- **公式**: https://github.com/philc/vimium
+
+---
+
 ## 🔤 フォント
 
 | フォント | 用途 | インストール |

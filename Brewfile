@@ -52,6 +52,9 @@ cask "alt-tab"         # Windows風のタスクスイッチャー
 cask "jordanbaird-ice" # メニューバー管理
 cask "raycast"         # 生産性向上ランチャー
 
+# ブラウザ
+cask "arc"             # モダンなChromiumベースブラウザ
+
 # AI・開発
 cask "claude"          # Claude CLI
 

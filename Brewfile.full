@@ -57,6 +57,7 @@ brew "yarn", link: false
 brew "heroku/brew/heroku"
 brew "pivotal/tap/springboot"
 cask "alt-tab"
+cask "arc"
 cask "claude"
 cask "font-hack-nerd-font"
 cask "font-jetbrains-mono-nerd-font"

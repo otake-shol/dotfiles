@@ -48,6 +48,14 @@ brew bundle --file=Brewfile.full
 - **説明**: 高速でカスタマイズ可能なランチャー。アプリ起動、ファイル検索、計算、スニペット、拡張機能など多機能
 - **公式**: https://www.raycast.com/
 
+### ブラウザ
+
+#### Arc
+- **用途**: モダンなChromiumベースのウェブブラウザ
+- **インストール**: `brew install --cask arc`
+- **説明**: スペース機能によるタブ管理、サイドバー型UI、Split View、コマンドバー、美しいデザインが特徴。生産性向上に特化したブラウザ
+- **公式**: https://arc.net/
+
 ### 開発ツール
 
 #### Claude CLI

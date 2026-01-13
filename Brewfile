@@ -48,6 +48,7 @@ brew "gnupg"           # GPG暗号化
 cask "ghostty"         # 高速でモダンなターミナル
 
 # ユーティリティ
+cask "alt-tab"         # Windows風のタスクスイッチャー
 cask "jordanbaird-ice" # メニューバー管理
 cask "raycast"         # 生産性向上ランチャー
 

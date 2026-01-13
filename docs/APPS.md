@@ -30,6 +30,13 @@ brew bundle --file=Brewfile.full
 
 ### ユーティリティ
 
+#### AltTab
+- **用途**: Windows風のAlt-Tabウィンドウスイッチャー
+- **インストール**: `brew install --cask alt-tab`
+- **説明**: macOSのCmd-Tabを、Windowsのようなウィンドウプレビュー付きスイッチャーに置き換える。すべてのウィンドウを一覧表示し、視覚的に切り替え可能
+- **公式**: https://alt-tab-macos.netlify.app/
+- **GitHub**: https://github.com/lwouis/alt-tab-macos
+
 #### Ice (jordanbaird-ice)
 - **用途**: macOSのメニューバーアイコンを管理・非表示にする
 - **インストール**: `brew install --cask jordanbaird-ice`

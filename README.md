@@ -2,7 +2,28 @@
 
 個人用の設定ファイル管理リポジトリ
 
-## クイックスタート
+## 🚀 クイックスタート
+
+### 自動セットアップ（推奨）
+
+新しいMacで最速セットアップ：
+
+```bash
+# リポジトリのクローン
+git clone https://github.com/otake-shol/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+
+# 自動セットアップスクリプトを実行
+bash bootstrap.sh
+```
+
+これで以下が自動的に設定されます：
+- Homebrewのインストール確認
+- 必須アプリケーションのインストール
+- dotfilesのシンボリックリンク作成
+- Oh My Zsh + Powerlevel10kのセットアップ
+
+### 手動セットアップ
 
 最小限の手順で基本的な環境をセットアップします。
 
@@ -14,16 +35,81 @@ cd ~/dotfiles
 # 2. Homebrewの確認（未インストールの場合はインストール）
 which brew || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# 3. 基本設定のシンボリックリンク作成
+# 3. アプリケーションのインストール
+brew bundle --file=Brewfile  # 必須ツールのみ
+
+# 4. 基本設定のシンボリックリンク作成
 ln -sf ~/dotfiles/.zshrc ~/.zshrc
 ln -sf ~/dotfiles/.aliases ~/.aliases
 ln -sf ~/dotfiles/git/.gitconfig ~/.gitconfig
 
-# 4. 設定の反映
+# 5. 設定の反映
 source ~/.zshrc
 ```
 
-これで基本的な環境が整います。より詳細なセットアップは以下の手順を参照してください。
+---
+
+## 📦 アプリケーション管理
+
+このdotfilesでは、Homebrewを使用してアプリケーションを管理しています。
+
+### インストール
+
+```bash
+# 必須ツールのみ（推奨）
+cd ~/dotfiles
+brew bundle --file=Brewfile
+
+# 全ツール（開発環境完全再現）
+brew bundle --file=Brewfile.full
+```
+
+### 新しいアプリの追加
+
+**自動追加（推奨）:**
+
+Claude Code の `dotfiles-manager` エージェントを使用：
+
+```
+"htop を dotfiles に追加して"
+"Ice というアプリを必須ツールとして追加"
+```
+
+エージェントが自動で以下を実行します：
+- Brewfile への追加
+- docs/APPS.md の更新
+- コミット
+
+詳細は [docs/DOTFILES_MANAGER.md](docs/DOTFILES_MANAGER.md) を参照。
+
+**手動追加:**
+
+```bash
+# 1. アプリをインストール
+brew install <package-name>
+
+# 2. Brewfile に追記
+echo 'brew "<package-name>"' >> ~/dotfiles/Brewfile
+
+# 3. Brewfile の更新
+cd ~/dotfiles
+./scripts/generate_brewfile.sh
+
+# 4. コミット
+git add Brewfile docs/APPS.md
+git commit -m "Add <package-name>"
+```
+
+### 主なアプリケーション
+
+- **ターミナル**: Ghostty
+- **ユーティリティ**: Ice (メニューバー管理)
+- **AI**: Claude CLI
+- **Git**: git, gh, lazygit, git-secrets
+- **エディタ**: Neovim, Vim
+- **バージョン管理**: asdf, nvm, pyenv, tfenv
+
+詳細は [docs/APPS.md](docs/APPS.md) を参照してください。
 
 ---
 
@@ -166,12 +252,18 @@ nvmの設定は`.zshrc`で既に設定済みです。
 
 ```
 dotfiles/
-├── .aliases            # シェルエイリアス
+├── .aliases            # シェルエイリアス（94+個）
 ├── .zshrc              # Zsh設定
+├── .vim/               # Vim設定
+├── Brewfile            # 必須アプリケーション
+├── Brewfile.full       # 全アプリケーション（バックアップ）
+├── bootstrap.sh        # 自動セットアップスクリプト
 ├── .claude/            # Claude Code設定
 │   ├── CLAUDE.md
 │   ├── settings.json
 │   ├── agents/
+│   │   ├── dotfiles-manager.md   # アプリ追加自動化エージェント
+│   │   └── frontend-engineer.md
 │   └── plugins/
 ├── antigravity/        # Antigravity設定
 │   ├── settings.json
@@ -181,6 +273,10 @@ dotfiles/
 │   ├── settings.json
 │   ├── keybindings.json
 │   └── extensions.txt
+├── docs/               # ドキュメント
+│   ├── APPS.md         # アプリケーション一覧
+│   ├── DOTFILES_MANAGER.md  # アプリ追加エージェントの使い方
+│   └── SETUP.md        # 詳細セットアップ手順
 ├── gh/                 # GitHub CLI設定
 │   └── config.yml
 ├── ghostty/            # Ghosttyターミナル設定
@@ -188,6 +284,8 @@ dotfiles/
 │   └── shaders/
 ├── git/                # Git設定
 │   └── .gitconfig
+├── scripts/            # ヘルパースクリプト
+│   └── generate_brewfile.sh
 └── vscode/             # VS Code設定
     ├── settings.json
     └── extensions.txt

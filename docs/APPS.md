@@ -56,6 +56,20 @@ brew bundle --file=Brewfile.full
 - **説明**: スペース機能によるタブ管理、サイドバー型UI、Split View、コマンドバー、美しいデザインが特徴。生産性向上に特化したブラウザ
 - **公式**: https://arc.net/
 
+### 生産性
+
+#### Spark
+- **用途**: メールクライアント
+- **インストール**: `brew install --cask readdle-spark`
+- **説明**: Readdle社製の高速でスマートなメールアプリ。複数アカウント管理、スマート通知、チーム機能、美しいデザイン。Gmail、Outlook、iCloudなど主要メールサービスに対応
+- **公式**: https://sparkmailapp.com/
+
+#### TickTick
+- **用途**: ToDoリスト・タスク管理
+- **インストール**: `brew install --cask ticktick`
+- **説明**: シンプルで強力なタスク管理アプリ。リマインダー、カレンダー、ポモドーロタイマー、習慣トラッカー機能を搭載。クロスプラットフォーム対応で同期可能
+- **公式**: https://www.ticktick.com/
+
 ### 開発ツール
 
 #### Claude CLI

@@ -55,6 +55,10 @@ cask "raycast"         # 生産性向上ランチャー
 # ブラウザ
 cask "arc"             # モダンなChromiumベースブラウザ
 
+# 生産性
+cask "readdle-spark"   # メールクライアント
+cask "ticktick"        # ToDoリスト・タスク管理
+
 # AI・開発
 cask "claude"          # Claude CLI
 

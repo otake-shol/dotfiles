@@ -28,6 +28,8 @@ brew "vim"
 # シェル・ターミナル
 brew "tmux"            # ターミナルマルチプレクサ
 brew "fzf"             # ファジーファインダー
+brew "zoxide"          # 高速ディレクトリナビゲーション
+brew "sheldon"         # シェルプラグインマネージャー
 brew "starship"        # クロスシェルプロンプト
 
 # ユーティリティ

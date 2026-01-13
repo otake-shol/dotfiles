@@ -147,9 +147,30 @@ brew bundle --file=Brewfile.full
 | ツール | 用途 | インストール |
 |--------|------|--------------|
 | tmux | ターミナルマルチプレクサ | `brew install tmux` |
-| fzf | ファジーファインダー | `brew install fzf` |
+| fzf | ファジーファインダー（ファイル・コマンド履歴検索） | `brew install fzf` |
+| zoxide | 高速ディレクトリナビゲーション（cdの代替） | `brew install zoxide` |
+| sheldon | 高速なシェルプラグインマネージャー | `brew install sheldon` |
 | starship | クロスシェルプロンプト | `brew install starship` |
 | pure | Zshプロンプトテーマ | `brew install pure` |
+
+#### 詳細
+
+**fzf (Fuzzy Finder)**
+- コマンドライン上でのファイル検索、コマンド履歴検索、プロセス検索などに使える
+- Ctrl+R でコマンド履歴を検索、Ctrl+T でファイルを検索可能
+- 公式: https://github.com/junegunn/fzf
+
+**zoxide**
+- `cd` の代替コマンド。よく使うディレクトリを記憶し、部分一致で高速移動
+- 使用例: `z dotfiles` → `~/dotfiles` に移動
+- `cd` より圧倒的に高速なディレクトリ移動を実現
+- 公式: https://github.com/ajeetdsouza/zoxide
+
+**sheldon**
+- Rust製の高速なシェルプラグインマネージャー
+- Oh My Zsh や Prezto の代替として使用可能
+- プラグインの並列ダウンロードと遅延読み込みに対応
+- 公式: https://sheldon.cli.rs
 
 ### 開発言語・ランタイム
 

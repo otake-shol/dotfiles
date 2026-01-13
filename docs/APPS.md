@@ -37,6 +37,12 @@ brew bundle --file=Brewfile.full
 - **公式**: https://alt-tab-macos.netlify.app/
 - **GitHub**: https://github.com/lwouis/alt-tab-macos
 
+#### Homerow
+- **用途**: キーボードショートカットで画面上のすべてのボタンを操作
+- **インストール**: `brew install --cask homerow`
+- **説明**: macOSのあらゆるUI要素にキーボードショートカットを割り当て。マウスを使わずに効率的な操作を実現。Vimライクなナビゲーションをシステム全体に拡張
+- **公式**: https://www.homerow.app/
+
 #### Ice (jordanbaird-ice)
 - **用途**: macOSのメニューバーアイコンを管理・非表示にする
 - **インストール**: `brew install --cask jordanbaird-ice`

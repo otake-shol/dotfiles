@@ -49,6 +49,7 @@ cask "ghostty"         # 高速でモダンなターミナル
 
 # ユーティリティ
 cask "alt-tab"         # Windows風のタスクスイッチャー
+cask "homerow"         # キーボードショートカット操作
 cask "jordanbaird-ice" # メニューバー管理
 cask "raycast"         # 生産性向上ランチャー
 

@@ -36,6 +36,7 @@ brew "starship"        # クロスシェルプロンプト
 brew "stow"            # シンボリックリンク管理
 brew "tree"            # ディレクトリツリー表示
 brew "btop"            # システムモニター
+brew "nb"              # コマンドラインメモ・ブックマーク管理
 brew "curl"            # HTTPクライアント
 brew "wget"            # ダウンローダー
 

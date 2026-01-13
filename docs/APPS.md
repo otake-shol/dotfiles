@@ -172,6 +172,16 @@ brew bundle --file=Brewfile.full
 - プラグインの並列ダウンロードと遅延読み込みに対応
 - 公式: https://sheldon.cli.rs
 
+### ユーティリティ（詳細）
+
+**nb**
+- コマンドラインとローカルWebでのメモ管理、ブックマーク、アーカイブツール
+- Markdown、暗号化、Git同期、全文検索、タグ付けに対応
+- `nb add` でメモ追加、`nb edit` で編集、`nb list` で一覧表示
+- `nb browse` でローカルWebインターフェース起動
+- プレーンテキストベースで、すべてのノートがGitで管理される
+- 公式: https://xwmx.github.io/nb
+
 ### 開発言語・ランタイム
 
 | ツール | 用途 | インストール |
@@ -198,6 +208,7 @@ brew bundle --file=Brewfile.full
 | stow | シンボリックリンク管理 | `brew install stow` |
 | tree | ディレクトリツリー表示 | `brew install tree` |
 | btop | システムモニター | `brew install btop` |
+| nb | コマンドラインメモ・ブックマーク管理 | `brew install nb` |
 | neofetch | システム情報表示 | `brew install neofetch` |
 | curl | HTTPクライアント | `brew install curl` |
 | wget | ダウンローダー | `brew install wget` |

@@ -27,6 +27,7 @@ brew "lazygit"
 brew "libfido2"
 brew "maven"
 brew "mysql"
+brew "nb"
 brew "neofetch"
 brew "neovim"
 brew "node", link: false

@@ -160,8 +160,14 @@ dotfiles/
 
 ## 🔗 参考リンク
 
-- [Oh My Zsh](https://ohmyz.sh/)
-- [Powerlevel10k](https://github.com/romkatv/powerlevel10k)
-- [Nerd Fonts](https://www.nerdfonts.com/)
-- [Ghostty](https://ghostty.org/)
-- [Homebrew](https://brew.sh/)
+### ツール・ライブラリ
+
+- [Homebrew](https://brew.sh/) - macOSパッケージマネージャー
+- [Oh My Zsh](https://ohmyz.sh/) - Zsh設定フレームワーク
+- [Powerlevel10k](https://github.com/romkatv/powerlevel10k) - Zshテーマ
+- [Nerd Fonts](https://www.nerdfonts.com/) - アイコン付きフォント
+- [Ghostty](https://ghostty.org/) - GPUアクセラレーションターミナル
+
+### 参考動画
+
+- [dotfiles管理の参考動画](https://www.youtube.com/watch?v=qJjg4A_5AZw&t=857s) - このdotfiles構成の参考にした動画

@@ -182,6 +182,17 @@ brew bundle --file=Brewfile.full
 - プレーンテキストベースで、すべてのノートがGitで管理される
 - 公式: https://xwmx.github.io/nb
 
+### クラウド/AWS（詳細）
+
+**AWS CLI (awscli)**
+- Amazon Web Servicesの公式コマンドラインインターフェース
+- AWS上のリソース（EC2, S3, Lambda など）を管理
+- Amazon Q機能を利用可能：AIアシスタントがAWSタスクをサポート
+- `aws configure` で初期設定、`aws s3 ls` でS3バケット一覧など
+- Amazon Q使用例: `aws q chat` でAIチャット起動
+- バージョン: 2.x（最新版）
+- 公式: https://aws.amazon.com/cli/
+
 ### 開発言語・ランタイム
 
 | ツール | 用途 | インストール |
@@ -223,6 +234,12 @@ brew bundle --file=Brewfile.full
 |--------|------|--------------|
 | gnupg | GPG暗号化 | `brew install gnupg` |
 | pinentry-mac | macOS用PINエントリー | `brew install pinentry-mac` |
+
+### クラウド/AWS
+
+| ツール | 用途 | インストール |
+|--------|------|--------------|
+| awscli | AWS CLI（Amazon Q含む） | `brew install awscli` |
 
 ### ビルドツール・その他
 

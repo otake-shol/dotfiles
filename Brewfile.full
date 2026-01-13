@@ -3,6 +3,7 @@ tap "homebrew/cask-versions"
 tap "homebrew/services"
 tap "pivotal/tap"
 brew "apr-util"
+brew "awscli"
 brew "asdf"
 brew "berkeley-db", link: true
 brew "btop"

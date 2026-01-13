@@ -43,6 +43,9 @@ brew "wget"            # ダウンローダー
 # セキュリティ
 brew "gnupg"           # GPG暗号化
 
+# クラウド/AWS
+brew "awscli"          # AWS CLI（Amazon Q含む）
+
 # ========================================
 # GUI Applications (必須)
 # ========================================

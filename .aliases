@@ -1,10 +1,141 @@
-# 一般
-alias ls="ls -la"
+# ========================================
+# 基本操作
+# ========================================
+
+# ディレクトリ移動
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias ~="cd ~"
+alias -- -="cd -"
+alias CD="cd"
+
+# ls関連
+alias ls="ls -G"           # macOSでカラー表示
+alias ll="ls -lh"          # 詳細表示
+alias la="ls -lAh"         # 隠しファイルも表示
+alias l="ls -CF"           # コンパクト表示
+alias lsd="ls -lh | grep '^d'"  # ディレクトリのみ
+
+# 検索・grep
+alias grep="grep --color=auto"
+alias fgrep="fgrep --color=auto"
+alias egrep="egrep --color=auto"
+alias h="history | grep"
+
+# 安全な削除・コピー
+alias rm="rm -i"
+alias cp="cp -i"
+alias mv="mv -i"
+
+# ========================================
+# Claude
+# ========================================
+alias c="claude"
+alias cl="claude"
+alias cla="claude"
+alias clau="claude"
+alias claud="claude"
+
+# ========================================
+# Git
+# ========================================
+alias gs="git status"
+alias ga="git add"
+alias gc="git commit"
+alias gcm="git commit -m"
+alias gp="git push"
+alias gpl="git pull"
+alias gd="git diff"
+alias gl="git log"
+alias glg="git log --graph --oneline --decorate --all"
+alias gco="git checkout"
+alias gcb="git checkout -b"
+alias gb="git branch"
+alias gba="git branch -a"
+alias gf="git fetch"
+alias gm="git merge"
+alias grb="git rebase"
+alias gst="git stash"
+alias gsta="git stash apply"
+alias gundo="git reset --soft HEAD^"
+
+
+
+
+# ========================================
+# 開発ツール
+# ========================================
+
+# Tmux
 alias tm="tmux a"
 
-# neovim設定
+# Neovim
 alias vi="nvim"
 alias vim="nvim"
 alias view="nvim -R"
+
+# Python
+alias python="python3"
+alias pip="pip3"
+alias py="python3"
+
+# Docker
+alias d="docker"
+alias dc="docker-compose"
+alias dps="docker ps"
+alias dpa="docker ps -a"
+alias di="docker images"
+alias drm="docker rm"
+alias drmi="docker rmi"
+alias dstop="docker stop"
+alias dstart="docker start"
+
+# npm
+alias ni="npm install"
+alias nid="npm install --save-dev"
+alias nig="npm install -g"
+alias nr="npm run"
+alias ns="npm start"
+alias nt="npm test"
+
+# yarn
+alias yi="yarn install"
+alias ya="yarn add"
+alias yad="yarn add --dev"
+alias yr="yarn run"
+alias ys="yarn start"
+alias yt="yarn test"
+
+# Homebrew
+alias brewup="brew update && brew upgrade && brew cleanup"
+alias brewls="brew list"
+
+# ========================================
+# システム・ネットワーク
+# ========================================
+
+# システム
+alias reload="source ~/.zshrc"
 alias zshconfig="vim ~/.zshrc"
+alias aliasconfig="vim ~/.aliases"
 alias ohmyzsh="vim ~/.oh-my-zsh"
+alias path='echo -e ${PATH//:/\\n}'
+alias his="history"
+alias df="df -h"
+alias du="du -h"
+alias ps="ps aux"
+alias top="top -o cpu"
+
+# ネットワーク
+alias myip="curl ifconfig.me"
+alias localip="ipconfig getifaddr en0"
+alias ports="lsof -i -P | grep LISTEN"
+
+# ========================================
+# クイックアクセス
+# ========================================
+alias dots="cd ~/dotfiles"
+alias projects="cd ~/Projects"
+alias downloads="cd ~/Downloads"
+alias desktop="cd ~/Desktop"

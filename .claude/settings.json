@@ -44,5 +44,6 @@
     "additionalDirectories": [
       "~/dotfiles/"
     ]
-  }
+  },
+  "language": "日本語"
 }

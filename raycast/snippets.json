@@ -10,6 +10,16 @@
     "keyword": ";c"
   },
   {
+    "name": "Antigravity",
+    "text": "Antigravity",
+    "keyword": ":a"
+  },
+  {
+    "name": "Antigravity ;a",
+    "text": "Antigravity",
+    "keyword": ";a"
+  },
+  {
     "name": "ultrathink",
     "text": "ultrathink",
     "keyword": ":u"

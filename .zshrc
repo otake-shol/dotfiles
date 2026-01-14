@@ -39,11 +39,6 @@ source /Users/otkshol/.docker/init-zsh.sh || true
 # asdf version manager
 . /usr/local/opt/asdf/libexec/asdf.sh
 
-# nvm (Node Version Manager)
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-
 # kiro shell integration
 [[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
 
@@ -52,6 +47,19 @@ export PATH="/Users/otkshol/.antigravity/antigravity/bin:$PATH"
 
 # Local environment
 . "$HOME/.local/bin/env"
+
+# fzf - ファジーファインダー設定
+export FZF_DEFAULT_OPTS="
+  --height 60%
+  --layout=reverse
+  --border=rounded
+  --info=inline
+  --preview 'bat --color=always --style=numbers --line-range=:200 {} 2>/dev/null || cat {}'
+  --preview-window=right:60%:wrap
+  --bind 'ctrl-/:toggle-preview'
+"
+export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:200 {}'"
+export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
 
 # direnv - ディレクトリ別環境変数
 eval "$(direnv hook zsh)"

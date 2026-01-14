@@ -80,12 +80,9 @@ font-thicken = true
 keybind = ctrl+h=goto_split:left
 keybind = ctrl+l=goto_split:right
 window-inherit-working-directory = true
-shell-integration = detect
 quick-terminal-position = "right"
 quick-terminal-screen = "main"
 quick-terminal-animation-duration = 0.3
 keybind = "cmd+shift+t=toggle_quick_terminal"
 clipboard-trim-trailing-spaces = true
 window-new-tab-position = current
-
-

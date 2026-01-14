@@ -1,0 +1,29 @@
+# bat configuration
+# https://github.com/sharkdp/bat
+
+# Theme (Catppuccin Mocha - ダークテーマ、目に優しい)
+--theme="Catppuccin Mocha"
+
+# 表示スタイル
+# numbers: 行番号表示
+# changes: Git差分マーカー
+# header: ファイル名ヘッダー
+# grid: グリッド罫線
+--style="numbers,changes,header,grid"
+
+# イタリック対応（対応フォント使用時）
+--italic-text=always
+
+# ページング設定（auto: 画面に収まらない場合のみ）
+--paging=auto
+
+# タブ幅
+--tabs=4
+
+# 特殊ファイルの言語マッピング
+--map-syntax "*.conf:INI"
+--map-syntax "*.env:Dotenv"
+--map-syntax ".gitignore:Git Ignore"
+--map-syntax "Brewfile:Ruby"
+--map-syntax "*.zshrc:Zsh"
+--map-syntax "*.aliases:Bash"

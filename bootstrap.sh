@@ -86,12 +86,6 @@ ln -sf ~/dotfiles/ghostty/config ~/.config/ghostty/config
 ln -sf ~/dotfiles/ghostty/shaders ~/.config/ghostty/shaders
 echo -e "${GREEN}✓ ghostty設定をリンクしました${NC}"
 
-# vim
-if [ -d ~/dotfiles/.vim ]; then
-    ln -sf ~/dotfiles/.vim ~/.vim
-    echo -e "${GREEN}✓ vim設定をリンクしました${NC}"
-fi
-
 # claude
 mkdir -p ~/.claude
 ln -sf ~/dotfiles/.claude/CLAUDE.md ~/.claude/CLAUDE.md
@@ -104,6 +98,20 @@ echo -e "${GREEN}✓ Claude Code設定をリンクしました${NC}"
 mkdir -p ~/.config/gh
 ln -sf ~/dotfiles/gh/config.yml ~/.config/gh/config.yml
 echo -e "${GREEN}✓ GitHub CLI設定をリンクしました${NC}"
+
+# nvim
+mkdir -p ~/.config/nvim
+ln -sf ~/dotfiles/nvim/.config/nvim/init.lua ~/.config/nvim/init.lua
+echo -e "${GREEN}✓ Neovim設定をリンクしました${NC}"
+
+# tmux
+ln -sf ~/dotfiles/tmux/.tmux.conf ~/.tmux.conf
+echo -e "${GREEN}✓ tmux設定をリンクしました${NC}"
+
+# bat
+mkdir -p ~/.config/bat
+ln -sf ~/dotfiles/bat/.config/bat/config ~/.config/bat/config
+echo -e "${GREEN}✓ bat設定をリンクしました${NC}"
 
 # antigravity
 ANTIGRAVITY_USER_DIR="$HOME/Library/Application Support/Antigravity/User"
@@ -149,15 +157,21 @@ fi
 # ========================================
 echo -e "\n${YELLOW}[5/5] 追加設定...${NC}"
 
-# nvm設定
-mkdir -p ~/.nvm
-echo -e "${GREEN}✓ nvm用ディレクトリを作成しました${NC}"
-
 # git-secrets設定
 if command -v git-secrets &> /dev/null; then
     git secrets --install ~/.git-templates/git-secrets 2>/dev/null || true
     git secrets --register-aws --global 2>/dev/null || true
     echo -e "${GREEN}✓ git-secretsを設定しました${NC}"
+fi
+
+# Neovim TokyoNightテーマ
+TOKYONIGHT_DIR="$HOME/.local/share/nvim/site/pack/colors/start/tokyonight.nvim"
+if [ ! -d "$TOKYONIGHT_DIR" ]; then
+    mkdir -p "$(dirname "$TOKYONIGHT_DIR")"
+    git clone --depth=1 https://github.com/folke/tokyonight.nvim "$TOKYONIGHT_DIR"
+    echo -e "${GREEN}✓ Neovim TokyoNightテーマをインストールしました${NC}"
+else
+    echo -e "${GREEN}✓ Neovim TokyoNightテーマはインストール済みです${NC}"
 fi
 
 # ========================================

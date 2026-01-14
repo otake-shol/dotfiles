@@ -54,7 +54,7 @@
 
 # MCPサーバー設定
 
-## 有効なMCPサーバー（14個）
+## 有効なMCPサーバー（13個）
 
 ### 認証不要（すぐ使える）
 | サーバー | 用途 |
@@ -80,7 +80,6 @@
 | GitHub | `GITHUB_PERSONAL_ACCESS_TOKEN` | Settings → Developer settings → PAT |
 | Brave Search | `BRAVE_API_KEY` | https://brave.com/search/api/ |
 | Sentry | `SENTRY_AUTH_TOKEN` | Settings → Auth Tokens |
-| Firebase | Firebase CLI認証 | `firebase login` |
 
 ## 環境変数の設定（.zshrcに追加）
 ```bash

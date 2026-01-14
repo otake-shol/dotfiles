@@ -44,9 +44,6 @@ alias mv="mv -i"
 # ========================================
 alias c="claude"
 alias cl="claude"
-alias cla="claude"
-alias clau="claude"
-alias claud="claude"
 
 # ========================================
 # Git
@@ -84,7 +81,8 @@ alias tm="tmux a"
 # Neovim
 alias vi="nvim"
 alias vim="nvim"
-alias view="nvim -R"
+alias nview="nvim -R"              # nvim読み取り専用モード
+alias view="bat"                   # 軽量ファイル閲覧（batに置き換え）
 
 # Python
 alias python="python3"
@@ -150,6 +148,19 @@ alias dots="cd ~/dotfiles"
 alias projects="cd ~/Projects"
 alias downloads="cd ~/Downloads"
 alias desktop="cd ~/Desktop"
+
+# ========================================
+# ファイル表示 (bat)
+# ========================================
+alias cat="bat"                      # catをbatに置き換え
+alias catp="bat -p"                  # プレーン表示（装飾なし）
+alias catl="bat -l"                  # 言語指定 (例: catl json file.txt)
+alias less="bat --paging=always"     # ページャーとして使用
+alias bathelp="bat --help"           # batのヘルプ
+
+# ファイルプレビュー (fzf + bat)
+alias fp="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
+alias fpe="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' | xargs -r nvim"
 
 # ========================================
 # エイリアス管理

@@ -13,3 +13,6 @@ Brewfile.lock.json
 
 # Serena tool internal files
 .serena/
+
+# Firebase debug logs
+firebase-debug.log

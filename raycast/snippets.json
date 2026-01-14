@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Ultrathink :u",
+    "text": "ultrathink",
+    "keyword": ":u"
+  },
+  {
+    "name": "Ultrathink :U",
+    "text": "ultrathink",
+    "keyword": ":U"
+  },
+  {
+    "name": "Ultrathink ;u",
+    "text": "ultrathink",
+    "keyword": ";u"
+  },
+  {
+    "name": "Ultrathink ;U",
+    "text": "ultrathink",
+    "keyword": ";U"
+  },    
+  {
+    "name": "Date",
+    "text": "{date:YYYY-MM-DD}",
+    "keyword": ":date"
+  },
+  {
+    "name": "Time",
+    "text": "{time:HH:mm}",
+    "keyword": ":time"
+  },
+  {
+    "name": "DateTime",
+    "text": "{date:YYYY-MM-DD} {time:HH:mm}",
+    "keyword": ":now"
+  }
+]

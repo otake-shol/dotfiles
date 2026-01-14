@@ -29,6 +29,7 @@ cd ~/dotfiles && bash bootstrap.sh
 | `bat/` | bat設定 |
 | `raycast/` | Raycastスクリプト |
 | `antigravity/` | Antigravity設定 |
+| `browser-extensions/` | ブラウザ拡張機能リスト |
 | `scripts/` | ユーティリティスクリプト |
 
 ## ドキュメント
@@ -39,6 +40,9 @@ cd ~/dotfiles && bash bootstrap.sh
 | [APPS.md](docs/APPS.md) | アプリケーション一覧 |
 | [mcp-servers-guide.md](docs/mcp-servers-guide.md) | MCPサーバー設定ガイド |
 | [BROWSER_EXTENSIONS.md](docs/BROWSER_EXTENSIONS.md) | ブラウザ拡張機能 |
+| [DOTFILES_MANAGER.md](docs/DOTFILES_MANAGER.md) | dotfiles管理ツール比較 |
+| [antigravity-extensions.md](docs/antigravity-extensions.md) | Antigravity拡張機能ガイド |
+| [vim-mastery-roadmap.md](docs/vim-mastery-roadmap.md) | Vim習得ロードマップ |
 
 ## 参考
 

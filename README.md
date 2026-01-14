@@ -30,3 +30,7 @@ dotfiles/
 
 - [SETUP.md](docs/SETUP.md) - 詳細セットアップ手順
 - [APPS.md](docs/APPS.md) - アプリケーション一覧
+
+## 参考情報
+
+- [GitHub does dotfiles](https://dotfiles.github.io/) - dotfiles管理のベストプラクティス、ツール、チュートリアル集

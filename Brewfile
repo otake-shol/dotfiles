@@ -16,6 +16,7 @@ brew "git"
 brew "gh"              # GitHub CLI
 brew "git-secrets"     # AWS認証情報の誤コミット防止
 brew "lazygit"         # Git TUI
+brew "git-delta"       # git diffを美しく表示
 
 # バージョン管理
 brew "asdf"            # 複数言語のバージョン管理
@@ -31,15 +32,21 @@ brew "fzf"             # ファジーファインダー
 brew "zoxide"          # 高速ディレクトリナビゲーション
 brew "sheldon"         # シェルプラグインマネージャー
 brew "starship"        # クロスシェルプロンプト
+brew "direnv"          # ディレクトリ別環境変数管理
 
 # ユーティリティ
 brew "bat"             # catの高機能代替（シンタックスハイライト付き）
+brew "eza"             # lsの高機能代替（Git統合・アイコン）
+brew "fd"              # findの高速代替
+brew "ripgrep"         # grepの超高速代替（rg）
 brew "stow"            # シンボリックリンク管理
 brew "tree"            # ディレクトリツリー表示
 brew "btop"            # システムモニター
 brew "nb"              # コマンドラインメモ・ブックマーク管理
 brew "curl"            # HTTPクライアント
 brew "wget"            # ダウンローダー
+brew "jq"              # JSON処理ツール
+brew "yq"              # YAML/TOML処理ツール
 
 # セキュリティ
 brew "gnupg"           # GPG暗号化
@@ -75,6 +82,8 @@ cask "figma"           # デザインツール・プロトタイピング
 
 # AI・開発
 cask "claude"          # Claude CLI
+cask "dbeaver-community" # データベースGUIクライアント
+cask "bruno"           # APIクライアント（REST/GraphQL）
 
 # フォント
 cask "font-hack-nerd-font"

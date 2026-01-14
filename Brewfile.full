@@ -2,78 +2,138 @@ tap "heroku/brew"
 tap "homebrew/cask-versions"
 tap "homebrew/services"
 tap "pivotal/tap"
+# Companion library to apr, the Apache Portable Runtime library
 brew "apr-util"
-brew "awscli"
+# Extendable version manager with support for Ruby, Node.js, Erlang & more
 brew "asdf"
-brew "berkeley-db", link: true
-brew "btop"
-brew "cmatrix"
+# C library implementing the SSH2 protocol
 brew "libssh2"
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
+# High performance key/value database
+brew "berkeley-db", link: true
+# Resource monitor. C++ version and continuation of bashtop and bpytop
+brew "btop"
+# Console Matrix
+brew "cmatrix"
+# Tool for downloading RTMP streaming media
 brew "rtmpdump"
+# Get a file from an HTTP, HTTPS or FTP server
 brew "curl"
+# Libraries to talk to Microsoft SQL Server and Sybase databases
 brew "freetds"
+# C library for reading, creating, and modifying zip archives
 brew "libzip"
+# General-purpose scripting language
 brew "php"
+# Dependency Manager for PHP
 brew "composer"
+# Apjanke's fork of the classic cowsay project
 brew "cowsay"
+# Monitor a directory for changes and run a shell command
 brew "fswatch"
+# Command-line fuzzy finder written in Go
 brew "fzf"
+# GitHub command-line tool
 brew "gh"
+# Prevents you from committing sensitive information to a git repo
 brew "git-secrets"
+# Asynchronous event library
 brew "libevent"
+# GNU Privacy Guard (OpenPGP)
 brew "gnupg"
+# Open-source build automation tool based on the Groovy and Kotlin DSL
 brew "gradle"
+# Tools and libraries to manipulate images in many formats
 brew "imagemagick"
+# Lightweight and flexible command-line JSON processor
+brew "jq"
+# Simple terminal UI for git commands
 brew "lazygit"
+# Provides library functionality for FIDO U2F & FIDO 2.0, including USB
 brew "libfido2"
+# Java-based project management
 brew "maven"
+# Open source relational database management system
 brew "mysql"
-brew "nb"
-brew "neofetch"
-brew "neovim"
-brew "node", link: false
-brew "nodebrew"
-brew "nvm"
-brew "openssl@1.1"
-brew "pdftk-java"
-brew "perl"
-brew "pinentry-mac"
-brew "postgresql@14", restart_service: :changed
-brew "pure"
-brew "pyenv"
-brew "python@3.10"
-brew "python@3.11"
-brew "tcl-tk"
-brew "python@3.8"
-brew "python@3.9"
-brew "sheldon"
-brew "sl"
-brew "starship"
-brew "stow"
-brew "tfenv"
+# Text interface for Git repositories
 brew "tig"
+# Command-line and local web note-taking, bookmarking, and archiving
+brew "nb"
+# Fast, highly customisable system info script
+brew "neofetch"
+# Ambitious Vim-fork focused on extensibility and agility
+brew "neovim"
+# Open-source, cross-platform JavaScript runtime environment
+brew "node", link: false
+# Node.js version manager
+brew "nodebrew"
+# Manage multiple Node.js versions
+brew "nvm"
+# Cryptography and SSL/TLS Toolkit
+brew "openssl@1.1"
+# Port of pdftk in java
+brew "pdftk-java"
+# Highly capable, feature-rich programming language
+brew "perl"
+# Pinentry for GPG on Mac
+brew "pinentry-mac"
+# Object-relational database system
+brew "postgresql@14", restart_service: :changed
+# Pretty, minimal and fast ZSH prompt
+brew "pure"
+# Python version management
+brew "pyenv"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.10"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.11"
+# Tool Command Language
+brew "tcl-tk"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.8"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.9"
+# Fast, configurable, shell plugin manager
+brew "sheldon"
+# Prints a steam locomotive if you type sl instead of ls
+brew "sl"
+# Cross-shell prompt for astronauts
+brew "starship"
+# Organize software neatly under a single directory tree (e.g. /usr/local)
+brew "stow"
+# Terraform version manager inspired by rbenv
+brew "tfenv"
+# Terminal multiplexer
 brew "tmux"
+# Implementation of Java Servlet and JavaServer Pages
 brew "tomcat"
+# File synchronization tool
 brew "unison"
+# Vi 'workalike' with many additional features
 brew "vim"
+# JavaScript package manager
 brew "yarn", link: false
+# Process YAML, JSON, XML, CSV and properties documents from the CLI
+brew "yq"
+# Shell extension to navigate your filesystem faster
 brew "zoxide"
+# Everything you need to get started with Heroku
 brew "heroku/brew/heroku"
 brew "pivotal/tap/springboot"
+# Enable Windows-like alt-tab
 cask "alt-tab"
-cask "arc"
+# Anthropic's official Claude AI desktop app
 cask "claude"
-cask "figma"
 cask "font-hack-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
+# Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
-cask "homerow"
+# Menu bar manager
 cask "jordanbaird-ice"
+# Orchestrates virtual Ubuntu instances
 cask "multipass"
+# Reverse proxy, secure introspectable tunnels to localhost
 cask "ngrok"
-cask "raycast"
-cask "readdle-spark"
 cask "sequel-pro-nightly"
-cask "slack"
-cask "ticktick"
 go "golang.org/x/tools/gopls"

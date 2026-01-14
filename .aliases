@@ -10,18 +10,29 @@ alias ~="cd ~"
 alias -- -="cd -"
 alias CD="cd"
 
-# ls関連
-alias ls="ls -G"           # macOSでカラー表示
-alias ll="ls -lh"          # 詳細表示
-alias la="ls -lAh"         # 隠しファイルも表示
-alias l="ls -CF"           # コンパクト表示
-alias lsd="ls -lh | grep '^d'"  # ディレクトリのみ
+# ls関連 (eza)
+alias ls="eza"                    # モダンなls
+alias ll="eza -l --git"           # 詳細表示+Git状態
+alias la="eza -la --git"          # 隠しファイル含む
+alias l="eza -1"                  # 1行1ファイル
+alias lsd="eza -lD"               # ディレクトリのみ
+alias lt="eza -T --git-ignore"    # ツリー表示
+alias lta="eza -Ta"               # ツリー（全ファイル）
 
 # 検索・grep
 alias grep="grep --color=auto"
 alias fgrep="fgrep --color=auto"
 alias egrep="egrep --color=auto"
 alias h="history | grep"
+
+# ripgrep (高速grep)
+alias rg="rg --smart-case"        # 大文字小文字自動判定
+alias rgi="rg -i"                 # 常に大文字小文字無視
+alias rgf="rg --files"            # ファイル名のみ表示
+
+# fd (高速find)
+alias fd="fd --hidden --exclude .git"  # 隠しファイル含む
+alias fdi="fd -I"                      # gitignore無視して検索
 
 # 安全な削除・コピー
 alias rm="rm -i"
@@ -139,3 +150,11 @@ alias dots="cd ~/dotfiles"
 alias projects="cd ~/Projects"
 alias downloads="cd ~/Downloads"
 alias desktop="cd ~/Desktop"
+
+# ========================================
+# エイリアス管理
+# ========================================
+alias aliases="cat ~/.aliases"         # 全表示
+alias aliasgrep="alias | grep"         # 検索
+alias ag="alias | grep"                # 短縮版
+alias af="alias | fzf"                 # fzfで対話的検索

@@ -52,3 +52,6 @@ export PATH="/Users/otkshol/.antigravity/antigravity/bin:$PATH"
 
 # Local environment
 . "$HOME/.local/bin/env"
+
+# direnv - ディレクトリ別環境変数
+eval "$(direnv hook zsh)"

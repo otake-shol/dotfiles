@@ -1,6 +1,5 @@
 [user]
 	name = otake-shol
-	mail = otkshol@gmail.com
 	email = charm.ot.trog@gmail.com
 [core]
 	autocrlf = input
@@ -24,3 +23,14 @@
 	allowed = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 [http]
 	postBuffer = 524288000
+[alias]
+	lg = log --oneline --graph --decorate --all
+	ll = log --graph --pretty=format:'%C(yellow)%h%C(reset) %C(blue)%ad%C(reset) %C(green)%an%C(reset) %s%C(red)%d%C(reset)' --date=short
+	last = log -1 --stat
+[log]
+	date = short
+	abbrevCommit = true
+[color "decorate"]
+	HEAD = bold cyan
+	branch = bold green
+	tag = bold yellow

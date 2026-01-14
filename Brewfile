@@ -3,11 +3,6 @@
 # 完全な環境は Brewfile.full を参照
 
 # ========================================
-# Taps
-# ========================================
-tap "homebrew/cask-versions"
-
-# ========================================
 # CLI Tools (必須)
 # ========================================
 
@@ -19,8 +14,7 @@ brew "lazygit"         # Git TUI
 brew "git-delta"       # git diffを美しく表示
 
 # バージョン管理
-brew "asdf"            # 複数言語のバージョン管理
-brew "nvm"             # Node.jsバージョン管理
+brew "asdf"            # 複数言語のバージョン管理（Node.js含む）
 
 # エディタ
 brew "neovim"          # モダンなVim
@@ -30,8 +24,6 @@ brew "vim"
 brew "tmux"            # ターミナルマルチプレクサ
 brew "fzf"             # ファジーファインダー
 brew "zoxide"          # 高速ディレクトリナビゲーション
-brew "sheldon"         # シェルプラグインマネージャー
-brew "starship"        # クロスシェルプロンプト
 brew "direnv"          # ディレクトリ別環境変数管理
 
 # ユーティリティ
@@ -63,6 +55,7 @@ cask "ghostty"         # 高速でモダンなターミナル
 
 # ユーティリティ
 cask "alt-tab"         # Windows風のタスクスイッチャー
+cask "cleanshot"       # スクリーンショット・画面録画
 cask "homerow"         # キーボードショートカット操作
 cask "jordanbaird-ice" # メニューバー管理
 cask "raycast"         # 生産性向上ランチャー

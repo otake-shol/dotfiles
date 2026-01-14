@@ -111,6 +111,24 @@ brew bundle --file=~/dotfiles/Brewfile.full
 
 ---
 
+#### CleanShot X
+
+> 高機能スクリーンショット・画面録画ツール
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install --cask cleanshot` |
+| 公式サイト | https://cleanshot.com/ |
+
+**特徴:**
+- スクリーンショット・画面録画
+- 注釈・モザイク・矢印追加
+- クラウドアップロード
+- スクロールキャプチャ
+- GIF 作成
+
+---
+
 ### ブラウザ
 
 #### Arc
@@ -224,6 +242,40 @@ brew bundle --file=~/dotfiles/Brewfile.full
 
 ---
 
+#### DBeaver Community
+
+> ユニバーサルデータベース GUI クライアント
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install --cask dbeaver-community` |
+| 公式サイト | https://dbeaver.io/ |
+
+**特徴:**
+- 多数のデータベース対応（MySQL, PostgreSQL, SQLite, MongoDB 等）
+- ER 図自動生成
+- SQL エディタ・補完
+- データエクスポート/インポート
+
+---
+
+#### Bruno
+
+> オープンソース API クライアント
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install --cask bruno` |
+| 公式サイト | https://www.usebruno.com/ |
+
+**特徴:**
+- REST / GraphQL 対応
+- Git フレンドリー（コレクションをファイルで管理）
+- オフライン動作
+- Postman / Insomnia からのインポート
+
+---
+
 ## CLI ツール
 
 ### Git 関連
@@ -234,6 +286,7 @@ brew bundle --file=~/dotfiles/Brewfile.full
 | **gh** | GitHub CLI | `brew install gh` |
 | **lazygit** | Git TUI | `brew install lazygit` |
 | **git-secrets** | 認証情報漏洩防止 | `brew install git-secrets` |
+| **git-delta** | 美しい diff 表示 | `brew install git-delta` |
 | **tig** | Git テキストUI | `brew install tig` |
 
 #### lazygit
@@ -317,6 +370,77 @@ zi            # インタラクティブ選択
 
 ---
 
+#### direnv
+
+> ディレクトリ別の環境変数管理
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install direnv` |
+| GitHub | https://github.com/direnv/direnv |
+
+**特徴:**
+- ディレクトリごとに環境変数を自動設定
+- `.envrc` ファイルで管理
+- プロジェクト切り替え時に自動適用
+
+---
+
+### モダン CLI ツール
+
+従来のUnixコマンドの高機能・高速な代替ツール。
+
+#### eza
+
+> ls の高機能代替
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install eza` |
+| GitHub | https://github.com/eza-community/eza |
+
+**特徴:**
+- Git ステータス統合
+- ファイルアイコン表示
+- ツリー表示対応
+- カラフルな出力
+
+---
+
+#### fd
+
+> find の高速代替
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install fd` |
+| GitHub | https://github.com/sharkdp/fd |
+
+**特徴:**
+- シンプルな構文
+- 正規表現サポート
+- `.gitignore` 自動対応
+- find より 5〜10 倍高速
+
+---
+
+#### ripgrep (rg)
+
+> grep の超高速代替
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install ripgrep` |
+| GitHub | https://github.com/BurntSushi/ripgrep |
+
+**特徴:**
+- 圧倒的な検索速度
+- `.gitignore` 自動対応
+- 複数ファイルタイプ対応
+- コード検索に最適
+
+---
+
 ### システムモニタリング
 
 #### btop
@@ -361,6 +485,9 @@ zi            # インタラクティブ選択
 | **nb** | CLI メモ・ブックマーク | `brew install nb` |
 | **curl** | HTTP クライアント | `brew install curl` |
 | **wget** | ダウンローダー | `brew install wget` |
+| **jq** | JSON 処理ツール | `brew install jq` |
+| **yq** | YAML/TOML 処理ツール | `brew install yq` |
+| **gnupg** | GPG 暗号化 | `brew install gnupg` |
 
 ---
 

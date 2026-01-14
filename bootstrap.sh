@@ -105,6 +105,17 @@ mkdir -p ~/.config/gh
 ln -sf ~/dotfiles/gh/config.yml ~/.config/gh/config.yml
 echo -e "${GREEN}✓ GitHub CLI設定をリンクしました${NC}"
 
+# antigravity
+ANTIGRAVITY_USER_DIR="$HOME/Library/Application Support/Antigravity/User"
+if [ -d "$HOME/Library/Application Support/Antigravity" ]; then
+    mkdir -p "$ANTIGRAVITY_USER_DIR"
+    ln -sf ~/dotfiles/antigravity/settings.json "$ANTIGRAVITY_USER_DIR/settings.json"
+    ln -sf ~/dotfiles/antigravity/keybindings.json "$ANTIGRAVITY_USER_DIR/keybindings.json"
+    echo -e "${GREEN}✓ Antigravity設定をリンクしました${NC}"
+else
+    echo -e "${YELLOW}⚠ Antigravityがインストールされていません。スキップします${NC}"
+fi
+
 # ========================================
 # 4. Oh My Zshのセットアップ
 # ========================================

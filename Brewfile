@@ -33,6 +33,7 @@ brew "sheldon"         # シェルプラグインマネージャー
 brew "starship"        # クロスシェルプロンプト
 
 # ユーティリティ
+brew "bat"             # catの高機能代替（シンタックスハイライト付き）
 brew "stow"            # シンボリックリンク管理
 brew "tree"            # ディレクトリツリー表示
 brew "btop"            # システムモニター

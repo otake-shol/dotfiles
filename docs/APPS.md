@@ -1,318 +1,402 @@
 # アプリケーション一覧
 
-このドキュメントは、dotfilesで管理しているアプリケーションとツールの一覧です。
+dotfilesで管理しているアプリケーションとツールの一覧です。
 
-## 📦 インストール方法
+## インストール
 
-### 必須ツールのみ（推奨）
 ```bash
-cd ~/dotfiles
-brew bundle --file=Brewfile
-```
+# 必須ツールのみ（推奨）
+brew bundle --file=~/dotfiles/Brewfile
 
-### 全ツール
-```bash
-cd ~/dotfiles
-brew bundle --file=Brewfile.full
+# 全ツール
+brew bundle --file=~/dotfiles/Brewfile.full
 ```
 
 ---
 
-## 🖥️ GUI アプリケーション
+## GUI アプリケーション
 
 ### ターミナル
 
 #### Ghostty
-- **用途**: 高速でモダンなGPUアクセラレーションターミナル
-- **インストール**: `brew install --cask ghostty`
-- **設定**: `~/dotfiles/ghostty/config`
-- **公式**: https://ghostty.org/
+
+<img src="https://ghostty.org/og-image.png" width="600" alt="Ghostty">
+
+> GPU アクセラレーション対応の高速モダンターミナル
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install --cask ghostty` |
+| 設定ファイル | `~/dotfiles/ghostty/config` |
+| 公式サイト | https://ghostty.org/ |
+
+**特徴:**
+- Zig言語で書かれた高速ターミナル
+- ネイティブGUI（macOS/Linux）
+- リッチなカスタマイズ性
+- シェーダー対応
+
+---
 
 ### ユーティリティ
 
+#### Raycast
+
+<img src="https://www.raycast.com/og-image.png" width="600" alt="Raycast">
+
+> Spotlight を超える生産性ランチャー
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install --cask raycast` |
+| 公式サイト | https://www.raycast.com/ |
+
+**特徴:**
+- 高速なアプリ起動・ファイル検索
+- スニペット・クリップボード履歴
+- 拡張機能エコシステム
+- ウィンドウ管理・計算機
+
+---
+
 #### AltTab
-- **用途**: Windows風のAlt-Tabウィンドウスイッチャー
-- **インストール**: `brew install --cask alt-tab`
-- **説明**: macOSのCmd-Tabを、Windowsのようなウィンドウプレビュー付きスイッチャーに置き換える。すべてのウィンドウを一覧表示し、視覚的に切り替え可能
-- **公式**: https://alt-tab-macos.netlify.app/
-- **GitHub**: https://github.com/lwouis/alt-tab-macos
+
+<img src="https://alt-tab-macos.netlify.app/public/demo/frontpage.jpg" width="600" alt="AltTab">
+
+> Windows 風のウィンドウスイッチャー
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install --cask alt-tab` |
+| 公式サイト | https://alt-tab-macos.netlify.app/ |
+
+**特徴:**
+- ウィンドウのプレビュー表示
+- すべてのウィンドウを一覧表示
+- キーボードショートカットでの高速切り替え
+
+---
 
 #### Homerow
-- **用途**: キーボードショートカットで画面上のすべてのボタンを操作
-- **インストール**: `brew install --cask homerow`
-- **説明**: macOSのあらゆるUI要素にキーボードショートカットを割り当て。マウスを使わずに効率的な操作を実現。Vimライクなナビゲーションをシステム全体に拡張
-- **公式**: https://www.homerow.app/
 
-#### Ice (jordanbaird-ice)
-- **用途**: macOSのメニューバーアイコンを管理・非表示にする
-- **インストール**: `brew install --cask jordanbaird-ice`
-- **公式**: https://github.com/jordanbaird/Ice
+<img src="https://www.homerow.app/homerow-og-image.png" width="600" alt="Homerow">
 
-#### Raycast
-- **用途**: macOS用の生産性向上ランチャー（Spotlight/Alfred代替）
-- **インストール**: `brew install --cask raycast`
-- **説明**: 高速でカスタマイズ可能なランチャー。アプリ起動、ファイル検索、計算、スニペット、拡張機能など多機能
-- **公式**: https://www.raycast.com/
+> キーボードだけで画面上のすべてを操作
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install --cask homerow` |
+| 公式サイト | https://www.homerow.app/ |
+
+**特徴:**
+- Vimライクなナビゲーション
+- すべてのUI要素にショートカット
+- マウス不要の効率的操作
+
+---
+
+#### Ice
+
+> メニューバーアイコンの管理ツール
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install --cask jordanbaird-ice` |
+| GitHub | https://github.com/jordanbaird/Ice |
+
+**特徴:**
+- メニューバーアイコンの表示/非表示
+- グループ化・並び替え
+- Bartender の無料代替
+
+---
 
 ### ブラウザ
 
 #### Arc
-- **用途**: モダンなChromiumベースのウェブブラウザ
-- **インストール**: `brew install --cask arc`
-- **説明**: スペース機能によるタブ管理、サイドバー型UI、Split View、コマンドバー、美しいデザインが特徴。生産性向上に特化したブラウザ
-- **公式**: https://arc.net/
+
+<img src="https://arc.net/og-image.png" width="600" alt="Arc">
+
+> 次世代のブラウザ体験
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install --cask arc` |
+| 公式サイト | https://arc.net/ |
+
+**特徴:**
+- スペース機能でタブ整理
+- サイドバー型の革新的UI
+- Split View で画面分割
+- コマンドバーで高速操作
+- 美しいデザイン
+
+---
 
 ### 生産性
 
 #### Spark
-- **用途**: メールクライアント
-- **インストール**: `brew install --cask readdle-spark`
-- **説明**: Readdle社製の高速でスマートなメールアプリ。複数アカウント管理、スマート通知、チーム機能、美しいデザイン。Gmail、Outlook、iCloudなど主要メールサービスに対応
-- **公式**: https://sparkmailapp.com/
+
+<img src="https://sparkmailapp.com/images/share/spark-share.png" width="600" alt="Spark">
+
+> スマートで高速なメールクライアント
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install --cask readdle-spark` |
+| 公式サイト | https://sparkmailapp.com/ |
+
+**特徴:**
+- 複数アカウント統合管理
+- スマート通知
+- AI機能搭載
+- Gmail / Outlook / iCloud 対応
+
+---
 
 #### TickTick
-- **用途**: ToDoリスト・タスク管理
-- **インストール**: `brew install --cask ticktick`
-- **説明**: シンプルで強力なタスク管理アプリ。リマインダー、カレンダー、ポモドーロタイマー、習慣トラッカー機能を搭載。クロスプラットフォーム対応で同期可能
-- **公式**: https://www.ticktick.com/
+
+<img src="https://www.ticktick.com/static/img/og-image.png" width="600" alt="TickTick">
+
+> オールインワンのタスク管理
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install --cask ticktick` |
+| 公式サイト | https://www.ticktick.com/ |
+
+**特徴:**
+- タスク管理・リマインダー
+- カレンダー統合
+- ポモドーロタイマー
+- 習慣トラッカー
+- クロスプラットフォーム同期
+
+---
 
 ### コミュニケーション
 
 #### Slack
-- **用途**: チームコミュニケーション・コラボレーション
-- **インストール**: `brew install --cask slack`
-- **説明**: ビジネス向けメッセージングアプリ。チャンネル、DM、ファイル共有、アプリ連携など豊富な機能。リモートワークやチーム開発に必須のツール
-- **公式**: https://slack.com/
+
+<img src="https://a.slack-edge.com/80588/marketing/img/meta/slack_hash_256.png" width="200" alt="Slack">
+
+> チームコラボレーションの定番
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install --cask slack` |
+| 公式サイト | https://slack.com/ |
+
+---
 
 ### デザイン
 
 #### Figma
-- **用途**: UIデザイン・プロトタイピングツール
-- **インストール**: `brew install --cask figma`
-- **説明**: ブラウザベースのコラボレーティブデザインツール。UI/UXデザイン、プロトタイピング、デザインシステム管理、リアルタイムコラボレーションが可能
-- **公式**: https://www.figma.com/
+
+<img src="https://cdn.sanity.io/images/599r6htc/localized/b58bb1fc1c5e5b099e42635da4c47f5fc8c90e56-2400x1260.png" width="600" alt="Figma">
+
+> コラボレーティブデザインツール
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install --cask figma` |
+| 公式サイト | https://www.figma.com/ |
+
+**特徴:**
+- リアルタイム共同編集
+- UI/UXデザイン
+- プロトタイピング
+- デザインシステム管理
+
+---
 
 ### 開発ツール
 
-#### Claude CLI
-- **用途**: Anthropic Claude AIのコマンドラインインターフェース
-- **インストール**: `brew install --cask claude`
-- **設定**: `~/dotfiles/.claude/`
+#### Claude
 
-#### Multipass
-- **用途**: 軽量なLinux VM管理
-- **インストール**: `brew install --cask multipass`
+> AI コーディングアシスタント
 
-#### ngrok
-- **用途**: ローカル開発サーバーを外部公開
-- **インストール**: `brew install --cask ngrok`
-
-#### Sequel Pro Nightly
-- **用途**: MySQL/MariaDBのGUIクライアント
-- **インストール**: `brew install --cask sequel-pro-nightly`
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install --cask claude` |
+| 設定ファイル | `~/dotfiles/.claude/` |
+| 公式サイト | https://claude.ai/ |
 
 ---
 
-## ⌨️ CLI ツール
+## CLI ツール
 
-### Git関連
+### Git 関連
 
-| ツール | 用途 | インストール |
+| ツール | 説明 | インストール |
 |--------|------|--------------|
-| git | バージョン管理システム | `brew install git` |
-| gh | GitHub CLI | `brew install gh` |
-| git-secrets | AWS認証情報の誤コミット防止 | `brew install git-secrets` |
-| lazygit | Git用TUI（ターミナルUI） | `brew install lazygit` |
-| tig | Gitのテキストインターフェース | `brew install tig` |
+| **git** | バージョン管理 | `brew install git` |
+| **gh** | GitHub CLI | `brew install gh` |
+| **lazygit** | Git TUI | `brew install lazygit` |
+| **git-secrets** | 認証情報漏洩防止 | `brew install git-secrets` |
+| **tig** | Git テキストUI | `brew install tig` |
 
-### バージョン管理
+#### lazygit
 
-| ツール | 用途 | インストール |
-|--------|------|--------------|
-| asdf | 複数言語のバージョン管理 | `brew install asdf` |
-| nvm | Node.jsバージョン管理 | `brew install nvm` |
-| nodebrew | Node.jsバージョン管理（代替） | `brew install nodebrew` |
-| pyenv | Pythonバージョン管理 | `brew install pyenv` |
-| tfenv | Terraformバージョン管理 | `brew install tfenv` |
+<img src="https://github.com/jesseduffield/lazygit/raw/assets/demo/commit_and_push-compressed.gif" width="600" alt="lazygit">
 
-### エディタ
+> ターミナルで使える直感的な Git クライアント
 
-| ツール | 用途 | インストール |
-|--------|------|--------------|
-| neovim | モダンなVim | `brew install neovim` |
-| vim | テキストエディタ | `brew install vim` |
+---
 
 ### シェル・ターミナル
 
-| ツール | 用途 | インストール |
+#### fzf
+
+<img src="https://raw.githubusercontent.com/junegunn/i/master/fzf-preview.png" width="600" alt="fzf">
+
+> コマンドライン用ファジーファインダー
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install fzf` |
+| GitHub | https://github.com/junegunn/fzf |
+
+**キーバインド:**
+- `Ctrl+R` - コマンド履歴検索
+- `Ctrl+T` - ファイル検索
+- `Alt+C` - ディレクトリ移動
+
+---
+
+#### zoxide
+
+> スマートな cd コマンド
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install zoxide` |
+| GitHub | https://github.com/ajeetdsouza/zoxide |
+
+**使用例:**
+```bash
+z dotfiles    # ~/dotfiles に移動（部分一致）
+z doc         # 最もよく使う "doc" を含むディレクトリへ
+zi            # インタラクティブ選択
+```
+
+---
+
+#### bat
+
+<img src="https://camo.githubusercontent.com/7b7c397acc5b91b4c4cf7756015185fe3c5f700f70d256a212de51294a0cf673/68747470733a2f2f696d6775722e636f6d2f724773646e44652e706e67" width="600" alt="bat">
+
+> シンタックスハイライト付き cat
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install bat` |
+| GitHub | https://github.com/sharkdp/bat |
+
+**特徴:**
+- シンタックスハイライト
+- Git 差分表示
+- 行番号表示
+- ページャー機能
+
+---
+
+#### tmux
+
+> ターミナルマルチプレクサ
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install tmux` |
+| 公式サイト | https://github.com/tmux/tmux |
+
+**特徴:**
+- セッション管理
+- ウィンドウ分割
+- SSH 接続維持
+
+---
+
+### システムモニタリング
+
+#### btop
+
+<img src="https://github.com/aristocratos/btop/raw/main/Img/normal.png" width="600" alt="btop">
+
+> 美しいシステムモニター
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install btop` |
+| GitHub | https://github.com/aristocratos/btop |
+
+---
+
+### エディタ
+
+| ツール | 説明 | インストール |
 |--------|------|--------------|
-| tmux | ターミナルマルチプレクサ | `brew install tmux` |
-| fzf | ファジーファインダー（ファイル・コマンド履歴検索） | `brew install fzf` |
-| zoxide | 高速ディレクトリナビゲーション（cdの代替） | `brew install zoxide` |
-| sheldon | 高速なシェルプラグインマネージャー | `brew install sheldon` |
-| starship | クロスシェルプロンプト | `brew install starship` |
-| pure | Zshプロンプトテーマ | `brew install pure` |
+| **neovim** | モダン Vim | `brew install neovim` |
+| **vim** | テキストエディタ | `brew install vim` |
 
-#### 詳細
+---
 
-**fzf (Fuzzy Finder)**
-- コマンドライン上でのファイル検索、コマンド履歴検索、プロセス検索などに使える
-- Ctrl+R でコマンド履歴を検索、Ctrl+T でファイルを検索可能
-- 公式: https://github.com/junegunn/fzf
+### バージョン管理
 
-**zoxide**
-- `cd` の代替コマンド。よく使うディレクトリを記憶し、部分一致で高速移動
-- 使用例: `z dotfiles` → `~/dotfiles` に移動
-- `cd` より圧倒的に高速なディレクトリ移動を実現
-- 公式: https://github.com/ajeetdsouza/zoxide
-
-**sheldon**
-- Rust製の高速なシェルプラグインマネージャー
-- Oh My Zsh や Prezto の代替として使用可能
-- プラグインの並列ダウンロードと遅延読み込みに対応
-- 公式: https://sheldon.cli.rs
-
-### ユーティリティ（詳細）
-
-**nb**
-- コマンドラインとローカルWebでのメモ管理、ブックマーク、アーカイブツール
-- Markdown、暗号化、Git同期、全文検索、タグ付けに対応
-- `nb add` でメモ追加、`nb edit` で編集、`nb list` で一覧表示
-- `nb browse` でローカルWebインターフェース起動
-- プレーンテキストベースで、すべてのノートがGitで管理される
-- 公式: https://xwmx.github.io/nb
-
-### クラウド/AWS（詳細）
-
-**AWS CLI (awscli)**
-- Amazon Web Servicesの公式コマンドラインインターフェース
-- AWS上のリソース（EC2, S3, Lambda など）を管理
-- Amazon Q機能を利用可能：AIアシスタントがAWSタスクをサポート
-- `aws configure` で初期設定、`aws s3 ls` でS3バケット一覧など
-- Amazon Q使用例: `aws q chat` でAIチャット起動
-- バージョン: 2.x（最新版）
-- 公式: https://aws.amazon.com/cli/
-
-### 開発言語・ランタイム
-
-| ツール | 用途 | インストール |
+| ツール | 説明 | インストール |
 |--------|------|--------------|
-| node | JavaScript実行環境 | `brew install node` |
-| python@3.13 | Python 3.13 | `brew install python@3.13` |
-| php | PHPインタープリタ | `brew install php` |
-| composer | PHP依存関係管理 | `brew install composer` |
-| ruby | Ruby言語 | `brew install ruby` |
-| perl | Perl言語 | `brew install perl` |
-| yarn | JavaScriptパッケージマネージャー | `brew install yarn` |
+| **asdf** | 複数言語バージョン管理 | `brew install asdf` |
+| **nvm** | Node.js 管理 | `brew install nvm` |
+| **pyenv** | Python 管理 | `brew install pyenv` |
+| **tfenv** | Terraform 管理 | `brew install tfenv` |
 
-### データベース
-
-| ツール | 用途 | インストール |
-|--------|------|--------------|
-| mysql | MySQLデータベース | `brew install mysql` |
-| postgresql@14 | PostgreSQL 14 | `brew install postgresql@14` |
+---
 
 ### ユーティリティ
 
-| ツール | 用途 | インストール |
+| ツール | 説明 | インストール |
 |--------|------|--------------|
-| stow | シンボリックリンク管理 | `brew install stow` |
-| tree | ディレクトリツリー表示 | `brew install tree` |
-| btop | システムモニター | `brew install btop` |
-| nb | コマンドラインメモ・ブックマーク管理 | `brew install nb` |
-| neofetch | システム情報表示 | `brew install neofetch` |
-| curl | HTTPクライアント | `brew install curl` |
-| wget | ダウンローダー | `brew install wget` |
-| fswatch | ファイル監視ツール | `brew install fswatch` |
-| cmatrix | Matrixスクリーンセーバー | `brew install cmatrix` |
-| cowsay | アスキーアート | `brew install cowsay` |
-| sl | 遊び用コマンド | `brew install sl` |
-
-### セキュリティ
-
-| ツール | 用途 | インストール |
-|--------|------|--------------|
-| gnupg | GPG暗号化 | `brew install gnupg` |
-| pinentry-mac | macOS用PINエントリー | `brew install pinentry-mac` |
-
-### クラウド/AWS
-
-| ツール | 用途 | インストール |
-|--------|------|--------------|
-| awscli | AWS CLI（Amazon Q含む） | `brew install awscli` |
-
-### ビルドツール・その他
-
-| ツール | 用途 | インストール |
-|--------|------|--------------|
-| gradle | Javaビルドツール | `brew install gradle` |
-| maven | Javaプロジェクト管理 | `brew install maven` |
-| springboot | Spring Boot CLI | `brew install pivotal/tap/springboot` |
-| heroku | Heroku CLI | `brew install heroku/brew/heroku` |
-| imagemagick | 画像処理 | `brew install imagemagick` |
-| pdftk-java | PDF操作 | `brew install pdftk-java` |
-| unison | ファイル同期 | `brew install unison` |
+| **stow** | シンボリックリンク管理 | `brew install stow` |
+| **tree** | ディレクトリツリー表示 | `brew install tree` |
+| **nb** | CLI メモ・ブックマーク | `brew install nb` |
+| **curl** | HTTP クライアント | `brew install curl` |
+| **wget** | ダウンローダー | `brew install wget` |
 
 ---
 
-## 🌐 ブラウザ拡張機能
+### クラウド / AWS
 
-ブラウザ拡張機能の詳細な管理方法は [docs/BROWSER_EXTENSIONS.md](BROWSER_EXTENSIONS.md) を参照してください。
+#### AWS CLI
 
-### 生産性向上
+> Amazon Web Services 公式 CLI
 
-#### Vimium
-- **用途**: ブラウザでVimキーバインドを使用
-- **対応ブラウザ**: Chrome, Edge, Firefox
-- **説明**: キーボードだけでブラウジング可能。リンクナビゲーション、タブ切り替え、ページスクロールなどをVimライクに操作
-- **インストール**:
-  - Chrome: https://chrome.google.com/webstore/detail/vimium/dbepggeogbaibhgnhhndojpepiihcmeb
-  - Firefox: https://addons.mozilla.org/firefox/addon/vimium-ff/
-- **公式**: https://github.com/philc/vimium
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install awscli` |
+| 公式サイト | https://aws.amazon.com/cli/ |
+
+**機能:**
+- AWS リソース管理
+- Amazon Q（AI アシスタント）搭載
+- `aws q chat` でチャット起動
 
 ---
 
-## 🔤 フォント
+## フォント
 
 | フォント | 用途 | インストール |
 |---------|------|--------------|
-| Hack Nerd Font | プログラミング用フォント | `brew install --cask font-hack-nerd-font` |
-| JetBrains Mono Nerd Font | プログラミング用フォント | `brew install --cask font-jetbrains-mono-nerd-font` |
+| **Hack Nerd Font** | プログラミング用 | `brew install --cask font-hack-nerd-font` |
+| **JetBrains Mono** | プログラミング用 | `brew install --cask font-jetbrains-mono-nerd-font` |
 
 ---
 
-## 📝 メモ
-
-### カテゴリ別追加インストール
-
-開発環境に応じて、以下のコマンドで追加インストール可能：
+## Brewfile の更新
 
 ```bash
-# フロントエンド開発
-brew install node yarn
+# 現在の環境を保存
+brew bundle dump --force --file=~/dotfiles/Brewfile.full
 
-# バックエンド開発（PHP）
-brew install php composer mysql
-
-# バックエンド開発（Python）
-brew install python@3.13 pyenv
-
-# データベース
-brew install mysql postgresql@14
-
-# インフラ・DevOps
-brew install terraform tfenv docker
-```
-
-### Brewfileの更新
-
-現在の環境を保存：
-```bash
-cd ~/dotfiles
-brew bundle dump --force --file=Brewfile.full
-```
-
-必須ツールのみ保存（手動で編集）：
-```bash
+# 必須ツールのみ編集
 vim ~/dotfiles/Brewfile
 ```

@@ -8,6 +8,9 @@ Brewfile.lock.json
 # Claude Code local settings
 .claude/settings.local.json
 
+# Raycast local snippets (contains personal info)
+raycast/snippets.local.json
+
 # Claude Code plugins marketplace (managed externally)
 .claude/plugins/marketplaces/
 

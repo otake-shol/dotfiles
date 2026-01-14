@@ -1,24 +1,34 @@
 [
   {
-    "name": "Ultrathink :u",
+    "name": "Claude Code",
+    "text": "Claude Code",
+    "keyword": ":c"
+  },
+  {
+    "name": "Claude Code ;c",
+    "text": "Claude Code",
+    "keyword": ";c"
+  },
+  {
+    "name": "ultrathink",
     "text": "ultrathink",
     "keyword": ":u"
   },
   {
-    "name": "Ultrathink :U",
+    "name": "ultrathink :U",
     "text": "ultrathink",
     "keyword": ":U"
   },
   {
-    "name": "Ultrathink ;u",
+    "name": "ultrathink ;u",
     "text": "ultrathink",
     "keyword": ";u"
   },
   {
-    "name": "Ultrathink ;U",
+    "name": "ultrathink ;U",
     "text": "ultrathink",
     "keyword": ";U"
-  },    
+  },
   {
     "name": "Date",
     "text": "{date:YYYY-MM-DD}",

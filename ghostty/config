@@ -11,16 +11,19 @@
 # フォント設定
 # ========================================
 
-# Nerd Fontを使用（アイコン表示に対応）
+# フォントフォールバックチェーン（上から順に適用）
 font-family = "JetBrains Mono"
+font-family = "Hiragino Sans"
 
-# 日本語フォント（濁点・半濁点の表示改善）
-font-family-cjk = "Hiragino Sans"
+font-size = 14
+
+# 合字設定（dligを無効化: 「ます」→「〼」問題の対策）
+font-feature = calt
+font-feature = liga
+font-feature = -dlig
 
 # Unicode文字幅の処理（日本語対応）
 grapheme-width-method = unicode
-font-size = 14
-font-feature = calt, liga, dlig
 
 # ========================================
 # テーマ設定

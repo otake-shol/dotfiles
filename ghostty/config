@@ -13,12 +13,6 @@
 
 # Nerd Fontを使用（アイコン表示に対応）
 font-family = "JetBrains Mono"
-
-# 日本語フォント（濁点・半濁点の表示改善）
-font-family-cjk = "Hiragino Sans"
-
-# Unicode文字幅の処理（日本語対応）
-grapheme-width-method = unicode
 font-size = 14
 font-feature = calt, liga, dlig
 

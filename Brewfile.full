@@ -1,4 +1,5 @@
 tap "heroku/brew"
+tap "homebrew/cask-versions"
 tap "homebrew/services"
 tap "pivotal/tap"
 # Companion library to apr, the Apache Portable Runtime library
@@ -29,12 +30,20 @@ brew "php"
 brew "composer"
 # Apjanke's fork of the classic cowsay project
 brew "cowsay"
+# Load/unload environment variables based on $PWD
+brew "direnv"
+# Modern, maintained replacement for ls
+brew "eza"
+# Simple, fast and user-friendly alternative to find
+brew "fd"
 # Monitor a directory for changes and run a shell command
 brew "fswatch"
 # Command-line fuzzy finder written in Go
 brew "fzf"
 # GitHub command-line tool
 brew "gh"
+# Syntax-highlighting pager for git and diff output
+brew "git-delta"
 # Prevents you from committing sensitive information to a git repo
 brew "git-secrets"
 # Asynchronous event library
@@ -55,6 +64,8 @@ brew "libfido2"
 brew "maven"
 # Open source relational database management system
 brew "mysql"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
 # Text interface for Git repositories
 brew "tig"
 # Command-line and local web note-taking, bookmarking, and archiving
@@ -78,7 +89,7 @@ brew "perl"
 # Pinentry for GPG on Mac
 brew "pinentry-mac"
 # Object-relational database system
-brew "postgresql@14", restart_service: :changed
+brew "postgresql@14"
 # Pretty, minimal and fast ZSH prompt
 brew "pure"
 # Python version management
@@ -107,6 +118,8 @@ brew "tfenv"
 brew "tmux"
 # Implementation of Java Servlet and JavaServer Pages
 brew "tomcat"
+# CLI tool that moves files or folder to the trash
+brew "trash"
 # File synchronization tool
 brew "unison"
 # Vi 'workalike' with many additional features
@@ -122,10 +135,12 @@ brew "heroku/brew/heroku"
 brew "pivotal/tap/springboot"
 # Enable Windows-like alt-tab
 cask "alt-tab"
+# Open source IDE for exploring and testing APIs
+cask "bruno"
 # Anthropic's official Claude AI desktop app
 cask "claude"
-# Screen capturing tool
-cask "cleanshot"
+# Universal database tool and SQL client
+cask "dbeaver-community"
 cask "font-hack-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
 # Terminal emulator that uses platform-native UI and GPU acceleration
@@ -136,5 +151,4 @@ cask "jordanbaird-ice"
 cask "multipass"
 # Reverse proxy, secure introspectable tunnels to localhost
 cask "ngrok"
-cask "sequel-pro-nightly"
 go "golang.org/x/tools/gopls"

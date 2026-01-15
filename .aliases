@@ -35,9 +35,30 @@ alias fd="fd --hidden --exclude .git"  # 隠しファイル含む
 alias fdi="fd -I"                      # gitignore無視して検索
 
 # 安全な削除・コピー
-alias rm="rm -i"
 alias cp="cp -i"
 alias mv="mv -i"
+
+# rm -rf 保護機能（確認プロンプト表示）
+rm() {
+  if [[ "$*" =~ "-rf" ]] || [[ "$*" =~ "-fr" ]]; then
+    echo "⚠️  rm -rf を実行しようとしています:"
+    echo "   rm $@"
+    echo ""
+    read "confirm?本当に実行しますか？ [y/N]: "
+    if [[ "$confirm" =~ ^[Yy]$ ]]; then
+      command rm "$@"
+    else
+      echo "キャンセルしました"
+      return 1
+    fi
+  else
+    command rm -i "$@"
+  fi
+}
+
+# trash - ゴミ箱に移動（復元可能な安全な削除）
+alias del="trash"
+alias tp="trash -F"  # Finderのゴミ箱に移動
 
 # ========================================
 # Claude

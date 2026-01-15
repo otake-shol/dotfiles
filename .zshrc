@@ -45,6 +45,9 @@ source /Users/otkshol/.docker/init-zsh.sh || true
 # Antigravity
 export PATH="/Users/otkshol/.antigravity/antigravity/bin:$PATH"
 
+# trash command (safe delete)
+export PATH="/usr/local/opt/trash/bin:$PATH"
+
 # Local environment
 . "$HOME/.local/bin/env"
 

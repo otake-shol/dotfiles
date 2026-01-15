@@ -1,6 +1,6 @@
 # dotfiles
 
-AI駆動開発環境に最適化された個人用設定ファイル
+macOS用の個人設定ファイル
 
 ## 特徴
 
@@ -25,20 +25,30 @@ cd ~/dotfiles && bash bootstrap.sh
 | `nvim/` | Neovim設定 |
 | `tmux/` | tmux設定 |
 | `ghostty/` | Ghosttyターミナル |
-| `git/`, `gh/` | Git/GitHub CLI設定 |
+| `git/`, `gh/` | Git/GitHub CLI設定、コミット/PRテンプレート |
 | `bat/` | bat設定 |
 | `raycast/` | Raycastスクリプト |
 | `antigravity/` | Antigravity設定 |
 | `browser-extensions/` | ブラウザ拡張機能リスト |
 | `scripts/` | ユーティリティスクリプト |
+| `templates/` | 仕様・ドキュメントテンプレート |
+| `espanso/` | テキスト展開（AIプロンプトスニペット） |
 
 ## ドキュメント
 
+### AI駆動開発（推奨）
+| ファイル | 内容 |
+|---------|------|
+| [AI-DRIVEN-DEV-GUIDE.md](docs/AI-DRIVEN-DEV-GUIDE.md) | AI駆動開発環境 完全ガイド |
+| [SPEC-DRIVEN-DEV.md](docs/SPEC-DRIVEN-DEV.md) | 仕様駆動開発ガイド |
+| [AI-PROMPTS.md](docs/AI-PROMPTS.md) | AIプロンプトテンプレート集 |
+| [mcp-servers-guide.md](docs/mcp-servers-guide.md) | MCPサーバー設定ガイド |
+
+### セットアップ・ツール
 | ファイル | 内容 |
 |---------|------|
 | [SETUP.md](docs/SETUP.md) | 詳細セットアップ手順 |
 | [APPS.md](docs/APPS.md) | アプリケーション一覧 |
-| [mcp-servers-guide.md](docs/mcp-servers-guide.md) | MCPサーバー設定ガイド |
 | [BROWSER_EXTENSIONS.md](docs/BROWSER_EXTENSIONS.md) | ブラウザ拡張機能 |
 | [DOTFILES_MANAGER.md](docs/DOTFILES_MANAGER.md) | dotfiles管理ツール比較 |
 | [antigravity-extensions.md](docs/antigravity-extensions.md) | Antigravity拡張機能ガイド |

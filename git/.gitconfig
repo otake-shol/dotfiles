@@ -4,6 +4,8 @@
 [core]
 	autocrlf = input
 	pager = delta
+[commit]
+	template = ~/dotfiles/git/commit-template.txt
 [interactive]
 	diffFilter = delta --color-only
 [delta]

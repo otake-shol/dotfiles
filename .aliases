@@ -142,6 +142,12 @@ alias localip="ipconfig getifaddr en0"
 alias ports="lsof -i -P | grep LISTEN"
 
 # ========================================
+# zoxide（高速ディレクトリジャンプ）
+# ========================================
+alias j="z"                           # ディレクトリジャンプ
+alias ji="zi"                         # インタラクティブ選択
+
+# ========================================
 # クイックアクセス
 # ========================================
 alias dots="cd ~/dotfiles"
@@ -161,6 +167,24 @@ alias bathelp="bat --help"           # batのヘルプ
 # ファイルプレビュー (fzf + bat)
 alias fp="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
 alias fpe="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' | xargs -r nvim"
+
+# ========================================
+# AI駆動開発ツール
+# ========================================
+
+# ドキュメント閲覧
+alias md="glow"                        # マークダウン表示
+alias mdp="glow -p"                    # ページャーモード
+
+# ファイル監視・自動実行（TDD用）
+alias watch="watchexec"
+alias watchtest="watchexec -e ts,js,py 'npm test'"
+
+# コード統計
+alias loc="tokei"                      # Lines of Code
+
+# HTTPクライアント
+alias http="https"                     # HTTPie（HTTPS優先）
 
 # ========================================
 # エイリアス管理

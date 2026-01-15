@@ -63,3 +63,6 @@ export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
 
 # direnv - ディレクトリ別環境変数
 eval "$(direnv hook zsh)"
+
+# zoxide - 高速ディレクトリジャンプ
+eval "$(zoxide init zsh)"

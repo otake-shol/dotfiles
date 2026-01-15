@@ -40,6 +40,14 @@ brew "wget"            # ダウンローダー
 brew "jq"              # JSON処理ツール
 brew "yq"              # YAML/TOML処理ツール
 
+# AI駆動開発向けユーティリティ
+brew "glow"            # マークダウンレンダラー（ドキュメント閲覧）
+brew "tldr"            # manページの簡潔版
+brew "httpie"          # モダンHTTPクライアント（API開発）
+brew "watchexec"       # ファイル監視・自動実行（TDD）
+brew "tokei"           # コード統計（プロジェクト分析）
+brew "lefthook"        # 高速Git hooks管理
+
 # セキュリティ
 brew "gnupg"           # GPG暗号化
 
@@ -56,6 +64,7 @@ cask "ghostty"         # 高速でモダンなターミナル
 # ユーティリティ
 cask "alt-tab"         # Windows風のタスクスイッチャー
 cask "cleanshot"       # スクリーンショット・画面録画
+cask "espanso"         # テキスト展開（プロンプトスニペット管理）
 cask "homerow"         # キーボードショートカット操作
 cask "jordanbaird-ice" # メニューバー管理
 cask "raycast"         # 生産性向上ランチャー

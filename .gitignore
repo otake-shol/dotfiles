@@ -19,3 +19,6 @@ raycast/snippets.local.json
 
 # Firebase debug logs
 firebase-debug.log
+
+# Playwright MCP screenshots/artifacts
+.playwright-mcp/

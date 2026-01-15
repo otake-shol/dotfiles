@@ -92,6 +92,8 @@ ln -sf ~/dotfiles/.claude/CLAUDE.md ~/.claude/CLAUDE.md
 ln -sf ~/dotfiles/.claude/settings.json ~/.claude/settings.json
 ln -sf ~/dotfiles/.claude/agents ~/.claude/agents
 ln -sf ~/dotfiles/.claude/plugins ~/.claude/plugins
+ln -sf ~/dotfiles/.claude/hooks ~/.claude/hooks
+ln -sf ~/dotfiles/.claude/commands ~/.claude/commands
 echo -e "${GREEN}✓ Claude Code設定をリンクしました${NC}"
 
 # gh (GitHub CLI)
@@ -112,6 +114,16 @@ echo -e "${GREEN}✓ tmux設定をリンクしました${NC}"
 mkdir -p ~/.config/bat
 ln -sf ~/dotfiles/bat/.config/bat/config ~/.config/bat/config
 echo -e "${GREEN}✓ bat設定をリンクしました${NC}"
+
+# espanso
+ESPANSO_CONFIG_DIR="$HOME/Library/Application Support/espanso"
+if command -v espanso &> /dev/null || [ -d "$ESPANSO_CONFIG_DIR" ]; then
+    mkdir -p "$ESPANSO_CONFIG_DIR/match"
+    ln -sf ~/dotfiles/espanso/match/ai-prompts.yml "$ESPANSO_CONFIG_DIR/match/ai-prompts.yml"
+    echo -e "${GREEN}✓ espanso設定をリンクしました${NC}"
+else
+    echo -e "${YELLOW}⚠ espansoがインストールされていません。スキップします${NC}"
+fi
 
 # antigravity
 ANTIGRAVITY_USER_DIR="$HOME/Library/Application Support/Antigravity/User"

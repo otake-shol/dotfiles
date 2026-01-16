@@ -22,9 +22,13 @@ brew "vim"
 
 # シェル・ターミナル
 brew "tmux"            # ターミナルマルチプレクサ
+brew "zellij"          # モダンなターミナルマルチプレクサ（Rust製）
 brew "fzf"             # ファジーファインダー
 brew "zoxide"          # 高速ディレクトリナビゲーション
 brew "direnv"          # ディレクトリ別環境変数管理
+brew "yazi"            # 高速ターミナルファイルマネージャー
+brew "ffmpegthumbnailer" # 動画サムネイル（yazi依存）
+brew "poppler"         # PDFプレビュー（yazi依存）
 
 # ユーティリティ
 brew "bat"             # catの高機能代替（シンタックスハイライト付き）

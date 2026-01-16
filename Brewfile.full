@@ -36,6 +36,8 @@ brew "direnv"
 brew "eza"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
+# Create thumbnails for your video files
+brew "ffmpegthumbnailer"
 # Monitor a directory for changes and run a shell command
 brew "fswatch"
 # Command-line fuzzy finder written in Go
@@ -88,6 +90,8 @@ brew "pdftk-java"
 brew "perl"
 # Pinentry for GPG on Mac
 brew "pinentry-mac"
+# PDF rendering library (based on the xpdf-3.0 code base)
+brew "poppler"
 # Object-relational database system
 brew "postgresql@14"
 # Pretty, minimal and fast ZSH prompt
@@ -116,6 +120,8 @@ brew "stow"
 brew "tfenv"
 # Terminal multiplexer
 brew "tmux"
+# Modern terminal multiplexer (Rust)
+brew "zellij"
 # Implementation of Java Servlet and JavaServer Pages
 brew "tomcat"
 # CLI tool that moves files or folder to the trash
@@ -126,8 +132,12 @@ brew "unison"
 brew "vim"
 # JavaScript package manager
 brew "yarn", link: false
+# Blazing fast terminal file manager written in Rust, based on async I/O
+brew "yazi"
 # Process YAML, JSON, XML, CSV and properties documents from the CLI
 brew "yq"
+# Pluggable terminal workspace, with terminal multiplexer as the base feature
+brew "zellij"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
 # Everything you need to get started with Heroku
@@ -151,4 +161,3 @@ cask "jordanbaird-ice"
 cask "multipass"
 # Reverse proxy, secure introspectable tunnels to localhost
 cask "ngrok"
-go "golang.org/x/tools/gopls"

@@ -335,6 +335,56 @@ zi            # インタラクティブ選択
 
 ---
 
+#### yazi
+
+<img src="https://yazi-rs.github.io/img/logo.png" width="100" alt="yazi">
+
+> 高速ターミナルファイルマネージャー（Rust製）
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install yazi ffmpegthumbnailer poppler` |
+| 公式サイト | https://yazi-rs.github.io/ |
+| GitHub | https://github.com/sxyazi/yazi |
+
+**特徴:**
+- 非同期I/Oによる高速動作
+- 画像・PDF・動画プレビュー（標準で動作）
+- Vimスタイルキーバインド
+- Git統合（変更ファイルの色分け）
+- Luaプラグインシステム
+- マルチタブ対応
+
+**基本キーバインド:**
+
+| キー | 動作 |
+|------|------|
+| `j/k` | 上下移動 |
+| `h/l` | 親/子ディレクトリ |
+| `Enter` | ファイルを開く |
+| `Space` | 選択 |
+| `y` | コピー |
+| `p` | 貼り付け |
+| `d` | 削除（ゴミ箱へ） |
+| `r` | リネーム |
+| `/` | 検索 |
+| `q` | 終了 |
+
+**シェル統合（.zshrc に追加済み）:**
+```bash
+# y コマンドで起動、終了時にディレクトリを移動
+function y() {
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+  yazi "$@" --cwd-file="$tmp"
+  if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    builtin cd -- "$cwd"
+  fi
+  rm -f -- "$tmp"
+}
+```
+
+---
+
 #### bat
 
 <img src="https://camo.githubusercontent.com/7b7c397acc5b91b4c4cf7756015185fe3c5f700f70d256a212de51294a0cf673/68747470733a2f2f696d6775722e636f6d2f724773646e44652e706e67" width="600" alt="bat">

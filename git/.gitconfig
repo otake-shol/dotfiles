@@ -12,8 +12,6 @@
 	navigate = true
 	side-by-side = true
 	line-numbers = true
-[merge]
-	conflictstyle = zdiff3
 [init]
 	templatedir = ~/.git-templates/git-secrets
 [secrets]

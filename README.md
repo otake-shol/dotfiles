@@ -39,20 +39,31 @@ cd ~/dotfiles && bash bootstrap.sh
 ### AI駆動開発（推奨）
 | ファイル | 内容 |
 |---------|------|
-| [AI-DRIVEN-DEV-GUIDE.md](docs/AI-DRIVEN-DEV-GUIDE.md) | AI駆動開発環境 完全ガイド |
-| [SPEC-DRIVEN-DEV.md](docs/SPEC-DRIVEN-DEV.md) | 仕様駆動開発ガイド |
-| [AI-PROMPTS.md](docs/AI-PROMPTS.md) | AIプロンプトテンプレート集 |
-| [mcp-servers-guide.md](docs/mcp-servers-guide.md) | MCPサーバー設定ガイド |
+| [AI-DRIVEN-DEV-GUIDE.md](docs/ai-workflow/AI-DRIVEN-DEV-GUIDE.md) | AI駆動開発環境 完全ガイド |
+| [SPEC-DRIVEN-DEV.md](docs/ai-workflow/SPEC-DRIVEN-DEV.md) | 仕様駆動開発ガイド |
+| [AI-PROMPTS.md](docs/ai-workflow/AI-PROMPTS.md) | AIプロンプトテンプレート集 |
+
+### ツール連携
+| ファイル | 内容 |
+|---------|------|
+| [mcp-servers-guide.md](docs/integrations/mcp-servers-guide.md) | MCPサーバー設定ガイド |
+| [claude-code-jira-guide.md](docs/integrations/claude-code-jira-guide.md) | Claude Code × Jira連携 |
+| [confluence-requirements-doc-automation.md](docs/integrations/confluence-requirements-doc-automation.md) | Confluence要件書自動化 |
+| [slack-jira-workflow-guide.md](docs/integrations/slack-jira-workflow-guide.md) | Slack-Jiraワークフロー |
 
 ### セットアップ・ツール
 | ファイル | 内容 |
 |---------|------|
-| [SETUP.md](docs/SETUP.md) | 詳細セットアップ手順 |
-| [APPS.md](docs/APPS.md) | アプリケーション一覧 |
-| [BROWSER_EXTENSIONS.md](docs/BROWSER_EXTENSIONS.md) | ブラウザ拡張機能 |
-| [DOTFILES_MANAGER.md](docs/DOTFILES_MANAGER.md) | dotfiles管理ツール比較 |
-| [antigravity-extensions.md](docs/antigravity-extensions.md) | Antigravity拡張機能ガイド |
-| [vim-mastery-roadmap.md](docs/vim-mastery-roadmap.md) | Vim習得ロードマップ |
+| [SETUP.md](docs/setup/SETUP.md) | 詳細セットアップ手順 |
+| [APPS.md](docs/setup/APPS.md) | アプリケーション一覧 |
+| [DOTFILES_MANAGER.md](docs/setup/DOTFILES_MANAGER.md) | dotfiles管理ツール比較 |
+| [BROWSER_EXTENSIONS.md](docs/tools/BROWSER_EXTENSIONS.md) | ブラウザ拡張機能 |
+| [antigravity-extensions.md](docs/tools/antigravity-extensions.md) | Antigravity拡張機能ガイド |
+
+### 学習
+| ファイル | 内容 |
+|---------|------|
+| [vim-mastery-roadmap.md](docs/learning/vim-mastery-roadmap.md) | Vim習得ロードマップ |
 
 ## 参考
 

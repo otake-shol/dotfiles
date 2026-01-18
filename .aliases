@@ -13,6 +13,7 @@ alias CD="cd"
 # ls関連 (eza)
 alias ls="eza"                    # モダンなls
 alias ll="eza -l --git"           # 詳細表示+Git状態
+alias っl="eza -l --git"          # 日本語入力時のtypo対策
 alias la="eza -la --git"          # 隠しファイル含む
 alias l="eza -1"                  # 1行1ファイル
 alias lsd="eza -lD"               # ディレクトリのみ

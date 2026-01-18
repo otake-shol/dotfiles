@@ -66,7 +66,9 @@ brew "awscli"          # AWS CLI（Amazon Q含む）
 cask "ghostty"         # 高速でモダンなターミナル
 
 # ユーティリティ
+cask "1password"       # パスワードマネージャー
 cask "alt-tab"         # Windows風のタスクスイッチャー
+cask "appcleaner"      # アプリ完全削除
 cask "cleanshot"       # スクリーンショット・画面録画
 cask "espanso"         # テキスト展開（プロンプトスニペット管理）
 cask "homerow"         # キーボードショートカット操作

@@ -20,7 +20,7 @@ brew bundle --file=~/dotfiles/Brewfile.full
 
 #### Ghostty
 
-<img src="https://ghostty.org/og-image.png" width="600" alt="Ghostty">
+<img src="https://ghostty.org/social-share-card.jpg" width="600" alt="Ghostty">
 
 > GPU アクセラレーション対応の高速モダンターミナル
 
@@ -42,13 +42,14 @@ brew bundle --file=~/dotfiles/Brewfile.full
 
 #### Raycast
 
-<img src="https://www.raycast.com/og-image.png" width="600" alt="Raycast">
+<img src="https://www.raycast.com/opengraph-image-pwu6ef.png" width="600" alt="Raycast">
 
 > Spotlight を超える生産性ランチャー
 
 | 項目 | 内容 |
 |------|------|
 | インストール | `brew install --cask raycast` |
+| 設定ファイル | `~/dotfiles/raycast/` |
 | 公式サイト | https://www.raycast.com/ |
 
 **特徴:**
@@ -56,6 +57,22 @@ brew bundle --file=~/dotfiles/Brewfile.full
 - スニペット・クリップボード履歴
 - 拡張機能エコシステム
 - ウィンドウ管理・計算機
+
+**自作 Script Commands:**
+
+macOS日本語入力のユーザー辞書を管理するスクリプト。
+
+| コマンド | 説明 |
+|---------|------|
+| ユーザー辞書に登録 | 読みと単語を入力して辞書に登録 |
+| ユーザー辞書一覧 | 登録済み単語を一覧表示 |
+| ユーザー辞書から削除 | 読みを入力して辞書から削除 |
+
+**セットアップ:**
+```bash
+# Raycast で "Import Script Command" を実行し、以下を選択
+~/dotfiles/raycast/scripts/
+```
 
 ---
 
@@ -79,7 +96,7 @@ brew bundle --file=~/dotfiles/Brewfile.full
 
 #### Homerow
 
-<img src="https://www.homerow.app/homerow-og-image.png" width="600" alt="Homerow">
+<img src="https://www.homerow.app/app-icon.png" width="120" alt="Homerow">
 
 > キーボードだけで画面上のすべてを操作
 
@@ -129,11 +146,45 @@ brew bundle --file=~/dotfiles/Brewfile.full
 
 ---
 
+#### 1Password
+
+> 安全で使いやすいパスワードマネージャー
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install --cask 1password` |
+| 公式サイト | https://1password.com/ |
+
+**特徴:**
+- パスワードの安全な保存・自動入力
+- 二要素認証のサポート
+- 家族・チームでの共有機能
+- ブラウザ拡張機能
+
+---
+
+#### AppCleaner
+
+> アプリの完全アンインストールツール
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install --cask appcleaner` |
+| 公式サイト | https://freemacsoft.net/appcleaner/ |
+
+**特徴:**
+- アプリの関連ファイルも含めて完全削除
+- ドラッグ&ドロップで簡単操作
+- 軽量で高速
+- 無料
+
+---
+
 ### ブラウザ
 
 #### Arc
 
-<img src="https://arc.net/og-image.png" width="600" alt="Arc">
+<img src="https://arc.net/og.png" width="600" alt="Arc">
 
 > 次世代のブラウザ体験
 
@@ -155,7 +206,7 @@ brew bundle --file=~/dotfiles/Brewfile.full
 
 #### Spark
 
-<img src="https://sparkmailapp.com/images/share/spark-share.png" width="600" alt="Spark">
+<img src="https://cdn-rdstaticassets.readdle.com/spark/img/spark3/index/banner-device.png" width="600" alt="Spark">
 
 > スマートで高速なメールクライアント
 
@@ -174,7 +225,7 @@ brew bundle --file=~/dotfiles/Brewfile.full
 
 #### TickTick
 
-<img src="https://www.ticktick.com/static/img/og-image.png" width="600" alt="TickTick">
+<img src="https://d107mjio2rjf74.cloudfront.net/sites/res/newHome/tick/header1.jpg" width="600" alt="TickTick">
 
 > オールインワンのタスク管理
 
@@ -211,7 +262,7 @@ brew bundle --file=~/dotfiles/Brewfile.full
 
 #### Figma
 
-<img src="https://cdn.sanity.io/images/599r6htc/localized/b58bb1fc1c5e5b099e42635da4c47f5fc8c90e56-2400x1260.png" width="600" alt="Figma">
+<img src="https://cdn.sanity.io/images/599r6htc/regionalized/1adfa5a99040c80af7b4b5e3e2cf845315ea2367-2400x1260.png?w=1200&q=70&fit=max&auto=format" width="600" alt="Figma">
 
 > コラボレーティブデザインツール
 
@@ -337,7 +388,7 @@ zi            # インタラクティブ選択
 
 #### yazi
 
-<img src="https://yazi-rs.github.io/img/logo.png" width="100" alt="yazi">
+<img src="https://raw.githubusercontent.com/sxyazi/yazi/main/assets/logo.png" width="100" alt="yazi">
 
 > 高速ターミナルファイルマネージャー（Rust製）
 
@@ -387,7 +438,7 @@ function y() {
 
 #### bat
 
-<img src="https://camo.githubusercontent.com/7b7c397acc5b91b4c4cf7756015185fe3c5f700f70d256a212de51294a0cf673/68747470733a2f2f696d6775722e636f6d2f724773646e44652e706e67" width="600" alt="bat">
+<img src="https://imgur.com/rGsdnDe.png" width="600" alt="bat">
 
 > シンタックスハイライト付き cat
 

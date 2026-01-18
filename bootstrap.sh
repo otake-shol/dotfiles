@@ -169,6 +169,11 @@ fi
 # ========================================
 echo -e "\n${YELLOW}[5/5] 追加設定...${NC}"
 
+# macOS defaults設定
+if [ -f ~/dotfiles/scripts/macos-defaults.sh ]; then
+    bash ~/dotfiles/scripts/macos-defaults.sh
+fi
+
 # git-secrets設定
 if command -v git-secrets &> /dev/null; then
     git secrets --install ~/.git-templates/git-secrets 2>/dev/null || true

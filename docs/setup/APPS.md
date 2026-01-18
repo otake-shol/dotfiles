@@ -114,6 +114,8 @@ macOS日本語入力のユーザー辞書を管理するスクリプト。
 
 #### Ice
 
+<img src="https://github.com/jordanbaird/Ice/raw/main/Ice/Assets.xcassets/AppIcon.appiconset/icon_256x256@2x.png" width="120" alt="Ice">
+
 > メニューバーアイコンの管理ツール
 
 | 項目 | 内容 |
@@ -129,6 +131,8 @@ macOS日本語入力のユーザー辞書を管理するスクリプト。
 ---
 
 #### CleanShot X
+
+<img src="https://cleanshot.com/img/ogimage.png" width="600" alt="CleanShot X">
 
 > 高機能スクリーンショット・画面録画ツール
 
@@ -147,6 +151,8 @@ macOS日本語入力のユーザー辞書を管理するスクリプト。
 ---
 
 #### 1Password
+
+<img src="https://images.ctfassets.net/2h488pz7kgfv/36K8vzztKT56Ci2LHvAzEK/f015044f6a373996bfa5d27df650cf70/homepage-open-graph-graphic-1200x630__1_.webp" width="600" alt="1Password">
 
 > 安全で使いやすいパスワードマネージャー
 
@@ -283,6 +289,8 @@ macOS日本語入力のユーザー辞書を管理するスクリプト。
 
 #### Claude
 
+<img src="https://cdn.prod.website-files.com/67ce28cfec624e2b733f8a52/68309ab48369f7ad9b4a40e1_open-graph.jpg" width="600" alt="Claude">
+
 > AI コーディングアシスタント
 
 | 項目 | 内容 |
@@ -294,6 +302,8 @@ macOS日本語入力のユーザー辞書を管理するスクリプト。
 ---
 
 #### DBeaver Community
+
+<img src="https://dbeaver.io/wp-content/uploads/2015/09/beaver-head.png" width="120" alt="DBeaver">
 
 > ユニバーサルデータベース GUI クライアント
 
@@ -311,6 +321,8 @@ macOS日本語入力のユーザー辞書を管理するスクリプト。
 ---
 
 #### Bruno
+
+<img src="https://raw.githubusercontent.com/usebruno/bruno/main/assets/images/landing-2.png" width="600" alt="Bruno">
 
 > オープンソース API クライアント
 
@@ -369,6 +381,8 @@ macOS日本語入力のユーザー辞書を管理するスクリプト。
 ---
 
 #### zoxide
+
+<img src="https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/contrib/tutorial.webp" width="600" alt="zoxide">
 
 > スマートな cd コマンド
 
@@ -457,6 +471,8 @@ function y() {
 
 #### tmux
 
+<img src="https://raw.githubusercontent.com/tmux/tmux/master/logo/tmux-logo-medium.png" width="200" alt="tmux">
+
 > ターミナルマルチプレクサ
 
 | 項目 | 内容 |
@@ -493,6 +509,8 @@ function y() {
 
 #### eza
 
+<img src="https://raw.githubusercontent.com/eza-community/eza/main/docs/images/screenshots.png" width="600" alt="eza">
+
 > ls の高機能代替
 
 | 項目 | 内容 |
@@ -509,6 +527,8 @@ function y() {
 ---
 
 #### fd
+
+<img src="https://raw.githubusercontent.com/sharkdp/fd/master/doc/screencast.svg" width="600" alt="fd">
 
 > find の高速代替
 
@@ -595,6 +615,8 @@ function y() {
 ### クラウド / AWS
 
 #### AWS CLI
+
+<img src="https://a0.awsstatic.com/libra-css/images/logos/aws_logo_smile_1200x630.png" width="300" alt="AWS CLI">
 
 > Amazon Web Services 公式 CLI
 

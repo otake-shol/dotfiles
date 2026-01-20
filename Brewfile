@@ -52,6 +52,13 @@ brew "watchexec"       # ファイル監視・自動実行（TDD）
 brew "tokei"           # コード統計（プロジェクト分析）
 brew "lefthook"        # 高速Git hooks管理
 
+# モダンCLIツール（従来コマンドの高機能代替）
+brew "dust"            # du代替（ディスク使用量可視化）
+brew "procs"           # ps代替（プロセス表示）
+brew "sd"              # sed代替（直感的な正規表現置換）
+brew "hyperfine"       # コマンドベンチマーク
+brew "git-absorb"      # fixup commitの自動化
+
 # セキュリティ
 brew "gnupg"           # GPG暗号化
 

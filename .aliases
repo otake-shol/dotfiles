@@ -154,9 +154,16 @@ alias ohmyzsh="vim ~/.oh-my-zsh"
 alias path='echo -e ${PATH//:/\\n}'
 alias his="history"
 alias df="df -h"
-alias du="du -h"
-alias ps="ps aux"
 alias top="top -o cpu"
+
+# モダンCLIツール（従来コマンドの高機能代替）
+alias du="dust"                    # ディスク使用量可視化
+alias dui="dust -r"                # 逆順（小さい順）
+alias ps="procs"                   # プロセス表示
+alias pst="procs --tree"           # プロセスツリー
+alias psg="procs --or"             # プロセス検索
+alias sed="sd"                     # 正規表現置換
+alias bench="hyperfine"            # コマンドベンチマーク
 
 # ネットワーク
 alias myip="curl ifconfig.me"

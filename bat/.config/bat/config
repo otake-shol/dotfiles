@@ -1,8 +1,8 @@
 # bat configuration
 # https://github.com/sharkdp/bat
 
-# Theme (Catppuccin Mocha - ダークテーマ、目に優しい)
---theme="Catppuccin Mocha"
+# Theme (TokyoNight - 他ツールと統一)
+--theme="tokyonight_night"
 
 # 表示スタイル
 # numbers: 行番号表示

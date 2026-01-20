@@ -4,6 +4,11 @@
 [core]
 	autocrlf = input
 	pager = delta
+	excludesfile = ~/.gitignore_global
+	fsmonitor = true
+	untrackedCache = true
+[feature]
+	manyFiles = true
 [commit]
 	template = ~/dotfiles/git/commit-template.txt
 [interactive]

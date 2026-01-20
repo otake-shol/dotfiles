@@ -1,0 +1,52 @@
+# EditorConfig - エディタ間で一貫したフォーマット設定
+# https://editorconfig.org
+
+root = true
+
+# ===========================================
+# デフォルト設定
+# ===========================================
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# ===========================================
+# 言語別設定
+# ===========================================
+
+# Python, Java - 4スペース
+[*.{py,java}]
+indent_size = 4
+
+# Go - タブ
+[*.go]
+indent_style = tab
+indent_size = 4
+
+# Makefile - タブ必須
+[Makefile]
+indent_style = tab
+
+# Markdown - 末尾空白を保持（改行に使用）
+[*.md]
+trim_trailing_whitespace = false
+
+# YAML - 2スペース
+[*.{yml,yaml}]
+indent_size = 2
+
+# JSON - 2スペース
+[*.json]
+indent_size = 2
+
+# Shell scripts
+[*.sh]
+indent_size = 4
+
+# Lua (Neovim設定等)
+[*.lua]
+indent_size = 2

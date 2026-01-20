@@ -1,0 +1,6 @@
+# asdf バージョン管理
+# 使用方法: asdf install でインストール
+# 参照: https://asdf-vm.com/
+
+nodejs 20.11.0
+python 3.12.1

@@ -76,9 +76,26 @@ ln -sf ~/dotfiles/.zshrc ~/.zshrc
 ln -sf ~/dotfiles/.aliases ~/.aliases
 echo -e "${GREEN}✓ zsh設定をリンクしました${NC}"
 
+# editorconfig / tool-versions
+ln -sf ~/dotfiles/.editorconfig ~/.editorconfig
+ln -sf ~/dotfiles/.tool-versions ~/.tool-versions
+echo -e "${GREEN}✓ editorconfig/tool-versionsをリンクしました${NC}"
+
 # git
 ln -sf ~/dotfiles/git/.gitconfig ~/.gitconfig
+ln -sf ~/dotfiles/git/.gitignore_global ~/.gitignore_global
 echo -e "${GREEN}✓ git設定をリンクしました${NC}"
+
+# ssh
+mkdir -p ~/.ssh/sockets
+chmod 700 ~/.ssh
+if [ ! -f ~/.ssh/config ]; then
+    ln -sf ~/dotfiles/ssh/config ~/.ssh/config
+    chmod 600 ~/.ssh/config
+    echo -e "${GREEN}✓ ssh設定をリンクしました${NC}"
+else
+    echo -e "${YELLOW}⚠ ssh設定は既存のため、スキップしました${NC}"
+fi
 
 # ghostty
 mkdir -p ~/.config/ghostty
@@ -189,6 +206,16 @@ if [ ! -d "$TOKYONIGHT_DIR" ]; then
     echo -e "${GREEN}✓ Neovim TokyoNightテーマをインストールしました${NC}"
 else
     echo -e "${GREEN}✓ Neovim TokyoNightテーマはインストール済みです${NC}"
+fi
+
+# TPM（tmuxプラグインマネージャー）
+TPM_DIR="$HOME/.tmux/plugins/tpm"
+if [ ! -d "$TPM_DIR" ]; then
+    git clone --depth=1 https://github.com/tmux-plugins/tpm "$TPM_DIR"
+    echo -e "${GREEN}✓ TPM（tmuxプラグインマネージャー）をインストールしました${NC}"
+    echo -e "${YELLOW}  ※ tmux起動後に prefix + I でプラグインをインストールしてください${NC}"
+else
+    echo -e "${GREEN}✓ TPMはインストール済みです${NC}"
 fi
 
 # ========================================

@@ -1,0 +1,56 @@
+# SSH設定 - セキュアなデフォルト
+# シンボリックリンク: ln -sf ~/dotfiles/ssh/config ~/.ssh/config
+
+# ===========================================
+# 1Password SSH Agent（使用する場合はコメント解除）
+# ===========================================
+# Host *
+#     IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+
+# ===========================================
+# グローバル設定
+# ===========================================
+Host *
+    # macOS Keychain連携（パスフレーズを記憶）
+    AddKeysToAgent yes
+    UseKeychain yes
+
+    # 明示的に指定した鍵のみ使用
+    IdentitiesOnly yes
+
+    # セキュリティ強化
+    HashKnownHosts yes
+
+    # 接続維持（60秒ごとにKeep-Alive）
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+
+    # 接続の多重化（高速化）
+    ControlMaster auto
+    ControlPath ~/.ssh/sockets/%r@%h-%p
+    ControlPersist 600
+
+# ===========================================
+# GitHub
+# ===========================================
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519
+
+# ===========================================
+# GitLab（必要に応じてコメント解除）
+# ===========================================
+# Host gitlab.com
+#     HostName gitlab.com
+#     User git
+#     IdentityFile ~/.ssh/id_ed25519
+
+# ===========================================
+# カスタムホスト（テンプレート）
+# ===========================================
+# Host myserver
+#     HostName example.com
+#     User username
+#     Port 22
+#     IdentityFile ~/.ssh/id_ed25519_custom

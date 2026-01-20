@@ -23,9 +23,11 @@ cd ~/dotfiles && bash bootstrap.sh
 | `Brewfile` / `Brewfile.full` | 必須/全アプリ |
 | `.claude/` | Claude Code（MCPサーバー等） |
 | `nvim/` | Neovim設定 |
-| `tmux/` | tmux設定 |
+| `tmux/` | tmux設定（メイン） |
+| `zellij/` | zellij設定（サブ/実験用） |
 | `ghostty/` | Ghosttyターミナル |
 | `git/`, `gh/` | Git/GitHub CLI設定、コミット/PRテンプレート |
+| `ssh/` | SSH設定 |
 | `bat/` | bat設定 |
 | `raycast/` | Raycastスクリプト |
 | `antigravity/` | Antigravity設定 |
@@ -33,6 +35,27 @@ cd ~/dotfiles && bash bootstrap.sh
 | `scripts/` | ユーティリティスクリプト |
 | `templates/` | 仕様・ドキュメントテンプレート |
 | `espanso/` | テキスト展開（AIプロンプトスニペット） |
+
+## テーマ
+
+全ツールで **TokyoNight** テーマを統一使用:
+- Neovim, tmux, Ghostty, bat
+
+## ターミナルマルチプレクサ
+
+| ツール | 用途 |
+|--------|------|
+| **tmux** | メイン使用（セッション保存/復元対応） |
+| **zellij** | サブ/実験用（Rust製、モダンUI） |
+
+## バックアップ
+
+### Raycast設定
+1. Raycast → Settings → Advanced → Export
+2. `~/dotfiles/raycast/` に保存
+
+### 1Password SSH Agent
+SSHキーを1Passwordで管理する場合は `ssh/config` のコメントを解除
 
 ## ドキュメント
 

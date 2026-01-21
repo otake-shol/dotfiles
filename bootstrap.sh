@@ -218,6 +218,33 @@ else
     echo -e "${GREEN}✓ TPMはインストール済みです${NC}"
 fi
 
+# ローカル設定ファイルのセットアップ
+echo -e "\n${YELLOW}ローカル設定ファイルのセットアップ...${NC}"
+
+# .gitconfig.local
+if [ ! -f ~/.gitconfig.local ]; then
+    echo -e "${YELLOW}Git ユーザー情報を設定します${NC}"
+    read -p "Git ユーザー名: " git_name
+    read -p "Git メールアドレス: " git_email
+    cat > ~/.gitconfig.local << EOF
+[user]
+	name = $git_name
+	email = $git_email
+EOF
+    echo -e "${GREEN}✓ ~/.gitconfig.local を作成しました${NC}"
+else
+    echo -e "${GREEN}✓ ~/.gitconfig.local は既存です${NC}"
+fi
+
+# .zshrc.local
+if [ ! -f ~/.zshrc.local ]; then
+    cp ~/dotfiles/.zshrc.local.template ~/.zshrc.local
+    echo -e "${GREEN}✓ ~/.zshrc.local を作成しました（テンプレートからコピー）${NC}"
+    echo -e "${YELLOW}  ※ 必要に応じて ~/.zshrc.local を編集してください${NC}"
+else
+    echo -e "${GREEN}✓ ~/.zshrc.local は既存です${NC}"
+fi
+
 # ========================================
 # 完了
 # ========================================

@@ -1,0 +1,20 @@
+# Git ローカル設定テンプレート
+# このファイルを ~/.gitconfig.local にコピーして編集してください
+#
+# 使用方法:
+#   cp ~/dotfiles/git/.gitconfig.local.template ~/.gitconfig.local
+#   vim ~/.gitconfig.local
+
+[user]
+	name = YOUR_NAME
+	email = YOUR_EMAIL
+
+# GPG署名を使用する場合（オプション）
+# [user]
+# 	signingkey = YOUR_GPG_KEY_ID
+# [commit]
+# 	gpgsign = true
+
+# 会社用の別メールアドレスを使用する場合（オプション）
+# [includeIf "gitdir:~/work/"]
+# 	path = ~/.gitconfig.work

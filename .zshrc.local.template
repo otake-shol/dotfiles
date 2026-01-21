@@ -1,0 +1,32 @@
+# Zsh ローカル設定テンプレート
+# このファイルを ~/.zshrc.local にコピーして編集してください
+#
+# 使用方法:
+#   cp ~/dotfiles/.zshrc.local.template ~/.zshrc.local
+#   vim ~/.zshrc.local
+#
+# 注意: このファイルはGit管理外です。機密情報を安全に保存できます。
+
+# ========================================
+# MCP認証用（Claude Code）
+# ========================================
+# export GITHUB_PERSONAL_ACCESS_TOKEN="ghp_xxxxx"
+# export BRAVE_API_KEY="BSAxxxxx"
+# export SENTRY_AUTH_TOKEN="sntrys_xxxxx"
+
+# ========================================
+# その他のAPI キー
+# ========================================
+# export OPENAI_API_KEY="sk-xxxxx"
+# export ANTHROPIC_API_KEY="sk-ant-xxxxx"
+
+# ========================================
+# 会社固有の設定
+# ========================================
+# export COMPANY_API_ENDPOINT="https://api.company.com"
+# alias vpn="open -a 'Company VPN'"
+
+# ========================================
+# ローカル固有のPATH
+# ========================================
+# export PATH="$HOME/company-tools/bin:$PATH"

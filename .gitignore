@@ -5,6 +5,11 @@
 # Homebrew Bundle lock files
 Brewfile.lock.json
 
+# Local settings (contains personal info / secrets)
+# Note: *.local.template files are tracked (templates for users)
+.gitconfig.local
+.zshrc.local
+
 # Claude Code local settings
 .claude/settings.local.json
 

@@ -1,6 +1,7 @@
-[user]
-	name = otake-shol
-	email = charm.ot.trog@gmail.com
+# ローカル設定（個人情報）を読み込み
+[include]
+	path = ~/.gitconfig.local
+
 [core]
 	autocrlf = input
 	pager = delta

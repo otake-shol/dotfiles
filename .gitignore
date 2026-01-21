@@ -27,3 +27,6 @@ firebase-debug.log
 
 # Playwright MCP screenshots/artifacts
 .playwright-mcp/
+
+# Personal resources (managed in cloud storage)
+docs/resources/

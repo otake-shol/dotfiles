@@ -11,14 +11,70 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
+# ログファイル
+LOG_FILE="$HOME/.dotfiles-setup.log"
+
+# ログ関数
+log() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
+}
+
+# クリーンアップ処理
+cleanup() {
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}エラーが発生しました。ログを確認してください: $LOG_FILE${NC}"
+        log "ERROR: Setup failed"
+    fi
+}
+trap cleanup EXIT
+
+# 冪等なシンボリックリンク作成関数
+safe_link() {
+    local src="$1"
+    local dest="$2"
+
+    if [ -L "$dest" ]; then
+        # 既存のシンボリックリンクを削除
+        rm "$dest"
+    elif [ -e "$dest" ]; then
+        # 既存ファイルをバックアップ
+        mv "$dest" "${dest}.backup.$(date +%Y%m%d%H%M%S)"
+        echo -e "${YELLOW}  バックアップ: ${dest}.backup.*${NC}"
+        log "Backed up: $dest"
+    fi
+
+    ln -sf "$src" "$dest"
+    log "Linked: $src -> $dest"
+}
+
+log "=== Setup started ==="
+
 echo -e "${BLUE}========================================${NC}"
 echo -e "${BLUE}  dotfiles セットアップスクリプト${NC}"
 echo -e "${BLUE}========================================${NC}"
 
 # ========================================
+# 0. Apple Silicon: Rosetta 2確認
+# ========================================
+if [[ $(uname -m) == "arm64" ]]; then
+    echo -e "\n${YELLOW}[0/6] Rosetta 2の確認...${NC}"
+    if ! /usr/bin/pgrep -q oahd; then
+        echo -e "${YELLOW}Rosetta 2をインストールしますか? (一部のx86アプリに必要) (y/n)${NC}"
+        read -r answer
+        if [ "$answer" = "y" ]; then
+            softwareupdate --install-rosetta --agree-to-license
+            echo -e "${GREEN}✓ Rosetta 2をインストールしました${NC}"
+            log "Installed Rosetta 2"
+        fi
+    else
+        echo -e "${GREEN}✓ Rosetta 2はインストール済みです${NC}"
+    fi
+fi
+
+# ========================================
 # 1. Homebrewのインストール確認
 # ========================================
-echo -e "\n${YELLOW}[1/5] Homebrewの確認...${NC}"
+echo -e "\n${YELLOW}[1/6] Homebrewの確認...${NC}"
 if ! command -v brew &> /dev/null; then
     echo -e "${RED}Homebrewがインストールされていません。${NC}"
     echo -e "${YELLOW}Homebrewをインストールしますか? (y/n)${NC}"
@@ -49,7 +105,7 @@ fi
 # ========================================
 # 2. アプリケーションのインストール
 # ========================================
-echo -e "\n${YELLOW}[2/5] アプリケーションのインストール...${NC}"
+echo -e "\n${YELLOW}[2/6] アプリケーションのインストール...${NC}"
 echo -e "${YELLOW}どのBrewfileを使用しますか?${NC}"
 echo -e "  1) Brewfile (必須ツールのみ - 推奨)"
 echo -e "  2) Brewfile.full (全ツール)"
@@ -81,78 +137,79 @@ fi
 # ========================================
 # 3. dotfilesのシンボリックリンク作成
 # ========================================
-echo -e "\n${YELLOW}[3/5] dotfilesのシンボリックリンク作成...${NC}"
+echo -e "\n${YELLOW}[3/6] dotfilesのシンボリックリンク作成...${NC}"
 
 # zsh
-ln -sf ~/dotfiles/.zshrc ~/.zshrc
-ln -sf ~/dotfiles/.aliases ~/.aliases
+safe_link ~/dotfiles/.zshrc ~/.zshrc
+safe_link ~/dotfiles/.aliases ~/.aliases
 echo -e "${GREEN}✓ zsh設定をリンクしました${NC}"
 
 # editorconfig / tool-versions
-ln -sf ~/dotfiles/.editorconfig ~/.editorconfig
-ln -sf ~/dotfiles/.tool-versions ~/.tool-versions
+safe_link ~/dotfiles/.editorconfig ~/.editorconfig
+safe_link ~/dotfiles/.tool-versions ~/.tool-versions
 echo -e "${GREEN}✓ editorconfig/tool-versionsをリンクしました${NC}"
 
 # git
-ln -sf ~/dotfiles/git/.gitconfig ~/.gitconfig
-ln -sf ~/dotfiles/git/.gitignore_global ~/.gitignore_global
+safe_link ~/dotfiles/git/.gitconfig ~/.gitconfig
+safe_link ~/dotfiles/git/.gitignore_global ~/.gitignore_global
 echo -e "${GREEN}✓ git設定をリンクしました${NC}"
 
 # ssh
 mkdir -p ~/.ssh/sockets
 chmod 700 ~/.ssh
-if [ ! -f ~/.ssh/config ]; then
-    ln -sf ~/dotfiles/ssh/config ~/.ssh/config
+if [ ! -f ~/.ssh/config ] || [ -L ~/.ssh/config ]; then
+    safe_link ~/dotfiles/ssh/config ~/.ssh/config
     chmod 600 ~/.ssh/config
     echo -e "${GREEN}✓ ssh設定をリンクしました${NC}"
 else
-    echo -e "${YELLOW}⚠ ssh設定は既存のため、スキップしました${NC}"
+    echo -e "${YELLOW}⚠ ssh設定は既存ファイルのため、スキップしました${NC}"
 fi
 
 # ghostty
 mkdir -p ~/.config/ghostty
-ln -sf ~/dotfiles/ghostty/config ~/.config/ghostty/config
+safe_link ~/dotfiles/ghostty/config ~/.config/ghostty/config
 echo -e "${GREEN}✓ ghostty設定をリンクしました${NC}"
 
 # claude
 mkdir -p ~/.claude
-ln -sf ~/dotfiles/.claude/CLAUDE.md ~/.claude/CLAUDE.md
-ln -sf ~/dotfiles/.claude/settings.json ~/.claude/settings.json
-ln -sf ~/dotfiles/.claude/agents ~/.claude/agents
-ln -sf ~/dotfiles/.claude/plugins ~/.claude/plugins
-ln -sf ~/dotfiles/.claude/hooks ~/.claude/hooks
-ln -sf ~/dotfiles/.claude/commands ~/.claude/commands
+safe_link ~/dotfiles/.claude/CLAUDE.md ~/.claude/CLAUDE.md
+safe_link ~/dotfiles/.claude/settings.json ~/.claude/settings.json
+safe_link ~/dotfiles/.claude/agents ~/.claude/agents
+safe_link ~/dotfiles/.claude/plugins ~/.claude/plugins
+safe_link ~/dotfiles/.claude/hooks ~/.claude/hooks
+safe_link ~/dotfiles/.claude/commands ~/.claude/commands
 echo -e "${GREEN}✓ Claude Code設定をリンクしました${NC}"
 
 # gh (GitHub CLI)
 mkdir -p ~/.config/gh
-ln -sf ~/dotfiles/gh/config.yml ~/.config/gh/config.yml
+safe_link ~/dotfiles/gh/config.yml ~/.config/gh/config.yml
 echo -e "${GREEN}✓ GitHub CLI設定をリンクしました${NC}"
 
 # nvim
 mkdir -p ~/.config/nvim
-ln -sf ~/dotfiles/nvim/.config/nvim/init.lua ~/.config/nvim/init.lua
+mkdir -p ~/.config/nvim/lua
+safe_link ~/dotfiles/nvim/.config/nvim/init.lua ~/.config/nvim/init.lua
 echo -e "${GREEN}✓ Neovim設定をリンクしました${NC}"
 
 # tmux
-ln -sf ~/dotfiles/tmux/.tmux.conf ~/.tmux.conf
+safe_link ~/dotfiles/tmux/.tmux.conf ~/.tmux.conf
 echo -e "${GREEN}✓ tmux設定をリンクしました${NC}"
 
 # bat
 mkdir -p ~/.config/bat
-ln -sf ~/dotfiles/bat/.config/bat/config ~/.config/bat/config
+safe_link ~/dotfiles/bat/.config/bat/config ~/.config/bat/config
 echo -e "${GREEN}✓ bat設定をリンクしました${NC}"
 
 # atuin
 mkdir -p ~/.config/atuin
-ln -sf ~/dotfiles/atuin/.config/atuin/config.toml ~/.config/atuin/config.toml
+safe_link ~/dotfiles/atuin/.config/atuin/config.toml ~/.config/atuin/config.toml
 echo -e "${GREEN}✓ atuin設定をリンクしました${NC}"
 
 # espanso
 ESPANSO_CONFIG_DIR="$HOME/Library/Application Support/espanso"
 if command -v espanso &> /dev/null || [ -d "$ESPANSO_CONFIG_DIR" ]; then
     mkdir -p "$ESPANSO_CONFIG_DIR/match"
-    ln -sf ~/dotfiles/espanso/match/ai-prompts.yml "$ESPANSO_CONFIG_DIR/match/ai-prompts.yml"
+    safe_link ~/dotfiles/espanso/match/ai-prompts.yml "$ESPANSO_CONFIG_DIR/match/ai-prompts.yml"
     echo -e "${GREEN}✓ espanso設定をリンクしました${NC}"
 else
     echo -e "${YELLOW}⚠ espansoがインストールされていません。スキップします${NC}"
@@ -162,8 +219,8 @@ fi
 ANTIGRAVITY_USER_DIR="$HOME/Library/Application Support/Antigravity/User"
 if [ -d "$HOME/Library/Application Support/Antigravity" ]; then
     mkdir -p "$ANTIGRAVITY_USER_DIR"
-    ln -sf ~/dotfiles/antigravity/settings.json "$ANTIGRAVITY_USER_DIR/settings.json"
-    ln -sf ~/dotfiles/antigravity/keybindings.json "$ANTIGRAVITY_USER_DIR/keybindings.json"
+    safe_link ~/dotfiles/antigravity/settings.json "$ANTIGRAVITY_USER_DIR/settings.json"
+    safe_link ~/dotfiles/antigravity/keybindings.json "$ANTIGRAVITY_USER_DIR/keybindings.json"
     echo -e "${GREEN}✓ Antigravity設定をリンクしました${NC}"
 else
     echo -e "${YELLOW}⚠ Antigravityがインストールされていません。スキップします${NC}"
@@ -172,7 +229,7 @@ fi
 # ========================================
 # 4. Oh My Zshのセットアップ
 # ========================================
-echo -e "\n${YELLOW}[4/5] Oh My Zshのセットアップ...${NC}"
+echo -e "\n${YELLOW}[4/6] Oh My Zshのセットアップ...${NC}"
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
     echo -e "${YELLOW}Oh My Zshをインストールしますか? (y/n)${NC}"
     read -r answer
@@ -204,7 +261,7 @@ fi
 # ========================================
 # 5. 追加設定
 # ========================================
-echo -e "\n${YELLOW}[5/5] 追加設定...${NC}"
+echo -e "\n${YELLOW}[5/6] 追加設定...${NC}"
 
 # macOS defaults設定
 if [ -f ~/dotfiles/scripts/macos-defaults.sh ]; then
@@ -278,8 +335,10 @@ else
 fi
 
 # ========================================
-# 完了
+# 6. 完了
 # ========================================
+log "=== Setup completed successfully ==="
+
 echo -e "\n${GREEN}========================================${NC}"
 echo -e "${GREEN}  セットアップが完了しました！${NC}"
 echo -e "${GREEN}========================================${NC}"
@@ -288,3 +347,4 @@ echo -e "  1. ターミナルを再起動するか、'source ~/.zshrc' を実行
 echo -e "  2. Powerlevel10kの設定: 'p10k configure'"
 echo -e "  3. Nerd Fontをターミナルに設定"
 echo -e "\n${BLUE}追加のアプリケーションは docs/APPS.md を参照してください${NC}"
+echo -e "${BLUE}ログファイル: $LOG_FILE${NC}"

@@ -62,6 +62,7 @@ brew "procs"           # ps代替（プロセス表示）
 brew "sd"              # sed代替（直感的な正規表現置換）
 brew "hyperfine"       # コマンドベンチマーク
 brew "git-absorb"      # fixup commitの自動化
+brew "git-cliff"       # CHANGELOG自動生成
 
 # セキュリティ
 brew "gnupg"           # GPG暗号化

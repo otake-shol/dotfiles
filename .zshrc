@@ -11,40 +11,38 @@ export ZSH="$HOME/.oh-my-zsh"
 # Set theme
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
-# Plugins
+# Plugins - 条件付き読み込みで起動速度を最適化
 plugins=(
-  # 補完・ハイライト
+  # 補完・ハイライト（必須）
   zsh-autosuggestions
   zsh-syntax-highlighting
   zsh-completions
 
-  # Git
+  # Git（必須）
   git
   github
 
-  # 開発ツール
-  docker
-  kubectl
-  npm
-  yarn
-
-  # ナビゲーション
+  # ナビゲーション（必須）
   z
   fzf
-
-  # クラウド・インフラ
-  aws
-  terraform
-
-  # その他
-  python
-  gradle
   history
-  1password
-  jira
-  tig
-  web-search
 )
+
+# 条件付きプラグイン - インストール済みの場合のみ読み込み
+command -v docker &>/dev/null && plugins+=(docker)
+command -v kubectl &>/dev/null && plugins+=(kubectl)
+command -v npm &>/dev/null && plugins+=(npm)
+command -v yarn &>/dev/null && plugins+=(yarn)
+command -v aws &>/dev/null && plugins+=(aws)
+command -v terraform &>/dev/null && plugins+=(terraform)
+command -v python3 &>/dev/null && plugins+=(python)
+command -v gradle &>/dev/null && plugins+=(gradle)
+command -v op &>/dev/null && plugins+=(1password)
+command -v jira &>/dev/null && plugins+=(jira)
+command -v tig &>/dev/null && plugins+=(tig)
+
+# web-search は常に有効
+plugins+=(web-search)
 
 # zsh-completions: 追加の補完定義を読み込み
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
@@ -128,6 +126,10 @@ export FZF_DEFAULT_OPTS="
   --preview 'bat --color=always --style=numbers --line-range=:200 {} 2>/dev/null || cat {}'
   --preview-window=right:60%:wrap
   --bind 'ctrl-/:toggle-preview'
+  --color=fg:#c0caf5,bg:#1a1b26,hl:#bb9af7
+  --color=fg+:#c0caf5,bg+:#292e42,hl+:#7dcfff
+  --color=info:#7aa2f7,prompt:#7dcfff,pointer:#7dcfff
+  --color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a
 "
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:200 {}'"
 export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"

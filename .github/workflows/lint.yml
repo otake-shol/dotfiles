@@ -18,8 +18,9 @@ jobs:
         uses: ludeeus/action-shellcheck@master
         with:
           scandir: './scripts'
-          additional_files: 'bootstrap.sh'
+          additional_files: 'bootstrap.sh .claude/hooks/*.sh'
           severity: warning
+          check_together: 'yes'
 
   yaml-lint:
     name: YAML Lint

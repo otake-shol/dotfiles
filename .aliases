@@ -235,6 +235,7 @@ alias ji="zi"                         # インタラクティブ選択
 # dotfiles管理
 # ========================================
 alias dotup="bash ~/dotfiles/scripts/check-updates.sh"    # 更新チェック
+alias dotupdate="bash ~/dotfiles/scripts/update-all.sh"   # 一括更新
 alias brewsync="bash ~/dotfiles/scripts/sync-brewfile.sh" # Brewfile同期チェック
 
 # ========================================

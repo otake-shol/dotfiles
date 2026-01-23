@@ -188,27 +188,155 @@ autocmd("BufWritePre", {
 })
 
 -- ===========================================
--- カラースキーム
+-- (カラースキームとステータスラインはlazy.nvimで管理)
 -- ===========================================
 
--- TokyoNight がインストールされていれば使用、なければ habamax
-local ok, _ = pcall(vim.cmd, "colorscheme tokyonight-night")
-if not ok then
-  vim.cmd("colorscheme habamax")
+-- ===========================================
+-- lazy.nvim プラグインマネージャー
+-- ===========================================
+
+-- lazy.nvim ブートストラップ
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable",
+    lazypath,
+  })
 end
+vim.opt.rtp:prepend(lazypath)
 
--- ===========================================
--- ステータスライン（シンプル版）
--- ===========================================
+-- プラグイン設定
+require("lazy").setup({
+  -- カラースキーム: TokyoNight
+  {
+    "folke/tokyonight.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.cmd.colorscheme("tokyonight-night")
+    end,
+  },
 
-vim.opt.laststatus = 2
-vim.opt.statusline = table.concat({
-  " %f",                    -- ファイル名
-  " %m",                    -- 変更フラグ
-  " %r",                    -- 読み取り専用フラグ
-  "%=",                     -- 右寄せ
-  " %y",                    -- ファイルタイプ
-  " [%{&fileencoding}]",    -- エンコーディング
-  " %l:%c ",                -- 行:列
-  " %p%% ",                 -- パーセント
+  -- ファジーファインダー: Telescope
+  {
+    "nvim-telescope/telescope.nvim",
+    tag = "0.1.8",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    keys = {
+      { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "ファイル検索" },
+      { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "テキスト検索" },
+      { "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "バッファ一覧" },
+      { "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "ヘルプ検索" },
+      { "<leader>fr", "<cmd>Telescope oldfiles<cr>", desc = "最近のファイル" },
+    },
+  },
+
+  -- シンタックスハイライト: Treesitter
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    event = { "BufReadPost", "BufNewFile" },
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        ensure_installed = {
+          "lua", "vim", "vimdoc",
+          "javascript", "typescript", "tsx",
+          "python", "go", "rust",
+          "json", "yaml", "toml", "markdown",
+          "bash", "html", "css",
+        },
+        highlight = { enable = true },
+        indent = { enable = true },
+      })
+    end,
+  },
+
+  -- ファイルエクスプローラー: neo-tree
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons",
+      "MunifTanjim/nui.nvim",
+    },
+    keys = {
+      { "<leader>e", "<cmd>Neotree toggle<cr>", desc = "ファイルツリー" },
+    },
+    opts = {
+      filesystem = {
+        follow_current_file = { enabled = true },
+      },
+    },
+  },
+
+  -- Git signs
+  {
+    "lewis6991/gitsigns.nvim",
+    event = { "BufReadPost", "BufNewFile" },
+    opts = {
+      signs = {
+        add = { text = "+" },
+        change = { text = "~" },
+        delete = { text = "_" },
+        topdelete = { text = "‾" },
+        changedelete = { text = "~" },
+      },
+    },
+  },
+
+  -- コメント
+  {
+    "numToStr/Comment.nvim",
+    event = { "BufReadPost", "BufNewFile" },
+    opts = {},
+  },
+
+  -- インデントガイド
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    event = { "BufReadPost", "BufNewFile" },
+    opts = {
+      indent = { char = "│" },
+      scope = { enabled = false },
+    },
+  },
+
+  -- ステータスライン: lualine
+  {
+    "nvim-lualine/lualine.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    event = "VeryLazy",
+    opts = {
+      options = {
+        theme = "tokyonight",
+        component_separators = { left = "", right = "" },
+        section_separators = { left = "", right = "" },
+      },
+    },
+  },
+
+  -- 括弧の自動ペア
+  {
+    "windwp/nvim-autopairs",
+    event = "InsertEnter",
+    opts = {},
+  },
+
+  -- サラウンド操作
+  {
+    "kylechui/nvim-surround",
+    version = "*",
+    event = "VeryLazy",
+    opts = {},
+  },
+}, {
+  -- lazy.nvim オプション
+  checker = { enabled = false }, -- 自動更新チェック無効
+  change_detection = { notify = false },
 })

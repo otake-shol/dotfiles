@@ -128,3 +128,4 @@ brew "oven-sh/bun/bun" # 超高速JS/TSランタイム（Node.js補完）
 # brew "mysql"
 # brew "postgresql@14"
 # brew "docker"
+brew "markdownlint-cli"  # Markdownリンター

@@ -193,4 +193,4 @@ export SENTRY_AUTH_TOKEN="sntrys_xxxxx"
 ```
 
 ## MCPサーバーガイド
-詳細は `~/dotfiles/docs/mcp-servers-guide.md` を参照
+詳細は `~/dotfiles/docs/integrations/mcp-servers-guide.md` を参照

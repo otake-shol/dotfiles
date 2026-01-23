@@ -22,9 +22,14 @@
 - bootstrap.sh のシェーダーリンク削除
 - SETUP.md の nvm 手順削除
 
+### Fixed
+- AI-DRIVEN-DEV-GUIDE.md の存在しないパス参照を修正
+- CLAUDE.md の MCPガイドパスを修正
+- DOTFILES_MANAGER.md を簡素化（エージェントへの参照のみに）
+
 ---
 
-## [Unreleased]
+## [2026-01-21] - 基盤整備
 
 ### Added
 - `ssh/config` - セキュアなSSH設定

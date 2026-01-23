@@ -334,8 +334,6 @@ ln -sf ~/dotfiles/espanso/match/base.yml ~/.config/espanso/match/base.yml
 
 ### 6.3 AIプロンプトテンプレート
 
-汎用プロンプトは `~/dotfiles/prompts/` で管理します。
-
 詳細は [AI-PROMPTS.md](AI-PROMPTS.md) を参照。
 
 ---

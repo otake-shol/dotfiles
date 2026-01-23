@@ -12,7 +12,43 @@ export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Plugins
-plugins=(zsh-autosuggestions zsh-syntax-highlighting git z python fzf aws 1password github gradle history iterm2 jira terraform tig web-search)
+plugins=(
+  # 補完・ハイライト
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+  zsh-completions
+
+  # Git
+  git
+  github
+
+  # 開発ツール
+  docker
+  kubectl
+  npm
+  yarn
+
+  # ナビゲーション
+  z
+  fzf
+
+  # クラウド・インフラ
+  aws
+  terraform
+
+  # その他
+  python
+  gradle
+  history
+  1password
+  iterm2
+  jira
+  tig
+  web-search
+)
+
+# zsh-completions: 追加の補完定義を読み込み
+fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
 source $ZSH/oh-my-zsh.sh
 
@@ -103,6 +139,11 @@ eval "$(direnv hook zsh)"
 # zoxide - 高速ディレクトリジャンプ
 eval "$(zoxide init zsh)"
 
+# atuin - 高機能シェル履歴管理
+if command -v atuin &> /dev/null; then
+  eval "$(atuin init zsh)"
+fi
+
 # yazi - ターミナルファイルマネージャー
 function y() {
   local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
@@ -112,6 +153,11 @@ function y() {
   fi
   rm -f -- "$tmp"
 }
+
+# bun - 高速JS/TSランタイム
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+[ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
 
 # ========================================
 # ローカル設定（Git管理外）

@@ -90,6 +90,11 @@ alias gst="git stash"
 alias gsta="git stash apply"
 alias gundo="git reset --soft HEAD^"
 
+# difftastic（構文認識diff）
+alias gdd="GIT_EXTERNAL_DIFF=difft git diff"          # 構文ベースdiff
+alias gdds="GIT_EXTERNAL_DIFF=difft git diff --staged" # ステージング済みの構文diff
+alias gdlog="GIT_EXTERNAL_DIFF=difft git log -p"      # ログを構文diffで表示
+
 
 
 
@@ -149,6 +154,15 @@ alias pna="pnpm add"
 alias pnad="pnpm add -D"
 alias pnr="pnpm run"
 alias pnx="pnpm dlx"
+
+# bun（高速JS/TSランタイム）
+alias b="bun"
+alias bi="bun install"
+alias ba="bun add"
+alias bad="bun add -d"
+alias br="bun run"
+alias bt="bun test"
+alias bx="bunx"
 
 # Homebrew
 alias brewup="brew update && brew upgrade && brew cleanup"

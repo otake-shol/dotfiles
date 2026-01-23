@@ -144,6 +144,11 @@ mkdir -p ~/.config/bat
 ln -sf ~/dotfiles/bat/.config/bat/config ~/.config/bat/config
 echo -e "${GREEN}✓ bat設定をリンクしました${NC}"
 
+# atuin
+mkdir -p ~/.config/atuin
+ln -sf ~/dotfiles/atuin/.config/atuin/config.toml ~/.config/atuin/config.toml
+echo -e "${GREEN}✓ atuin設定をリンクしました${NC}"
+
 # espanso
 ESPANSO_CONFIG_DIR="$HOME/Library/Application Support/espanso"
 if command -v espanso &> /dev/null || [ -d "$ESPANSO_CONFIG_DIR" ]; then
@@ -186,6 +191,10 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
         # zsh-syntax-highlighting
         git clone https://github.com/zsh-users/zsh-syntax-highlighting \
             ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
+        # zsh-completions
+        git clone https://github.com/zsh-users/zsh-completions \
+            ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-completions
 
         echo -e "${GREEN}✓ Oh My Zshのセットアップが完了しました${NC}"
     fi

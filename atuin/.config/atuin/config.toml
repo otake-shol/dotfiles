@@ -1,0 +1,71 @@
+# Atuin 設定ファイル
+# https://docs.atuin.sh/configuration/config/
+
+# ========================================
+# 同期設定
+# ========================================
+# 同期を有効にする場合は atuin register / atuin login を実行
+# sync_address = "https://api.atuin.sh"
+# sync_frequency = "5m"
+
+# ========================================
+# 検索設定
+# ========================================
+# 検索モード: prefix, fulltext, fuzzy, skim
+search_mode = "fuzzy"
+
+# フィルターモード: global, host, session, directory
+filter_mode = "global"
+
+# ワークディレクトリフィルター: global, host, session
+workspaces = false
+
+# 検索時にフィルターモードを切り替え可能
+filter_mode_shell_up_key_binding = "global"
+
+# ========================================
+# UI設定
+# ========================================
+# スタイル: auto, full, compact
+style = "compact"
+
+# インライン表示の高さ
+inline_height = 20
+
+# タイムスタンプ表示
+show_preview = true
+
+# コマンドの最大長（0で無制限）
+max_preview_height = 4
+
+# ========================================
+# 履歴設定
+# ========================================
+# スペースで始まるコマンドを記録しない
+secrets_filter = true
+
+# 特定のコマンドを記録しない
+history_filter = [
+    "^cd ",
+    "^ls",
+    "^ll",
+    "^la",
+    "^exit$",
+    "^clear$",
+    "^pwd$",
+]
+
+# ========================================
+# キーバインド
+# ========================================
+# Ctrl+R: 履歴検索（デフォルト）
+# Up/Down: 履歴ナビゲーション
+
+# ========================================
+# その他
+# ========================================
+# Enterで実行せずにコマンドラインに入力
+enter_accept = false
+
+# 更新チェック
+update_check = true

@@ -2,6 +2,9 @@
 # 新しいMacをセットアップする際に最低限必要なツールを記載
 # 完全な環境は Brewfile.full を参照
 
+# Taps
+tap "oven-sh/bun"      # bun用
+
 # ========================================
 # CLI Tools (必須)
 # ========================================
@@ -12,6 +15,7 @@ brew "gh"              # GitHub CLI
 brew "git-secrets"     # AWS認証情報の誤コミット防止
 brew "lazygit"         # Git TUI
 brew "git-delta"       # git diffを美しく表示
+brew "difftastic"      # 構文認識diff（リファクタリング時に便利）
 
 # バージョン管理
 brew "asdf"            # 複数言語のバージョン管理（Node.js含む）
@@ -21,6 +25,7 @@ brew "neovim"          # モダンなVim
 brew "vim"
 
 # シェル・ターミナル
+brew "atuin"           # シェル履歴管理（クラウド同期対応）
 brew "tmux"            # ターミナルマルチプレクサ
 brew "zellij"          # モダンなターミナルマルチプレクサ（Rust製）
 brew "fzf"             # ファジーファインダー
@@ -61,6 +66,8 @@ brew "git-absorb"      # fixup commitの自動化
 
 # セキュリティ
 brew "gnupg"           # GPG暗号化
+brew "mkcert"          # ローカルHTTPS証明書作成
+brew "nss"             # mkcert Firefox対応
 
 # クラウド/AWS
 brew "awscli"          # AWS CLI（Amazon Q含む）
@@ -74,6 +81,7 @@ cask "ghostty"         # 高速でモダンなターミナル
 
 # ユーティリティ
 cask "1password"       # パスワードマネージャー
+cask "1password-cli"   # 1Password CLI（シークレット管理）
 cask "alt-tab"         # Windows風のタスクスイッチャー
 cask "appcleaner"      # アプリ完全削除
 cask "cleanshot"       # スクリーンショット・画面録画
@@ -99,10 +107,14 @@ cask "figma"           # デザインツール・プロトタイピング
 cask "claude"          # Claude CLI
 cask "dbeaver-community" # データベースGUIクライアント
 cask "bruno"           # APIクライアント（REST/GraphQL）
+cask "orbstack"        # 軽量Docker代替（Docker Desktop不要）
 
 # フォント
 cask "font-hack-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
+
+# JSランタイム
+brew "oven-sh/bun/bun" # 超高速JS/TSランタイム（Node.js補完）
 
 # ========================================
 # オプション：開発環境

@@ -1,0 +1,76 @@
+name: Lint dotfiles
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  shellcheck:
+    name: ShellCheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: './scripts'
+          additional_files: 'bootstrap.sh'
+          severity: warning
+
+  yaml-lint:
+    name: YAML Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: YAML Lint
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: .
+          config_data: |
+            extends: default
+            rules:
+              line-length:
+                max: 200
+              truthy:
+                check-keys: false
+              document-start: disable
+
+  markdown-lint:
+    name: Markdown Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Markdown Lint
+        uses: articulate/actions-markdownlint@v1
+        with:
+          config: .markdownlint.json
+          files: '**/*.md'
+          ignore: 'node_modules'
+
+  toml-validate:
+    name: TOML Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install taplo
+        run: |
+          curl -fsSL https://github.com/tamasfe/taplo/releases/latest/download/taplo-full-linux-x86_64.gz | gunzip -c > taplo
+          chmod +x taplo
+          sudo mv taplo /usr/local/bin/
+
+      - name: Validate TOML files
+        run: |
+          find . -name "*.toml" -type f | while read f; do
+            echo "Validating $f"
+            taplo format --check "$f" || exit 1
+          done

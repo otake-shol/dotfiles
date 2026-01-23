@@ -169,6 +169,52 @@ macOS日本語入力のユーザー辞書を管理するスクリプト。
 
 ---
 
+#### 1Password CLI
+
+> コマンドラインからシークレットを安全に取得
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install --cask 1password-cli` |
+| ドキュメント | https://developer.1password.com/docs/cli/ |
+
+**特徴:**
+- 環境変数に機密情報をハードコードしない
+- スクリプトから安全にシークレット取得
+- SSH鍵の管理
+- CI/CD連携
+
+**セットアップ:**
+```bash
+# 1Passwordアプリと連携（推奨）
+# 1Password > 設定 > 開発者 > 「CLIと連携」を有効化
+
+# サインイン確認
+op account list
+```
+
+**使用例:**
+```bash
+# アイテム取得
+op item get "GitHub Token" --fields password
+
+# 環境変数として使用
+export GITHUB_TOKEN=$(op item get "GitHub Token" --fields password)
+
+# シークレット参照（op://形式）
+op run -- npm run deploy  # 環境変数を自動注入
+```
+
+**.zshrc.local での活用例:**
+```bash
+# 1Password CLIでシークレット管理（平文を書かない）
+if command -v op &> /dev/null; then
+  export GITHUB_TOKEN=$(op item get "GitHub Token" --fields password 2>/dev/null)
+fi
+```
+
+---
+
 #### AppCleaner
 
 > アプリの完全アンインストールツール
@@ -320,6 +366,42 @@ macOS日本語入力のユーザー辞書を管理するスクリプト。
 
 ---
 
+#### OrbStack
+
+<img src="https://orbstack.dev/img/logo.png" width="120" alt="OrbStack">
+
+> 軽量・高速な Docker Desktop 代替
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install --cask orbstack` |
+| 公式サイト | https://orbstack.dev/ |
+
+**特徴:**
+- Docker Desktop より軽量（メモリ 50% 以上削減）
+- 起動・コンテナ操作が高速
+- Docker CLI 完全互換（`docker`, `docker compose` がそのまま使える）
+- Linux VM 管理も統合
+- M1/M2 Mac で特に効果的
+- 個人利用無料
+
+**Docker Desktop との比較:**
+
+| 項目 | Docker Desktop | OrbStack |
+|------|---------------|----------|
+| メモリ使用量 | 2-4GB | 0.5-1GB |
+| 起動速度 | 遅い | 高速 |
+| ファイル共有 | 遅い | VirtioFS（高速） |
+| 料金 | 商用有料 | 個人無料 |
+
+**移行手順:**
+1. Docker Desktop を停止
+2. OrbStack をインストール・起動
+3. 既存の Docker イメージは自動インポート可能
+4. `docker` コマンドがそのまま使える
+
+---
+
 #### Bruno
 
 <img src="https://raw.githubusercontent.com/usebruno/bruno/main/assets/images/landing-2.png" width="600" alt="Bruno">
@@ -350,6 +432,7 @@ macOS日本語入力のユーザー辞書を管理するスクリプト。
 | **lazygit** | Git TUI | `brew install lazygit` |
 | **git-secrets** | 認証情報漏洩防止 | `brew install git-secrets` |
 | **git-delta** | 美しい diff 表示 | `brew install git-delta` |
+| **difftastic** | 構文認識 diff | `brew install difftastic` |
 | **tig** | Git テキストUI | `brew install tig` |
 
 #### lazygit
@@ -361,6 +444,55 @@ macOS日本語入力のユーザー辞書を管理するスクリプト。
 ---
 
 ### シェル・ターミナル
+
+#### atuin
+
+> SQLiteベースの高機能シェル履歴管理
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install atuin` |
+| 設定ファイル | `~/dotfiles/atuin/.config/atuin/config.toml` |
+| 公式サイト | https://atuin.sh/ |
+| GitHub | https://github.com/atuinsh/atuin |
+
+**特徴:**
+- 全デバイス間で履歴を同期（オプション）
+- SQLiteで高速検索（数十万件でも瞬時）
+- コンテキスト情報（ディレクトリ、終了コード、実行時間）を記録
+- fzfライクなインタラクティブ検索
+- 統計情報表示
+
+**キーバインド:**
+
+| キー | 動作 |
+|------|------|
+| `Ctrl+R` | 履歴検索（インタラクティブ） |
+| `↑/↓` | 履歴ナビゲーション |
+| `Tab` | 補完候補選択 |
+| `Ctrl+N/P` | 次/前の候補 |
+
+**便利なコマンド:**
+
+```bash
+# 統計情報表示
+atuin stats
+
+# 履歴をインポート（zsh_historyから）
+atuin import auto
+
+# 同期設定（オプション）
+atuin register  # アカウント作成
+atuin login     # ログイン
+atuin sync      # 手動同期
+```
+
+**同期機能（オプション）:**
+- 複数Mac間で履歴を共有可能
+- End-to-End暗号化
+- セルフホスト可能
+
+---
 
 #### fzf
 
@@ -586,6 +718,57 @@ function y() {
 
 ---
 
+### JSランタイム
+
+#### bun
+
+> 超高速JavaScript/TypeScriptランタイム
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install bun` |
+| 公式サイト | https://bun.sh/ |
+| GitHub | https://github.com/oven-sh/bun |
+
+**特徴:**
+- Node.jsより4倍高速な起動
+- `bun install` はnpmより10-25倍高速
+- TypeScriptをネイティブ実行
+- npm互換パッケージマネージャー内蔵
+- テストランナー、バンドラー内蔵
+
+**エイリアス:**
+
+| エイリアス | コマンド | 説明 |
+|-----------|----------|------|
+| `b` | `bun` | bun本体 |
+| `bi` | `bun install` | 依存関係インストール |
+| `ba` | `bun add` | パッケージ追加 |
+| `bad` | `bun add -d` | devDependency追加 |
+| `br` | `bun run` | スクリプト実行 |
+| `bt` | `bun test` | テスト実行 |
+| `bx` | `bunx` | npx相当 |
+
+**使用例:**
+```bash
+# 新規プロジェクト
+bun init
+
+# 依存関係インストール（爆速）
+bun install
+
+# TypeScriptをそのまま実行
+bun run index.ts
+
+# テスト実行
+bun test
+
+# npx相当
+bunx create-next-app
+```
+
+---
+
 ### バージョン管理
 
 | ツール | 説明 | インストール |
@@ -609,6 +792,7 @@ function y() {
 | **jq** | JSON 処理ツール | `brew install jq` |
 | **yq** | YAML/TOML 処理ツール | `brew install yq` |
 | **gnupg** | GPG 暗号化 | `brew install gnupg` |
+| **mkcert** | ローカルHTTPS証明書 | `brew install mkcert nss` |
 
 ---
 

@@ -86,3 +86,27 @@ quick-terminal-animation-duration = 0.3
 keybind = "cmd+shift+t=toggle_quick_terminal"
 clipboard-trim-trailing-spaces = true
 window-new-tab-position = current
+
+# Undercurl対応（LSPエラー表示改善）
+font-style-italic = "JetBrainsMono Nerd Font Italic"
+bold-is-bright = false
+
+# クリップボード操作
+keybind = ctrl+shift+c=copy_to_clipboard
+keybind = ctrl+shift+v=paste_from_clipboard
+
+# 新しいタブ/ウィンドウ
+keybind = cmd+t=new_tab
+keybind = cmd+n=new_window
+
+# タブ移動
+keybind = cmd+1=goto_tab:1
+keybind = cmd+2=goto_tab:2
+keybind = cmd+3=goto_tab:3
+keybind = cmd+4=goto_tab:4
+keybind = cmd+5=goto_tab:5
+
+# フォントサイズ調整
+keybind = cmd+plus=increase_font_size:1
+keybind = cmd+minus=decrease_font_size:1
+keybind = cmd+0=reset_font_size

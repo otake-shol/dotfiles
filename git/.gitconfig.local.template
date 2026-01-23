@@ -4,17 +4,31 @@
 # 使用方法:
 #   cp ~/dotfiles/git/.gitconfig.local.template ~/.gitconfig.local
 #   vim ~/.gitconfig.local
+#
+# 注意: このファイルはGit管理外です。個人情報を安全に保存できます。
 
 [user]
-	name = YOUR_NAME
-	email = YOUR_EMAIL
+	# 必須: あなたの名前とメールアドレスを設定
+	name = Your Name
+	email = your.email@example.com
 
-# GPG署名を使用する場合（オプション）
-# [user]
-# 	signingkey = YOUR_GPG_KEY_ID
+	# GPG署名を使用する場合（オプション）
+	# signingkey = YOUR_GPG_KEY_ID
+
+# GPGコミット署名（オプション）
 # [commit]
 # 	gpgsign = true
 
-# 会社用の別メールアドレスを使用する場合（オプション）
+# GitHub Enterprise設定（会社用、オプション）
+# [url "git@github.company.com:"]
+# 	insteadOf = https://github.company.com/
+
+# 会社固有のメール設定（ディレクトリ別）
 # [includeIf "gitdir:~/work/"]
 # 	path = ~/.gitconfig.work
+
+# プロキシ設定（会社環境用、オプション）
+# [http]
+# 	proxy = http://proxy.company.com:8080
+# [https]
+# 	proxy = http://proxy.company.com:8080

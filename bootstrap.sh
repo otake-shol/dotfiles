@@ -1,22 +1,95 @@
 #!/bin/bash
 # bootstrap.sh - 新しいMacの自動セットアップスクリプト
 # 使用方法: bash bootstrap.sh
+# オプション:
+#   -n, --dry-run    実際の変更を行わずシミュレーション
+#   -h, --help       ヘルプを表示
+#   -v, --verbose    詳細出力
 
 set -e  # エラーで停止
+
+# ========================================
+# 設定
+# ========================================
+DRY_RUN=false
+VERBOSE=false
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # カラー出力
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # ログファイル
 LOG_FILE="$HOME/.dotfiles-setup.log"
 
+# ========================================
+# ヘルプ
+# ========================================
+show_help() {
+    cat << EOF
+使用方法: bash bootstrap.sh [オプション]
+
+新しいMacの自動セットアップスクリプト
+
+オプション:
+  -n, --dry-run    実際の変更を行わずシミュレーション実行
+  -v, --verbose    詳細な出力を表示
+  -h, --help       このヘルプを表示
+
+例:
+  bash bootstrap.sh           # 通常実行
+  bash bootstrap.sh --dry-run # ドライラン（変更なし）
+  bash bootstrap.sh -n -v     # ドライラン + 詳細出力
+EOF
+    exit 0
+}
+
+# ========================================
+# 引数解析
+# ========================================
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -n|--dry-run)
+            DRY_RUN=true
+            ;;
+        -v|--verbose)
+            VERBOSE=true
+            ;;
+        -h|--help)
+            show_help
+            ;;
+        *)
+            echo -e "${RED}不明なオプション: $1${NC}"
+            show_help
+            ;;
+    esac
+    shift
+done
+
+# ========================================
+# ユーティリティ関数
+# ========================================
+
 # ログ関数
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
+    if [ "$VERBOSE" = true ]; then
+        echo -e "${CYAN}[LOG] $1${NC}"
+    fi
+}
+
+# ドライラン対応コマンド実行
+run_cmd() {
+    if [ "$DRY_RUN" = true ]; then
+        echo -e "${CYAN}[DRY RUN] $*${NC}"
+        log "[DRY RUN] $*"
+    else
+        "$@"
+    fi
 }
 
 # クリーンアップ処理
@@ -28,10 +101,62 @@ cleanup() {
 }
 trap cleanup EXIT
 
+# ========================================
+# 依存関係チェック
+# ========================================
+check_dependencies() {
+    local missing=()
+
+    # 必須コマンド
+    command -v git &>/dev/null || missing+=("git")
+    command -v curl &>/dev/null || missing+=("curl")
+
+    if [ ${#missing[@]} -gt 0 ]; then
+        echo -e "${RED}エラー: 必要なコマンドがインストールされていません${NC}"
+        echo -e "${RED}不足: ${missing[*]}${NC}"
+        echo -e "${YELLOW}Xcode Command Line Toolsをインストールしてください:${NC}"
+        echo -e "  xcode-select --install"
+        exit 1
+    fi
+
+    log "Dependencies check passed"
+}
+
+# OS/アーキテクチャ検出
+detect_system() {
+    OS="$(uname -s)"
+    ARCH="$(uname -m)"
+
+    if [ "$OS" != "Darwin" ]; then
+        echo -e "${RED}このスクリプトはmacOS専用です${NC}"
+        exit 1
+    fi
+
+    if [ "$ARCH" = "arm64" ]; then
+        HOMEBREW_PREFIX="/opt/homebrew"
+    else
+        HOMEBREW_PREFIX="/usr/local"
+    fi
+
+    log "Detected: $OS ($ARCH), Homebrew prefix: $HOMEBREW_PREFIX"
+}
+
 # 冪等なシンボリックリンク作成関数
 safe_link() {
     local src="$1"
     local dest="$2"
+
+    if [ "$DRY_RUN" = true ]; then
+        if [ -L "$dest" ]; then
+            echo -e "${CYAN}[DRY RUN] Would update symlink: $dest -> $src${NC}"
+        elif [ -e "$dest" ]; then
+            echo -e "${CYAN}[DRY RUN] Would backup and link: $dest -> $src${NC}"
+        else
+            echo -e "${CYAN}[DRY RUN] Would create symlink: $dest -> $src${NC}"
+        fi
+        log "[DRY RUN] Link: $src -> $dest"
+        return
+    fi
 
     if [ -L "$dest" ]; then
         # 既存のシンボリックリンクを削除
@@ -47,16 +172,25 @@ safe_link() {
     log "Linked: $src -> $dest"
 }
 
+# ========================================
+# 初期化
+# ========================================
+check_dependencies
+detect_system
+
 log "=== Setup started ==="
 
 echo -e "${BLUE}========================================${NC}"
 echo -e "${BLUE}  dotfiles セットアップスクリプト${NC}"
 echo -e "${BLUE}========================================${NC}"
+if [ "$DRY_RUN" = true ]; then
+    echo -e "${CYAN}  [ドライランモード - 実際の変更は行いません]${NC}"
+fi
 
 # ========================================
 # 0. Apple Silicon: Rosetta 2確認
 # ========================================
-if [[ $(uname -m) == "arm64" ]]; then
+if [[ "$ARCH" == "arm64" ]]; then
     echo -e "\n${YELLOW}[0/6] Rosetta 2の確認...${NC}"
     if ! /usr/bin/pgrep -q oahd; then
         echo -e "${YELLOW}Rosetta 2をインストールしますか? (一部のx86アプリに必要) (y/n)${NC}"

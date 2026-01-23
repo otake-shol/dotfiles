@@ -185,6 +185,32 @@ fcd() {
   cd "$dir"
 }
 
+# fstash - git stashをfzfで選択して適用
+fstash() {
+  local stash
+  stash=$(git stash list 2>/dev/null | fzf --preview 'echo {} | cut -d: -f1 | xargs git stash show -p --color=always')
+  [ -n "$stash" ] && git stash apply "$(echo "$stash" | cut -d: -f1)"
+}
+
+# fenv - 環境変数をfzfで検索
+fenv() {
+  local var
+  var=$(env | fzf --preview 'echo {}' --preview-window=down:3:wrap)
+  [ -n "$var" ] && echo "$var"
+}
+
+# fhistory - 履歴をfzfで検索して実行
+fhistory() {
+  local cmd
+  cmd=$(history | fzf --tac --preview 'echo {}' | sed 's/^ *[0-9]* *//')
+  [ -n "$cmd" ] && print -z "$cmd"
+}
+
+# fman - manページをfzfで検索
+fman() {
+  man -k . | fzf --preview 'echo {} | awk "{print \$1}" | xargs man' | awk '{print $1}' | xargs man
+}
+
 # zoxide - 高速ディレクトリジャンプ
 eval "$(zoxide init zsh)"
 
@@ -207,6 +233,42 @@ function y() {
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 [ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
+
+# ========================================
+# dotfiles更新リマインダー
+# ========================================
+# 30日以上更新していない場合に通知
+_dotfiles_update_reminder() {
+  local dotfiles_dir="$HOME/dotfiles"
+  if [[ -d "$dotfiles_dir/.git" ]]; then
+    local last_update=$(git -C "$dotfiles_dir" log -1 --format="%ct" 2>/dev/null)
+    if [[ -n "$last_update" ]]; then
+      local days_since=$(( ($(date +%s) - last_update) / 86400 ))
+      if [[ $days_since -gt 30 ]]; then
+        echo "⚠️  dotfilesが${days_since}日間更新されていません。'dotup'で確認してください。"
+      fi
+    fi
+  fi
+}
+# 起動時にチェック（1日1回のみ）
+_dotfiles_reminder_cache="$HOME/.cache/dotfiles-reminder"
+if [[ ! -f "$_dotfiles_reminder_cache" ]] || [[ $(find "$_dotfiles_reminder_cache" -mtime +1 2>/dev/null) ]]; then
+  _dotfiles_update_reminder
+  mkdir -p "$(dirname "$_dotfiles_reminder_cache")"
+  touch "$_dotfiles_reminder_cache"
+fi
+
+# ========================================
+# プロファイル設定
+# ========================================
+# DOTFILES_PROFILE で使用するプロファイルを選択
+# 利用可能: personal (default), work, minimal
+DOTFILES_PROFILE="${DOTFILES_PROFILE:-personal}"
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+
+if [[ -f "$DOTFILES_DIR/profiles/${DOTFILES_PROFILE}.zsh" ]]; then
+    source "$DOTFILES_DIR/profiles/${DOTFILES_PROFILE}.zsh"
+fi
 
 # ========================================
 # ローカル設定（Git管理外）

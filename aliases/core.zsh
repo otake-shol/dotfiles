@@ -1,0 +1,157 @@
+# ========================================
+# 基本操作
+# ========================================
+
+# ディレクトリ移動
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias ~="cd ~"
+alias -- -="cd -"
+alias CD="cd"
+
+# ls関連 (eza)
+alias ls="eza"                    # モダンなls
+alias ll="eza -l --git"           # 詳細表示+Git状態
+alias la="eza -la --git"          # 隠しファイル含む
+alias l="eza -1"                  # 1行1ファイル
+alias lsd="eza -lD"               # ディレクトリのみ
+alias lt="eza -T --git-ignore"    # ツリー表示
+alias lta="eza -Ta"               # ツリー（全ファイル）
+
+# 検索・grep
+alias grep="grep --color=auto"
+alias fgrep="fgrep --color=auto"
+alias egrep="egrep --color=auto"
+alias h="history | grep"
+
+# ripgrep (高速grep)
+alias rg="rg --smart-case"        # 大文字小文字自動判定
+alias rgi="rg -i"                 # 常に大文字小文字無視
+alias rgf="rg --files"            # ファイル名のみ表示
+
+# fd (高速find)
+alias fd="fd --hidden --exclude .git"  # 隠しファイル含む
+alias fdi="fd -I"                      # gitignore無視して検索
+
+# 安全な削除・コピー
+alias cp="cp -i"
+alias mv="mv -i"
+
+# rm -rf 保護機能（確認プロンプト表示）
+rm() {
+  if [[ "$*" =~ "-rf" ]] || [[ "$*" =~ "-fr" ]]; then
+    echo "⚠️  rm -rf を実行しようとしています:"
+    echo "   rm $@"
+    echo ""
+    read "confirm?本当に実行しますか？ [y/N]: "
+    if [[ "$confirm" =~ ^[Yy]$ ]]; then
+      command rm "$@"
+    else
+      echo "キャンセルしました"
+      return 1
+    fi
+  else
+    command rm -i "$@"
+  fi
+}
+
+# trash - ゴミ箱に移動（復元可能な安全な削除）
+alias del="trash"
+alias tp="trash -F"  # Finderのゴミ箱に移動
+
+# ========================================
+# Claude
+# ========================================
+alias c="claude"
+
+# ========================================
+# システム・ネットワーク
+# ========================================
+
+# システム
+alias reload="source ~/.zshrc"
+alias zshconfig="vim ~/.zshrc"
+alias aliasconfig="vim ~/.aliases"
+alias ohmyzsh="vim ~/.oh-my-zsh"
+alias zshtime="time zsh -i -c exit"  # zsh起動時間計測
+alias path='echo -e ${PATH//:/\\n}'
+alias his="history"
+alias df="df -h"
+alias top="top -o cpu"
+
+# モダンCLIツール（従来コマンドの高機能代替）
+alias du="dust"                    # ディスク使用量可視化
+alias dui="dust -r"                # 逆順（小さい順）
+alias ps="procs"                   # プロセス表示
+alias pst="procs --tree"           # プロセスツリー
+alias psg="procs --or"             # プロセス検索
+alias sdr="sd"                     # sd (Rust製の高速置換) ※sedとは構文が異なる
+alias bench="hyperfine"            # コマンドベンチマーク
+
+# ネットワーク
+alias myip="curl -s ifconfig.me"
+alias localip="ipconfig getifaddr en0"
+alias ips="echo 'Local:' && ipconfig getifaddr en0 && echo 'Global:' && curl -s ifconfig.me"
+alias ports="lsof -i -P | grep LISTEN"
+
+# ========================================
+# zoxide（高速ディレクトリジャンプ）
+# ========================================
+alias j="z"                           # ディレクトリジャンプ
+alias ji="zi"                         # インタラクティブ選択
+
+# ========================================
+# dotfiles管理
+# ========================================
+DOTFILES_SCRIPTS="${DOTFILES_DIR:-$HOME/dotfiles}/scripts"
+alias dotup="bash $DOTFILES_SCRIPTS/maintenance/check-updates.sh"       # 更新チェック
+alias dotupdate="bash $DOTFILES_SCRIPTS/maintenance/update-all.sh"      # 一括更新
+alias brewsync="bash $DOTFILES_SCRIPTS/maintenance/sync-brewfile.sh"    # Brewfile同期チェック
+alias dotsysinfo="bash $DOTFILES_SCRIPTS/lib/os-detect.sh"              # システム情報表示
+
+# ========================================
+# クイックアクセス
+# ========================================
+alias dots="cd ~/dotfiles"
+alias projects="cd ~/Projects"
+alias downloads="cd ~/Downloads"
+alias desktop="cd ~/Desktop"
+
+# ========================================
+# ファイル表示 (bat)
+# ========================================
+alias cat="bat"                      # catをbatに置き換え
+alias catp="bat -p"                  # プレーン表示（装飾なし）
+alias catl="bat -l"                  # 言語指定 (例: catl json file.txt)
+alias less="bat --paging=always"     # ページャーとして使用
+alias bathelp="bat --help"           # batのヘルプ
+
+# ファイルプレビュー (fzf + bat)
+alias fp="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
+
+# ========================================
+# AI駆動開発ツール
+# ========================================
+
+# ドキュメント閲覧
+alias md="glow"                        # マークダウン表示
+alias mdp="glow -p"                    # ページャーモード
+
+# ファイル監視・自動実行（TDD用）
+alias watch="watchexec"
+alias watchtest="watchexec -e ts,js,py 'npm test'"
+
+# コード統計
+alias loc="tokei"                      # Lines of Code
+
+# HTTPクライアント
+alias http="https"                     # HTTPie（HTTPS優先）
+
+# ========================================
+# エイリアス管理
+# ========================================
+alias aliases="cat ~/.aliases"         # 全表示
+alias aliasgrep="alias | grep"         # 検索
+alias ag="alias | grep"                # 短縮版
+alias af="alias | fzf"                 # fzfで対話的検索

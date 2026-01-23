@@ -75,3 +75,42 @@ jobs:
             echo "Validating $f"
             taplo format --check "$f" || exit 1
           done
+
+  bootstrap-test:
+    name: Bootstrap Script Test
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Syntax check bootstrap.sh
+        run: bash -n bootstrap.sh
+
+      - name: Syntax check all shell scripts
+        run: |
+          find . -name "*.sh" -type f | while read f; do
+            echo "Checking syntax: $f"
+            bash -n "$f" || exit 1
+          done
+
+      - name: Dry run bootstrap
+        run: bash bootstrap.sh --dry-run
+
+  zsh-syntax:
+    name: Zsh Syntax Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install zsh
+        run: sudo apt-get update && sudo apt-get install -y zsh
+
+      - name: Check zsh files syntax
+        run: |
+          for f in aliases/*.zsh .zshrc; do
+            if [ -f "$f" ]; then
+              echo "Checking: $f"
+              zsh -n "$f" || exit 1
+            fi
+          done

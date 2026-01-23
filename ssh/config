@@ -21,6 +21,12 @@ Host *
     # セキュリティ強化
     HashKnownHosts yes
 
+    # Ed25519優先（より安全な鍵交換）
+    HostKeyAlgorithms ssh-ed25519,ssh-ed25519-cert-v01@openssh.com,rsa-sha2-512,rsa-sha2-256
+
+    # 安全な鍵交換アルゴリズム
+    KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512
+
     # 接続維持（60秒ごとにKeep-Alive）
     ServerAliveInterval 60
     ServerAliveCountMax 3
@@ -29,6 +35,9 @@ Host *
     ControlMaster auto
     ControlPath ~/.ssh/sockets/%r@%h-%p
     ControlPersist 600
+
+    # 圧縮を有効化（低速回線向け）
+    Compression yes
 
 # ===========================================
 # GitHub

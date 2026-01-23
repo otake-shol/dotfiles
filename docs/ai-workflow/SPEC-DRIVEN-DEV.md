@@ -362,15 +362,7 @@ specs/features/auth.md の「セッション有効期限」が
 
 ## 8. ツール・テンプレート
 
-### 8.1 仕様テンプレート
-
-`specs/templates/` に各種テンプレートを配置：
-
-- `feature-spec-template.md` - 機能仕様テンプレート
-- `api-spec-template.md` - API仕様テンプレート
-- `data-model-template.md` - データモデルテンプレート
-
-### 8.2 Claude Codeコマンド
+### 8.1 Claude Codeコマンド
 
 `.claude/commands/` にカスタムコマンドを配置：
 

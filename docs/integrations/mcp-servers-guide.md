@@ -11,8 +11,9 @@
 |------------|------|------|
 | Context7 | ✅ 設定済み | リアルタイムドキュメント参照 |
 | Serena | ✅ 設定済み | シンボリックコード解析（LSP統合） |
-| Playwright | ❌ 未設定 | ブラウザ自動化・E2Eテスト |
-| GitHub | ❌ 未設定 | Issue/PR操作・リポジトリ管理 |
+| Playwright | ✅ 設定済み | ブラウザ自動化・E2Eテスト |
+| Sequential Thinking | ✅ 設定済み | 構造化された問題解決 |
+| GitHub | ⚠️ PAT必要 | Issue/PR操作・リポジトリ管理 |
 
 ---
 

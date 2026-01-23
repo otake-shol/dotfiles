@@ -41,7 +41,6 @@ plugins=(
   gradle
   history
   1password
-  iterm2
   jira
   tig
   web-search
@@ -98,8 +97,8 @@ bindkey '^Z' fancy-ctrl-z
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Docker Desktop
-source /Users/otkshol/.docker/init-zsh.sh || true
+# Docker (OrbStack)
+# OrbStackは自動でdockerコマンドを提供するため追加設定不要
 
 # asdf version manager (Apple Silicon / Intel 両対応)
 if [[ $(uname -m) == "arm64" ]]; then

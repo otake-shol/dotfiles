@@ -23,30 +23,21 @@ cd ~/dotfiles && bash bootstrap.sh
 | `Brewfile` / `Brewfile.full` | 必須/全アプリ |
 | `.claude/` | Claude Code（MCPサーバー等） |
 | `nvim/` | Neovim設定 |
-| `tmux/` | tmux設定（メイン） |
-| `zellij/` | zellij設定（サブ/実験用） |
+| `tmux/` | tmux設定 |
 | `ghostty/` | Ghosttyターミナル |
 | `git/`, `gh/` | Git/GitHub CLI設定、コミット/PRテンプレート |
 | `ssh/` | SSH設定 |
-| `bat/` | bat設定 |
+| `bat/`, `atuin/` | bat/atuin設定 |
 | `raycast/` | Raycastスクリプト |
 | `antigravity/` | Antigravity設定 |
 | `browser-extensions/` | ブラウザ拡張機能リスト |
 | `scripts/` | ユーティリティスクリプト |
-| `templates/` | 仕様・ドキュメントテンプレート |
 | `espanso/` | テキスト展開（AIプロンプトスニペット） |
 
 ## テーマ
 
 全ツールで **TokyoNight** テーマを統一使用:
 - Neovim, tmux, Ghostty, bat
-
-## ターミナルマルチプレクサ
-
-| ツール | 用途 |
-|--------|------|
-| **tmux** | メイン使用（セッション保存/復元対応） |
-| **zellij** | サブ/実験用（Rust製、モダンUI） |
 
 ## バックアップ
 
@@ -80,13 +71,8 @@ SSHキーを1Passwordで管理する場合は `ssh/config` のコメントを解
 | [SETUP.md](docs/setup/SETUP.md) | 詳細セットアップ手順 |
 | [APPS.md](docs/setup/APPS.md) | アプリケーション一覧 |
 | [DOTFILES_MANAGER.md](docs/setup/DOTFILES_MANAGER.md) | dotfiles管理ツール比較 |
-| [BROWSER_EXTENSIONS.md](docs/tools/BROWSER_EXTENSIONS.md) | ブラウザ拡張機能 |
 | [antigravity-extensions.md](docs/tools/antigravity-extensions.md) | Antigravity拡張機能ガイド |
-
-### 学習
-| ファイル | 内容 |
-|---------|------|
-| [vim-mastery-roadmap.md](docs/learning/vim-mastery-roadmap.md) | Vim習得ロードマップ |
+| [browser-extensions/](browser-extensions/) | ブラウザ拡張機能リスト |
 
 ## 参考
 

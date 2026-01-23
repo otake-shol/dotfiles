@@ -101,12 +101,12 @@ brew "neofetch"
 brew "neovim"
 # Open-source, cross-platform JavaScript runtime environment
 brew "node", link: false
-# Node.js version manager
-brew "nodebrew"
+# 注: nodebrew は asdf に統一推奨
+# brew "nodebrew"
 # Libraries for security-enabled client and server applications
 brew "nss"
-# Manage multiple Node.js versions
-brew "nvm"
+# 注: nvm は asdf に統一推奨
+# brew "nvm"
 # Cryptography and SSL/TLS Toolkit
 brew "openssl@1.1"
 # Port of pdftk in java
@@ -123,8 +123,8 @@ brew "postgresql@14"
 brew "procs"
 # Pretty, minimal and fast ZSH prompt
 brew "pure"
-# Python version management
-brew "pyenv"
+# 注: pyenv は asdf に統一推奨
+# brew "pyenv"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.10"
 # Interpreted, interactive, object-oriented programming language
@@ -149,8 +149,8 @@ brew "stow"
 brew "terraform", link: false
 # Tool to generate documentation from Terraform modules
 brew "terraform-docs"
-# Terraform version manager inspired by rbenv
-brew "tfenv"
+# 注: tfenv は asdf に統一推奨
+# brew "tfenv"
 # Linter for Terraform files
 brew "tflint"
 # Simplified and community-driven man pages
@@ -181,8 +181,7 @@ brew "yarn", link: false
 brew "yazi"
 # Process YAML, JSON, XML, CSV and properties documents from the CLI
 brew "yq"
-# Pluggable terminal workspace, with terminal multiplexer as the base feature
-brew "zellij"
+# 注: zellij は削除済み（tmux使用）
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
 # Everything you need to get started with Heroku

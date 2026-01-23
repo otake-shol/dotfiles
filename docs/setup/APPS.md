@@ -771,12 +771,44 @@ bunx create-next-app
 
 ### バージョン管理
 
-| ツール | 説明 | インストール |
-|--------|------|--------------|
-| **asdf** | 複数言語バージョン管理 | `brew install asdf` |
-| **nvm** | Node.js 管理 | `brew install nvm` |
-| **pyenv** | Python 管理 | `brew install pyenv` |
-| **tfenv** | Terraform 管理 | `brew install tfenv` |
+#### asdf
+
+> 複数言語を1つのツールで管理（推奨）
+
+| 項目 | 内容 |
+|------|------|
+| インストール | `brew install asdf` |
+| 公式サイト | https://asdf-vm.com/ |
+
+**特徴:**
+- Node.js, Python, Terraform, Ruby, Go 等を1ツールで管理
+- `.tool-versions` ファイルでプロジェクトごとにバージョン固定
+- 600以上のプラグイン対応
+
+**セットアップ:**
+```bash
+# プラグイン追加
+asdf plugin add nodejs
+asdf plugin add python
+asdf plugin add terraform
+
+# バージョンインストール
+asdf install nodejs 20.11.0
+asdf install python 3.12.1
+asdf install terraform 1.7.0
+
+# グローバル設定
+asdf global nodejs 20.11.0
+asdf global python 3.12.1
+asdf global terraform 1.7.0
+```
+
+**プロジェクト別設定:**
+```bash
+# プロジェクトルートで
+echo "nodejs 18.19.0" >> .tool-versions
+asdf install
+```
 
 ---
 

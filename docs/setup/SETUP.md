@@ -65,12 +65,6 @@ ln -sf ~/dotfiles/git/.gitconfig ~/.gitconfig
 ```bash
 mkdir -p ~/.config/ghostty
 ln -sf ~/dotfiles/ghostty/config ~/.config/ghostty/config
-ln -sf ~/dotfiles/ghostty/shaders ~/.config/ghostty/shaders
-```
-
-#### Vim設定（存在する場合）
-```bash
-ln -sf ~/dotfiles/.vim ~/.vim
 ```
 
 #### Claude Code設定
@@ -133,11 +127,6 @@ exec zsh
 初回起動時、Powerlevel10kのセットアップウィザードが起動します。
 
 ### Step 7: 追加設定
-
-#### nvm設定
-```bash
-mkdir -p ~/.nvm
-```
 
 #### git-secrets設定
 ```bash
@@ -252,5 +241,4 @@ brew bundle --file=Brewfile
 - [ ] Git設定が反映されている (`git config --list`)
 - [ ] GitHub CLIにログインしている (`gh auth status`)
 - [ ] エイリアスが動作している (`alias`)
-- [ ] nvmが動作している (`nvm --version`)
 - [ ] asdfが動作している (`asdf --version`)

@@ -2,6 +2,28 @@
 
 このdotfilesの変更履歴を記録します。
 
+## [2026-01-24] - 整理・統一
+
+### Changed
+- バージョン管理を **asdf に統一**（nvm, pyenv, tfenv から移行推奨）
+- `.tool-versions` に terraform 追加
+- Docker Desktop → OrbStack 移行完了
+- iterm2 プラグイン削除（Ghostty 使用）
+
+### Removed
+- `zellij/` - tmux に統一
+- `ghostty/shaders/` - 未使用
+- `templates/specs/` - 未使用
+- `docs/learning/vim-mastery-roadmap.md` - Vim 不使用
+- `docs/tools/BROWSER_EXTENSIONS.md` - browser-extensions/ に統合
+
+### Fixed
+- README.md の削除済みファイル参照を修正
+- bootstrap.sh のシェーダーリンク削除
+- SETUP.md の nvm 手順削除
+
+---
+
 ## [Unreleased]
 
 ### Added

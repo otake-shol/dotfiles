@@ -112,7 +112,6 @@ fi
 # ghostty
 mkdir -p ~/.config/ghostty
 ln -sf ~/dotfiles/ghostty/config ~/.config/ghostty/config
-ln -sf ~/dotfiles/ghostty/shaders ~/.config/ghostty/shaders
 echo -e "${GREEN}✓ ghostty設定をリンクしました${NC}"
 
 # claude

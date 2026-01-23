@@ -27,7 +27,6 @@ brew "vim"
 # シェル・ターミナル
 brew "atuin"           # シェル履歴管理（クラウド同期対応）
 brew "tmux"            # ターミナルマルチプレクサ
-brew "zellij"          # モダンなターミナルマルチプレクサ（Rust製）
 brew "fzf"             # ファジーファインダー
 brew "zoxide"          # 高速ディレクトリナビゲーション
 brew "direnv"          # ディレクトリ別環境変数管理

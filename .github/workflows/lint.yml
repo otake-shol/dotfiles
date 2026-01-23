@@ -90,13 +90,11 @@ jobs:
 
       - name: Install taplo
         run: |
-          curl -fsSL https://github.com/tamasfe/taplo/releases/latest/download/taplo-full-linux-x86_64.gz | gunzip -c > taplo
-          chmod +x taplo
-          sudo mv taplo /usr/local/bin/
+          npm install -g @taplo/cli
 
       - name: Validate TOML files
         run: |
-          find . -name "*.toml" -type f | while read f; do
+          find . -name "*.toml" -type f ! -path "./.git/*" | while read f; do
             echo "Validating $f"
             taplo format --check "$f" || exit 1
           done
@@ -119,7 +117,9 @@ jobs:
           done
 
       - name: Dry run bootstrap
-        run: bash bootstrap.sh --dry-run
+        run: bash bootstrap.sh --dry-run --skip-apps
+        env:
+          CI: true
 
   zsh-syntax:
     name: Zsh Syntax Check

@@ -12,7 +12,7 @@
 # ========================================
 
 # Nerd Fontを使用（アイコン表示に対応）
-font-family = "JetBrains Mono"
+font-family = "JetBrainsMono Nerd Font"
 font-size = 14
 font-feature = calt, liga, dlig
 
@@ -65,7 +65,7 @@ clipboard-read = allow
 clipboard-write = allow
 
 # スクロールバック行数（大量出力に対応）
-scrollback-limit = 10000
+scrollback-limit = 50000
 
 # マウス関連
 mouse-hide-while-typing = true

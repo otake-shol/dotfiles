@@ -16,6 +16,12 @@
 
 ## メイン技術
 - React / Next.js
+- TypeScript（厳格モード推奨）
+- Node.js 20.x（.tool-versionsで管理）
+
+## パッケージマネージャー
+- npm / yarn / pnpm いずれも可
+- プロジェクトのlock fileに従う
 
 ## 開発スタイル
 - 個人開発・チーム開発の両方
@@ -82,9 +88,20 @@ Claudeとしてのおすすめ案を明示し、その理由を説明する。
 - コメント: 関数やコンポーネントにはJSDocを書く
 - ディレクトリ構成: レイヤーベース（components, hooks, utils など）を好む
 
+## コミットメッセージ規約
+- **Conventional Commits** に従う
+- フォーマット: `<type>: <subject>`
+- Type: feat, fix, docs, style, refactor, perf, test, chore, ci
+- 詳細は `~/dotfiles/git/commit-template.txt` を参照
+
 ---
 
 # テストコード作成時の厳守事項
+
+## テストフレームワーク
+- **Vitest**（推奨）または **Jest**
+- React コンポーネント: **React Testing Library**
+- E2E: **Playwright**
 
 ## 絶対に守ってください
 

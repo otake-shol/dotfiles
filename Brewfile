@@ -40,7 +40,7 @@ brew "tree"            # ディレクトリツリー表示
 brew "btop"            # システムモニター
 brew "nb"              # コマンドラインメモ・ブックマーク管理
 brew "curl"            # HTTPクライアント
-brew "wget"            # ダウンローダー
+brew "mas"             # Mac App Store CLI
 brew "jq"              # JSON処理ツール
 brew "yq"              # YAML/TOML処理ツール
 

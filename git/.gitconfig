@@ -37,8 +37,13 @@
 [log]
 	date = short
 	abbrevCommit = true
+[push]
+	default = current
+	autoSetupRemote = true
 [pull]
 	rebase = true
+[credential]
+	helper = osxkeychain
 [fetch]
 	prune = true
 [rerere]

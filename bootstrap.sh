@@ -210,6 +210,18 @@ if command -v git-secrets &> /dev/null; then
     echo -e "${GREEN}✓ git-secretsを設定しました${NC}"
 fi
 
+# asdf プラグイン・バージョンインストール
+if command -v asdf &> /dev/null; then
+    echo -e "${YELLOW}asdfプラグインをセットアップ中...${NC}"
+    asdf plugin add nodejs 2>/dev/null || true
+    asdf plugin add python 2>/dev/null || true
+
+    if [ -f ~/.tool-versions ]; then
+        asdf install
+        echo -e "${GREEN}✓ asdfバージョンをインストールしました${NC}"
+    fi
+fi
+
 # Neovim TokyoNightテーマ
 TOKYONIGHT_DIR="$HOME/.local/share/nvim/site/pack/colors/start/tokyonight.nvim"
 if [ ! -d "$TOKYONIGHT_DIR" ]; then

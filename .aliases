@@ -113,7 +113,11 @@ alias py="python3"
 
 # Docker
 alias d="docker"
-alias dc="docker-compose"
+alias dc="docker compose"          # Docker Compose v2
+alias dcu="docker compose up"
+alias dcd="docker compose down"
+alias dcb="docker compose build"
+alias dclogs="docker compose logs -f"
 alias dps="docker ps"
 alias dpa="docker ps -a"
 alias di="docker images"
@@ -138,9 +142,31 @@ alias yr="yarn run"
 alias ys="yarn start"
 alias yt="yarn test"
 
+# pnpm
+alias pn="pnpm"
+alias pni="pnpm install"
+alias pna="pnpm add"
+alias pnad="pnpm add -D"
+alias pnr="pnpm run"
+alias pnx="pnpm dlx"
+
 # Homebrew
 alias brewup="brew update && brew upgrade && brew cleanup"
 alias brewls="brew list"
+
+# Kubernetes
+alias k="kubectl"
+alias kgp="kubectl get pods"
+alias kgs="kubectl get services"
+alias kgd="kubectl get deployments"
+alias kl="kubectl logs -f"
+alias kx="kubectl exec -it"
+alias kctx="kubectl config use-context"
+alias kns="kubectl config set-context --current --namespace"
+
+# AWS
+alias awswho="aws sts get-caller-identity"
+alias awsregions="aws ec2 describe-regions --output table"
 
 # ========================================
 # システム・ネットワーク
@@ -202,7 +228,12 @@ alias bathelp="bat --help"           # batのヘルプ
 
 # ファイルプレビュー (fzf + bat)
 alias fp="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
-alias fpe="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' | xargs -r nvim"
+# fzfでファイル選択してnvimで開く（macOS互換）
+fpe() {
+  local file
+  file=$(fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}')
+  [[ -n "$file" ]] && nvim "$file"
+}
 
 # ========================================
 # AI駆動開発ツール

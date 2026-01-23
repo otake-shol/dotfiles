@@ -163,7 +163,7 @@ alias dui="dust -r"                # 逆順（小さい順）
 alias ps="procs"                   # プロセス表示
 alias pst="procs --tree"           # プロセスツリー
 alias psg="procs --or"             # プロセス検索
-alias sed="sd"                     # 正規表現置換
+alias sdr="sd"                     # sd (Rust製の高速置換) ※sedとは構文が異なる
 alias bench="hyperfine"            # コマンドベンチマーク
 
 # ネットワーク

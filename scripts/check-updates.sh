@@ -25,13 +25,17 @@ cd ~/dotfiles 2>/dev/null || {
 # リモートの最新情報を取得
 git fetch origin --quiet 2>/dev/null
 
+# デフォルトブランチを動的に取得 (main/master 両対応)
+DEFAULT_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
+DEFAULT_BRANCH=${DEFAULT_BRANCH:-main}
+
 LOCAL=$(git rev-parse HEAD 2>/dev/null)
-REMOTE=$(git rev-parse origin/master 2>/dev/null)
+REMOTE=$(git rev-parse origin/${DEFAULT_BRANCH} 2>/dev/null)
 
 if [ -z "$REMOTE" ]; then
     echo -e "${YELLOW}⚠ リモートリポジトリに接続できません${NC}"
 elif [ "$LOCAL" != "$REMOTE" ]; then
-    BEHIND=$(git rev-list --count HEAD..origin/master 2>/dev/null)
+    BEHIND=$(git rev-list --count HEAD..origin/${DEFAULT_BRANCH} 2>/dev/null)
     echo -e "${YELLOW}⚠ dotfilesに ${BEHIND} 件の更新があります${NC}"
     echo -e "   更新: cd ~/dotfiles && git pull"
 else

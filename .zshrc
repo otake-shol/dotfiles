@@ -16,6 +16,11 @@ plugins=(zsh-autosuggestions zsh-syntax-highlighting git z python fzf aws 1passw
 
 source $ZSH/oh-my-zsh.sh
 
+# エディタ設定
+export EDITOR="nvim"
+export VISUAL="nvim"
+export GIT_EDITOR="nvim"
+
 # Load aliases from external file
 if [[ -f ~/.aliases ]]; then
   source ~/.aliases
@@ -60,8 +65,12 @@ bindkey '^Z' fancy-ctrl-z
 # Docker Desktop
 source /Users/otkshol/.docker/init-zsh.sh || true
 
-# asdf version manager
-. /usr/local/opt/asdf/libexec/asdf.sh
+# asdf version manager (Apple Silicon / Intel 両対応)
+if [[ $(uname -m) == "arm64" ]]; then
+  . /opt/homebrew/opt/asdf/libexec/asdf.sh
+else
+  . /usr/local/opt/asdf/libexec/asdf.sh
+fi
 
 # kiro shell integration
 [[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"

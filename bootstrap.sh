@@ -25,6 +25,12 @@ if ! command -v brew &> /dev/null; then
     read -r answer
     if [ "$answer" = "y" ]; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        # Homebrew PATH設定 (Apple Silicon / Intel 両対応)
+        if [[ $(uname -m) == "arm64" ]]; then
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        else
+            eval "$(/usr/local/bin/brew shellenv)"
+        fi
         echo -e "${GREEN}Homebrewのインストールが完了しました。${NC}"
     else
         echo -e "${RED}Homebrewが必要です。終了します。${NC}"
@@ -32,6 +38,12 @@ if ! command -v brew &> /dev/null; then
     fi
 else
     echo -e "${GREEN}✓ Homebrewはインストール済みです${NC}"
+    # 既存のHomebrew PATH設定を確認 (Apple Silicon / Intel 両対応)
+    if [[ $(uname -m) == "arm64" ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    else
+        eval "$(/usr/local/bin/brew shellenv)"
+    fi
 fi
 
 # ========================================

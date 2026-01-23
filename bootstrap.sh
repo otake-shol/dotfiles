@@ -445,8 +445,14 @@ fi
 # ========================================
 echo -e "\n${YELLOW}[4/7] Oh My Zshのセットアップ...${NC}"
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
-    echo -e "${YELLOW}Oh My Zshをインストールしますか? (y/n)${NC}"
-    read -r answer
+    # CI環境またはドライランモードではスキップ
+    if [ "$DRY_RUN" = true ] || [ "$CI" = "true" ]; then
+        echo -e "${CYAN}[DRY RUN/CI] Oh My Zshのインストールをスキップします${NC}"
+        answer="n"
+    else
+        echo -e "${YELLOW}Oh My Zshをインストールしますか? (y/n)${NC}"
+        read -r answer
+    fi
     if [ "$answer" = "y" ]; then
         sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 

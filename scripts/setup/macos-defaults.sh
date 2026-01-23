@@ -2,7 +2,7 @@
 # macos-defaults.sh - macOS固有の設定
 # 使用方法: bash scripts/macos-defaults.sh
 
-set -e
+set -euo pipefail
 
 # カラー出力
 GREEN='\033[0;32m'

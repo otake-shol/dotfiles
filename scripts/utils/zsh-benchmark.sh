@@ -4,7 +4,7 @@
 # ========================================
 # 使用方法: bash scripts/utils/zsh-benchmark.sh [回数]
 
-set -e
+set -euo pipefail
 
 ITERATIONS="${1:-10}"
 
@@ -23,7 +23,7 @@ echo ""
 # 通常起動の計測
 echo -e "${YELLOW}▸ 通常モード（$ITERATIONS回計測）${NC}"
 total=0
-for i in $(seq 1 $ITERATIONS); do
+for i in $(seq 1 "$ITERATIONS"); do
     time=$( { time zsh -i -c exit; } 2>&1 | grep real | awk '{print $2}' | sed 's/[^0-9.]//g' )
     # macOSのtimeコマンド形式に対応
     if [[ -z "$time" ]]; then
@@ -39,7 +39,7 @@ echo ""
 # minimalモード計測
 echo -e "${YELLOW}▸ Minimalモード（$ITERATIONS回計測）${NC}"
 total_minimal=0
-for i in $(seq 1 $ITERATIONS); do
+for i in $(seq 1 "$ITERATIONS"); do
     time=$( { DOTFILES_PROFILE=minimal /usr/bin/time -p zsh -i -c exit; } 2>&1 | grep real | awk '{print $2}' )
     total_minimal=$(echo "$total_minimal + $time" | bc)
     printf "  実行 %2d: %.3fs\n" "$i" "$time"
@@ -98,6 +98,7 @@ if [[ "$2" == "--breakdown" ]]; then
     /usr/bin/time -p zsh --no-rcs -c 'source ~/.zshrc; exit' 2>&1 | grep real
 
     echo -e "${YELLOW}▸ oh-my-zsh${NC}"
+    # shellcheck disable=SC2016
     /usr/bin/time -p zsh -c 'export ZSH="$HOME/.oh-my-zsh"; source $ZSH/oh-my-zsh.sh; exit' 2>&1 | grep real
 
     echo -e "${YELLOW}▸ .aliases${NC}"

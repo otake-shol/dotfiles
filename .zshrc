@@ -130,12 +130,32 @@ bindkey '^Z' fancy-ctrl-z
 # Docker (OrbStack)
 # OrbStackは自動でdockerコマンドを提供するため追加設定不要
 
-# asdf version manager (Apple Silicon / Intel 両対応)
-if [[ $(uname -m) == "arm64" ]]; then
-  . /opt/homebrew/opt/asdf/libexec/asdf.sh
-else
-  . /usr/local/opt/asdf/libexec/asdf.sh
-fi
+# ========================================
+# asdf 遅延読み込み (起動速度最適化)
+# ========================================
+# 初回使用時にasdfを読み込む
+_asdf_loaded=false
+_asdf_init() {
+  if [[ "$_asdf_loaded" = false ]]; then
+    _asdf_loaded=true
+    if [[ $(uname -m) == "arm64" ]]; then
+      . /opt/homebrew/opt/asdf/libexec/asdf.sh
+    else
+      . /usr/local/opt/asdf/libexec/asdf.sh
+    fi
+  fi
+}
+
+# asdfコマンドのラッパー（遅延読み込み）
+asdf() {
+  _asdf_init
+  command asdf "$@"
+}
+
+# node/python等使用時に自動初期化
+for cmd in node npm npx python python3 pip pip3 ruby gem; do
+  eval "$cmd() { _asdf_init; unset -f $cmd; command $cmd \"\$@\"; }"
+done
 
 # kiro shell integration
 [[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
@@ -166,9 +186,24 @@ export FZF_DEFAULT_OPTS="
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:200 {}'"
 export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
 
-# direnv - ディレクトリ別環境変数（minimalモードではスキップ）
-if [[ -z "$DOTFILES_MINIMAL" ]]; then
-  eval "$(direnv hook zsh)"
+# ========================================
+# direnv 遅延読み込み
+# ========================================
+# minimalモードではスキップ、それ以外は遅延読み込み
+if [[ -z "$DOTFILES_MINIMAL" ]] && command -v direnv &>/dev/null; then
+  _direnv_hook() {
+    trap -- '' SIGINT
+    eval "$(direnv export zsh 2>/dev/null)"
+    trap - SIGINT
+  }
+  typeset -ag precmd_functions
+  if (( ! ${precmd_functions[(I)_direnv_hook]} )); then
+    precmd_functions=(_direnv_hook $precmd_functions)
+  fi
+  typeset -ag chpwd_functions
+  if (( ! ${chpwd_functions[(I)_direnv_hook]} )); then
+    chpwd_functions=(_direnv_hook $chpwd_functions)
+  fi
 fi
 
 # ========================================
@@ -252,9 +287,19 @@ if [[ -z "$DOTFILES_MINIMAL" ]]; then
   eval "$(zoxide init zsh)"
 fi
 
-# atuin - 高機能シェル履歴管理（minimalモードではスキップ）
-if [[ -z "$DOTFILES_MINIMAL" ]] && command -v atuin &> /dev/null; then
-  eval "$(atuin init zsh)"
+# ========================================
+# atuin 遅延読み込み
+# ========================================
+# minimalモードではスキップ
+if [[ -z "$DOTFILES_MINIMAL" ]] && command -v atuin &>/dev/null; then
+  # atuinの初期化（キャッシュを使用して高速化）
+  _atuin_cache="${XDG_CACHE_HOME:-$HOME/.cache}/atuin-init.zsh"
+  if [[ ! -f "$_atuin_cache" ]] || [[ $(find "$_atuin_cache" -mtime +7 2>/dev/null) ]]; then
+    mkdir -p "$(dirname "$_atuin_cache")"
+    atuin init zsh > "$_atuin_cache" 2>/dev/null
+  fi
+  source "$_atuin_cache"
+  unset _atuin_cache
 fi
 
 # yazi - ターミナルファイルマネージャー

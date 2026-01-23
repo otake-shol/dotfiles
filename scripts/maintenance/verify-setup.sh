@@ -4,7 +4,7 @@
 # ========================================
 # 使用方法: bash scripts/maintenance/verify-setup.sh
 
-set -e
+set -euo pipefail
 
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 
@@ -61,10 +61,12 @@ verify_symlinks() {
     for link_pair in "${links[@]}"; do
         local target="${link_pair%%:*}"
         local source="${link_pair##*:}"
-        local name=$(basename "$target")
+        local name
+        name=$(basename "$target")
 
         if [[ -L "$target" ]]; then
-            local actual_source=$(readlink "$target")
+            local actual_source
+            actual_source=$(readlink "$target")
             if [[ "$actual_source" == "$source" ]]; then
                 check_pass "$name → $source"
             else
@@ -102,7 +104,9 @@ verify_required_tools() {
         local desc="${tool_pair##*:}"
 
         if command -v "$cmd" &>/dev/null; then
-            local version=$($cmd --version 2>/dev/null | head -1 || echo "installed")
+            # shellcheck disable=SC2034
+            local version
+            version=$($cmd --version 2>/dev/null | head -1 || echo "installed")
             check_pass "$cmd ($desc)"
         else
             check_fail "$cmd が見つかりません ($desc)"
@@ -222,8 +226,10 @@ verify_git_config() {
     print_header "Git設定検証"
 
     # ユーザー設定
-    local name=$(git config --global user.name 2>/dev/null || echo "")
-    local email=$(git config --global user.email 2>/dev/null || echo "")
+    local name
+    local email
+    name=$(git config --global user.name 2>/dev/null || echo "")
+    email=$(git config --global user.email 2>/dev/null || echo "")
 
     if [[ -n "$name" ]]; then
         check_pass "Git user.name: $name"
@@ -245,7 +251,8 @@ verify_git_config() {
     fi
 
     # delta
-    local pager=$(git config --global core.pager 2>/dev/null || echo "")
+    local pager
+    pager=$(git config --global core.pager 2>/dev/null || echo "")
     if [[ "$pager" == *"delta"* ]]; then
         check_pass "delta がGit pagerに設定済み"
     else

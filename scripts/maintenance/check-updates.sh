@@ -2,6 +2,8 @@
 # check-updates.sh - dotfilesとBrewの更新状況を確認
 # 使用方法: bash scripts/check-updates.sh
 
+set -euo pipefail
+
 # カラー出力
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -30,12 +32,12 @@ DEFAULT_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@
 DEFAULT_BRANCH=${DEFAULT_BRANCH:-main}
 
 LOCAL=$(git rev-parse HEAD 2>/dev/null)
-REMOTE=$(git rev-parse origin/${DEFAULT_BRANCH} 2>/dev/null)
+REMOTE=$(git rev-parse "origin/${DEFAULT_BRANCH}" 2>/dev/null)
 
 if [ -z "$REMOTE" ]; then
     echo -e "${YELLOW}⚠ リモートリポジトリに接続できません${NC}"
 elif [ "$LOCAL" != "$REMOTE" ]; then
-    BEHIND=$(git rev-list --count HEAD..origin/${DEFAULT_BRANCH} 2>/dev/null)
+    BEHIND=$(git rev-list --count "HEAD..origin/${DEFAULT_BRANCH}" 2>/dev/null)
     echo -e "${YELLOW}⚠ dotfilesに ${BEHIND} 件の更新があります${NC}"
     echo -e "   更新: cd ~/dotfiles && git pull"
 else

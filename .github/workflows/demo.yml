@@ -1,0 +1,66 @@
+name: Generate Demo GIFs
+
+on:
+  push:
+    branches: [master, main]
+    paths:
+      - 'demo/**'
+  workflow_dispatch:
+
+jobs:
+  generate-demos:
+    name: Generate Demo GIFs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install VHS
+        run: |
+          # VHSのインストール
+          curl -fsSL https://apt.fury.io/charmbracelet/gpg.key \
+            | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+          echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] \
+            https://apt.fury.io/charmbracelet/ * *" \
+            | sudo tee /etc/apt/sources.list.d/charm.list
+          sudo apt-get update
+          sudo apt-get install -y vhs
+
+      - name: Install dependencies
+        run: |
+          # デモに必要なツールをインストール
+          sudo apt-get install -y zsh git
+
+      - name: Generate main demo
+        run: |
+          vhs demo/demo.tape \
+            || echo "Demo generation skipped"
+        continue-on-error: true
+
+      - name: Generate scenario demos
+        run: |
+          for tape in demo/scenarios/*.tape; do
+            echo "Processing $tape..."
+            vhs "$tape" || echo "Skipped $tape"
+          done
+        continue-on-error: true
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-gifs
+          path: demo/**/*.gif
+          if-no-files-found: warn
+
+      - name: Commit generated GIFs
+        if: github.event_name == 'push'
+        run: |
+          git config --local user.email \
+            "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add demo/**/*.gif || true
+          git diff --staged --quiet \
+            || git commit -m "chore: update demo GIFs [skip ci]"
+          git push || true
+        continue-on-error: true

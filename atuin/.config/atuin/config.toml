@@ -45,15 +45,7 @@ max_preview_height = 4
 secrets_filter = true
 
 # 特定のコマンドを記録しない
-history_filter = [
-    "^cd ",
-    "^ls",
-    "^ll",
-    "^la",
-    "^exit$",
-    "^clear$",
-    "^pwd$",
-]
+history_filter = ["^cd ", "^ls", "^ll", "^la", "^exit$", "^clear$", "^pwd$"]
 
 # ========================================
 # キーバインド

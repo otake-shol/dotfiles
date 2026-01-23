@@ -3,7 +3,7 @@
 # 使用方法: bash scripts/update-all.sh
 # エイリアス: dotupdate (推奨)
 
-set -e
+set -euo pipefail
 
 # カラー出力
 RED='\033[0;31m'

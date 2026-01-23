@@ -2,9 +2,10 @@
 # linux.sh - Linux/WSL用セットアップスクリプト
 # 使用方法: bash scripts/setup/linux.sh
 
-set -e
+set -euo pipefail
 
 # カラー出力
+# shellcheck disable=SC2034
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -12,6 +13,7 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
 source "$SCRIPT_DIR/../lib/os-detect.sh"
 
 # ========================================
@@ -19,6 +21,7 @@ source "$SCRIPT_DIR/../lib/os-detect.sh"
 # ========================================
 detect_distro() {
     if [ -f /etc/os-release ]; then
+        # shellcheck source=/dev/null
         . /etc/os-release
         echo "$ID"
     elif [ -f /etc/debian_version ]; then
@@ -61,7 +64,8 @@ detect_package_manager() {
 # パッケージインストール
 # ========================================
 install_packages() {
-    local pkg_manager=$(detect_package_manager)
+    local pkg_manager
+    pkg_manager=$(detect_package_manager)
 
     echo -e "${YELLOW}パッケージマネージャー: $pkg_manager${NC}"
 
@@ -102,8 +106,8 @@ install_packages() {
             fi
             ;;
         dnf|yum)
-            sudo $pkg_manager install -y epel-release 2>/dev/null || true
-            sudo $pkg_manager install -y \
+            sudo "$pkg_manager" install -y epel-release 2>/dev/null || true
+            sudo "$pkg_manager" install -y \
                 git curl wget zsh vim tmux tree jq fzf unzip \
                 fd-find ripgrep bat eza zoxide \
                 2>/dev/null || true
@@ -138,7 +142,7 @@ install_linuxbrew() {
 
         # PATHに追加
         BREW_PREFIX="/home/linuxbrew/.linuxbrew"
-        echo 'eval "$('$BREW_PREFIX'/bin/brew shellenv)"' >> ~/.profile
+        echo "eval \"\$(${BREW_PREFIX}/bin/brew shellenv)\"" >> ~/.profile
         eval "$($BREW_PREFIX/bin/brew shellenv)"
 
         echo -e "${GREEN}✓ Linuxbrewをインストールしました${NC}"
@@ -156,7 +160,8 @@ install_neovim() {
 
     echo -e "${YELLOW}Neovimをインストール中...${NC}"
 
-    local pkg_manager=$(detect_package_manager)
+    local pkg_manager
+    pkg_manager=$(detect_package_manager)
 
     case "$pkg_manager" in
         apt)
@@ -166,7 +171,7 @@ install_neovim() {
             sudo mv nvim.appimage /usr/local/bin/nvim
             ;;
         dnf|yum)
-            sudo $pkg_manager install -y neovim
+            sudo "$pkg_manager" install -y neovim
             ;;
         pacman)
             sudo pacman -S --noconfirm neovim
@@ -191,6 +196,7 @@ install_rust_tools() {
         read -r answer
         if [ "$answer" = "y" ]; then
             curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+            # shellcheck source=/dev/null
             source "$HOME/.cargo/env"
         else
             return
@@ -287,7 +293,8 @@ setup_linux_defaults() {
 # メイン
 # ========================================
 main() {
-    local distro=$(detect_distro)
+    local distro
+    distro=$(detect_distro)
 
     echo -e "${BLUE}========================================${NC}"
     echo -e "${BLUE}  Linux セットアップスクリプト${NC}"

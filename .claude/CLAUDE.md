@@ -1,4 +1,4 @@
-# コミュニケーションの好み
+## コミュニケーションの好み
 
 ## 質問の仕方
 - 複数質問がある場合は、まず全体像（質問リスト）を共有する
@@ -12,7 +12,7 @@
 
 ---
 
-# 技術スタック・開発環境
+## 技術スタック・開発環境
 
 ## メイン技術
 - React / Next.js
@@ -96,7 +96,7 @@ Claudeとしてのおすすめ案を明示し、その理由を説明する。
 
 ---
 
-# テストコード作成時の厳守事項
+## テストコード作成時の厳守事項
 
 ## テストフレームワーク
 - **Vitest**（推奨）または **Jest**
@@ -129,7 +129,7 @@ Claudeとしてのおすすめ案を明示し、その理由を説明する。
 
 ---
 
-# Brewfile管理ルール
+## Brewfile管理ルール
 
 ## 自動化の仕組み
 - `brew install <package>` 実行後、Hooksにより自動でBrewfileが更新される
@@ -146,7 +146,7 @@ Claudeとしてのおすすめ案を明示し、その理由を説明する。
 
 ---
 
-# エディタ設定
+## エディタ設定
 
 ## ファイルをエディタで開く場合
 - **Antigravity**（Google製エディタ）を使用すること
@@ -155,7 +155,7 @@ Claudeとしてのおすすめ案を明示し、その理由を説明する。
 
 ---
 
-# MCPサーバー設定
+## MCPサーバー設定
 
 ## 有効なMCPサーバー（13個）
 
@@ -194,3 +194,103 @@ export SENTRY_AUTH_TOKEN="sntrys_xxxxx"
 
 ## MCPサーバーガイド
 詳細は `~/dotfiles/docs/integrations/mcp-servers-guide.md` を参照
+
+---
+
+## dotfiles 開発ガイドライン
+
+## ディレクトリ構造
+
+```
+dotfiles/
+├── .zshrc                 # メインzsh設定
+├── .aliases               # エイリアス定義
+├── bootstrap.sh           # セットアップスクリプト
+├── Makefile               # GNU Stow操作
+├── Brewfile               # 必須パッケージ
+├── Brewfile.full          # 全パッケージ
+├── flake.nix              # Nix設定
+├── home.nix               # home-manager設定
+├── stow/                   # GNU Stowパッケージ
+│   ├── zsh/
+│   ├── git/
+│   ├── nvim/
+│   └── ...
+├── profiles/              # 環境別プロファイル
+│   ├── personal.zsh
+│   ├── work.zsh
+│   └── minimal.zsh
+├── scripts/               # ユーティリティスクリプト
+│   ├── setup/
+│   ├── maintenance/
+│   ├── utils/
+│   └── lib/
+├── tests/                 # Batsテスト
+│   ├── *.bats
+│   └── Dockerfile
+└── demo/                  # VHSデモ録画
+    └── scenarios/
+```
+
+## 開発コマンド
+
+```bash
+# テスト実行
+make test                  # ローカルでBatsテスト
+docker-compose -f tests/docker-compose.yml up  # Dockerでテスト
+
+# Lint
+make lint                  # ShellCheck実行
+
+# Stow操作
+make check                 # ドライラン
+make install               # 全パッケージインストール
+make install-zsh           # 個別パッケージ
+
+# ベンチマーク
+bash scripts/utils/zsh-benchmark.sh
+```
+
+## シェルスクリプト規約
+
+1. **ヘッダー**: `#!/bin/bash` + `set -euo pipefail`
+2. **ローカル変数**: `local` で宣言
+3. **カラー出力**: 共通の色定義を使用
+4. **エラーハンドリング**: trap で cleanup
+5. **ShellCheck準拠**: 警告なしを目指す
+
+## テスト作成ガイドライン
+
+- テストファイル: `tests/*.bats`
+- ヘルパー: `tests/test_helper.bash`
+- アサーション: bats-assert使用
+- 環境: CI環境とローカルの両方で動作すること
+
+## プロファイル追加方法
+
+1. `profiles/<name>.zsh` を作成
+2. `DOTFILES_PROFILE=<name>` で切り替え
+3. `.zshrc` で自動読み込み
+
+## Nix使用方法
+
+```bash
+# 開発シェル
+nix develop
+
+# home-manager適用
+nix run home-manager -- switch --flake .
+```
+
+## CI/CD
+
+- **lint.yml**: ShellCheck, YAML Lint, Markdown Lint, セキュリティスキャン
+- **demo.yml**: VHSデモGIF生成
+- **release.yml**: git-cliffでCHANGELOG生成
+
+## 貢献ガイドライン
+
+1. 変更前にテストを追加
+2. ShellCheckを通す
+3. Conventional Commitsに従う
+4. PRの説明を丁寧に書く

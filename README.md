@@ -31,10 +31,10 @@
 
 ---
 
-<!-- Demo GIF placeholder - replace with actual recording -->
-<!-- <p align="center">
-  <img src="docs/assets/demo.gif" alt="Demo" width="800">
-</p> -->
+<!-- Demo GIF - Generated with VHS -->
+<p align="center">
+  <img src="demo/demo.gif" alt="Demo" width="800">
+</p>
 
 ## Features
 
@@ -231,6 +231,30 @@ zshbench --profile   # Detailed profiling with zprof
 |----------|-------------|
 | [SETUP.md](docs/setup/SETUP.md) | Detailed setup instructions |
 | [APPS.md](docs/setup/APPS.md) | Application list & descriptions |
+
+## Alternative: Nix Flakes
+
+This repository supports Nix Flakes for reproducible environment management:
+
+```bash
+# Enter development shell
+nix develop
+
+# Apply home-manager configuration
+nix run home-manager -- switch --flake .
+
+# Build packages
+nix build
+```
+
+### Why Nix?
+
+- **Reproducible**: Same environment everywhere
+- **Declarative**: Define packages in code
+- **Rollback**: Easy to revert changes
+- **Cross-platform**: Works on Linux & macOS
+
+See [flake.nix](flake.nix) and [home.nix](home.nix) for configuration.
 
 ## Requirements
 

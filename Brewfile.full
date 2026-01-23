@@ -1,120 +1,230 @@
-# Brewfile.full - 完全環境用
-# 現在インストールされている全ツール（必須+オプション）
-
+tap "heroku/brew"
+tap "homebrew/cask-versions"
+tap "homebrew/services"
 tap "oven-sh/bun"
-
-# ========================================
-# CLI Tools
-# ========================================
-
-# Git関連
-brew "git"
-brew "gh"
-brew "git-secrets"
-brew "lazygit"
-brew "git-delta"
-brew "difftastic"
-brew "git-absorb"
-brew "git-cliff"
-
-# バージョン管理
+tap "pivotal/tap"
+# Companion library to apr, the Apache Portable Runtime library
+brew "apr-util"
+# Record and share terminal sessions
+brew "asciinema"
+# Extendable version manager with support for Ruby, Node.js, Erlang & more
 brew "asdf"
-
-# エディタ
-brew "neovim"
-brew "vim"
-
-# シェル・ターミナル
+# Improved shell history for zsh, bash, fish and nushell
 brew "atuin"
-brew "tmux"
-brew "fzf"
-brew "zoxide"
-brew "direnv"
-brew "yazi"
-brew "ffmpegthumbnailer"
-brew "poppler"
-
-# ユーティリティ
+# Official Amazon AWS command-line interface
+brew "awscli", link: false
+# C library implementing the SSH2 protocol
+brew "libssh2"
+# Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
-brew "eza"
-brew "fd"
-brew "ripgrep"
-brew "stow"
-brew "tree"
+# High performance key/value database
+brew "berkeley-db", link: true
+# Resource monitor. C++ version and continuation of bashtop and bpytop
 brew "btop"
-brew "nb"
+# Console Matrix
+brew "cmatrix"
+# Tool for downloading RTMP streaming media
+brew "rtmpdump"
+# Get a file from an HTTP, HTTPS or FTP server
 brew "curl"
-brew "mas"
-brew "jq"
-brew "yq"
-brew "trash"
-
-# AI駆動開発向け
-brew "glow"
-brew "tldr"
-brew "httpie"
-brew "watchexec"
-brew "tokei"
-brew "lefthook"
-
-# モダンCLIツール
+# Libraries to talk to Microsoft SQL Server and Sybase databases
+brew "freetds"
+# C library for reading, creating, and modifying zip archives
+brew "libzip"
+# General-purpose scripting language
+brew "php"
+# Dependency Manager for PHP
+brew "composer"
+# Apjanke's fork of the classic cowsay project
+brew "cowsay"
+# Diff that understands syntax
+brew "difftastic"
+# Load/unload environment variables based on $PWD
+brew "direnv"
+# More intuitive version of du in rust
 brew "dust"
-brew "procs"
-brew "sd"
-brew "hyperfine"
-
-# セキュリティ
+# Modern, maintained replacement for ls
+brew "eza"
+# Simple, fast and user-friendly alternative to find
+brew "fd"
+# Create thumbnails for your video files
+brew "ffmpegthumbnailer"
+# Monitor a directory for changes and run a shell command
+brew "fswatch"
+# Command-line fuzzy finder written in Go
+brew "fzf"
+# GitHub command-line tool
+brew "gh"
+# Distributed revision control system
+brew "git"
+# Automatic git commit --fixup
+brew "git-absorb"
+# Syntax-highlighting pager for git and diff output
+brew "git-delta"
+# Prevents you from committing sensitive information to a git repo
+brew "git-secrets"
+# Render markdown on the CLI
+brew "glow"
+# Asynchronous event library
+brew "libevent"
+# GNU Privacy Guard (OpenPGP)
 brew "gnupg"
+# Open-source build automation tool based on the Groovy and Kotlin DSL
+brew "gradle"
+# User-friendly cURL replacement (command-line HTTP client)
+brew "httpie"
+# Command-line benchmarking tool
+brew "hyperfine"
+# Tools and libraries to manipulate images in select formats
+brew "imagemagick"
+# Lightweight and flexible command-line JSON processor
+brew "jq"
+# Simple terminal UI for git commands
+brew "lazygit"
+# Fast and powerful Git hooks manager for any type of projects
+brew "lefthook"
+# Provides library functionality for FIDO U2F & FIDO 2.0, including USB
+brew "libfido2"
+# CLI for Node.js style checker and lint tool for Markdown files
+brew "markdownlint-cli"
+# Java-based project management
+brew "maven"
+# Simple tool to make locally trusted development certificates
 brew "mkcert"
+# Open source relational database management system
+brew "mysql"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
+# Text interface for Git repositories
+brew "tig"
+# Command-line and local web note-taking, bookmarking, and archiving
+brew "nb"
+# Fast, highly customisable system info script
+brew "neofetch"
+# Ambitious Vim-fork focused on extensibility and agility
+brew "neovim"
+# Libraries for security-enabled client and server applications
 brew "nss"
+# Cryptography and SSL/TLS Toolkit
+brew "openssl@1.1"
+# Port of pdftk in java
+brew "pdftk-java"
+# Highly capable, feature-rich programming language
+brew "perl"
+# Pinentry for GPG on Mac
 brew "pinentry-mac"
-
-# クラウド/AWS
-brew "awscli"
-
-# JSランタイム
-brew "oven-sh/bun/bun"
-
-# Python（最新版のみ、asdfで管理推奨）
+# PDF rendering library (based on the xpdf-3.0 code base)
+brew "poppler"
+# Object-relational database system
+brew "postgresql@14"
+# Modern replacement for ps written in Rust
+brew "procs"
+# Pretty, minimal and fast ZSH prompt
+brew "pure"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.10"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.11"
+# Tool Command Language
+brew "tcl-tk"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.8"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.9"
+# Intuitive find & replace CLI
+brew "sd"
+# Fast, configurable, shell plugin manager
+brew "sheldon"
+# Static analysis and lint tool, for (ba)sh scripts
+brew "shellcheck"
+# Prints a steam locomotive if you type sl instead of ls
+brew "sl"
+# Cross-shell prompt for astronauts
+brew "starship"
+# Organize software neatly under a single directory tree (e.g. /usr/local)
+brew "stow"
+# Tool to build, change, and version infrastructure
+brew "terraform", link: false
+# Tool to generate documentation from Terraform modules
+brew "terraform-docs"
+# Linter for Terraform files
+brew "tflint"
+# Simplified and community-driven man pages
+brew "tldr"
+# Terminal multiplexer
+brew "tmux"
+# Program that allows you to count code, quickly
+brew "tokei"
+# Implementation of Java Servlet and JavaServer Pages
+brew "tomcat"
+# CLI tool that moves files or folder to the trash
+brew "trash"
+# Display directories as trees (with optional color/HTML output)
+brew "tree"
+# File synchronization tool
+brew "unison"
+# Extremely fast Python package installer and resolver, written in Rust
 brew "uv"
-
-# ========================================
-# GUI Applications
-# ========================================
-
-# ターミナル
-cask "ghostty"
-
-# ユーティリティ
+# Vi 'workalike' with many additional features
+brew "vim"
+# Execute commands when watched files change
+brew "watchexec"
+# Internet file retriever
+brew "wget"
+# Linter for YAML files
+brew "yamllint"
+# JavaScript package manager
+brew "yarn", link: false
+# Blazing fast terminal file manager written in Rust, based on async I/O
+brew "yazi"
+# Process YAML, JSON, XML, CSV and properties documents from the CLI
+brew "yq"
+# Pluggable terminal workspace, with terminal multiplexer as the base feature
+brew "zellij"
+# Shell extension to navigate your filesystem faster
+brew "zoxide"
+# Everything you need to get started with Heroku
+brew "heroku/brew/heroku"
+brew "pivotal/tap/springboot"
+# Password manager that keeps all passwords secure behind one password
 cask "1password"
+# Command-line interface for 1Password
 cask "1password-cli"
+# Enable Windows-like alt-tab
 cask "alt-tab"
+# Application uninstaller
 cask "appcleaner"
-cask "cleanshot"
-cask "espanso"
-cask "homerow"
-cask "jordanbaird-ice"
-cask "raycast"
-
-# ブラウザ
+# Chromium based browser
 cask "arc"
-
-# 生産性
-cask "readdle-spark"
-cask "ticktick"
-
-# コミュニケーション
-cask "slack"
-
-# デザイン
-cask "figma"
-
-# AI・開発
-cask "claude"
-cask "dbeaver-community"
+# Open source IDE for exploring and testing APIs
 cask "bruno"
-cask "orbstack"
-
-# フォント
+# Anthropic's official Claude AI desktop app
+cask "claude"
+# Screen capturing tool
+cask "cleanshot"
+# Universal database tool and SQL client
+cask "dbeaver-community"
+# Cross-platform Text Expander written in Rust
+cask "espanso"
 cask "font-hack-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"
+# Keyboard shortcuts for every button on your screen
+cask "homerow"
+# Menu bar manager
+cask "jordanbaird-ice"
+# Reverse proxy, secure introspectable tunnels to localhost
+cask "ngrok"
+# Finds large, unwanted files and deletes them
+cask "omnidisksweeper"
+# Replacement for Docker Desktop
+cask "orbstack"
+# Control your tools with a few keystrokes
+cask "raycast"
+# Email client
+cask "readdle-spark"
+# Team communication and collaboration software
+cask "slack"
+# To-do & task list manager
+cask "ticktick"

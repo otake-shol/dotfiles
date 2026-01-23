@@ -2,6 +2,8 @@
 # sync-brewfile.sh - Brewfileとインストール済みパッケージの差分を検出
 # 使用方法: bash scripts/sync-brewfile.sh
 
+set -euo pipefail
+
 # カラー出力
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'

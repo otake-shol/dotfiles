@@ -3,7 +3,7 @@
 # 使用方法: bash scripts/generate-changelog.sh
 # 前提条件: brew install git-cliff
 
-set -e
+set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"

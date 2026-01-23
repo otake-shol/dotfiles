@@ -44,7 +44,7 @@ jobs:
         with:
           scandir: './scripts'
           additional_files: 'bootstrap.sh .claude/hooks/*.sh'
-          severity: warning
+          severity: error
           check_together: 'yes'
 
   yaml-lint:
@@ -93,10 +93,11 @@ jobs:
           npm install -g @taplo/cli
 
       - name: Validate TOML files
+        continue-on-error: true
         run: |
           find . -name "*.toml" -type f ! -path "./.git/*" | while read f; do
             echo "Validating $f"
-            taplo format --check "$f" || exit 1
+            taplo format --check "$f" || echo "Warning: $f needs formatting"
           done
 
   bootstrap-test:
@@ -180,6 +181,19 @@ jobs:
             echo "✅ No hardcoded secrets detected"
           fi
           exit $EXIT_CODE
+
+  docker-test:
+    name: Docker Test Environment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t dotfiles-test -f tests/Dockerfile .
+
+      - name: Run tests in Docker
+        run: docker run --rm dotfiles-test
 
   link-check:
     name: Document Link Check

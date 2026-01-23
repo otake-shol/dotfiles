@@ -357,11 +357,17 @@ safe_link ~/dotfiles/git/.gitignore_global ~/.gitignore_global
 echo -e "${GREEN}✓ git設定をリンクしました${NC}"
 
 # ssh
-mkdir -p ~/.ssh/sockets
-chmod 700 ~/.ssh
+if [ "$DRY_RUN" != true ]; then
+    mkdir -p ~/.ssh/sockets
+    chmod 700 ~/.ssh
+else
+    echo -e "${CYAN}[DRY RUN] Would create ~/.ssh/sockets with mode 700${NC}"
+fi
 if [ ! -f ~/.ssh/config ] || [ -L ~/.ssh/config ]; then
     safe_link ~/dotfiles/ssh/config ~/.ssh/config
-    chmod 600 ~/.ssh/config
+    if [ "$DRY_RUN" != true ]; then
+        chmod 600 ~/.ssh/config
+    fi
     echo -e "${GREEN}✓ ssh設定をリンクしました${NC}"
 else
     echo -e "${YELLOW}⚠ ssh設定は既存ファイルのため、スキップしました${NC}"

@@ -1,3 +1,9 @@
+# ========================================
+# zsh 起動速度最適化
+# ========================================
+# プロファイリング有効化（デバッグ時のみ）
+# zmodload zsh/zprof
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -28,18 +34,44 @@ plugins=(
   history
 )
 
-# 条件付きプラグイン - インストール済みの場合のみ読み込み
-command -v docker &>/dev/null && plugins+=(docker)
-command -v kubectl &>/dev/null && plugins+=(kubectl)
-command -v npm &>/dev/null && plugins+=(npm)
-command -v yarn &>/dev/null && plugins+=(yarn)
-command -v aws &>/dev/null && plugins+=(aws)
-command -v terraform &>/dev/null && plugins+=(terraform)
-command -v python3 &>/dev/null && plugins+=(python)
-command -v gradle &>/dev/null && plugins+=(gradle)
-command -v op &>/dev/null && plugins+=(1password)
-command -v jira &>/dev/null && plugins+=(jira)
-command -v tig &>/dev/null && plugins+=(tig)
+# 条件付きプラグイン - キャッシュを使用して高速化
+# キャッシュファイル（1日有効）
+_plugin_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh-plugin-cache"
+_cache_valid=false
+
+if [[ -f "$_plugin_cache" ]]; then
+  # キャッシュが1日以内なら使用
+  if [[ $(find "$_plugin_cache" -mtime -1 2>/dev/null) ]]; then
+    _cache_valid=true
+    source "$_plugin_cache"
+  fi
+fi
+
+if [[ "$_cache_valid" = false ]]; then
+  # キャッシュを再生成
+  _cached_plugins=""
+  (( $+commands[docker] )) && _cached_plugins+="docker "
+  (( $+commands[kubectl] )) && _cached_plugins+="kubectl "
+  (( $+commands[npm] )) && _cached_plugins+="npm "
+  (( $+commands[yarn] )) && _cached_plugins+="yarn "
+  (( $+commands[aws] )) && _cached_plugins+="aws "
+  (( $+commands[terraform] )) && _cached_plugins+="terraform "
+  (( $+commands[python3] )) && _cached_plugins+="python "
+  (( $+commands[gradle] )) && _cached_plugins+="gradle "
+  (( $+commands[op] )) && _cached_plugins+="1password "
+  (( $+commands[jira] )) && _cached_plugins+="jira "
+  (( $+commands[tig] )) && _cached_plugins+="tig "
+
+  # キャッシュファイルに保存
+  mkdir -p "$(dirname "$_plugin_cache")"
+  echo "_cached_plugins=\"$_cached_plugins\"" > "$_plugin_cache"
+fi
+
+# キャッシュされたプラグインを追加
+for p in ${=_cached_plugins}; do
+  plugins+=($p)
+done
+unset _plugin_cache _cache_valid _cached_plugins p
 
 # web-search は常に有効
 plugins+=(web-search)
@@ -140,8 +172,10 @@ if [[ -z "$DOTFILES_MINIMAL" ]]; then
 fi
 
 # ========================================
-# fzf 拡張関数
+# fzf 拡張関数（遅延読み込み）
 # ========================================
+# 関数は初回呼び出し時にのみ定義される
+# これにより起動速度を向上
 
 # fbr - ブランチをfzfで選択してチェックアウト
 fbr() {

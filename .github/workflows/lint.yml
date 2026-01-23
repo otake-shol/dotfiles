@@ -1,4 +1,4 @@
-name: Lint dotfiles
+name: Lint & Test dotfiles
 
 on:
   push:
@@ -7,6 +7,31 @@ on:
     branches: [master, main]
 
 jobs:
+  bats-test:
+    name: Bats Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install bats
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bats
+
+      - name: Install bats helpers
+        run: |
+          sudo git clone https://github.com/bats-core/bats-support.git /usr/local/lib/bats-support
+          sudo git clone https://github.com/bats-core/bats-assert.git /usr/local/lib/bats-assert
+
+      - name: Install zsh
+        run: sudo apt-get install -y zsh
+
+      - name: Run tests
+        run: bats tests/
+        env:
+          CI: true
+
   shellcheck:
     name: ShellCheck
     runs-on: ubuntu-latest

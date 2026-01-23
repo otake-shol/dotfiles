@@ -1,10 +1,12 @@
 #!/bin/bash
-# bootstrap.sh - 新しいMacの自動セットアップスクリプト
+# bootstrap.sh - 新しいMac/Linuxの自動セットアップスクリプト
 # 使用方法: bash bootstrap.sh
 # オプション:
 #   -n, --dry-run    実際の変更を行わずシミュレーション
 #   -h, --help       ヘルプを表示
 #   -v, --verbose    詳細出力
+#   --linux-only     Linuxセットアップのみ実行
+#   --skip-apps      アプリケーションインストールをスキップ
 
 set -e  # エラーで停止
 
@@ -13,6 +15,8 @@ set -e  # エラーで停止
 # ========================================
 DRY_RUN=false
 VERBOSE=false
+LINUX_ONLY=false
+SKIP_APPS=false
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # カラー出力
@@ -61,6 +65,12 @@ while [[ "$#" -gt 0 ]]; do
             ;;
         -h|--help)
             show_help
+            ;;
+        --linux-only)
+            LINUX_ONLY=true
+            ;;
+        --skip-apps)
+            SKIP_APPS=true
             ;;
         *)
             echo -e "${RED}不明なオプション: $1${NC}"
@@ -127,16 +137,33 @@ detect_system() {
     OS="$(uname -s)"
     ARCH="$(uname -m)"
 
-    if [ "$OS" != "Darwin" ]; then
-        echo -e "${RED}このスクリプトはmacOS専用です${NC}"
-        exit 1
-    fi
-
-    if [ "$ARCH" = "arm64" ]; then
-        HOMEBREW_PREFIX="/opt/homebrew"
-    else
-        HOMEBREW_PREFIX="/usr/local"
-    fi
+    case "$OS" in
+        Darwin)
+            IS_MACOS=true
+            IS_LINUX=false
+            if [ "$ARCH" = "arm64" ]; then
+                HOMEBREW_PREFIX="/opt/homebrew"
+            else
+                HOMEBREW_PREFIX="/usr/local"
+            fi
+            ;;
+        Linux)
+            IS_MACOS=false
+            IS_LINUX=true
+            HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
+            # WSL検出
+            if grep -qEi "(Microsoft|WSL)" /proc/version 2>/dev/null; then
+                IS_WSL=true
+                echo -e "${CYAN}WSL環境を検出しました${NC}"
+            else
+                IS_WSL=false
+            fi
+            ;;
+        *)
+            echo -e "${RED}未対応のOS: $OS${NC}"
+            exit 1
+            ;;
+    esac
 
     log "Detected: $OS ($ARCH), Homebrew prefix: $HOMEBREW_PREFIX"
 }
@@ -208,70 +235,111 @@ fi
 # ========================================
 # 1. Homebrewのインストール確認
 # ========================================
-echo -e "\n${YELLOW}[1/6] Homebrewの確認...${NC}"
+echo -e "\n${YELLOW}[1/7] Homebrewの確認...${NC}"
 if ! command -v brew &> /dev/null; then
     echo -e "${RED}Homebrewがインストールされていません。${NC}"
-    echo -e "${YELLOW}Homebrewをインストールしますか? (y/n)${NC}"
+    if [ "$IS_LINUX" = true ]; then
+        echo -e "${YELLOW}Linuxbrew (Homebrew for Linux) をインストールしますか? (y/n)${NC}"
+        echo -e "${CYAN}※ LinuxbrewなしでもLinux固有のパッケージマネージャーで続行可能です${NC}"
+    else
+        echo -e "${YELLOW}Homebrewをインストールしますか? (y/n)${NC}"
+    fi
     read -r answer
     if [ "$answer" = "y" ]; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        # Homebrew PATH設定 (Apple Silicon / Intel 両対応)
+        # Homebrew PATH設定
+        if [ "$IS_MACOS" = true ]; then
+            if [[ $(uname -m) == "arm64" ]]; then
+                eval "$(/opt/homebrew/bin/brew shellenv)"
+            else
+                eval "$(/usr/local/bin/brew shellenv)"
+            fi
+        else
+            eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        fi
+        echo -e "${GREEN}Homebrewのインストールが完了しました。${NC}"
+    else
+        if [ "$IS_MACOS" = true ]; then
+            echo -e "${RED}macOSではHomebrewが必要です。終了します。${NC}"
+            exit 1
+        else
+            echo -e "${YELLOW}⚠ Homebrew未インストール。Linux固有パッケージマネージャーを使用します${NC}"
+            USE_SYSTEM_PKG=true
+        fi
+    fi
+else
+    echo -e "${GREEN}✓ Homebrewはインストール済みです${NC}"
+    # 既存のHomebrew PATH設定
+    if [ "$IS_MACOS" = true ]; then
         if [[ $(uname -m) == "arm64" ]]; then
             eval "$(/opt/homebrew/bin/brew shellenv)"
         else
             eval "$(/usr/local/bin/brew shellenv)"
         fi
-        echo -e "${GREEN}Homebrewのインストールが完了しました。${NC}"
     else
-        echo -e "${RED}Homebrewが必要です。終了します。${NC}"
-        exit 1
-    fi
-else
-    echo -e "${GREEN}✓ Homebrewはインストール済みです${NC}"
-    # 既存のHomebrew PATH設定を確認 (Apple Silicon / Intel 両対応)
-    if [[ $(uname -m) == "arm64" ]]; then
-        eval "$(/opt/homebrew/bin/brew shellenv)"
-    else
-        eval "$(/usr/local/bin/brew shellenv)"
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" 2>/dev/null || true
     fi
 fi
 
 # ========================================
 # 2. アプリケーションのインストール
 # ========================================
-echo -e "\n${YELLOW}[2/6] アプリケーションのインストール...${NC}"
-echo -e "${YELLOW}どのBrewfileを使用しますか?${NC}"
-echo -e "  1) Brewfile (必須ツールのみ - 推奨)"
-echo -e "  2) Brewfile.full (全ツール)"
-read -r brewfile_choice
+echo -e "\n${YELLOW}[2/7] アプリケーションのインストール...${NC}"
 
-case $brewfile_choice in
-    1)
-        BREWFILE="Brewfile"
-        echo -e "${GREEN}必須ツールをインストールします${NC}"
-        ;;
-    2)
-        BREWFILE="Brewfile.full"
-        echo -e "${YELLOW}全ツールをインストールします（時間がかかります）${NC}"
-        ;;
-    *)
-        BREWFILE="Brewfile"
-        echo -e "${GREEN}デフォルト: 必須ツールをインストールします${NC}"
-        ;;
-esac
+if [ "$SKIP_APPS" = true ]; then
+    echo -e "${CYAN}アプリケーションインストールをスキップします${NC}"
+elif [ "$USE_SYSTEM_PKG" = true ] && [ "$IS_LINUX" = true ]; then
+    # Linux固有パッケージマネージャーを使用
+    echo -e "${YELLOW}Linux固有パッケージマネージャーでツールをインストール...${NC}"
+    bash "$SCRIPT_DIR/scripts/setup/linux.sh"
+elif command -v brew &>/dev/null; then
+    # Homebrewを使用
+    if [ "$IS_LINUX" = true ]; then
+        # Linux用Brewfile（GUIアプリを除外）
+        BREWFILE="Brewfile.linux"
+        if [ ! -f "$BREWFILE" ]; then
+            # LinuxにはGUIアプリなしのBrewfileを生成
+            echo -e "${YELLOW}Linux用Brewfile (CLI tools only) を使用します${NC}"
+            BREWFILE="Brewfile"
+        fi
+    else
+        echo -e "${YELLOW}どのBrewfileを使用しますか?${NC}"
+        echo -e "  1) Brewfile (必須ツールのみ - 推奨)"
+        echo -e "  2) Brewfile.full (全ツール)"
+        read -r brewfile_choice
 
-if [ -f "$BREWFILE" ]; then
-    brew bundle --file="$BREWFILE"
-    echo -e "${GREEN}✓ アプリケーションのインストールが完了しました${NC}"
+        case $brewfile_choice in
+            1)
+                BREWFILE="Brewfile"
+                echo -e "${GREEN}必須ツールをインストールします${NC}"
+                ;;
+            2)
+                BREWFILE="Brewfile.full"
+                echo -e "${YELLOW}全ツールをインストールします${NC}"
+                ;;
+            *)
+                BREWFILE="Brewfile"
+                echo -e "${GREEN}デフォルト: 必須ツールをインストールします${NC}"
+                ;;
+        esac
+    fi
+
+    if [ -f "$BREWFILE" ]; then
+        brew bundle --file="$BREWFILE"
+        echo -e "${GREEN}✓ アプリケーションのインストールが完了しました${NC}"
+    else
+        echo -e "${RED}$BREWFILE が見つかりません${NC}"
+        exit 1
+    fi
 else
-    echo -e "${RED}$BREWFILE が見つかりません${NC}"
+    echo -e "${RED}Homebrewが見つかりません${NC}"
     exit 1
 fi
 
 # ========================================
 # 3. dotfilesのシンボリックリンク作成
 # ========================================
-echo -e "\n${YELLOW}[3/6] dotfilesのシンボリックリンク作成...${NC}"
+echo -e "\n${YELLOW}[3/7] dotfilesのシンボリックリンク作成...${NC}"
 
 # zsh
 safe_link ~/dotfiles/.zshrc ~/.zshrc
@@ -340,7 +408,11 @@ safe_link ~/dotfiles/atuin/.config/atuin/config.toml ~/.config/atuin/config.toml
 echo -e "${GREEN}✓ atuin設定をリンクしました${NC}"
 
 # espanso
-ESPANSO_CONFIG_DIR="$HOME/Library/Application Support/espanso"
+if [ "$IS_MACOS" = true ]; then
+    ESPANSO_CONFIG_DIR="$HOME/Library/Application Support/espanso"
+else
+    ESPANSO_CONFIG_DIR="$HOME/.config/espanso"
+fi
 if command -v espanso &> /dev/null || [ -d "$ESPANSO_CONFIG_DIR" ]; then
     mkdir -p "$ESPANSO_CONFIG_DIR/match"
     safe_link ~/dotfiles/espanso/match/ai-prompts.yml "$ESPANSO_CONFIG_DIR/match/ai-prompts.yml"
@@ -349,21 +421,23 @@ else
     echo -e "${YELLOW}⚠ espansoがインストールされていません。スキップします${NC}"
 fi
 
-# antigravity
-ANTIGRAVITY_USER_DIR="$HOME/Library/Application Support/Antigravity/User"
-if [ -d "$HOME/Library/Application Support/Antigravity" ]; then
-    mkdir -p "$ANTIGRAVITY_USER_DIR"
-    safe_link ~/dotfiles/antigravity/settings.json "$ANTIGRAVITY_USER_DIR/settings.json"
-    safe_link ~/dotfiles/antigravity/keybindings.json "$ANTIGRAVITY_USER_DIR/keybindings.json"
-    echo -e "${GREEN}✓ Antigravity設定をリンクしました${NC}"
-else
-    echo -e "${YELLOW}⚠ Antigravityがインストールされていません。スキップします${NC}"
+# antigravity (macOS only)
+if [ "$IS_MACOS" = true ]; then
+    ANTIGRAVITY_USER_DIR="$HOME/Library/Application Support/Antigravity/User"
+    if [ -d "$HOME/Library/Application Support/Antigravity" ]; then
+        mkdir -p "$ANTIGRAVITY_USER_DIR"
+        safe_link ~/dotfiles/antigravity/settings.json "$ANTIGRAVITY_USER_DIR/settings.json"
+        safe_link ~/dotfiles/antigravity/keybindings.json "$ANTIGRAVITY_USER_DIR/keybindings.json"
+        echo -e "${GREEN}✓ Antigravity設定をリンクしました${NC}"
+    else
+        echo -e "${YELLOW}⚠ Antigravityがインストールされていません。スキップします${NC}"
+    fi
 fi
 
 # ========================================
 # 4. Oh My Zshのセットアップ
 # ========================================
-echo -e "\n${YELLOW}[4/6] Oh My Zshのセットアップ...${NC}"
+echo -e "\n${YELLOW}[4/7] Oh My Zshのセットアップ...${NC}"
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
     echo -e "${YELLOW}Oh My Zshをインストールしますか? (y/n)${NC}"
     read -r answer
@@ -395,11 +469,18 @@ fi
 # ========================================
 # 5. 追加設定
 # ========================================
-echo -e "\n${YELLOW}[5/6] 追加設定...${NC}"
+echo -e "\n${YELLOW}[5/7] 追加設定...${NC}"
 
-# macOS defaults設定
-if [ -f ~/dotfiles/scripts/macos-defaults.sh ]; then
-    bash ~/dotfiles/scripts/macos-defaults.sh
+# OS固有設定
+if [ "$IS_MACOS" = true ]; then
+    if [ -f ~/dotfiles/scripts/setup/macos-defaults.sh ]; then
+        bash ~/dotfiles/scripts/setup/macos-defaults.sh
+    fi
+elif [ "$IS_LINUX" = true ]; then
+    if [ -f ~/dotfiles/scripts/setup/linux.sh ]; then
+        # Linux固有の追加設定（パッケージインストールはスキップ、設定のみ）
+        echo -e "${YELLOW}Linux固有設定を適用中...${NC}"
+    fi
 fi
 
 # git-secrets設定
@@ -490,7 +571,58 @@ else
 fi
 
 # ========================================
-# 6. 完了
+# 6. Linux/WSL固有設定
+# ========================================
+if [ "$IS_LINUX" = true ]; then
+    echo -e "\n${YELLOW}[6/7] Linux固有設定...${NC}"
+
+    # デフォルトシェルをzshに変更
+    if [ "$(basename "$SHELL")" != "zsh" ] && command -v zsh &>/dev/null; then
+        echo -e "${YELLOW}デフォルトシェルをzshに変更しますか? (y/n)${NC}"
+        read -r answer
+        if [ "$answer" = "y" ]; then
+            chsh -s "$(which zsh)"
+            echo -e "${GREEN}✓ デフォルトシェルをzshに変更しました${NC}"
+        fi
+    else
+        echo -e "${GREEN}✓ zshは既にデフォルトシェルです${NC}"
+    fi
+
+    # WSL固有設定
+    if [ "$IS_WSL" = true ]; then
+        echo -e "${YELLOW}WSL固有設定を確認中...${NC}"
+
+        # Windows側のクリップボード連携設定
+        if [ -f /mnt/c/Windows/System32/clip.exe ]; then
+            echo -e "${GREEN}✓ Windowsクリップボード連携が利用可能です${NC}"
+        fi
+
+        # wsl.conf設定
+        if [ ! -f /etc/wsl.conf ]; then
+            echo -e "${YELLOW}wsl.confを作成しますか? (systemd有効化) (y/n)${NC}"
+            read -r answer
+            if [ "$answer" = "y" ]; then
+                sudo tee /etc/wsl.conf > /dev/null << 'WSLEOF'
+[boot]
+systemd=true
+
+[interop]
+appendWindowsPath=false
+
+[automount]
+enabled=true
+options="metadata,umask=22,fmask=11"
+WSLEOF
+                echo -e "${GREEN}✓ wsl.confを作成しました（WSL再起動が必要）${NC}"
+            fi
+        fi
+    fi
+else
+    echo -e "\n${YELLOW}[6/7] macOS固有設定は適用済みです${NC}"
+fi
+
+# ========================================
+# 7. 完了
 # ========================================
 log "=== Setup completed successfully ==="
 
@@ -501,5 +633,8 @@ echo -e "\n${YELLOW}次のステップ:${NC}"
 echo -e "  1. ターミナルを再起動するか、'source ~/.zshrc' を実行"
 echo -e "  2. Powerlevel10kの設定: 'p10k configure'"
 echo -e "  3. Nerd Fontをターミナルに設定"
-echo -e "\n${BLUE}追加のアプリケーションは docs/APPS.md を参照してください${NC}"
+if [ "$IS_WSL" = true ]; then
+    echo -e "  4. WSLを再起動: wsl --shutdown (PowerShellから)"
+fi
+echo -e "\n${BLUE}追加のアプリケーションは docs/setup/APPS.md を参照してください${NC}"
 echo -e "${BLUE}ログファイル: $LOG_FILE${NC}"

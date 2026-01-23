@@ -70,3 +70,41 @@ echo ""
 echo -e "${BOLD}詳細なプロファイリング:${NC}"
 echo "  zsh -i -c 'zprof' を実行（zshrcに 'zmodload zsh/zprof' を追加）"
 echo ""
+
+# プロファイリングオプション
+if [[ "$2" == "--profile" ]]; then
+    echo -e "${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BOLD} 詳細プロファイリング（上位10項目）${NC}"
+    echo -e "${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+
+    # 一時的なzshrcを作成してzprofを有効化
+    TEMP_ZSHRC=$(mktemp)
+    echo "zmodload zsh/zprof" > "$TEMP_ZSHRC"
+    cat ~/.zshrc >> "$TEMP_ZSHRC"
+    echo "zprof | head -20" >> "$TEMP_ZSHRC"
+
+    ZDOTDIR=$(dirname "$TEMP_ZSHRC") zsh -c "source $TEMP_ZSHRC"
+    rm "$TEMP_ZSHRC"
+fi
+
+# 起動時間の内訳を表示するオプション
+if [[ "$2" == "--breakdown" ]]; then
+    echo -e "${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BOLD} 起動時間内訳${NC}"
+    echo -e "${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+
+    # 各設定ファイルの読み込み時間を計測
+    echo -e "${YELLOW}▸ .zshrc のみ${NC}"
+    /usr/bin/time -p zsh --no-rcs -c 'source ~/.zshrc; exit' 2>&1 | grep real
+
+    echo -e "${YELLOW}▸ oh-my-zsh${NC}"
+    /usr/bin/time -p zsh -c 'export ZSH="$HOME/.oh-my-zsh"; source $ZSH/oh-my-zsh.sh; exit' 2>&1 | grep real
+
+    echo -e "${YELLOW}▸ .aliases${NC}"
+    /usr/bin/time -p zsh --no-rcs -c '[[ -f ~/.aliases ]] && source ~/.aliases; exit' 2>&1 | grep real
+fi
+
+echo -e "${BOLD}オプション:${NC}"
+echo "  --profile    zprofによる詳細プロファイリング"
+echo "  --breakdown  起動時間の内訳表示"
+echo ""

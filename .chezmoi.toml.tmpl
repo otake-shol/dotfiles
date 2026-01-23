@@ -1,0 +1,49 @@
+# chezmoi configuration template
+# Documentation: https://www.chezmoi.io/reference/configuration-file/
+
+[data]
+    # User information (prompted during init)
+    name = "{{ .chezmoi.username }}"
+    email = "{{ promptStringOnce . "email" "Email address" }}"
+
+    # Profile selection
+    # Options: personal, work, minimal
+    profile = "{{ promptStringOnce . "profile" "Profile (personal/work/minimal)" "personal" }}"
+
+    # OS-specific settings
+    {{- if eq .chezmoi.os "darwin" }}
+    os = "macos"
+    {{- else if eq .chezmoi.os "linux" }}
+    os = "linux"
+    {{- if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+    is_wsl = true
+    {{- else }}
+    is_wsl = false
+    {{- end }}
+    {{- else }}
+    os = "unknown"
+    {{- end }}
+
+[diff]
+    # Use delta for diffs
+    command = "delta"
+    args = ["--paging", "never"]
+
+[merge]
+    # Use nvim for merge conflicts
+    command = "nvim"
+    args = ["-d", "{{ "{{" }} .Destination {{ "}}" }}", "{{ "{{" }} .Source {{ "}}" }}", "{{ "{{" }} .Target {{ "}}" }}"]
+
+[edit]
+    # Default editor
+    command = "nvim"
+
+[git]
+    # Auto commit/push
+    autoCommit = false
+    autoPush = false
+
+# Encryption with age (optional)
+# [age]
+#     identity = "~/.config/chezmoi/key.txt"
+#     recipient = "age1..."

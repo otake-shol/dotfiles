@@ -1,0 +1,156 @@
+# MkDocs configuration
+# Documentation: https://www.mkdocs.org/
+# Material theme: https://squidfunk.github.io/mkdocs-material/
+
+site_name: dotfiles
+site_url: https://otake-shol.github.io/dotfiles/
+site_author: otake-shol
+site_description: A modern, cross-platform dotfiles repository with AI-driven development integration
+
+repo_name: otake-shol/dotfiles
+repo_url: https://github.com/otake-shol/dotfiles
+edit_uri: edit/master/docs/
+
+copyright: Copyright &copy; 2024 otake-shol
+
+theme:
+  name: material
+  language: en
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: deep purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: deep purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: JetBrains Mono
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.action.edit
+
+plugins:
+  - search:
+      lang:
+        - en
+        - ja
+  - minify:
+      minify_html: true
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: otake-shol
+      repo: dotfiles
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/otake-shol
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX
+  alternate:
+    - name: English
+      link: /
+      lang: en
+    - name: 日本語
+      link: /ja/
+      lang: ja
+
+extra_css:
+  - stylesheets/extra.css
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Quick Start: getting-started/quick-start.md
+      - Installation: getting-started/installation.md
+      - Configuration: getting-started/configuration.md
+  - Features:
+      - Shell Setup: features/shell.md
+      - Modern CLI Tools: features/cli-tools.md
+      - Development Environment: features/development.md
+      - AI-Driven Development: features/ai-driven-dev.md
+  - Guides:
+      - AI Workflow:
+          - AI-Driven Dev Guide: ai-workflow/AI-DRIVEN-DEV-GUIDE.md
+          - Spec-Driven Development: ai-workflow/SPEC-DRIVEN-DEV.md
+          - AI Prompts: ai-workflow/AI-PROMPTS.md
+      - Integrations:
+          - MCP Servers: integrations/mcp-servers-guide.md
+          - Claude Code × Jira: integrations/claude-code-jira-guide.md
+          - Confluence Automation: integrations/confluence-requirements-doc-automation.md
+      - Setup:
+          - Detailed Setup: setup/SETUP.md
+          - Application List: setup/APPS.md
+  - Reference:
+      - Aliases: reference/aliases.md
+      - Functions: reference/functions.md
+      - Scripts: reference/scripts.md
+      - Configuration Files: reference/config-files.md
+  - Contributing: contributing.md
+  - Changelog: changelog.md

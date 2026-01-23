@@ -2,56 +2,31 @@
   {
     "name": "Claude Code",
     "text": "Claude Code",
-    "keyword": ":c"
-  },
-  {
-    "name": "Claude Code ;c",
-    "text": "Claude Code",
     "keyword": ";c"
   },
   {
     "name": "Antigravity",
-    "text": "Antigravity",
-    "keyword": ":a"
-  },
-  {
-    "name": "Antigravity ;a",
     "text": "Antigravity",
     "keyword": ";a"
   },
   {
     "name": "ultrathink",
     "text": "ultrathink",
-    "keyword": ":u"
-  },
-  {
-    "name": "ultrathink :U",
-    "text": "ultrathink",
-    "keyword": ":U"
-  },
-  {
-    "name": "ultrathink ;u",
-    "text": "ultrathink",
     "keyword": ";u"
-  },
-  {
-    "name": "ultrathink ;U",
-    "text": "ultrathink",
-    "keyword": ";U"
   },
   {
     "name": "Date",
     "text": "{date:YYYY-MM-DD}",
-    "keyword": ":date"
+    "keyword": ";date"
   },
   {
     "name": "Time",
     "text": "{time:HH:mm}",
-    "keyword": ":time"
+    "keyword": ";time"
   },
   {
     "name": "DateTime",
     "text": "{date:YYYY-MM-DD} {time:HH:mm}",
-    "keyword": ":now"
+    "keyword": ";now"
   }
 ]

@@ -433,7 +433,6 @@ fi
 | **git-secrets** | 認証情報漏洩防止 | `brew install git-secrets` |
 | **git-delta** | 美しい diff 表示 | `brew install git-delta` |
 | **difftastic** | 構文認識 diff | `brew install difftastic` |
-| **tig** | Git テキストUI | `brew install tig` |
 
 #### lazygit
 
@@ -820,7 +819,6 @@ asdf install
 | **tree** | ディレクトリツリー表示 | `brew install tree` |
 | **nb** | CLI メモ・ブックマーク | `brew install nb` |
 | **curl** | HTTP クライアント | `brew install curl` |
-| **wget** | ダウンローダー | `brew install wget` |
 | **jq** | JSON 処理ツール | `brew install jq` |
 | **yq** | YAML/TOML 処理ツール | `brew install yq` |
 | **gnupg** | GPG 暗号化 | `brew install gnupg` |

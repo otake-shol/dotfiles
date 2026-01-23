@@ -99,6 +99,67 @@ defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool t
 echo -e "${GREEN}✓ トラックパッド: タップでクリック、3本指ドラッグ${NC}"
 
 # ========================================
+# Mission Control
+# ========================================
+# スペースを最近使用順に並び替えない（位置を固定）
+defaults write com.apple.dock mru-spaces -bool false
+# Mission Controlアニメーション高速化
+defaults write com.apple.dock expose-animation-duration -float 0.1
+# アプリケーションごとにウィンドウをグループ化
+defaults write com.apple.dock expose-group-apps -bool true
+echo -e "${GREEN}✓ Mission Control: スペース固定、高速アニメーション${NC}"
+
+# ========================================
+# Hot Corners（画面四隅のアクション）
+# ========================================
+# 左上: Mission Control (2)
+defaults write com.apple.dock wvous-tl-corner -int 2
+defaults write com.apple.dock wvous-tl-modifier -int 0
+# 右上: デスクトップ表示 (4)
+defaults write com.apple.dock wvous-tr-corner -int 4
+defaults write com.apple.dock wvous-tr-modifier -int 0
+# 左下: なし (0)
+defaults write com.apple.dock wvous-bl-corner -int 0
+defaults write com.apple.dock wvous-bl-modifier -int 0
+# 右下: Launchpad (11)
+defaults write com.apple.dock wvous-br-corner -int 11
+defaults write com.apple.dock wvous-br-modifier -int 0
+echo -e "${GREEN}✓ Hot Corners: 左上=Mission Control, 右上=デスクトップ, 右下=Launchpad${NC}"
+
+# ========================================
+# Safari（開発者向け）
+# ========================================
+# 開発者メニューを有効化
+defaults write com.apple.Safari IncludeDevelopMenu -bool true
+defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
+defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true
+# すべてのWebページでWebインスペクタを許可
+defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
+echo -e "${GREEN}✓ Safari: 開発者メニュー有効化${NC}"
+
+# ========================================
+# セキュリティ
+# ========================================
+# スクリーンセーバー解除時に即座にパスワード要求
+defaults write com.apple.screensaver askForPassword -int 1
+defaults write com.apple.screensaver askForPasswordDelay -int 0
+echo -e "${GREEN}✓ セキュリティ: スクリーンセーバー解除時に即パスワード要求${NC}"
+
+# ========================================
+# Bluetooth（音質向上）
+# ========================================
+# Bluetoothヘッドフォンの音質を向上（AAC/aptX優先）
+defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
+echo -e "${GREEN}✓ Bluetooth: ヘッドフォン音質向上${NC}"
+
+# ========================================
+# プライバシー
+# ========================================
+# ターゲティング広告を制限
+defaults write com.apple.AdLib forceLimitAdTracking -bool true
+echo -e "${GREEN}✓ プライバシー: ターゲティング広告制限${NC}"
+
+# ========================================
 # その他
 # ========================================
 # .DS_Storeファイルをネットワークドライブに作成しない

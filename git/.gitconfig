@@ -31,9 +31,36 @@
 [http]
 	postBuffer = 524288000
 [alias]
+	# ログ表示
 	lg = log --oneline --graph --decorate --all
 	ll = log --graph --pretty=format:'%C(yellow)%h%C(reset) %C(blue)%ad%C(reset) %C(green)%an%C(reset) %s%C(red)%d%C(reset)' --date=short
 	last = log -1 --stat
+	today = log --since=midnight --oneline
+	week = log --since='1 week ago' --oneline
+
+	# ブランチ操作
+	sw = switch
+	swc = switch -c
+	recent = branch --sort=-committerdate --format='%(committerdate:relative)%09%(refname:short)'
+	cleanup = "!git branch --merged | grep -v '\\*\\|main\\|master\\|develop' | xargs -n 1 git branch -d"
+
+	# コミット操作
+	undo = reset HEAD~1 --mixed
+	amend = commit --amend --no-edit
+	wip = "!git add -A && git commit -m 'WIP'"
+	unwip = reset HEAD~1 --mixed
+
+	# ステージング
+	unstage = restore --staged
+	discard = restore
+
+	# 差分
+	df = diff
+	dfs = diff --staged
+	dft = difftool
+
+	# ステータス
+	st = status -sb
 [log]
 	date = short
 	abbrevCommit = true

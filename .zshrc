@@ -136,6 +136,54 @@ export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
 # direnv - ディレクトリ別環境変数
 eval "$(direnv hook zsh)"
 
+# ========================================
+# fzf 拡張関数
+# ========================================
+
+# fbr - ブランチをfzfで選択してチェックアウト
+fbr() {
+  local branches branch
+  branches=$(git branch -a --color=always | grep -v HEAD) &&
+  branch=$(echo "$branches" |
+    fzf --ansi --preview 'git log --oneline --graph --color=always $(echo {} | sed "s/.* //" | sed "s#remotes/origin/##") -- | head -50' \
+        --preview-window=right:50%) &&
+  git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/origin/##")
+}
+
+# fshow - コミット履歴をfzfで閲覧・詳細表示
+fshow() {
+  git log --graph --color=always \
+    --format="%C(auto)%h%d %s %C(green)%cr %C(blue)<%an>" |
+  fzf --ansi --no-sort --reverse \
+    --preview 'echo {} | grep -o "[a-f0-9]\{7,\}" | head -1 | xargs git show --color=always' \
+    --preview-window=right:60% \
+    --bind 'enter:execute(echo {} | grep -o "[a-f0-9]\{7,\}" | head -1 | xargs git show --color=always | less -R)'
+}
+
+# fvim - ファイルをfzfで選択してnvimで開く
+fvim() {
+  local file
+  file=$(fzf --preview 'bat --color=always --style=numbers --line-range=:300 {}' \
+             --preview-window=right:60%) &&
+  [ -n "$file" ] && nvim "$file"
+}
+
+# fkill - プロセスをfzfで選択してkill
+fkill() {
+  local pid
+  pid=$(ps -ef | sed 1d | fzf --header='Select process to kill' \
+    --preview 'echo {}' --preview-window=down:3:wrap | awk '{print $2}')
+  [ -n "$pid" ] && kill -9 "$pid" && echo "Killed process $pid"
+}
+
+# fcd - ディレクトリをfzfで選択して移動
+fcd() {
+  local dir
+  dir=$(find ${1:-.} -type d 2>/dev/null | fzf --preview 'eza --tree --level=1 --color=always {}' \
+        --preview-window=right:50%) &&
+  cd "$dir"
+}
+
 # zoxide - 高速ディレクトリジャンプ
 eval "$(zoxide init zsh)"
 

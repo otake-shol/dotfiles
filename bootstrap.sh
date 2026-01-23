@@ -441,6 +441,27 @@ else
     echo -e "${GREEN}✓ TPMはインストール済みです${NC}"
 fi
 
+# bat TokyoNightテーマ
+BAT_THEMES_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/bat/themes"
+if [ ! -f "$BAT_THEMES_DIR/tokyonight_night.tmTheme" ]; then
+    mkdir -p "$BAT_THEMES_DIR"
+    THEME_URL="https://raw.githubusercontent.com/folke/tokyonight.nvim/main/extras/sublime/tokyonight_night.tmTheme"
+    if curl -fsSL "$THEME_URL" -o "$BAT_THEMES_DIR/tokyonight_night.tmTheme" 2>/dev/null; then
+        bat cache --build 2>/dev/null || true
+        echo -e "${GREEN}✓ bat TokyoNightテーマをインストールしました${NC}"
+    else
+        echo -e "${YELLOW}⚠ batテーマのダウンロードに失敗しました（スキップ）${NC}"
+    fi
+else
+    echo -e "${GREEN}✓ bat TokyoNightテーマはインストール済みです${NC}"
+fi
+
+# lefthookのセットアップ
+if command -v lefthook &> /dev/null && [ -f ~/dotfiles/lefthook.yml ]; then
+    cd ~/dotfiles && lefthook install 2>/dev/null || true
+    echo -e "${GREEN}✓ lefthook Git hooksをインストールしました${NC}"
+fi
+
 # ローカル設定ファイルのセットアップ
 echo -e "\n${YELLOW}ローカル設定ファイルのセットアップ...${NC}"
 

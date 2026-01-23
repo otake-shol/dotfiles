@@ -239,6 +239,33 @@ require("lazy").setup({
       })
     end,
   },
+  -- フォーマッター・リンターの自動インストール
+  {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+    config = function()
+      require("mason-tool-installer").setup({
+        ensure_installed = {
+          -- Formatters
+          "stylua",       -- Lua
+          "prettierd",    -- JS/TS/JSON/etc
+          "black",        -- Python
+          "isort",        -- Python imports
+          "shfmt",        -- Shell
+          "goimports",    -- Go
+          -- Linters
+          "eslint_d",     -- JS/TS
+          "ruff",         -- Python
+          "luacheck",     -- Lua
+          "shellcheck",   -- Shell
+          "golangci-lint", -- Go
+          "markdownlint", -- Markdown
+        },
+        auto_update = false,
+        run_on_start = true,
+      })
+    end,
+  },
   {
     "williamboman/mason-lspconfig.nvim",
     dependencies = { "williamboman/mason.nvim" },
@@ -404,6 +431,90 @@ require("lazy").setup({
   },
 
   -- ========================================
+  -- フォーマッター（conform.nvim）
+  -- ========================================
+  {
+    "stevearc/conform.nvim",
+    event = { "BufWritePre" },
+    cmd = { "ConformInfo" },
+    keys = {
+      {
+        "<leader>lf",
+        function()
+          require("conform").format({ async = true, lsp_fallback = true })
+        end,
+        mode = "",
+        desc = "フォーマット",
+      },
+    },
+    opts = {
+      formatters_by_ft = {
+        lua = { "stylua" },
+        javascript = { "prettierd", "prettier", stop_after_first = true },
+        typescript = { "prettierd", "prettier", stop_after_first = true },
+        javascriptreact = { "prettierd", "prettier", stop_after_first = true },
+        typescriptreact = { "prettierd", "prettier", stop_after_first = true },
+        json = { "prettierd", "prettier", stop_after_first = true },
+        yaml = { "prettierd", "prettier", stop_after_first = true },
+        markdown = { "prettierd", "prettier", stop_after_first = true },
+        html = { "prettierd", "prettier", stop_after_first = true },
+        css = { "prettierd", "prettier", stop_after_first = true },
+        python = { "isort", "black" },
+        go = { "gofmt", "goimports" },
+        rust = { "rustfmt" },
+        sh = { "shfmt" },
+        bash = { "shfmt" },
+        zsh = { "shfmt" },
+      },
+      format_on_save = {
+        timeout_ms = 3000,
+        lsp_fallback = true,
+      },
+    },
+    init = function()
+      vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+    end,
+  },
+
+  -- ========================================
+  -- リンター（nvim-lint）
+  -- ========================================
+  {
+    "mfussenegger/nvim-lint",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      local lint = require("lint")
+
+      lint.linters_by_ft = {
+        javascript = { "eslint_d" },
+        typescript = { "eslint_d" },
+        javascriptreact = { "eslint_d" },
+        typescriptreact = { "eslint_d" },
+        python = { "ruff" },
+        lua = { "luacheck" },
+        sh = { "shellcheck" },
+        bash = { "shellcheck" },
+        go = { "golangcilint" },
+        markdown = { "markdownlint" },
+      }
+
+      -- 自動lint実行
+      local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
+      vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+        group = lint_augroup,
+        callback = function()
+          lint.try_lint()
+        end,
+      })
+
+      -- 手動lint実行キーマップ
+      vim.keymap.set("n", "<leader>ll", function()
+        lint.try_lint()
+      end, { desc = "リント実行" })
+    end,
+  },
+
+  -- ========================================
   -- which-key（キーマップ表示）
   -- ========================================
   {
@@ -422,6 +533,7 @@ require("lazy").setup({
         { "<leader>s", group = "Split" },
         { "<leader>c", group = "Code" },
         { "<leader>d", group = "Diagnostics" },
+        { "<leader>l", group = "Lint/Format" },
       })
     end,
   },

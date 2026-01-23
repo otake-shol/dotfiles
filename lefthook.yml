@@ -1,0 +1,77 @@
+# ========================================
+# lefthook - Git Hooks 自動化
+# ========================================
+# インストール: brew install lefthook && lefthook install
+
+# pre-commit: コミット前チェック
+pre-commit:
+  parallel: true
+  commands:
+    # シェルスクリプトのlint
+    shellcheck:
+      glob: "*.sh"
+      run: shellcheck {staged_files}
+      skip:
+        - merge
+        - rebase
+
+    # YAML検証
+    yamllint:
+      glob: "*.{yml,yaml}"
+      run: yamllint -d relaxed {staged_files}
+      skip:
+        - merge
+        - rebase
+
+    # Markdown lint
+    markdownlint:
+      glob: "*.md"
+      run: markdownlint {staged_files} --fix
+      skip:
+        - merge
+        - rebase
+
+    # 末尾の空白チェック
+    trailing-whitespace:
+      run: git diff --check --cached
+      skip:
+        - merge
+        - rebase
+
+    # 機密情報チェック
+    secrets:
+      run: git secrets --scan --cached
+      skip:
+        - merge
+        - rebase
+
+# commit-msg: コミットメッセージ検証
+commit-msg:
+  commands:
+    # Conventional Commits形式チェック
+    conventional-commit:
+      run: |
+        commit_msg=$(cat {1})
+        pattern="^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)(\(.+\))?: .{1,}"
+        if ! echo "$commit_msg" | grep -qE "$pattern"; then
+          echo "❌ コミットメッセージがConventional Commits形式ではありません"
+          echo "   形式: <type>(<scope>): <subject>"
+          echo "   例: feat(auth): ログイン機能を追加"
+          echo ""
+          echo "   有効なtype: feat, fix, docs, style, refactor, perf, test, chore, ci, build, revert"
+          exit 1
+        fi
+
+# pre-push: プッシュ前チェック
+pre-push:
+  parallel: true
+  commands:
+    # ブランチ名チェック（main/masterへの直接プッシュ防止）
+    branch-protection:
+      run: |
+        branch=$(git rev-parse --abbrev-ref HEAD)
+        if [[ "$branch" == "main" || "$branch" == "master" ]]; then
+          echo "⚠️  main/masterへの直接プッシュは非推奨です"
+          echo "   feature/xxx ブランチを使用してください"
+          # 警告のみ（exit 1 でブロック可能）
+        fi

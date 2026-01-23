@@ -134,8 +134,10 @@ export FZF_DEFAULT_OPTS="
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:200 {}'"
 export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
 
-# direnv - ディレクトリ別環境変数
-eval "$(direnv hook zsh)"
+# direnv - ディレクトリ別環境変数（minimalモードではスキップ）
+if [[ -z "$DOTFILES_MINIMAL" ]]; then
+  eval "$(direnv hook zsh)"
+fi
 
 # ========================================
 # fzf 拡張関数
@@ -211,11 +213,13 @@ fman() {
   man -k . | fzf --preview 'echo {} | awk "{print \$1}" | xargs man' | awk '{print $1}' | xargs man
 }
 
-# zoxide - 高速ディレクトリジャンプ
-eval "$(zoxide init zsh)"
+# zoxide - 高速ディレクトリジャンプ（minimalモードではスキップ）
+if [[ -z "$DOTFILES_MINIMAL" ]]; then
+  eval "$(zoxide init zsh)"
+fi
 
-# atuin - 高機能シェル履歴管理
-if command -v atuin &> /dev/null; then
+# atuin - 高機能シェル履歴管理（minimalモードではスキップ）
+if [[ -z "$DOTFILES_MINIMAL" ]] && command -v atuin &> /dev/null; then
   eval "$(atuin init zsh)"
 fi
 

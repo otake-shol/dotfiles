@@ -2,6 +2,8 @@
 
 macOS用の個人設定ファイル
 
+[🇬🇧 English](docs/README.en.md)
+
 ## 特徴
 
 - **Claude Code統合** - MCPサーバー13個設定済み

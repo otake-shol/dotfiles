@@ -114,3 +114,118 @@ jobs:
               zsh -n "$f" || exit 1
             fi
           done
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Gitleaks Secret Scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_COMMENTS: false
+
+      - name: Check for hardcoded secrets patterns
+        run: |
+          echo "Scanning for potential secrets..."
+          PATTERNS=(
+            'sk-[A-Za-z0-9]{48}'           # OpenAI API key
+            'sk-ant-[A-Za-z0-9-]{95}'      # Anthropic API key
+            'ghp_[A-Za-z0-9]{36}'          # GitHub PAT
+            'gho_[A-Za-z0-9]{36}'          # GitHub OAuth
+            'xoxb-[A-Za-z0-9-]+'           # Slack Bot token
+            'xoxp-[A-Za-z0-9-]+'           # Slack User token
+            'AKIA[A-Z0-9]{16}'             # AWS Access Key ID
+          )
+
+          EXIT_CODE=0
+          for pattern in "${PATTERNS[@]}"; do
+            if grep -rE "$pattern" --include="*.sh" --include="*.zsh" --include="*.yml" --include="*.yaml" --include="*.json" . 2>/dev/null | grep -v ".git" | grep -v "git-secrets"; then
+              echo "⚠️  Potential secret found matching pattern: $pattern"
+              EXIT_CODE=1
+            fi
+          done
+
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "✅ No hardcoded secrets detected"
+          fi
+          exit $EXIT_CODE
+
+  link-check:
+    name: Document Link Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check internal markdown links
+        run: |
+          echo "Checking internal links in markdown files..."
+          EXIT_CODE=0
+
+          # Find all markdown files
+          while IFS= read -r md_file; do
+            dir=$(dirname "$md_file")
+
+            # Extract relative links (not http/https)
+            grep -oE '\[([^\]]+)\]\(([^)]+)\)' "$md_file" 2>/dev/null | \
+            grep -v 'http://' | grep -v 'https://' | \
+            sed 's/\[.*\](\([^)]*\))/\1/' | \
+            sed 's/#.*//' | \
+            while read -r link; do
+              if [ -n "$link" ]; then
+                # Resolve relative path
+                if [[ "$link" == /* ]]; then
+                  target=".$link"
+                else
+                  target="$dir/$link"
+                fi
+
+                # Normalize path
+                target=$(realpath -m "$target" 2>/dev/null || echo "$target")
+
+                if [ ! -e "$target" ]; then
+                  echo "❌ Broken link in $md_file: $link"
+                  EXIT_CODE=1
+                fi
+              fi
+            done
+          done < <(find . -name "*.md" -type f ! -path "./.git/*")
+
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "✅ All internal links are valid"
+          fi
+          exit $EXIT_CODE
+
+      - name: Check for orphaned documents
+        run: |
+          echo "Checking for documents not linked from README..."
+          # Get all markdown files in docs/
+          DOCS_FILES=$(find docs -name "*.md" -type f 2>/dev/null | sort)
+
+          if [ -n "$DOCS_FILES" ]; then
+            echo "Documents found in docs/:"
+            echo "$DOCS_FILES"
+
+            # Check if each is referenced somewhere
+            ORPHANED=""
+            while IFS= read -r doc; do
+              # Check if this doc is referenced in any markdown file
+              basename_doc=$(basename "$doc")
+              if ! grep -r "$basename_doc\|$doc" --include="*.md" . 2>/dev/null | grep -v "^$doc:" | grep -q .; then
+                ORPHANED="$ORPHANED\n  - $doc"
+              fi
+            done <<< "$DOCS_FILES"
+
+            if [ -n "$ORPHANED" ]; then
+              echo -e "⚠️  Potentially orphaned documents (not linked):$ORPHANED"
+              # Warning only, don't fail
+            else
+              echo "✅ All documents are linked"
+            fi
+          fi

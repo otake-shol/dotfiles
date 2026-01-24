@@ -35,3 +35,6 @@ firebase-debug.log
 
 # Personal resources (managed in cloud storage)
 docs/resources/
+
+# Stow creates symlinks here from home directory
+.claude/

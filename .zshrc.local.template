@@ -32,9 +32,8 @@
 # export PATH="$HOME/company-tools/bin:$PATH"
 
 # ========================================
-# SOPS/age 暗号化シークレット管理
+# SOPS/age 暗号化シークレット管理（オプション）
 # ========================================
-# 詳細: docs/security/sops-age-setup.md
 #
 # export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"
 #

@@ -61,7 +61,10 @@ export PATH="/usr/local/opt/trash/bin:$PATH"
 [[ -f "$HOME/.local/bin/env" ]] && . "$HOME/.local/bin/env"
 
 # kiro shell integration
-[[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
+if [[ "$TERM_PROGRAM" == "kiro" ]]; then
+  local kiro_path="$(kiro --locate-shell-integration-path zsh 2>/dev/null)"
+  [[ -n "$kiro_path" && -f "$kiro_path" ]] && . "$kiro_path"
+fi
 
 # ========================================
 # dotfiles更新リマインダー

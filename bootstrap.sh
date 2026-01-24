@@ -931,6 +931,9 @@ fi
 # ========================================
 log "=== Setup completed successfully ==="
 
+# 成功時はログファイルを削除（失敗時のみ残す）
+rm -f "$LOG_FILE"
+
 echo -e "\n${GREEN}========================================${NC}"
 echo -e "${GREEN}  セットアップが完了しました！${NC}"
 echo -e "${GREEN}========================================${NC}"
@@ -942,4 +945,3 @@ if [ "$IS_WSL" = true ]; then
     echo -e "  4. WSLを再起動: wsl --shutdown (PowerShellから)"
 fi
 echo -e "\n${BLUE}追加のアプリケーションは docs/setup/APPS.md を参照してください${NC}"
-echo -e "${BLUE}ログファイル: $LOG_FILE${NC}"

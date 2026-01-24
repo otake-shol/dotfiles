@@ -143,6 +143,34 @@ setup() {
     assert_failure
 }
 
+@test "require_command shows install hint for missing command" {
+    run require_command "nonexistent_tool_xyz"
+    assert_failure
+    assert_output --partial "インストール方法"
+}
+
+@test "_get_install_hint returns brew command on macOS" {
+    if [[ "$(uname -s)" == "Darwin" ]]; then
+        run _get_install_hint "fzf"
+        assert_success
+        assert_output --partial "brew install fzf"
+    else
+        skip "macOS only test"
+    fi
+}
+
+@test "require_version succeeds for valid version" {
+    # bash is available and has a version
+    run require_version "bash" "1.0.0"
+    assert_success
+}
+
+@test "require_version fails for missing command" {
+    run require_version "nonexistent_xyz" "1.0.0"
+    assert_failure
+    assert_output --partial "インストールされていません"
+}
+
 @test "run_cmd executes command normally when DRY_RUN=false" {
     DRY_RUN=false
     run run_cmd echo "hello"

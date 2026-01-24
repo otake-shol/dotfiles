@@ -50,3 +50,34 @@ indent_size = 4
 # Lua (Neovim設定等)
 [*.lua]
 indent_size = 2
+
+# Nix
+[*.nix]
+indent_size = 2
+
+# Zsh設定ファイル
+[*.zsh]
+indent_size = 2
+
+[.zshrc]
+indent_size = 2
+
+# TOML
+[*.toml]
+indent_size = 2
+
+# Bats テスト
+[*.bats]
+indent_size = 4
+
+# Dockerfile
+[Dockerfile*]
+indent_size = 4
+
+# Git設定
+[.gitconfig]
+indent_style = tab
+
+[.gitignore]
+indent_style = space
+indent_size = 2

@@ -25,8 +25,14 @@ export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
 # ========================================
 # zoxide - 高速ディレクトリジャンプ
 # ========================================
-if [[ -z "$DOTFILES_MINIMAL" ]]; then
-  eval "$(zoxide init zsh)"
+if [[ -z "$DOTFILES_MINIMAL" ]] && command -v zoxide &>/dev/null; then
+  _zoxide_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zoxide-init.zsh"
+  if [[ ! -f "$_zoxide_cache" ]] || [[ $(find "$_zoxide_cache" -mtime +7 2>/dev/null) ]]; then
+    mkdir -p "$(dirname "$_zoxide_cache")"
+    zoxide init zsh > "$_zoxide_cache" 2>/dev/null
+  fi
+  source "$_zoxide_cache"
+  unset _zoxide_cache
 fi
 
 # ========================================

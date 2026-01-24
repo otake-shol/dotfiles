@@ -21,9 +21,9 @@ cd ~/dotfiles && bash bootstrap.sh
 
 | ディレクトリ | 内容 |
 |-------------|------|
-| `.zshrc`, `.aliases` | シェル設定 |
+| `stow/zsh/` | シェル設定（.zshrc, .aliases） |
+| `stow/claude/` | Claude Code（agents, commands, hooks） |
 | `Brewfile` | Homebrewパッケージ |
-| `.claude/` | Claude Code（MCPサーバー等） |
 | `nvim/` | Neovim設定 |
 | `tmux/` | tmux設定 |
 | `ghostty/` | Ghosttyターミナル |

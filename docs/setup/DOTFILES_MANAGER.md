@@ -25,4 +25,4 @@ htop を必須ツールとして追加
 
 エージェントの詳細な動作仕様は以下を参照してください：
 
-- [.claude/agents/dotfiles-manager.md](../../.claude/agents/dotfiles-manager.md)
+- [stow/claude/.claude/agents/dotfiles-manager.md](../../stow/claude/.claude/agents/dotfiles-manager.md)

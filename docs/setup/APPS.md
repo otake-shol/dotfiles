@@ -338,7 +338,7 @@ fi
 | 項目 | 内容 |
 |------|------|
 | インストール | `brew install --cask claude` |
-| 設定ファイル | `~/dotfiles/.claude/` |
+| 設定ファイル | `~/dotfiles/stow/claude/.claude/` |
 | 公式サイト | https://claude.ai/ |
 
 ---

@@ -38,52 +38,27 @@ cd ~/dotfiles
 
 ### Step 3: アプリケーションのインストール
 
-#### 必須ツールのみ（推奨）
 ```bash
 brew bundle --file=Brewfile
 ```
 
-#### 全ツール
+### Step 4: dotfilesのシンボリックリンク作成（GNU Stow）
+
 ```bash
-brew bundle --file=Brewfile.full
+# GNU Stowで一括作成（推奨）
+cd ~/dotfiles
+make install
+
+# または個別に
+make install-zsh
+make install-git
+make install-claude
+make install-nvim
+make install-tmux
+make install-ghostty
 ```
 
-### Step 4: dotfilesのシンボリックリンク作成
-
-#### Zsh設定
-```bash
-ln -sf ~/dotfiles/.zshrc ~/.zshrc
-ln -sf ~/dotfiles/.aliases ~/.aliases
-```
-
-#### Git設定
-```bash
-ln -sf ~/dotfiles/git/.gitconfig ~/.gitconfig
-```
-
-#### Ghosttyターミナル設定
-```bash
-mkdir -p ~/.config/ghostty
-ln -sf ~/dotfiles/ghostty/config ~/.config/ghostty/config
-```
-
-#### Claude Code設定
-```bash
-mkdir -p ~/.claude
-ln -sf ~/dotfiles/.claude/CLAUDE.md ~/.claude/CLAUDE.md
-ln -sf ~/dotfiles/.claude/settings.json ~/.claude/settings.json
-ln -sf ~/dotfiles/.claude/agents ~/.claude/agents
-ln -sf ~/dotfiles/.claude/plugins ~/.claude/plugins
-```
-
-#### GitHub CLI設定
-```bash
-mkdir -p ~/.config/gh
-ln -sf ~/dotfiles/gh/config.yml ~/.config/gh/config.yml
-```
-
-#### エディタ設定（VS Code, Cursor, Antigravity）
-詳細はREADME.mdの「詳細セットアップ手順」セクションを参照してください。
+Stowを使わず手動で作成する場合は `make check` でドライランを確認できます。
 
 ### Step 5: Oh My Zshのセットアップ
 
@@ -144,7 +119,7 @@ git secrets --register-aws --global
 
 ```bash
 cd ~/dotfiles
-brew bundle dump --force --file=Brewfile.full
+brew bundle dump --force --file=Brewfile
 ```
 
 ### 新しいアプリの追加
@@ -203,8 +178,8 @@ eval "$(/usr/local/bin/brew shellenv)"
 # バックアップを作成
 mv ~/.zshrc ~/.zshrc.backup
 
-# 再度リンク作成
-ln -sf ~/dotfiles/.zshrc ~/.zshrc
+# Stowで再リンク
+cd ~/dotfiles && make install-zsh
 ```
 
 ### brew bundle install が失敗する

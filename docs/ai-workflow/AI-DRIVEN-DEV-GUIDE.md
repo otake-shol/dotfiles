@@ -36,14 +36,17 @@ npm install -g @anthropic-ai/claude-code
 
 #### 設定ファイルの配置
 ```bash
-# dotfilesからシンボリックリンク
+# dotfilesからGNU Stowで配置（推奨）
+cd ~/dotfiles
+make install-claude
+
+# または手動で
 mkdir -p ~/.claude
-ln -sf ~/dotfiles/.claude/CLAUDE.md ~/.claude/CLAUDE.md
-ln -sf ~/dotfiles/.claude/settings.json ~/.claude/settings.json
-ln -sf ~/dotfiles/.claude/agents ~/.claude/agents
-ln -sf ~/dotfiles/.claude/hooks ~/.claude/hooks
-ln -sf ~/dotfiles/.claude/commands ~/.claude/commands
-ln -sf ~/dotfiles/.claude/plugins ~/.claude/plugins
+ln -sf ~/dotfiles/stow/claude/.claude/CLAUDE.md ~/.claude/CLAUDE.md
+ln -sf ~/dotfiles/stow/claude/.claude/settings.json ~/.claude/settings.json
+ln -sf ~/dotfiles/stow/claude/.claude/agents ~/.claude/agents
+ln -sf ~/dotfiles/stow/claude/.claude/hooks ~/.claude/hooks
+ln -sf ~/dotfiles/stow/claude/.claude/commands ~/.claude/commands
 ```
 
 ### 1.2 CLAUDE.md（グローバル指示）
@@ -80,11 +83,11 @@ ln -sf ~/dotfiles/.claude/plugins ~/.claude/plugins
 
 hooksディレクトリにスクリプトを配置して、特定のイベントで自動実行できます。
 
-**例: Brewfile自動更新フック**
+#### 例: Brewfile自動更新フック
 ```bash
 # ~/.claude/hooks/update-brewfile.sh
 #!/bin/bash
-cd ~/dotfiles && brew bundle dump --force --file=Brewfile.full
+cd ~/dotfiles && brew bundle dump --force --file=Brewfile
 ```
 
 ### 1.5 Commands（カスタムコマンド）

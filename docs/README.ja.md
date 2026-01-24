@@ -22,7 +22,7 @@ cd ~/dotfiles && bash bootstrap.sh
 | ディレクトリ | 内容 |
 |-------------|------|
 | `.zshrc`, `.aliases` | シェル設定 |
-| `Brewfile` / `Brewfile.full` | 必須/全アプリ |
+| `Brewfile` | Homebrewパッケージ |
 | `.claude/` | Claude Code（MCPサーバー等） |
 | `nvim/` | Neovim設定 |
 | `tmux/` | tmux設定 |
@@ -33,7 +33,6 @@ cd ~/dotfiles && bash bootstrap.sh
 | `raycast/` | Raycastスクリプト |
 | `antigravity/` | Antigravity設定 |
 | `scripts/` | ユーティリティスクリプト |
-| `espanso/` | テキスト展開（AIプロンプトスニペット） |
 
 ## テーマ
 

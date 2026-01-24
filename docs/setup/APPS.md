@@ -5,11 +5,7 @@ dotfilesで管理しているアプリケーションとツールの一覧です
 ## インストール
 
 ```bash
-# 必須ツールのみ（推奨）
 brew bundle --file=~/dotfiles/Brewfile
-
-# 全ツール
-brew bundle --file=~/dotfiles/Brewfile.full
 ```
 
 ---
@@ -859,8 +855,8 @@ asdf install
 
 ```bash
 # 現在の環境を保存
-brew bundle dump --force --file=~/dotfiles/Brewfile.full
+brew bundle dump --force --file=~/dotfiles/Brewfile
 
-# 必須ツールのみ編集
+# 編集
 vim ~/dotfiles/Brewfile
 ```

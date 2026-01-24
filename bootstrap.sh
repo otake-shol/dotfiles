@@ -600,25 +600,8 @@ elif command -v brew &>/dev/null; then
             BREWFILE="Brewfile"
         fi
     else
-        echo -e "${YELLOW}どのBrewfileを使用しますか?${NC}"
-        echo -e "  1) Brewfile (必須ツールのみ - 推奨)"
-        echo -e "  2) Brewfile.full (全ツール)"
-        read -r brewfile_choice
-
-        case $brewfile_choice in
-            1)
-                BREWFILE="Brewfile"
-                echo -e "${GREEN}必須ツールをインストールします${NC}"
-                ;;
-            2)
-                BREWFILE="Brewfile.full"
-                echo -e "${YELLOW}全ツールをインストールします${NC}"
-                ;;
-            *)
-                BREWFILE="Brewfile"
-                echo -e "${GREEN}デフォルト: 必須ツールをインストールします${NC}"
-                ;;
-        esac
+        BREWFILE="Brewfile"
+        echo -e "${GREEN}Brewfileからツールをインストールします${NC}"
     fi
 
     if [ -f "$BREWFILE" ]; then

@@ -12,9 +12,6 @@
   <a href="https://github.com/otake-shol/dotfiles/actions/workflows/lint.yml">
     <img src="https://github.com/otake-shol/dotfiles/actions/workflows/lint.yml/badge.svg" alt="Lint">
   </a>
-  <a href="https://codecov.io/gh/otake-shol/dotfiles">
-    <img src="https://codecov.io/gh/otake-shol/dotfiles/branch/master/graph/badge.svg" alt="Coverage">
-  </a>
   <a href="https://github.com/otake-shol/dotfiles/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/otake-shol/dotfiles" alt="License">
   </a>
@@ -36,29 +33,6 @@
 </p>
 
 ---
-
-<!-- Demo GIF - Generated with VHS (run `vhs demo/demo.tape` or trigger CI) -->
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="demo/demo.gif">
-    <source media="(prefers-color-scheme: light)" srcset="demo/demo.gif">
-    <img src="demo/demo.gif" alt="dotfiles demo - bootstrap, aliases, and modern CLI tools in action" width="800">
-  </picture>
-</p>
-
-<details>
-<summary>📹 Can't see the demo? Generate it locally</summary>
-
-```bash
-# Install VHS
-brew install vhs
-
-# Generate demo GIF
-vhs demo/demo.tape
-```
-
-Or trigger the [Demo Workflow](../../actions/workflows/demo.yml) manually.
-</details>
 
 ## Features
 
@@ -181,8 +155,7 @@ dotfiles/
 │   └── lib/                   # Shared libraries
 ├── docs/                      # Documentation
 ├── Makefile                   # GNU Stow operations
-├── Brewfile                   # Essential packages
-├── Brewfile.full              # All packages
+├── Brewfile                   # Homebrew packages
 └── bootstrap.sh               # Main setup script
 ```
 

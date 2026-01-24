@@ -1,20 +1,5 @@
 [
   {
-    "name": "Claude Code",
-    "text": "Claude Code",
-    "keyword": ";c"
-  },
-  {
-    "name": "Antigravity",
-    "text": "Antigravity",
-    "keyword": ";a"
-  },
-  {
-    "name": "ultrathink",
-    "text": "ultrathink",
-    "keyword": ";u"
-  },
-  {
     "name": "Date",
     "text": "{date:YYYY-MM-DD}",
     "keyword": ";date"

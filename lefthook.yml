@@ -75,7 +75,6 @@ commit-msg:
 
 # pre-push: プッシュ前チェック
 pre-push:
-  parallel: true
   commands:
     # ブランチ名チェック（main/masterへの直接プッシュ防止）
     branch-protection:
@@ -85,13 +84,4 @@ pre-push:
           echo "⚠️  main/masterへの直接プッシュは非推奨です"
           echo "   feature/xxx ブランチを使用してください"
           # 警告のみ（exit 1 でブロック可能）
-        fi
-
-    # Batsテスト実行
-    test:
-      run: |
-        if command -v bats &>/dev/null && [ -d "tests" ]; then
-          bats tests/
-        else
-          echo "⚠️  bats未インストールまたはtests/なし（スキップ）"
         fi

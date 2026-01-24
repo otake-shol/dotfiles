@@ -27,13 +27,11 @@ export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
 # ========================================
 if command -v zoxide &>/dev/null; then
   _zoxide_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zoxide-init.zsh"
-  _cache_ttl="${DOTFILES_CACHE_TTL_DAYS:-7}"
-  if [[ ! -f "$_zoxide_cache" ]] || [[ $(find "$_zoxide_cache" -mtime +"$_cache_ttl" 2>/dev/null) ]]; then
-    mkdir -p "$(dirname "$_zoxide_cache")"
-    zoxide init zsh > "$_zoxide_cache" 2>/dev/null
+  if ! _cache_valid "$_zoxide_cache"; then
+    _cache_update "$_zoxide_cache" "zoxide init zsh"
   fi
   source "$_zoxide_cache"
-  unset _zoxide_cache _cache_ttl
+  unset _zoxide_cache
 fi
 
 # ========================================
@@ -64,7 +62,8 @@ export BUN_INSTALL="$HOME/.bun"
 [[ -d "$HOME/.antigravity/antigravity/bin" ]] && export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 
 # trash command (safe delete)
-[[ -d "/usr/local/opt/trash/bin" ]] && export PATH="/usr/local/opt/trash/bin:$PATH"
+local _trash_path="${HOMEBREW_PREFIX:-/usr/local}/opt/trash/bin"
+[[ -d "$_trash_path" ]] && export PATH="$_trash_path:$PATH"
 
 # Local environment
 [[ -f "$HOME/.local/bin/env" ]] && . "$HOME/.local/bin/env"
@@ -99,10 +98,8 @@ _dotfiles_update_reminder() {
 
 # 起動時にチェック（キャッシュTTL期間ごと）
 _dotfiles_reminder_cache="$HOME/.cache/dotfiles-reminder"
-_cache_ttl="${DOTFILES_CACHE_TTL_DAYS:-7}"
-if [[ ! -f "$_dotfiles_reminder_cache" ]] || [[ $(find "$_dotfiles_reminder_cache" -mtime +"$_cache_ttl" 2>/dev/null) ]]; then
+if ! _cache_valid "$_dotfiles_reminder_cache"; then
   _dotfiles_update_reminder
-  mkdir -p "$(dirname "$_dotfiles_reminder_cache")"
-  touch "$_dotfiles_reminder_cache"
+  _cache_touch "$_dotfiles_reminder_cache"
 fi
-unset _cache_ttl
+unset _dotfiles_reminder_cache

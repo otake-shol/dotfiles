@@ -6,12 +6,13 @@
   "editor.suggestSelection": "first",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
+    "source.fixAll.eslint": "explicit",
   },
   "explorer.confirmDragAndDrop": false,
   "security.workspace.trust.untrustedFiles": "open",
   "antigravity.marketplaceGalleryItemURL": "https://marketplace.visualstudio.com/items",
   "antigravity.marketplaceExtensionGalleryServiceURL": "https://marketplace.visualstudio.com/_apis/public/gallery",
   "workbench.colorTheme": "Tokyo Night",
-  "workbench.iconTheme": "vscode-icons"
+  "workbench.iconTheme": "vscode-icons",
+  "makefile.configureOnOpen": true,
 }

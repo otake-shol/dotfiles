@@ -1,13 +1,33 @@
 #!/bin/bash
-# check-updates.sh - dotfilesとBrewの更新状況を確認（読み取り専用）
-# 使用方法: bash scripts/check-updates.sh
+# check_updates.sh - dotfilesとBrewの更新状況を確認（読み取り専用）
+# 使用方法: bash scripts/maintenance/check_updates.sh
 # エイリアス: dotup
 #
 # 役割分担:
-#   check-updates.sh (dotup)   - 更新があるか確認するのみ（変更なし）
-#   update-all.sh (dotupdate)  - 実際に更新を実行する
+#   check_updates.sh (dotup)   - 更新があるか確認するのみ（変更なし）
+#   update_all.sh (dotupdate)  - 実際に更新を実行する
 
 set -euo pipefail
+
+# ヘルプ表示
+show_help() {
+    cat << 'EOF'
+check_updates.sh - dotfilesとBrewの更新状況を確認（読み取り専用）
+
+使用方法:
+    bash scripts/maintenance/check_updates.sh
+    dotup  # エイリアス
+
+オプション:
+    -h, --help    このヘルプを表示
+
+説明:
+    このスクリプトは更新の確認のみを行い、実際の更新は行いません。
+    更新を実行するには update_all.sh (dotupdate) を使用してください。
+EOF
+}
+
+[[ "${1:-}" == "-h" || "${1:-}" == "--help" ]] && show_help && exit 0
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

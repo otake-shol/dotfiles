@@ -2,8 +2,6 @@
 
 macOS/Linux向けの個人開発環境設定ファイル
 
-[![Lint](https://github.com/otake-shol/dotfiles/actions/workflows/lint.yml/badge.svg)](https://github.com/otake-shol/dotfiles/actions/workflows/lint.yml)
-
 ## 特徴
 
 - **Claude Code統合** - MCPサーバー13個・カスタムコマンド設定済み
@@ -118,12 +116,101 @@ make bench           # zsh起動時間ベンチマーク
 make deps            # Homebrewパッケージインストール
 ```
 
-## ドキュメント
+## トラブルシューティング
 
-| ファイル | 内容 |
-|---------|------|
-| [SETUP.md](docs/setup/SETUP.md) | 詳細セットアップ手順 |
-| [APPS.md](docs/setup/APPS.md) | アプリケーション説明一覧 |
+### Homebrewのパスが通らない
+
+```bash
+# Apple Silicon Mac
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Intel Mac
+echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/usr/local/bin/brew shellenv)"
+```
+
+### Oh My Zshのテーマが表示されない
+
+1. Nerd Fontがインストールされているか確認: `brew list --cask | grep nerd-font`
+2. ターミナルのフォント設定を確認（Ghostty: `font-family`）
+
+### シンボリックリンクエラー
+
+```bash
+mv ~/.zshrc ~/.zshrc.backup  # バックアップ
+cd ~/dotfiles && make install-zsh
+```
+
+## セットアップ確認チェックリスト
+
+- [ ] `brew --version` が動作する
+- [ ] `ls ~/.oh-my-zsh` でディレクトリが存在する
+- [ ] `git config --list` で設定が反映されている
+- [ ] `gh auth status` でログイン済み
+- [ ] `asdf --version` が動作する
+
+> 詳細なアプリケーション説明は [APPS.md](docs/setup/APPS.md) を参照
+
+## バージョン管理 (asdf)
+
+Node.js, Python, Ruby等のランタイムは[asdf](https://asdf-vm.com/)で管理しています。
+
+```bash
+# バージョン確認
+asdf current
+
+# プラグイン追加・バージョンインストール
+asdf plugin add nodejs
+asdf install nodejs latest
+asdf global nodejs latest
+```
+
+設定ファイル: `stow/zsh/.tool-versions`
+
+> **Note**: asdfは遅延読み込みされるため、初回のnode/npm実行時に自動で初期化されます。
+
+## Git Hooks (lefthook)
+
+[lefthook](https://github.com/evilmartians/lefthook)でpre-commit/commit-msgフックを管理しています。
+
+```bash
+# 初回セットアップ（bootstrap.shで自動実行）
+lefthook install
+
+# 手動でフック実行
+lefthook run pre-commit
+```
+
+**設定済みフック:**
+- ShellCheck, yamllint, markdownlint
+- zsh構文チェック
+- Conventional Commits形式チェック
+- 末尾空白・secrets検出
+
+設定ファイル: `lefthook.yml`
+
+## Claude Code統合
+
+Claude Codeの設定は `stow/claude/` で管理しています。
+
+```
+stow/claude/.claude/
+├── CLAUDE.md           # 開発ガイドライン・MCP設定
+├── settings.json       # hooks, permissions
+├── commands/           # カスタムスラッシュコマンド
+│   ├── commit-push.md  # /commit-push
+│   ├── test.md         # /test
+│   └── review.md       # /review
+└── agents/             # 特化型エージェント
+    ├── code-reviewer.md
+    └── test-engineer.md
+```
+
+**MCPサーバー（13個設定済み）:**
+- Context7, Serena, Playwright, Sequential Thinking
+- Linear, Supabase, Notion, Figma, Slack (OAuth)
+- GitHub, Brave Search, Sentry (環境変数)
 
 ## 動作環境
 

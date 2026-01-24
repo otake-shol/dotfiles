@@ -764,18 +764,23 @@ asdf install
 
 ---
 
+### 開発ツール
+
+| ツール | 説明 | インストール |
+|--------|------|--------------|
+| **lefthook** | 高速Git hooks管理 | `brew install lefthook` |
+| **tokei** | コード統計・行数カウント | `brew install tokei` |
+| **markdownlint-cli** | Markdownリンター | `brew install markdownlint-cli` |
+
+---
+
 ### ユーティリティ
 
 | ツール | 説明 | インストール |
 |--------|------|--------------|
 | **stow** | シンボリックリンク管理 | `brew install stow` |
-| **tree** | ディレクトリツリー表示 | `brew install tree` |
-| **nb** | CLI メモ・ブックマーク | `brew install nb` |
 | **curl** | HTTP クライアント | `brew install curl` |
 | **jq** | JSON 処理ツール | `brew install jq` |
-| **yq** | YAML/TOML 処理ツール | `brew install yq` |
-| **gnupg** | GPG 暗号化 | `brew install gnupg` |
-| **mkcert** | ローカルHTTPS証明書 | `brew install mkcert nss` |
 
 ---
 

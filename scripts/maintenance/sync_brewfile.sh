@@ -1,8 +1,32 @@
 #!/bin/bash
-# sync-brewfile.sh - Brewfileとインストール済みパッケージの差分を検出
-# 使用方法: bash scripts/sync-brewfile.sh
+# sync_brewfile.sh - Brewfileとインストール済みパッケージの差分を検出
+# 使用方法: bash scripts/maintenance/sync_brewfile.sh
 
 set -euo pipefail
+
+# ヘルプ表示
+show_help() {
+    cat << 'EOF'
+sync_brewfile.sh - Brewfileとインストール済みパッケージの差分を検出
+
+使用方法:
+    bash scripts/maintenance/sync_brewfile.sh
+    brewsync  # エイリアス
+
+オプション:
+    -h, --help    このヘルプを表示
+
+チェック内容:
+    1. Brewfileに含まれていないインストール済みパッケージ
+    2. インストールされていないBrewfile内のパッケージ
+    3. Caskの状態確認
+
+説明:
+    このスクリプトは差分の検出のみを行い、実際の同期は行いません。
+EOF
+}
+
+[[ "${1:-}" == "-h" || "${1:-}" == "--help" ]] && show_help && exit 0
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

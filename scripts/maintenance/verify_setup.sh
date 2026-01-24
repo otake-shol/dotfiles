@@ -1,8 +1,8 @@
 #!/bin/bash
 # ========================================
-# verify-setup.sh - dotfilesセットアップ検証
+# verify_setup.sh - dotfilesセットアップ検証
 # ========================================
-# 使用方法: bash scripts/maintenance/verify-setup.sh
+# 使用方法: bash scripts/maintenance/verify_setup.sh
 
 set -euo pipefail
 

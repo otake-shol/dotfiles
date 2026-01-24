@@ -15,7 +15,8 @@
 #     git-functions.zsh   - Git関連関数
 #     util-functions.zsh  - ユーティリティ関数
 
-ZSH_CONFIG_DIR="${HOME}/.zsh"
+# ZSH_CONFIG_DIR は .zshrc で定義済み（必須）
+# .zshrc → core.zsh → .aliases の順序で読み込まれる
 
 # 関数ファイルの読み込み（fzf-functions以外、fzfはlazy.zshで遅延読み込み）
 for func_file in "$ZSH_CONFIG_DIR/functions"/{git,util}-functions.zsh; do

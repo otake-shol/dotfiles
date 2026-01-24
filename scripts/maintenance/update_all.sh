@@ -1,13 +1,39 @@
 #!/bin/bash
-# update-all.sh - 開発環境の一括更新スクリプト（実行）
-# 使用方法: bash scripts/maintenance/update-all.sh
+# update_all.sh - 開発環境の一括更新スクリプト（実行）
+# 使用方法: bash scripts/maintenance/update_all.sh
 # エイリアス: dotupdate
 #
 # 役割分担:
-#   check-updates.sh (dotup)   - 更新があるか確認するのみ（変更なし）
-#   update-all.sh (dotupdate)  - 実際に更新を実行する
+#   check_updates.sh (dotup)   - 更新があるか確認するのみ（変更なし）
+#   update_all.sh (dotupdate)  - 実際に更新を実行する
 
 set -euo pipefail
+
+# ヘルプ表示
+show_help() {
+    cat << 'EOF'
+update_all.sh - 開発環境の一括更新スクリプト
+
+使用方法:
+    bash scripts/maintenance/update_all.sh
+    dotupdate  # エイリアス
+
+オプション:
+    -h, --help    このヘルプを表示
+
+更新対象:
+    - Homebrew (brew update && upgrade && cleanup)
+    - Oh My Zsh
+    - Zshプラグイン (Powerlevel10k, autosuggestions, syntax-highlighting, completions)
+    - asdfプラグイン
+
+説明:
+    このスクリプトは実際に更新を実行します。
+    更新の確認のみを行うには check_updates.sh (dotup) を使用してください。
+EOF
+}
+
+[[ "${1:-}" == "-h" || "${1:-}" == "--help" ]] && show_help && exit 0
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -54,34 +80,24 @@ else
 fi
 
 # ========================================
-# 3. Zsh Plugins
+# 3. Zsh Plugins（共通関数を使用）
 # ========================================
 echo -e "\n${YELLOW}[3/4] Zshプラグイン...${NC}"
 ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 
-# Powerlevel10k
-if [ -d "$ZSH_CUSTOM/themes/powerlevel10k" ]; then
-    cd "$ZSH_CUSTOM/themes/powerlevel10k"
-    git pull --quiet && echo -e "${GREEN}  ✓ Powerlevel10k${NC}" || echo -e "${RED}  ✗ Powerlevel10k${NC}"
-fi
+# プラグインリスト: 名前|パス
+ZSH_PLUGINS=(
+    "Powerlevel10k|$ZSH_CUSTOM/themes/powerlevel10k"
+    "zsh-autosuggestions|$ZSH_CUSTOM/plugins/zsh-autosuggestions"
+    "zsh-syntax-highlighting|$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
+    "zsh-completions|$ZSH_CUSTOM/plugins/zsh-completions"
+)
 
-# zsh-autosuggestions
-if [ -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ]; then
-    cd "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
-    git pull --quiet && echo -e "${GREEN}  ✓ zsh-autosuggestions${NC}" || echo -e "${RED}  ✗ zsh-autosuggestions${NC}"
-fi
-
-# zsh-syntax-highlighting
-if [ -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]; then
-    cd "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
-    git pull --quiet && echo -e "${GREEN}  ✓ zsh-syntax-highlighting${NC}" || echo -e "${RED}  ✗ zsh-syntax-highlighting${NC}"
-fi
-
-# zsh-completions
-if [ -d "$ZSH_CUSTOM/plugins/zsh-completions" ]; then
-    cd "$ZSH_CUSTOM/plugins/zsh-completions"
-    git pull --quiet && echo -e "${GREEN}  ✓ zsh-completions${NC}" || echo -e "${RED}  ✗ zsh-completions${NC}"
-fi
+for plugin in "${ZSH_PLUGINS[@]}"; do
+    name="${plugin%%|*}"
+    path="${plugin##*|}"
+    update_zsh_plugin "$name" "$path"
+done
 
 UPDATED+=("Zshプラグイン")
 

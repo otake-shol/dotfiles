@@ -103,14 +103,14 @@ clean:
 .PHONY: bench
 bench:
 	@echo "=== Zsh起動速度ベンチマーク ==="
-	@bash scripts/utils/zsh-benchmark.sh
+	@bash scripts/utils/zsh_benchmark.sh
 
 # 全体ヘルスチェック
 .PHONY: health
 health: lint check
 	@echo ""
 	@echo "=== セットアップ検証 ==="
-	@bash scripts/maintenance/verify-setup.sh
+	@bash scripts/maintenance/verify_setup.sh
 
 # Homebrew依存ツリー表示
 .PHONY: deps
@@ -121,4 +121,4 @@ deps:
 # Brewfile同期チェック
 .PHONY: brewsync
 brewsync:
-	@bash scripts/maintenance/sync-brewfile.sh
+	@bash scripts/maintenance/sync_brewfile.sh

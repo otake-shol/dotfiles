@@ -37,17 +37,12 @@ brew "ripgrep"         # grepの超高速代替（rg）
 brew "stow"            # シンボリックリンク管理
 brew "btop"            # システムモニター
 brew "curl"            # HTTPクライアント
-brew "mas"             # Mac App Store CLI
 brew "jq"              # JSON処理ツール
-brew "yq"              # YAML/TOML処理ツール
 
 # 開発ツール
 brew "tokei"           # コード統計（プロジェクト分析）
 brew "lefthook"        # 高速Git hooks管理
 brew "markdownlint-cli" # Markdownリンター
-
-# セキュリティ
-brew "gnupg"           # GPG暗号化
 
 # クラウド/AWS
 brew "awscli"          # AWS CLI

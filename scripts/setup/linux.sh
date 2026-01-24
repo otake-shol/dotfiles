@@ -27,14 +27,6 @@ detect_distro() {
     fi
 }
 
-# WSL検出
-is_wsl() {
-    if grep -qEi "(Microsoft|WSL)" /proc/version 2>/dev/null; then
-        return 0
-    fi
-    return 1
-}
-
 # ========================================
 # パッケージマネージャー検出
 # ========================================

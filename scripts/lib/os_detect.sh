@@ -1,6 +1,6 @@
 #!/bin/bash
-# os-detect.sh - OS/アーキテクチャ検出ライブラリ
-# 使用方法: source scripts/lib/os-detect.sh
+# os_detect.sh - OS/アーキテクチャ検出ライブラリ
+# 使用方法: source scripts/lib/os_detect.sh
 
 # OS検出
 detect_os() {
@@ -58,6 +58,25 @@ show_system_info() {
         echo "macOS: $(detect_macos_version)"
         echo "Homebrew: $(detect_homebrew_prefix)"
     fi
+}
+
+# ========================================
+# 便利な判定関数
+# ========================================
+is_macos() {
+    [[ "$(uname -s)" == "Darwin" ]]
+}
+
+is_linux() {
+    [[ "$(uname -s)" == "Linux" ]]
+}
+
+is_wsl() {
+    is_linux && grep -qEi "(Microsoft|WSL)" /proc/version 2>/dev/null
+}
+
+is_arm64() {
+    [[ "$(uname -m)" == "arm64" || "$(uname -m)" == "aarch64" ]]
 }
 
 # 直接実行された場合はシステム情報を表示

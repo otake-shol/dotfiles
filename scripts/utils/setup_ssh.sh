@@ -1,8 +1,8 @@
 #!/bin/bash
 # ========================================
-# setup-ssh.sh - SSH鍵生成・管理ヘルパー
+# setup_ssh.sh - SSH鍵生成・管理ヘルパー
 # ========================================
-# 使用方法: bash scripts/utils/setup-ssh.sh [オプション]
+# 使用方法: bash scripts/utils/setup_ssh.sh [オプション]
 # オプション:
 #   -e, --email EMAIL    SSH鍵に使用するメールアドレス
 #   -t, --type TYPE      鍵の種類 (ed25519, rsa) デフォルト: ed25519
@@ -13,20 +13,10 @@
 
 set -euo pipefail
 
-# 共通ライブラリ読み込み
+# 共通ライブラリ読み込み（必須）
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=../lib/common.sh
-if [[ -f "${SCRIPT_DIR}/../lib/common.sh" ]]; then
-    source "${SCRIPT_DIR}/../lib/common.sh"
-else
-    # フォールバック
-    RED='\033[0;31m'
-    GREEN='\033[0;32m'
-    YELLOW='\033[1;33m'
-    BLUE='\033[0;34m'
-    CYAN='\033[0;36m'
-    NC='\033[0m'
-fi
+source "${SCRIPT_DIR}/../lib/common.sh"
 
 # デフォルト設定
 KEY_TYPE="ed25519"

@@ -6,16 +6,13 @@
 # ========================================
 # asdf 遅延読み込み
 # ========================================
-_asdf_loaded=false
+typeset -g _asdf_loaded=false
 _asdf_init() {
   if [[ "$_asdf_loaded" = false ]]; then
     _asdf_loaded=true
-    local asdf_path
-    if [[ $(uname -m) == "arm64" ]]; then
-      asdf_path="/opt/homebrew/opt/asdf/libexec/asdf.sh"
-    else
-      asdf_path="/usr/local/opt/asdf/libexec/asdf.sh"
-    fi
+    # HOMEBREW_PREFIXを使用（brew shellenvで設定済み、未設定時はアーキテクチャから推測）
+    local brew_prefix="${HOMEBREW_PREFIX:-$([[ $(uname -m) == "arm64" ]] && echo /opt/homebrew || echo /usr/local)}"
+    local asdf_path="${brew_prefix}/opt/asdf/libexec/asdf.sh"
     [[ -f "$asdf_path" ]] && source "$asdf_path"
   fi
 }
@@ -26,10 +23,15 @@ asdf() {
   command asdf "$@"
 }
 
-# node/python等使用時に自動初期化
-for cmd in node npm npx claude python3 pip3 ruby gem; do
-  eval "$cmd() { _asdf_init; unset -f $cmd; command $cmd \"\$@\"; }"
-done
+# node/python等使用時に自動初期化（evalを避けて直接定義）
+node() { _asdf_init; unset -f node; command node "$@"; }
+npm() { _asdf_init; unset -f npm; command npm "$@"; }
+npx() { _asdf_init; unset -f npx; command npx "$@"; }
+claude() { _asdf_init; unset -f claude; command claude "$@"; }
+python3() { _asdf_init; unset -f python3; command python3 "$@"; }
+pip3() { _asdf_init; unset -f pip3; command pip3 "$@"; }
+ruby() { _asdf_init; unset -f ruby; command ruby "$@"; }
+gem() { _asdf_init; unset -f gem; command gem "$@"; }
 
 # ========================================
 # direnv 遅延読み込み
@@ -55,20 +57,18 @@ fi
 # ========================================
 if command -v atuin &>/dev/null; then
   _atuin_cache="${XDG_CACHE_HOME:-$HOME/.cache}/atuin-init.zsh"
-  _cache_ttl="${DOTFILES_CACHE_TTL_DAYS:-7}"
-  if [[ ! -f "$_atuin_cache" ]] || [[ $(find "$_atuin_cache" -mtime +"$_cache_ttl" 2>/dev/null) ]]; then
-    mkdir -p "$(dirname "$_atuin_cache")"
-    atuin init zsh > "$_atuin_cache" 2>/dev/null
+  if ! _cache_valid "$_atuin_cache"; then
+    _cache_update "$_atuin_cache" "atuin init zsh"
   fi
   source "$_atuin_cache"
-  unset _atuin_cache _cache_ttl
+  unset _atuin_cache
 fi
 
 # ========================================
 # fzf 拡張関数（遅延読み込み）
 # ========================================
-_fzf_functions_file="${HOME}/.zsh/functions/fzf-functions.zsh"
-_fzf_funcs_loaded=false
+typeset -g _fzf_functions_file="${HOME}/.zsh/functions/fzf-functions.zsh"
+typeset -g _fzf_funcs_loaded=false
 
 _load_fzf_functions() {
   if [[ "$_fzf_funcs_loaded" = false ]]; then
@@ -85,8 +85,15 @@ _load_fzf_functions() {
   fi
 }
 
-# fzf関数のスタブ（初回呼び出しで本体を読み込み）
-for _fn in fbr fshow fvim fkill fcd fstash fenv fhistory fman fdiff fgst; do
-  eval "$_fn() { _load_fzf_functions; $_fn \"\$@\"; }"
-done
-unset _fn
+# fzf関数のスタブ（初回呼び出しで本体を読み込み、evalを避けて直接定義）
+fbr() { _load_fzf_functions && fbr "$@"; }
+fshow() { _load_fzf_functions && fshow "$@"; }
+fvim() { _load_fzf_functions && fvim "$@"; }
+fkill() { _load_fzf_functions && fkill "$@"; }
+fcd() { _load_fzf_functions && fcd "$@"; }
+fstash() { _load_fzf_functions && fstash "$@"; }
+fenv() { _load_fzf_functions && fenv "$@"; }
+fhistory() { _load_fzf_functions && fhistory "$@"; }
+fman() { _load_fzf_functions && fman "$@"; }
+fdiff() { _load_fzf_functions && fdiff "$@"; }
+fgst() { _load_fzf_functions && fgst "$@"; }

@@ -85,8 +85,6 @@ done
 # ========================================
 # ユーティリティ関数
 # ========================================
-# UI関数（show_progress, start_spinner等）はcommon.shで定義
-# bootstrap.sh固有の関数のみここで定義
 
 # ステップ表示（番号付き）
 show_step() {
@@ -94,7 +92,6 @@ show_step() {
     local total=$2
     local title=$3
     echo -e "\n${YELLOW}[$step/$total] ${title}${NC}"
-    show_progress "$step" "$total" "$title"
 }
 
 # ログ関数（bootstrap.sh固有：LOG_FILE, VERBOSE使用）
@@ -152,15 +149,11 @@ install_brewfile_packages() {
                 printf "│ [%3d/%3d] %-42s ${GREEN}✓ 済${NC}\n" "$current" "$total" "$tap"
                 ((skipped++))
             else
-                # スピナー表示しながらインストール
                 printf "│ [%3d/%3d] %-42s " "$current" "$total" "$tap"
-                start_spinner "追加中..." "$current" "$total"
                 if brew tap "$tap" &>/dev/null; then
-                    stop_spinner
                     echo -e "${GREEN}✓ 追加${NC}"
                     ((success++))
                 else
-                    stop_spinner
                     echo -e "${RED}✗ 失敗${NC}"
                     ((failed++))
                     failed_packages+=("tap: $tap")
@@ -182,24 +175,19 @@ install_brewfile_packages() {
                 ((skipped++))
             else
                 printf "│ [%3d/%3d] %-42s " "$current" "$total" "$pkg"
-                start_spinner "インストール中..." "$current" "$total"
                 if brew install "$pkg" &>/dev/null; then
-                    stop_spinner
                     echo -e "${GREEN}✓ 完了${NC}"
                     ((success++))
                 else
-                    stop_spinner
                     echo -e "${RED}✗ 失敗${NC}"
                     ((failed++))
                     failed_packages+=("brew: $pkg")
                 fi
             fi
 
-            # 10パッケージごとに進捗バー表示
+            # 10パッケージごとに進捗表示
             if (( current % 10 == 0 )); then
-                printf "│ "
-                show_overall_progress "$current" "$total"
-                echo ""
+                printf "│ 進捗: %d/%d\n" "$current" "$total"
             fi
         done
         echo -e "${CYAN}└──────────────────────────────────────────────────────────┘${NC}"
@@ -217,13 +205,10 @@ install_brewfile_packages() {
                 ((skipped++))
             else
                 printf "│ [%3d/%3d] %-42s " "$current" "$total" "$pkg"
-                start_spinner "インストール中..." "$current" "$total"
                 if brew install --cask "$pkg" &>/dev/null; then
-                    stop_spinner
                     echo -e "${GREEN}✓ 完了${NC}"
                     ((success++))
                 else
-                    stop_spinner
                     echo -e "${RED}✗ 失敗${NC}"
                     ((failed++))
                     failed_packages+=("cask: $pkg")
@@ -234,10 +219,8 @@ install_brewfile_packages() {
         echo ""
     fi
 
-    # 最終プログレスバー
-    printf "完了: "
-    show_overall_progress "$total" "$total"
-    echo -e "\n"
+    # 完了メッセージ
+    echo -e "完了: ${GREEN}$total/$total${NC}\n"
 
     # サマリー表示
     echo -e "${BLUE}╔════════════════════════════════════════════════════════╗${NC}"
@@ -324,38 +307,32 @@ check_dependencies() {
     log "Dependencies check passed"
 }
 
-# OS/アーキテクチャ検出
+# OS/アーキテクチャ検出（os-detect.shの関数を使用）
 detect_system() {
     OS="$(uname -s)"
     ARCH="$(uname -m)"
 
-    case "$OS" in
-        Darwin)
-            IS_MACOS=true
-            IS_LINUX=false
-            if [ "$ARCH" = "arm64" ]; then
-                HOMEBREW_PREFIX="/opt/homebrew"
-            else
-                HOMEBREW_PREFIX="/usr/local"
-            fi
-            ;;
-        Linux)
-            IS_MACOS=false
-            IS_LINUX=true
-            HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
-            # WSL検出
-            if grep -qEi "(Microsoft|WSL)" /proc/version 2>/dev/null; then
-                IS_WSL=true
-                echo -e "${CYAN}WSL環境を検出しました${NC}"
-            else
-                IS_WSL=false
-            fi
-            ;;
-        *)
-            echo -e "${RED}未対応のOS: $OS${NC}"
-            exit 1
-            ;;
-    esac
+    # os-detect.sh の関数を使用（common.sh経由で読み込み済み）
+    if is_macos; then
+        IS_MACOS=true
+        IS_LINUX=false
+    elif is_linux; then
+        IS_MACOS=false
+        IS_LINUX=true
+        # WSL検出
+        if is_wsl; then
+            IS_WSL=true
+            echo -e "${CYAN}WSL環境を検出しました${NC}"
+        else
+            IS_WSL=false
+        fi
+    else
+        echo -e "${RED}未対応のOS: $OS${NC}"
+        exit 1
+    fi
+
+    # Homebrewプレフィックスを統一関数で取得
+    HOMEBREW_PREFIX=$(detect_homebrew_prefix)
 
     log "Detected: $OS ($ARCH), Homebrew prefix: $HOMEBREW_PREFIX"
 }
@@ -410,16 +387,8 @@ if ! command -v brew &> /dev/null; then
     read -r answer
     if [ "$answer" = "y" ]; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        # Homebrew PATH設定
-        if [ "$IS_MACOS" = true ]; then
-            if [[ $(uname -m) == "arm64" ]]; then
-                eval "$(/opt/homebrew/bin/brew shellenv)"
-            else
-                eval "$(/usr/local/bin/brew shellenv)"
-            fi
-        else
-            eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-        fi
+        # Homebrew PATH設定（HOMEBREW_PREFIXを使用）
+        eval "$("${HOMEBREW_PREFIX}/bin/brew" shellenv)"
         echo -e "${GREEN}Homebrewのインストールが完了しました。${NC}"
     else
         if [ "$IS_MACOS" = true ]; then
@@ -432,16 +401,8 @@ if ! command -v brew &> /dev/null; then
     fi
 else
     echo -e "${GREEN}✓ Homebrewはインストール済みです${NC}"
-    # 既存のHomebrew PATH設定
-    if [ "$IS_MACOS" = true ]; then
-        if [[ $(uname -m) == "arm64" ]]; then
-            eval "$(/opt/homebrew/bin/brew shellenv)"
-        else
-            eval "$(/usr/local/bin/brew shellenv)"
-        fi
-    else
-        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" 2>/dev/null || true
-    fi
+    # 既存のHomebrew PATH設定（HOMEBREW_PREFIXを使用）
+    eval "$("${HOMEBREW_PREFIX}/bin/brew" shellenv)" 2>/dev/null || true
 fi
 
 # ========================================
@@ -591,8 +552,8 @@ echo -e "\n${YELLOW}[5/7] 追加設定...${NC}"
 
 # OS固有設定
 if [ "$IS_MACOS" = true ]; then
-    if [ -f ~/dotfiles/scripts/setup/macos-defaults.sh ]; then
-        bash ~/dotfiles/scripts/setup/macos-defaults.sh
+    if [ -f ~/dotfiles/scripts/setup/macos_defaults.sh ]; then
+        bash ~/dotfiles/scripts/setup/macos_defaults.sh
     fi
 elif [ "$IS_LINUX" = true ]; then
     if [ -f ~/dotfiles/scripts/setup/linux.sh ]; then

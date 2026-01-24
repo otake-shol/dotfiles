@@ -1,8 +1,8 @@
 #!/bin/bash
 # ========================================
-# zsh-benchmark.sh - zsh起動時間計測
+# zsh_benchmark.sh - zsh起動時間計測
 # ========================================
-# 使用方法: bash scripts/utils/zsh-benchmark.sh [回数]
+# 使用方法: bash scripts/utils/zsh_benchmark.sh [回数]
 
 set -euo pipefail
 

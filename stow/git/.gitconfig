@@ -110,8 +110,13 @@
 	autoStash = true
 [gpg]
 	# GPGプログラム設定（コミット署名用）
-	# macOSの場合は gpg2 を使用することを推奨
-	# program = gpg
+	# 有効化手順:
+	#   1. brew install gnupg
+	#   2. gpg --full-generate-key でキーを生成
+	#   3. gpg --list-secret-keys --keyid-format=long で ID を確認
+	#   4. git config --global user.signingkey YOUR_KEY_ID
+	#   5. 以下の program と gpgsign のコメントを外す
+	# program = /opt/homebrew/bin/gpg
 [commit]
 	template = ~/dotfiles/stow/git/commit-template.txt
 	# GPG署名を有効にする場合はコメントを外す

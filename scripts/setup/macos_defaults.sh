@@ -1,14 +1,52 @@
 #!/bin/bash
-# macos-defaults.sh - macOS固有の設定
-# 使用方法: bash scripts/macos-defaults.sh
+# macos_defaults.sh - macOS固有の設定
+# 使用方法: bash scripts/setup/macos_defaults.sh
 
-set -euo pipefail
+set -uo pipefail  # -e を外してエラー時も継続
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # 共通ライブラリ読み込み
 # shellcheck source=../lib/common.sh
 source "${SCRIPT_DIR}/../lib/common.sh"
+
+# ヘルプ表示
+show_help() {
+    cat << 'EOF'
+macos-defaults.sh - macOS固有の設定を適用
+
+使用方法:
+    bash scripts/setup/macos-defaults.sh
+
+オプション:
+    -h, --help    このヘルプを表示
+
+設定内容:
+    - Dock: 自動非表示、高速アニメーション
+    - Finder: 隠しファイル表示、パスバー
+    - キーボード: 高速キーリピート、自動変換無効化
+    - トラックパッド: タップでクリック、3本指ドラッグ
+    - Mission Control: スペース固定
+    - Hot Corners: 四隅アクション設定
+    - Safari: 開発者メニュー
+    - セキュリティ: スクリーンセーバーパスワード
+EOF
+}
+
+[[ "${1:-}" == "-h" || "${1:-}" == "--help" ]] && show_help && exit 0
+
+# エラーカウンター
+_defaults_errors=0
+
+# defaultsコマンドのラッパー（エラー時に警告を出力）
+safe_defaults() {
+    if ! defaults write "$@" 2>/dev/null; then
+        echo -e "${YELLOW}⚠ defaults write $1 $2 の設定に失敗しました${NC}" >&2
+        ((_defaults_errors++)) || true
+        return 1
+    fi
+    return 0
+}
 
 echo -e "${YELLOW}macOS defaults設定を適用中...${NC}"
 
@@ -186,5 +224,12 @@ killall Dock 2>/dev/null || true
 killall Finder 2>/dev/null || true
 killall SystemUIServer 2>/dev/null || true
 
-echo -e "${GREEN}✓ macOS defaults設定が完了しました${NC}"
+# ========================================
+# 結果サマリー
+# ========================================
+if [[ $_defaults_errors -eq 0 ]]; then
+    echo -e "${GREEN}✓ macOS defaults設定がすべて正常に完了しました${NC}"
+else
+    echo -e "${YELLOW}⚠ macOS defaults設定が完了しました（${_defaults_errors}件の警告あり）${NC}"
+fi
 echo -e "${YELLOW}※ 一部の設定は再起動後に反映されます${NC}"

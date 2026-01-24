@@ -49,8 +49,7 @@ show_core_aliases() {
     print_alias "h <pattern>" "履歴検索"
 
     print_section "安全な削除"
-    print_alias "del" "ゴミ箱へ移動"
-    print_alias "rm -rf" "確認プロンプト付き"
+    print_alias "rm -rf" "確認プロンプト付き（関数でラップ）"
 
     print_section "システム"
     print_alias "reload" "zshrc再読み込み"
@@ -91,7 +90,7 @@ show_node_aliases() {
     print_alias "nt" "npm test"
 
     print_section "yarn"
-    print_alias "y" "yarn"
+    print_alias "yi" "yarn install"
     print_alias "ya" "yarn add"
     print_alias "yad" "yarn add -D"
 
@@ -99,12 +98,16 @@ show_node_aliases() {
     print_alias "pn" "pnpm"
     print_alias "pni" "pnpm install"
     print_alias "pnr" "pnpm run"
+
+    print_section "bun"
+    print_alias "b" "bun"
+    print_alias "bi" "bun install"
+    print_alias "br" "bun run"
 }
 
 show_dev_aliases() {
     print_section "エディタ"
-    print_alias "v" "nvim"
-    print_alias "vim" "nvim"
+    print_alias "vi / vim" "nvim"
     print_alias "c" "claude"
 
     print_section "Python"
@@ -114,9 +117,7 @@ show_dev_aliases() {
     print_alias "activate" "source .venv/bin/activate"
 
     print_section "ユーティリティ"
-    print_alias "md" "glow (Markdown表示)"
     print_alias "loc" "tokei (コード統計)"
-    print_alias "http" "HTTPie"
 }
 
 show_fzf_functions() {
@@ -138,15 +139,15 @@ show_tools() {
     print_alias "ls → eza" "アイコン・Git対応ls"
     print_alias "grep → rg" "ripgrep (高速検索)"
     print_alias "find → fd" "fd (高速ファイル検索)"
-    print_alias "du → dust" "ディスク使用量可視化"
-    print_alias "ps → procs" "プロセス表示"
     print_alias "top → btop" "リソースモニター"
-    print_alias "diff → delta" "美しいdiff"
+    print_alias "diff → delta" "美しいdiff (git diff)"
     print_alias "cd → zoxide" "スマートディレクトリジャンプ"
+    print_alias "y" "yazi (ターミナルファイルマネージャー)"
 
     print_section "dotfiles管理"
     print_alias "dotup" "更新チェック"
     print_alias "dotupdate" "一括更新"
+    print_alias "dotverify" "セットアップ検証"
     print_alias "brewsync" "Brewfile同期チェック"
     print_alias "dots" "cd ~/dotfiles"
 }

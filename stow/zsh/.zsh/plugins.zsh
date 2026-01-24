@@ -30,8 +30,9 @@ _plugin_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh-plugin-cache"
 _cache_valid=false
 
 if [[ -f "$_plugin_cache" ]]; then
-  # キャッシュが7日以内なら使用（atuin, zoxideと統一）
-  if [[ $(find "$_plugin_cache" -mtime -7 2>/dev/null) ]]; then
+  # キャッシュがTTL以内なら使用（DOTFILES_CACHE_TTL_DAYSで統一管理）
+  _cache_ttl="${DOTFILES_CACHE_TTL_DAYS:-7}"
+  if [[ $(find "$_plugin_cache" -mtime -"$_cache_ttl" 2>/dev/null) ]]; then
     _cache_valid=true
     source "$_plugin_cache"
   fi

@@ -233,10 +233,6 @@ dotfiles/
 ## 開発コマンド
 
 ```bash
-# テスト実行
-make test                  # ローカルでBatsテスト
-docker-compose -f tests/docker-compose.yml up  # Dockerでテスト
-
 # Lint
 make lint                  # ShellCheck実行
 
@@ -257,19 +253,6 @@ bash scripts/utils/zsh-benchmark.sh
 4. **エラーハンドリング**: trap で cleanup
 5. **ShellCheck準拠**: 警告なしを目指す
 
-## テスト作成ガイドライン
-
-- テストファイル: `tests/*.bats`
-- ヘルパー: `tests/test_helper.bash`
-- アサーション: bats-assert使用
-- 環境: CI環境とローカルの両方で動作すること
-
-## プロファイル追加方法
-
-1. `profiles/<name>.zsh` を作成
-2. `DOTFILES_PROFILE=<name>` で切り替え
-3. `.zshrc` で自動読み込み
-
 ## CI/CD
 
 - **lint.yml**: ShellCheck, YAML Lint, Markdown Lint, セキュリティスキャン
@@ -278,7 +261,6 @@ bash scripts/utils/zsh-benchmark.sh
 
 ## 貢献ガイドライン
 
-1. 変更前にテストを追加
-2. ShellCheckを通す
-3. Conventional Commitsに従う
-4. PRの説明を丁寧に書く
+1. ShellCheckを通す
+2. Conventional Commitsに従う
+3. PRの説明を丁寧に書く

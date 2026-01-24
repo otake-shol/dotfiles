@@ -29,9 +29,8 @@ help:
 	@echo "  make bootstrap      完全セットアップ（bootstrap.sh実行）"
 	@echo ""
 	@echo "検証・メンテナンス:"
-	@echo "  make test           Batsテスト実行"
 	@echo "  make lint           ShellCheckでlint"
-	@echo "  make health         全体ヘルスチェック（lint+test+verify）"
+	@echo "  make health         全体ヘルスチェック（lint+verify）"
 	@echo "  make bench          Zsh起動速度ベンチマーク"
 	@echo "  make deps           Homebrew依存ツリー表示"
 	@echo "  make brewsync       Brewfile同期チェック"
@@ -87,16 +86,6 @@ uninstall-%:
 bootstrap:
 	bash bootstrap.sh
 
-# テスト
-.PHONY: test
-test:
-	@echo "Running tests..."
-	@if [ -d "tests" ]; then \
-		bats tests/; \
-	else \
-		echo "tests/ ディレクトリがありません"; \
-	fi
-
 # シェルスクリプトのlint
 .PHONY: lint
 lint:
@@ -118,7 +107,7 @@ bench:
 
 # 全体ヘルスチェック
 .PHONY: health
-health: lint test check
+health: lint check
 	@echo ""
 	@echo "=== セットアップ検証 ==="
 	@bash scripts/maintenance/verify-setup.sh

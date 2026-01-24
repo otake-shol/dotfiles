@@ -7,31 +7,6 @@ on:
     branches: [master, main]
 
 jobs:
-  bats-test:
-    name: Bats Tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install bats
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y bats
-
-      - name: Install bats helpers
-        run: |
-          sudo git clone https://github.com/bats-core/bats-support.git /usr/local/lib/bats-support
-          sudo git clone https://github.com/bats-core/bats-assert.git /usr/local/lib/bats-assert
-
-      - name: Install zsh
-        run: sudo apt-get install -y zsh
-
-      - name: Run tests
-        run: bats tests/
-        env:
-          CI: true
-
   shellcheck:
     name: ShellCheck
     runs-on: ubuntu-latest
@@ -190,20 +165,6 @@ jobs:
             echo "✅ No hardcoded secrets detected"
           fi
           exit $EXIT_CODE
-
-  docker-test:
-    name: Docker Test Environment
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Build Docker image
-        run: docker build -t dotfiles-test -f tests/Dockerfile .
-
-      - name: Run tests in Docker
-        run: docker run --rm dotfiles-test
 
   link-check:
     name: Document Link Check

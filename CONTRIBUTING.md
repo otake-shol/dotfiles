@@ -9,7 +9,6 @@ Thank you for your interest in contributing! This document provides guidelines a
 - [Development Workflow](#development-workflow)
 - [Commit Convention](#commit-convention)
 - [Pull Request Process](#pull-request-process)
-- [Testing](#testing)
 - [Style Guide](#style-guide)
 
 ## Code of Conduct
@@ -120,12 +119,7 @@ git config --local commit.template stow/git/commit-template.txt
    make lint
    ```
 
-2. **Run tests**
-   ```bash
-   make test
-   ```
-
-3. **Verify setup**
+2. **Verify setup**
    ```bash
    make health
    ```
@@ -134,7 +128,6 @@ git config --local commit.template stow/git/commit-template.txt
 
 - Keep PRs focused and small
 - Update documentation if needed
-- Add tests for new features
 - Ensure CI passes
 
 ### PR Template
@@ -152,52 +145,8 @@ How you tested the changes
 
 ## Checklist
 - [ ] Ran `make lint`
-- [ ] Ran `make test`
+- [ ] Ran `make health`
 - [ ] Updated documentation (if applicable)
-```
-
-## Testing
-
-### Running Tests
-
-```bash
-# Run all tests
-make test
-
-# Run specific test file
-bats tests/zshrc.bats
-
-# Run with verbose output
-bats --verbose-run tests/
-```
-
-### Writing Tests
-
-Tests are written using [Bats](https://github.com/bats-core/bats-core).
-
-```bash
-# tests/example.bats
-#!/usr/bin/env bats
-
-load 'test_helper'
-
-@test "description of what you're testing" {
-    run some_command
-    [ "$status" -eq 0 ]
-    [[ "$output" =~ "expected" ]]
-}
-```
-
-### Test Structure
-
-```
-tests/
-├── test_helper.bash    # Shared helper functions
-├── aliases.bats        # Alias tests
-├── bootstrap.bats      # Bootstrap script tests
-├── scripts.bats        # Utility script tests
-├── symlinks.bats       # Symlink verification
-└── zshrc.bats          # Zsh configuration tests
 ```
 
 ## Style Guide

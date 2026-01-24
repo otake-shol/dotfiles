@@ -32,7 +32,6 @@ cd ~/dotfiles && bash bootstrap.sh
 | `bat/`, `atuin/` | bat/atuin設定 |
 | `raycast/` | Raycastスクリプト |
 | `antigravity/` | Antigravity設定 |
-| `browser-extensions/` | ブラウザ拡張機能リスト |
 | `scripts/` | ユーティリティスクリプト |
 | `espanso/` | テキスト展開（AIプロンプトスニペット） |
 
@@ -79,8 +78,6 @@ SSHキーを1Passwordで管理する場合は `ssh/config` のコメントを解
 | [SETUP.md](docs/setup/SETUP.md) | 詳細セットアップ手順 |
 | [APPS.md](docs/setup/APPS.md) | アプリケーション一覧 |
 | [DOTFILES_MANAGER.md](docs/setup/DOTFILES_MANAGER.md) | dotfiles管理ツール比較 |
-| [antigravity-extensions.md](docs/tools/antigravity-extensions.md) | Antigravity拡張機能ガイド |
-| [browser-extensions/](browser-extensions/) | ブラウザ拡張機能リスト |
 
 ## 参考
 

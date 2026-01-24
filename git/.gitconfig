@@ -110,6 +110,16 @@
 	colorMoved = default
 [rebase]
 	autoStash = true
+[gpg]
+	# GPGプログラム設定（コミット署名用）
+	# macOSの場合は gpg2 を使用することを推奨
+	# program = gpg
+[commit]
+	# GPG署名を有効にする場合はコメントを外す
+	# gpgsign = true
+[tag]
+	# タグにも署名する場合はコメントを外す
+	# gpgSign = true
 [color "decorate"]
 	HEAD = bold cyan
 	branch = bold green

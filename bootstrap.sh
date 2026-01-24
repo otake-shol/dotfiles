@@ -92,6 +92,39 @@ done
 # ユーティリティ関数
 # ========================================
 
+# プログレスバー表示
+# 使用例: show_progress 3 7 "シンボリックリンク作成"
+TOTAL_STEPS=7
+show_progress() {
+    local current=$1
+    local total=${2:-$TOTAL_STEPS}
+    local message="${3:-処理中}"
+    local width=40
+    local percent=$((current * 100 / total))
+    local filled=$((width * current / total))
+    local empty=$((width - filled))
+
+    # プログレスバーの描画
+    printf "\r${BLUE}["
+    printf "%${filled}s" | tr ' ' '█'
+    printf "%${empty}s" | tr ' ' '░'
+    printf "] %3d%% ${NC}${message}" "$percent"
+
+    # 完了時は改行
+    if [ "$current" -eq "$total" ]; then
+        echo ""
+    fi
+}
+
+# ステップ表示（番号付き）
+show_step() {
+    local step=$1
+    local total=$2
+    local title=$3
+    echo -e "\n${YELLOW}[$step/$total] ${title}${NC}"
+    show_progress "$step" "$total" "$title"
+}
+
 # ログ関数
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"

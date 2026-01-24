@@ -532,7 +532,7 @@ require("lazy").setup({
         { "<leader>b", group = "Buffer" },
         { "<leader>s", group = "Split" },
         { "<leader>c", group = "Code" },
-        { "<leader>d", group = "Diagnostics" },
+        { "<leader>d", group = "Debug" },
         { "<leader>l", group = "Lint/Format" },
       })
     end,
@@ -654,6 +654,180 @@ require("lazy").setup({
     event = "VeryLazy",
     opts = {},
   },
+
+  -- ========================================
+  -- DAP（Debug Adapter Protocol）
+  -- ========================================
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = {
+      -- DAP UI
+      {
+        "rcarriga/nvim-dap-ui",
+        dependencies = { "nvim-neotest/nvim-nio" },
+        opts = {},
+        config = function(_, opts)
+          local dap = require("dap")
+          local dapui = require("dapui")
+          dapui.setup(opts)
+          -- DAP UIの自動オープン/クローズ
+          dap.listeners.after.event_initialized["dapui_config"] = function()
+            dapui.open()
+          end
+          dap.listeners.before.event_terminated["dapui_config"] = function()
+            dapui.close()
+          end
+          dap.listeners.before.event_exited["dapui_config"] = function()
+            dapui.close()
+          end
+        end,
+      },
+      -- 仮想テキストでデバッグ値を表示
+      {
+        "theHamsta/nvim-dap-virtual-text",
+        opts = {},
+      },
+      -- Mason DAP統合
+      {
+        "jay-babu/mason-nvim-dap.nvim",
+        dependencies = "mason.nvim",
+        cmd = { "DapInstall", "DapUninstall" },
+        opts = {
+          automatic_installation = true,
+          ensure_installed = {
+            "python",    -- debugpy
+            "js",        -- js-debug-adapter (Node.js/Chrome)
+            "delve",     -- Go
+            "codelldb",  -- Rust/C/C++
+          },
+        },
+      },
+    },
+    keys = {
+      { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "ブレークポイント" },
+      { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input("条件: ")) end, desc = "条件付きブレークポイント" },
+      { "<leader>dc", function() require("dap").continue() end, desc = "デバッグ開始/続行" },
+      { "<leader>dC", function() require("dap").run_to_cursor() end, desc = "カーソルまで実行" },
+      { "<leader>di", function() require("dap").step_into() end, desc = "ステップイン" },
+      { "<leader>do", function() require("dap").step_over() end, desc = "ステップオーバー" },
+      { "<leader>dO", function() require("dap").step_out() end, desc = "ステップアウト" },
+      { "<leader>dr", function() require("dap").repl.toggle() end, desc = "REPL" },
+      { "<leader>dl", function() require("dap").run_last() end, desc = "最後の設定で実行" },
+      { "<leader>dt", function() require("dap").terminate() end, desc = "終了" },
+      { "<leader>du", function() require("dapui").toggle() end, desc = "DAP UI" },
+      { "<leader>de", function() require("dapui").eval() end, desc = "式を評価", mode = { "n", "v" } },
+    },
+    config = function()
+      local dap = require("dap")
+
+      -- デバッグサインの設定
+      vim.fn.sign_define("DapBreakpoint", { text = "●", texthl = "DapBreakpoint", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapBreakpointCondition", { text = "◆", texthl = "DapBreakpointCondition", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapLogPoint", { text = "◇", texthl = "DapLogPoint", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapStopped", { text = "→", texthl = "DapStopped", linehl = "DapStoppedLine", numhl = "" })
+      vim.fn.sign_define("DapBreakpointRejected", { text = "○", texthl = "DapBreakpointRejected", linehl = "", numhl = "" })
+
+      -- Python設定
+      dap.adapters.python = {
+        type = "executable",
+        command = "python",
+        args = { "-m", "debugpy.adapter" },
+      }
+      dap.configurations.python = {
+        {
+          type = "python",
+          request = "launch",
+          name = "Launch file",
+          program = "${file}",
+          pythonPath = function()
+            local cwd = vim.fn.getcwd()
+            if vim.fn.executable(cwd .. "/venv/bin/python") == 1 then
+              return cwd .. "/venv/bin/python"
+            elseif vim.fn.executable(cwd .. "/.venv/bin/python") == 1 then
+              return cwd .. "/.venv/bin/python"
+            else
+              return "/usr/bin/python3"
+            end
+          end,
+        },
+      }
+
+      -- Node.js / TypeScript設定
+      dap.adapters["pwa-node"] = {
+        type = "server",
+        host = "localhost",
+        port = "${port}",
+        executable = {
+          command = "node",
+          args = {
+            vim.fn.stdpath("data") .. "/mason/packages/js-debug-adapter/js-debug/src/dapDebugServer.js",
+            "${port}",
+          },
+        },
+      }
+      dap.configurations.javascript = {
+        {
+          type = "pwa-node",
+          request = "launch",
+          name = "Launch file",
+          program = "${file}",
+          cwd = "${workspaceFolder}",
+        },
+      }
+      dap.configurations.typescript = dap.configurations.javascript
+
+      -- Go設定
+      dap.adapters.delve = {
+        type = "server",
+        port = "${port}",
+        executable = {
+          command = "dlv",
+          args = { "dap", "-l", "127.0.0.1:${port}" },
+        },
+      }
+      dap.configurations.go = {
+        {
+          type = "delve",
+          name = "Debug",
+          request = "launch",
+          program = "${file}",
+        },
+        {
+          type = "delve",
+          name = "Debug test",
+          request = "launch",
+          mode = "test",
+          program = "${file}",
+        },
+      }
+    end,
+  },
+  -- ========================================
+  -- AI補完（オプション）
+  -- ========================================
+  -- GitHub Copilot を使用する場合はコメントを外す
+  -- {
+  --   "github/copilot.vim",
+  --   event = "InsertEnter",
+  --   config = function()
+  --     vim.g.copilot_no_tab_map = true
+  --     vim.keymap.set("i", "<C-j>", 'copilot#Accept("<CR>")', {
+  --       expr = true,
+  --       replace_keycodes = false,
+  --     })
+  --   end,
+  -- },
+
+  -- Codeium（無料のAI補完）を使用する場合はコメントを外す
+  -- {
+  --   "Exafunction/codeium.vim",
+  --   event = "InsertEnter",
+  --   config = function()
+  --     vim.keymap.set("i", "<C-j>", function()
+  --       return vim.fn["codeium#Accept"]()
+  --     end, { expr = true })
+  --   end,
+  -- },
 }, {
   -- lazy.nvim オプション
   checker = { enabled = false }, -- 自動更新チェック無効

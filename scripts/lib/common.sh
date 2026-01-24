@@ -256,6 +256,50 @@ is_arm64() {
 }
 
 # ========================================
+# プログレスバー
+# ========================================
+# 使用例: show_progress 3 10 "処理中..."
+show_progress() {
+    local current=$1
+    local total=$2
+    local message="${3:-処理中}"
+    local width=40
+    local percent=$((current * 100 / total))
+    local filled=$((width * current / total))
+    local empty=$((width - filled))
+
+    # プログレスバーの描画
+    printf "\r${BLUE}["
+    printf "%${filled}s" | tr ' ' '█'
+    printf "%${empty}s" | tr ' ' '░'
+    printf "] %3d%% ${NC}${message}" "$percent"
+
+    # 完了時は改行
+    if [ "$current" -eq "$total" ]; then
+        echo ""
+    fi
+}
+
+# スピナー表示（バックグラウンド処理用）
+# 使用例: start_spinner "処理中" & SPINNER_PID=$!; ...; stop_spinner $SPINNER_PID
+start_spinner() {
+    local message="${1:-処理中}"
+    local chars="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
+    local i=0
+    while true; do
+        printf "\r${CYAN}${chars:$i:1}${NC} ${message}"
+        i=$(( (i + 1) % ${#chars} ))
+        sleep 0.1
+    done
+}
+
+stop_spinner() {
+    local pid=$1
+    kill "$pid" 2>/dev/null
+    printf "\r"
+}
+
+# ========================================
 # 結果サマリー表示
 # ========================================
 print_summary() {

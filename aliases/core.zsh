@@ -112,6 +112,8 @@ alias brewsync="bash $DOTFILES_SCRIPTS/maintenance/sync-brewfile.sh"    # Brewfi
 alias dotsysinfo="bash $DOTFILES_SCRIPTS/lib/os-detect.sh"              # システム情報表示
 alias dothelp="bash $DOTFILES_SCRIPTS/utils/dothelp.sh"                 # エイリアスヘルプ
 alias dotverify="bash $DOTFILES_SCRIPTS/maintenance/verify-setup.sh"   # セットアップ検証
+alias dotssh="bash $DOTFILES_SCRIPTS/utils/setup-ssh.sh"                # SSH鍵管理
+alias dotsshlist="bash $DOTFILES_SCRIPTS/utils/setup-ssh.sh --list"     # SSH鍵一覧
 
 # ========================================
 # クイックアクセス

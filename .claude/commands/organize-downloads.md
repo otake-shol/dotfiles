@@ -4,7 +4,7 @@ iCloud Contents内の `01_ダウンロード` 配下のファイルを適切な�
 
 ## 対象パス
 
-- ベース: `/Users/otkshol/Library/Mobile Documents/com~apple~CloudDocs/Contents`
+- ベース: `~/Library/Mobile Documents/com~apple~CloudDocs/Contents`
 - 整理対象: `01_ダウンロード`
 
 ## 振り分けルール

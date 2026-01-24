@@ -172,7 +172,7 @@ done
 [[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
 
 # Antigravity
-export PATH="/Users/otkshol/.antigravity/antigravity/bin:$PATH"
+export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 
 # trash command (safe delete)
 export PATH="/usr/local/opt/trash/bin:$PATH"

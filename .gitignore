@@ -19,8 +19,10 @@ raycast/snippets.local.json
 # Espanso local snippets (personal words)
 espanso/match/words.yml
 
-# Claude Code plugins marketplace (managed externally)
+# Claude Code plugins (user-specific, auto-generated)
 .claude/plugins/marketplaces/
+.claude/plugins/known_marketplaces.json
+.claude/plugins/installed_plugins.json
 
 # Serena tool internal files
 .serena/

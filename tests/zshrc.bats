@@ -3,6 +3,9 @@
 
 load 'test_helper'
 
+# fzf関数ファイルのパス
+FZF_FUNCTIONS_FILE="$DOTFILES_ROOT/zsh/functions/fzf-functions.zsh"
+
 # 構文チェック
 @test ".zshrc has valid zsh syntax" {
     if command -v zsh &>/dev/null; then
@@ -19,6 +22,15 @@ load 'test_helper'
         [ "$status" -eq 0 ]
     else
         skip "zsh not installed or .aliases not found"
+    fi
+}
+
+@test "fzf-functions.zsh has valid zsh syntax" {
+    if command -v zsh &>/dev/null && [ -f "$FZF_FUNCTIONS_FILE" ]; then
+        run zsh -n "$FZF_FUNCTIONS_FILE"
+        [ "$status" -eq 0 ]
+    else
+        skip "zsh not installed or fzf-functions.zsh not found"
     fi
 }
 
@@ -46,41 +58,52 @@ load 'test_helper'
     grep -q 'fzf' "$DOTFILES_ROOT/.zshrc"
 }
 
-# fzf関数の存在確認
-@test ".zshrc defines fbr function" {
-    grep -q '^fbr()' "$DOTFILES_ROOT/.zshrc"
+# fzf関数ファイルの存在確認
+@test "fzf functions file exists" {
+    assert_file_exists "$FZF_FUNCTIONS_FILE"
 }
 
-@test ".zshrc defines fshow function" {
-    grep -q '^fshow()' "$DOTFILES_ROOT/.zshrc"
+# fzf関数の存在確認（遅延読み込みファイル内）
+@test "fzf-functions.zsh defines fbr function" {
+    grep -q '^fbr()' "$FZF_FUNCTIONS_FILE"
 }
 
-@test ".zshrc defines fvim function" {
-    grep -q '^fvim()' "$DOTFILES_ROOT/.zshrc"
+@test "fzf-functions.zsh defines fshow function" {
+    grep -q '^fshow()' "$FZF_FUNCTIONS_FILE"
 }
 
-@test ".zshrc defines fkill function" {
-    grep -q '^fkill()' "$DOTFILES_ROOT/.zshrc"
+@test "fzf-functions.zsh defines fvim function" {
+    grep -q '^fvim()' "$FZF_FUNCTIONS_FILE"
 }
 
-@test ".zshrc defines fcd function" {
-    grep -q '^fcd()' "$DOTFILES_ROOT/.zshrc"
+@test "fzf-functions.zsh defines fkill function" {
+    grep -q '^fkill()' "$FZF_FUNCTIONS_FILE"
 }
 
-@test ".zshrc defines fstash function" {
-    grep -q '^fstash()' "$DOTFILES_ROOT/.zshrc"
+@test "fzf-functions.zsh defines fcd function" {
+    grep -q '^fcd()' "$FZF_FUNCTIONS_FILE"
 }
 
-@test ".zshrc defines fenv function" {
-    grep -q '^fenv()' "$DOTFILES_ROOT/.zshrc"
+@test "fzf-functions.zsh defines fstash function" {
+    grep -q '^fstash()' "$FZF_FUNCTIONS_FILE"
 }
 
-@test ".zshrc defines fhistory function" {
-    grep -q '^fhistory()' "$DOTFILES_ROOT/.zshrc"
+@test "fzf-functions.zsh defines fenv function" {
+    grep -q '^fenv()' "$FZF_FUNCTIONS_FILE"
 }
 
-@test ".zshrc defines fman function" {
-    grep -q '^fman()' "$DOTFILES_ROOT/.zshrc"
+@test "fzf-functions.zsh defines fhistory function" {
+    grep -q '^fhistory()' "$FZF_FUNCTIONS_FILE"
+}
+
+@test "fzf-functions.zsh defines fman function" {
+    grep -q '^fman()' "$FZF_FUNCTIONS_FILE"
+}
+
+# .zshrcがfzf関数の遅延読み込みを設定していること
+@test ".zshrc sets up lazy loading for fzf functions" {
+    grep -q '_fzf_functions_file' "$DOTFILES_ROOT/.zshrc"
+    grep -q '_load_fzf_functions' "$DOTFILES_ROOT/.zshrc"
 }
 
 # エイリアス読み込み確認

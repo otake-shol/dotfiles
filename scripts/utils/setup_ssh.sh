@@ -167,13 +167,29 @@ generate_key() {
     echo -e "  パス: $key_path"
     echo -e "  メール: $email"
 
+    # パスフレーズ入力（セキュリティ強化）
+    echo -e "\n${YELLOW}パスフレーズを設定してください（空でスキップ可）:${NC}"
+    echo -e "${DIM}※ パスフレーズを設定すると、鍵が盗まれても悪用を防げます${NC}"
+    local passphrase=""
+    local passphrase_confirm=""
+    read -rsp "パスフレーズ: " passphrase
+    echo ""
+    if [[ -n "$passphrase" ]]; then
+        read -rsp "パスフレーズ（確認）: " passphrase_confirm
+        echo ""
+        if [[ "$passphrase" != "$passphrase_confirm" ]]; then
+            echo -e "${RED}パスフレーズが一致しません${NC}"
+            return 1
+        fi
+    fi
+
     # 鍵生成
     case "$key_type" in
         ed25519)
-            ssh-keygen -t ed25519 -C "$email" -f "$key_path" -N ""
+            ssh-keygen -t ed25519 -C "$email" -f "$key_path" -N "$passphrase"
             ;;
         rsa)
-            ssh-keygen -t rsa -b 4096 -C "$email" -f "$key_path" -N ""
+            ssh-keygen -t rsa -b 4096 -C "$email" -f "$key_path" -N "$passphrase"
             ;;
         *)
             echo -e "${RED}不明な鍵の種類: $key_type${NC}"

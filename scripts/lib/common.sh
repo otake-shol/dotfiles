@@ -112,6 +112,33 @@ update_zsh_plugin() {
 }
 
 # ========================================
+# ファイルリンク関数
+# ========================================
+# 安全にシンボリックリンクを作成（既存ファイルのバックアップ付き）
+# Usage: safe_link "/path/to/source" "/path/to/destination"
+safe_link() {
+    local src="$1"
+    local dst="$2"
+
+    # ソースファイルの存在確認
+    if [[ ! -e "$src" ]]; then
+        echo -e "${YELLOW}⚠ ソースが存在しません: $src${NC}"
+        return 1
+    fi
+
+    # 既存ファイル/ディレクトリの処理
+    if [[ -e "$dst" && ! -L "$dst" ]]; then
+        local backup
+        backup="${dst}.backup.$(date +%Y%m%d%H%M%S)"
+        echo -e "${YELLOW}⚠ $dst が存在します。バックアップを作成: $backup${NC}"
+        mv "$dst" "$backup"
+    fi
+
+    # シンボリックリンク作成
+    ln -sf "$src" "$dst"
+}
+
+# ========================================
 # OS検出（os-detect.shとの連携）
 # ========================================
 # os-detect.shが存在すれば読み込む

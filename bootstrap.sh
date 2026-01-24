@@ -337,8 +337,6 @@ detect_system() {
     log "Detected: $OS ($ARCH), Homebrew prefix: $HOMEBREW_PREFIX"
 }
 
-# safe_link関数はcommon.shで定義（重複を避ける）
-
 # ========================================
 # 初期化
 # ========================================

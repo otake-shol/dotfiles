@@ -57,6 +57,10 @@ dotfiles/
 ```
 
 > **Note**: `antigravity/` はmacOS固有パス（`~/Library/Application Support/`）を使用するため、GNU Stowではなく`bootstrap.sh`で個別にリンクを作成しています。
+>
+> **antigravity/の内容:**
+> - `settings.json` - エディタ設定（テーマ、フォント、フォーマッタ等）
+> - `extensions.txt` - 推奨拡張機能リスト
 
 ## 便利なコマンド
 

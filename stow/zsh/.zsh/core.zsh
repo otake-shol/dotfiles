@@ -1,9 +1,7 @@
 # ========================================
 # core.zsh - 基本設定・オプション
 # ========================================
-
-# グローバル定数（他モジュールから参照）
-export DOTFILES_CACHE_TTL_DAYS="${DOTFILES_CACHE_TTL_DAYS:-7}"
+# 注: DOTFILES_CACHE_TTL_DAYS は cache.zsh で定義済み
 
 # エディタ設定
 export EDITOR="nvim"

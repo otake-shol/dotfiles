@@ -6,6 +6,9 @@
 # ========================================
 # fzf - ファジーファインダー設定
 # ========================================
+# 注: Ctrl+R（履歴検索）はatuinが上書きするため、fzfのキーバインドは
+#     設定していません。Ctrl+T（ファイル検索）が必要な場合は以下を有効化:
+#     source <(fzf --zsh)
 export FZF_DEFAULT_OPTS="
   --height 60%
   --layout=reverse
@@ -62,8 +65,9 @@ export BUN_INSTALL="$HOME/.bun"
 [[ -d "$HOME/.antigravity/antigravity/bin" ]] && export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 
 # trash command (safe delete)
-local _trash_path="${HOMEBREW_PREFIX:-/usr/local}/opt/trash/bin"
+_trash_path="${HOMEBREW_PREFIX:-/usr/local}/opt/trash/bin"
 [[ -d "$_trash_path" ]] && export PATH="$_trash_path:$PATH"
+unset _trash_path
 
 # Local environment
 [[ -f "$HOME/.local/bin/env" ]] && . "$HOME/.local/bin/env"

@@ -32,9 +32,7 @@ if [ -z "$ENTRIES" ]; then
 fi
 
 # 削除実行
-sqlite3 "$DB_PATH" "DELETE FROM ZUSERDICTIONARYENTRY WHERE ZSHORTCUT = '$YOMI';"
-
-if [ $? -eq 0 ]; then
+if sqlite3 "$DB_PATH" "DELETE FROM ZUSERDICTIONARYENTRY WHERE ZSHORTCUT = '$YOMI';"; then
     echo "削除完了: $YOMI"
 else
     echo "削除に失敗しました"

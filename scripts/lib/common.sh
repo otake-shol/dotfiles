@@ -359,10 +359,10 @@ show_progress() {
     local empty=$((width - filled))
 
     # プログレスバーの描画
-    printf "\r${BLUE}["
+    printf '\r%s[' "${BLUE}"
     printf "%${filled}s" | tr ' ' '█'
     printf "%${empty}s" | tr ' ' '░'
-    printf "] %3d%% ${NC}${message}" "$percent"
+    printf '] %3d%% %s%s' "$percent" "${NC}" "${message}"
 
     # 完了時は改行
     if [ "$current" -eq "$total" ]; then
@@ -377,7 +377,7 @@ start_spinner() {
     local chars="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
     local i=0
     while true; do
-        printf "\r${CYAN}${chars:$i:1}${NC} ${message}"
+        printf '\r%s%s%s %s' "${CYAN}" "${chars:$i:1}" "${NC}" "${message}"
         i=$(( (i + 1) % ${#chars} ))
         sleep 0.1
     done

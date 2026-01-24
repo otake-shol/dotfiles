@@ -13,7 +13,7 @@ echo "現在インストールされているパッケージをBrewfileに保存
 echo "出力先: $OUTPUT_FILE"
 echo ""
 
-read -p "続行しますか? (y/n): " confirm
+read -rp "続行しますか? (y/n): " confirm
 if [[ "$confirm" != "y" ]]; then
     echo "キャンセルしました"
     exit 0

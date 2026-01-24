@@ -106,10 +106,10 @@ show_progress() {
     local empty=$((width - filled))
 
     # プログレスバーの描画
-    printf "\r${BLUE}["
+    printf '\r%s[' "${BLUE}"
     printf "%${filled}s" | tr ' ' '█'
     printf "%${empty}s" | tr ' ' '░'
-    printf "] %3d%% ${NC}${message}" "$percent"
+    printf '] %3d%% %s%s' "$percent" "${NC}" "${message}"
 
     # 完了時は改行
     if [ "$current" -eq "$total" ]; then
@@ -186,6 +186,7 @@ start_spinner() {
     SPINNER_PID=$!
 }
 
+# shellcheck disable=SC2120
 stop_spinner() {
     if [ -n "$SPINNER_PID" ] && kill -0 "$SPINNER_PID" 2>/dev/null; then
         kill "$SPINNER_PID" 2>/dev/null
@@ -204,10 +205,10 @@ show_overall_progress() {
     local filled=$((width * current / total))
     local empty=$((width - filled))
 
-    printf "${BLUE}["
+    printf '%s[' "${BLUE}"
     printf "%${filled}s" | tr ' ' '▓'
     printf "%${empty}s" | tr ' ' '░'
-    printf "] %3d%% (%d/%d)${NC}" "$percent" "$current" "$total"
+    printf '] %3d%% (%d/%d)%s' "$percent" "$current" "$total" "${NC}"
 }
 
 # Brewfileパッケージを個別インストール（状況表示付き）

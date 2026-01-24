@@ -4,7 +4,7 @@
 load 'test_helper'
 
 # fzf関数ファイルのパス
-FZF_FUNCTIONS_FILE="$DOTFILES_ROOT/zsh/functions/fzf-functions.zsh"
+FZF_FUNCTIONS_FILE="$DOTFILES_ROOT/stow/zsh/.zsh/functions/fzf-functions.zsh"
 
 # 構文チェック
 @test ".zshrc has valid zsh syntax" {

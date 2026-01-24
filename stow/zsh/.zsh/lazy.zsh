@@ -64,7 +64,7 @@ fi
 # ========================================
 # fzf 拡張関数（遅延読み込み）
 # ========================================
-_fzf_functions_file="${DOTFILES_DIR:-$HOME/dotfiles}/zsh/functions/fzf-functions.zsh"
+_fzf_functions_file="${HOME}/.zsh/functions/fzf-functions.zsh"
 _fzf_funcs_loaded=false
 
 _load_fzf_functions() {

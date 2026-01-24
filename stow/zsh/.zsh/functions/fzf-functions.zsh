@@ -2,7 +2,7 @@
 # fzf 拡張関数
 # ========================================
 # このファイルは必要な時にのみ読み込まれる
-# 使用方法: source ~/dotfiles/zsh/functions/fzf-functions.zsh
+# 使用方法: source ~/.zsh/functions/fzf-functions.zsh
 # または .zshrc で autoload 設定
 
 # fbr - ブランチをfzfで選択してチェックアウト

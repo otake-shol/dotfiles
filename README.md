@@ -33,12 +33,11 @@
 ## Features
 
 - **Cross-Platform** - Works on macOS, Linux, and WSL
-- **AI-Driven Development** - Pre-configured Claude Code with 13 MCP servers
+- **AI-Driven Development** - Pre-configured Claude Code with MCP servers
 - **Modern CLI Tools** - bat, eza, fzf, ripgrep, zoxide, and more
 - **One-Command Setup** - Fully automated bootstrap script
 - **Idempotent** - Safe to run multiple times
 - **Theme Unified** - TokyoNight theme across all tools
-- **Profile Support** - Switch between personal/work/minimal configurations
 - **Well Documented** - Comprehensive guides for everything
 
 ## Quick Start
@@ -194,27 +193,12 @@ zshbench --profile   # Detailed profiling with zprof
 
 ## Documentation
 
-### AI-Driven Development
-
-| Document | Description |
-|----------|-------------|
-| [AI-DRIVEN-DEV-GUIDE.md](docs/ai-workflow/AI-DRIVEN-DEV-GUIDE.md) | Complete AI development setup |
-| [SPEC-DRIVEN-DEV.md](docs/ai-workflow/SPEC-DRIVEN-DEV.md) | Specification-driven development |
-| [AI-PROMPTS.md](docs/ai-workflow/AI-PROMPTS.md) | AI prompt templates |
-
-### Tool Integration
-
-| Document | Description |
-|----------|-------------|
-| [mcp-servers-guide.md](docs/integrations/mcp-servers-guide.md) | MCP server setup guide |
-| [claude-code-jira-guide.md](docs/integrations/claude-code-jira-guide.md) | Claude Code × Jira |
-
-### Setup & Tools
-
 | Document | Description |
 |----------|-------------|
 | [SETUP.md](docs/setup/SETUP.md) | Detailed setup instructions |
 | [APPS.md](docs/setup/APPS.md) | Application list & descriptions |
+| [mcp-servers-guide.md](docs/integrations/mcp-servers-guide.md) | MCP server setup guide |
+| [atlassian-guide.md](docs/integrations/atlassian-guide.md) | Jira/Confluence integration |
 
 ## Requirements
 

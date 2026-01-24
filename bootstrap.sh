@@ -144,6 +144,72 @@ run_cmd() {
     fi
 }
 
+# スピナーアニメーション（プログレスバー付き）
+SPINNER_FRAMES=("⠋" "⠙" "⠹" "⠸" "⠼" "⠴" "⠦" "⠧" "⠇" "⠏")
+SPINNER_PID=""
+
+# インラインプログレスバー生成
+make_progress_bar() {
+    local current=$1
+    local total=$2
+    local width=20
+    local percent=$((current * 100 / total))
+    local filled=$((width * current / total))
+    local empty=$((width - filled))
+    local bar=""
+
+    # プログレスバー文字列を構築
+    bar="["
+    for ((j=0; j<filled; j++)); do bar+="▓"; done
+    for ((j=0; j<empty; j++)); do bar+="░"; done
+    bar+="]"
+
+    printf "%s %3d%%" "$bar" "$percent"
+}
+
+start_spinner() {
+    local message="$1"
+    local current="${2:-0}"
+    local total="${3:-100}"
+
+    (
+        local i=0
+        while true; do
+            local bar
+            bar=$(make_progress_bar "$current" "$total")
+            # printf %s でエスケープ問題を回避
+            printf "\r%s%s %s%s %s%s%s  " "${YELLOW}" "${SPINNER_FRAMES[$i]}" "${message}" "${NC}" "${CYAN}" "${bar}" "${NC}"
+            i=$(( (i + 1) % ${#SPINNER_FRAMES[@]} ))
+            sleep 0.1
+        done
+    ) &
+    SPINNER_PID=$!
+}
+
+stop_spinner() {
+    if [ -n "$SPINNER_PID" ] && kill -0 "$SPINNER_PID" 2>/dev/null; then
+        kill "$SPINNER_PID" 2>/dev/null
+        wait "$SPINNER_PID" 2>/dev/null || true
+    fi
+    SPINNER_PID=""
+    printf "\r\033[K"
+}
+
+# 全体プログレスバー表示
+show_overall_progress() {
+    local current=$1
+    local total=$2
+    local width=30
+    local percent=$((current * 100 / total))
+    local filled=$((width * current / total))
+    local empty=$((width - filled))
+
+    printf "${BLUE}["
+    printf "%${filled}s" | tr ' ' '▓'
+    printf "%${empty}s" | tr ' ' '░'
+    printf "] %3d%% (%d/%d)${NC}" "$percent" "$current" "$total"
+}
+
 # Brewfileパッケージを個別インストール（状況表示付き）
 install_brewfile_packages() {
     local brewfile="$1"
@@ -174,84 +240,123 @@ install_brewfile_packages() {
     local total=$((${#taps[@]} + ${#brews[@]} + ${#casks[@]}))
     local current=0
 
-    echo -e "${BLUE}総パッケージ数: $total (tap: ${#taps[@]}, brew: ${#brews[@]}, cask: ${#casks[@]})${NC}"
+    echo -e "${BLUE}╔════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${BLUE}║  📦 Brewfile パッケージインストール                    ║${NC}"
+    echo -e "${BLUE}╚════════════════════════════════════════════════════════╝${NC}"
+    echo -e "総パッケージ数: ${CYAN}$total${NC} (tap: ${#taps[@]}, brew: ${#brews[@]}, cask: ${#casks[@]})"
     echo ""
 
     # Taps
     if [ ${#taps[@]} -gt 0 ]; then
-        echo -e "${CYAN}── Taps ──${NC}"
+        echo -e "${CYAN}┌── 🔌 Taps ──────────────────────────────────────────────┐${NC}"
         for tap in "${taps[@]}"; do
             ((current++))
-            printf "[%3d/%3d] %-40s " "$current" "$total" "$tap"
+
+            # インストール済みチェック
             if brew tap | grep -q "^${tap}$" 2>/dev/null; then
-                echo -e "${GREEN}✓ 済${NC}"
+                printf "│ [%3d/%3d] %-42s ${GREEN}✓ 済${NC}\n" "$current" "$total" "$tap"
                 ((skipped++))
-            elif brew tap "$tap" 2>/dev/null; then
-                echo -e "${GREEN}✓ 追加${NC}"
-                ((success++))
             else
-                echo -e "${RED}✗ 失敗${NC}"
-                ((failed++))
-                failed_packages+=("tap: $tap")
+                # スピナー表示しながらインストール
+                printf "│ [%3d/%3d] %-42s " "$current" "$total" "$tap"
+                start_spinner "追加中..." "$current" "$total"
+                if brew tap "$tap" &>/dev/null; then
+                    stop_spinner
+                    echo -e "${GREEN}✓ 追加${NC}"
+                    ((success++))
+                else
+                    stop_spinner
+                    echo -e "${RED}✗ 失敗${NC}"
+                    ((failed++))
+                    failed_packages+=("tap: $tap")
+                fi
             fi
         done
+        echo -e "${CYAN}└──────────────────────────────────────────────────────────┘${NC}"
         echo ""
     fi
 
     # Brews (CLIツール)
     if [ ${#brews[@]} -gt 0 ]; then
-        echo -e "${CYAN}── CLI Tools (brew) ──${NC}"
+        echo -e "${CYAN}┌── 🛠  CLI Tools (brew) ─────────────────────────────────┐${NC}"
         for pkg in "${brews[@]}"; do
             ((current++))
-            printf "[%3d/%3d] %-40s " "$current" "$total" "$pkg"
+
             if brew list --formula "$pkg" &>/dev/null; then
-                echo -e "${GREEN}✓ 済${NC}"
+                printf "│ [%3d/%3d] %-42s ${GREEN}✓ 済${NC}\n" "$current" "$total" "$pkg"
                 ((skipped++))
-            elif brew install "$pkg" 2>/dev/null; then
-                echo -e "${GREEN}✓ 完了${NC}"
-                ((success++))
             else
-                echo -e "${RED}✗ 失敗${NC}"
-                ((failed++))
-                failed_packages+=("brew: $pkg")
+                printf "│ [%3d/%3d] %-42s " "$current" "$total" "$pkg"
+                start_spinner "インストール中..." "$current" "$total"
+                if brew install "$pkg" &>/dev/null; then
+                    stop_spinner
+                    echo -e "${GREEN}✓ 完了${NC}"
+                    ((success++))
+                else
+                    stop_spinner
+                    echo -e "${RED}✗ 失敗${NC}"
+                    ((failed++))
+                    failed_packages+=("brew: $pkg")
+                fi
+            fi
+
+            # 10パッケージごとに進捗バー表示
+            if (( current % 10 == 0 )); then
+                printf "│ "
+                show_overall_progress "$current" "$total"
+                echo ""
             fi
         done
+        echo -e "${CYAN}└──────────────────────────────────────────────────────────┘${NC}"
         echo ""
     fi
 
     # Casks (GUIアプリ)
     if [ ${#casks[@]} -gt 0 ]; then
-        echo -e "${CYAN}── GUI Apps (cask) ──${NC}"
+        echo -e "${CYAN}┌── 🖥  GUI Apps (cask) ──────────────────────────────────┐${NC}"
         for pkg in "${casks[@]}"; do
             ((current++))
-            printf "[%3d/%3d] %-40s " "$current" "$total" "$pkg"
+
             if brew list --cask "$pkg" &>/dev/null; then
-                echo -e "${GREEN}✓ 済${NC}"
+                printf "│ [%3d/%3d] %-42s ${GREEN}✓ 済${NC}\n" "$current" "$total" "$pkg"
                 ((skipped++))
-            elif brew install --cask "$pkg" 2>/dev/null; then
-                echo -e "${GREEN}✓ 完了${NC}"
-                ((success++))
             else
-                echo -e "${RED}✗ 失敗${NC}"
-                ((failed++))
-                failed_packages+=("cask: $pkg")
+                printf "│ [%3d/%3d] %-42s " "$current" "$total" "$pkg"
+                start_spinner "インストール中..." "$current" "$total"
+                if brew install --cask "$pkg" &>/dev/null; then
+                    stop_spinner
+                    echo -e "${GREEN}✓ 完了${NC}"
+                    ((success++))
+                else
+                    stop_spinner
+                    echo -e "${RED}✗ 失敗${NC}"
+                    ((failed++))
+                    failed_packages+=("cask: $pkg")
+                fi
             fi
         done
+        echo -e "${CYAN}└──────────────────────────────────────────────────────────┘${NC}"
         echo ""
     fi
 
+    # 最終プログレスバー
+    printf "完了: "
+    show_overall_progress "$total" "$total"
+    echo -e "\n"
+
     # サマリー表示
-    echo -e "${BLUE}════════════════════════════════════════${NC}"
-    echo -e "${BLUE}  インストール結果サマリー${NC}"
-    echo -e "${BLUE}════════════════════════════════════════${NC}"
-    echo -e "  ${GREEN}✓ 新規インストール: $success${NC}"
-    echo -e "  ${CYAN}○ スキップ（済）  : $skipped${NC}"
-    echo -e "  ${RED}✗ 失敗            : $failed${NC}"
+    echo -e "${BLUE}╔════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${BLUE}║  📊 インストール結果サマリー                          ║${NC}"
+    echo -e "${BLUE}╠════════════════════════════════════════════════════════╣${NC}"
+    printf "${BLUE}║${NC}  ${GREEN}✓ 新規インストール${NC}: %-34s${BLUE}║${NC}\n" "$success"
+    printf "${BLUE}║${NC}  ${CYAN}○ スキップ（済）${NC}  : %-34s${BLUE}║${NC}\n" "$skipped"
+    printf "${BLUE}║${NC}  ${RED}✗ 失敗${NC}            : %-34s${BLUE}║${NC}\n" "$failed"
+    echo -e "${BLUE}╚════════════════════════════════════════════════════════╝${NC}"
 
     if [ $failed -gt 0 ]; then
-        echo -e "\n${YELLOW}失敗したパッケージ:${NC}"
+        echo -e "\n${YELLOW}⚠ 失敗したパッケージ:${NC}"
         for pkg in "${failed_packages[@]}"; do
-            echo -e "  ${RED}- $pkg${NC}"
+            echo -e "  ${RED}├─ $pkg${NC}"
         done
         log "Failed packages: ${failed_packages[*]}"
         return 1
@@ -262,9 +367,43 @@ install_brewfile_packages() {
 
 # クリーンアップ処理
 cleanup() {
-    if [ $? -ne 0 ]; then
-        echo -e "${RED}エラーが発生しました。ログを確認してください: $LOG_FILE${NC}"
-        log "ERROR: Setup failed"
+    local exit_code=$?
+    if [ $exit_code -ne 0 ]; then
+        echo ""
+        echo -e "${RED}╔════════════════════════════════════════════════════════╗${NC}"
+        echo -e "${RED}║  ❌ エラーが発生しました                               ║${NC}"
+        echo -e "${RED}╠════════════════════════════════════════════════════════╣${NC}"
+        echo -e "${RED}║${NC}  終了コード: $exit_code"
+        echo -e "${RED}║${NC}  ログファイル: $LOG_FILE"
+        echo -e "${RED}╚════════════════════════════════════════════════════════╝${NC}"
+
+        # ログから失敗パッケージを抽出
+        if [ -f "$LOG_FILE" ]; then
+            local failed_pkgs
+            failed_pkgs=$(grep -i "failed packages" "$LOG_FILE" | tail -1)
+            if [ -n "$failed_pkgs" ]; then
+                echo ""
+                echo -e "${YELLOW}┌── 失敗したパッケージ ───────────────────────────────────┐${NC}"
+                echo -e "${YELLOW}│${NC} ${failed_pkgs#*: }"
+                echo -e "${YELLOW}└──────────────────────────────────────────────────────────┘${NC}"
+            fi
+
+            # 直近のログエントリを表示
+            echo ""
+            echo -e "${CYAN}┌── 直近のログ (最後の5件) ───────────────────────────────┐${NC}"
+            tail -5 "$LOG_FILE" | while IFS= read -r line; do
+                echo -e "${CYAN}│${NC} $line"
+            done
+            echo -e "${CYAN}└──────────────────────────────────────────────────────────┘${NC}"
+        fi
+
+        echo ""
+        echo -e "${YELLOW}💡 ヒント:${NC}"
+        echo -e "  • 失敗したパッケージは後で個別にインストールできます"
+        echo -e "  • brew install <パッケージ名> で再試行"
+        echo -e "  • 詳細ログ: cat $LOG_FILE"
+
+        log "ERROR: Setup failed with exit code $exit_code"
     fi
 }
 trap cleanup EXIT

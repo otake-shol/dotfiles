@@ -32,7 +32,7 @@ done
 # ========================================
 # direnv 遅延読み込み
 # ========================================
-if [[ -z "$DOTFILES_MINIMAL" ]] && command -v direnv &>/dev/null; then
+if command -v direnv &>/dev/null; then
   _direnv_hook() {
     trap -- '' SIGINT
     eval "$(direnv export zsh 2>/dev/null)"
@@ -51,7 +51,7 @@ fi
 # ========================================
 # atuin 遅延読み込み
 # ========================================
-if [[ -z "$DOTFILES_MINIMAL" ]] && command -v atuin &>/dev/null; then
+if command -v atuin &>/dev/null; then
   _atuin_cache="${XDG_CACHE_HOME:-$HOME/.cache}/atuin-init.zsh"
   if [[ ! -f "$_atuin_cache" ]] || [[ $(find "$_atuin_cache" -mtime +7 2>/dev/null) ]]; then
     mkdir -p "$(dirname "$_atuin_cache")"

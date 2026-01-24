@@ -132,11 +132,6 @@ FZF_FUNCTIONS_FILE="$DOTFILES_ROOT/stow/zsh/.zsh/functions/fzf-functions.zsh"
     head -30 "$DOTFILES_ROOT/.zshrc" | grep -q 'p10k-instant-prompt'
 }
 
-# プロファイル機能確認
-@test ".zshrc supports DOTFILES_PROFILE" {
-    grep -q 'DOTFILES_PROFILE' "$DOTFILES_ROOT/.zshrc"
-}
-
 # ローカル設定読み込み確認
 @test ".zshrc sources .zshrc.local" {
     grep -q '\.zshrc\.local' "$DOTFILES_ROOT/.zshrc"

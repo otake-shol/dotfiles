@@ -201,21 +201,6 @@ All tools use the **TokyoNight** color scheme for a unified look:
 - bat
 - fzf
 
-## Profiles
-
-Set `DOTFILES_PROFILE` in `~/.zshrc.local`:
-
-| Profile | Use Case | Features |
-|---------|----------|----------|
-| `personal` | Default | Full features |
-| `work` | Corporate | Proxy settings, work tools |
-| `minimal` | Fast startup | Core features only |
-
-```bash
-# Example: ~/.zshrc.local
-export DOTFILES_PROFILE=work
-```
-
 ## Useful Commands
 
 ```bash

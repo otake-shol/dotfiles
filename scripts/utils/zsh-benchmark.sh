@@ -19,8 +19,8 @@ echo -e "${BOLD}${CYAN} zsh 起動時間ベンチマーク${NC}"
 echo -e "${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
-# 通常起動の計測
-echo -e "${YELLOW}▸ 通常モード（$ITERATIONS回計測）${NC}"
+# 起動時間の計測
+echo -e "${YELLOW}▸ 起動時間計測（$ITERATIONS回）${NC}"
 total=0
 for i in $(seq 1 "$ITERATIONS"); do
     time=$( { time zsh -i -c exit; } 2>&1 | grep real | awk '{print $2}' | sed 's/[^0-9.]//g' )
@@ -35,24 +35,11 @@ avg=$(echo "scale=3; $total / $ITERATIONS" | bc)
 echo -e "  ${GREEN}平均: ${avg}s${NC}"
 echo ""
 
-# minimalモード計測
-echo -e "${YELLOW}▸ Minimalモード（$ITERATIONS回計測）${NC}"
-total_minimal=0
-for i in $(seq 1 "$ITERATIONS"); do
-    time=$( { DOTFILES_PROFILE=minimal /usr/bin/time -p zsh -i -c exit; } 2>&1 | grep real | awk '{print $2}' )
-    total_minimal=$(echo "$total_minimal + $time" | bc)
-    printf "  実行 %2d: %.3fs\n" "$i" "$time"
-done
-avg_minimal=$(echo "scale=3; $total_minimal / $ITERATIONS" | bc)
-echo -e "  ${GREEN}平均: ${avg_minimal}s${NC}"
-echo ""
-
 # 結果サマリー
 echo -e "${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${BOLD} 結果サマリー${NC}"
 echo -e "${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "  通常モード平均:   ${GREEN}${avg}s${NC}"
-echo -e "  Minimalモード平均: ${GREEN}${avg_minimal}s${NC}"
+echo -e "  平均起動時間: ${GREEN}${avg}s${NC}"
 
 # 目標値との比較
 if (( $(echo "$avg < 0.5" | bc -l) )); then
@@ -61,7 +48,7 @@ elif (( $(echo "$avg < 1.0" | bc -l) )); then
     echo -e "  ${YELLOW}⚠ 起動時間はやや遅め（0.5〜1秒）${NC}"
 else
     echo -e "  ${YELLOW}⚠ 起動時間が遅いです（1秒以上）${NC}"
-    echo -e "  ${CYAN}ヒント: 'DOTFILES_PROFILE=minimal' を使用するか、プラグインを見直してください${NC}"
+    echo -e "  ${CYAN}ヒント: プラグインを見直してください${NC}"
 fi
 echo ""
 
@@ -71,7 +58,7 @@ echo "  zsh -i -c 'zprof' を実行（zshrcに 'zmodload zsh/zprof' を追加）
 echo ""
 
 # プロファイリングオプション
-if [[ "$2" == "--profile" ]]; then
+if [[ "${2:-}" == "--profile" ]]; then
     echo -e "${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo -e "${BOLD} 詳細プロファイリング（上位10項目）${NC}"
     echo -e "${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -87,7 +74,7 @@ if [[ "$2" == "--profile" ]]; then
 fi
 
 # 起動時間の内訳を表示するオプション
-if [[ "$2" == "--breakdown" ]]; then
+if [[ "${2:-}" == "--breakdown" ]]; then
     echo -e "${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo -e "${BOLD} 起動時間内訳${NC}"
     echo -e "${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"

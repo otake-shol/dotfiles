@@ -23,7 +23,6 @@ fi
 # ========================================
 # 環境変数（モジュール読み込み前に設定）
 # ========================================
-DOTFILES_PROFILE="${DOTFILES_PROFILE:-personal}"
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 
 # ========================================
@@ -47,13 +46,6 @@ ZSH_CONFIG_DIR="${HOME}/.zsh"
 # Powerlevel10k テーマ設定
 # ========================================
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# ========================================
-# プロファイル設定
-# ========================================
-if [[ -f "$DOTFILES_DIR/profiles/${DOTFILES_PROFILE}.zsh" ]]; then
-  source "$DOTFILES_DIR/profiles/${DOTFILES_PROFILE}.zsh"
-fi
 
 # ========================================
 # ローカル設定（Git管理外）

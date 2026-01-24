@@ -7,40 +7,13 @@
 set -euo pipefail
 
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# 色定義
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-CYAN='\033[0;36m'
-NC='\033[0m'
-BOLD='\033[1m'
+# 共通ライブラリ読み込み
+# shellcheck source=../lib/common.sh
+source "${SCRIPT_DIR}/../lib/common.sh"
 
-# カウンター
-PASS=0
-FAIL=0
-WARN=0
-
-print_header() {
-    echo -e "\n${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${BOLD}${CYAN} $1${NC}"
-    echo -e "${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-}
-
-check_pass() {
-    echo -e "  ${GREEN}✓${NC} $1"
-    ((PASS++))
-}
-
-check_fail() {
-    echo -e "  ${RED}✗${NC} $1"
-    ((FAIL++))
-}
-
-check_warn() {
-    echo -e "  ${YELLOW}⚠${NC} $1"
-    ((WARN++))
-}
+# カウンターはcommon.shのグローバル変数（COMMON_CHECK_PASS/FAIL/WARN）を直接使用
 
 # ========================================
 # シンボリックリンク検証
@@ -261,24 +234,24 @@ verify_git_config() {
 }
 
 # ========================================
-# 結果サマリー
+# 結果サマリー（common.shのカウンターを使用）
 # ========================================
-print_summary() {
+show_summary() {
     print_header "検証結果サマリー"
 
-    echo -e "  ${GREEN}✓ 成功:${NC} $PASS 項目"
-    echo -e "  ${YELLOW}⚠ 警告:${NC} $WARN 項目"
-    echo -e "  ${RED}✗ 失敗:${NC} $FAIL 項目"
+    echo -e "  ${GREEN}✓ 成功:${NC} $COMMON_CHECK_PASS 項目"
+    echo -e "  ${YELLOW}⚠ 警告:${NC} $COMMON_CHECK_WARN 項目"
+    echo -e "  ${RED}✗ 失敗:${NC} $COMMON_CHECK_FAIL 項目"
     echo ""
 
-    if [[ $FAIL -eq 0 ]]; then
-        if [[ $WARN -eq 0 ]]; then
-            echo -e "${GREEN}${BOLD}🎉 完璧！全ての検証に成功しました${NC}"
+    if [[ $COMMON_CHECK_FAIL -eq 0 ]]; then
+        if [[ $COMMON_CHECK_WARN -eq 0 ]]; then
+            echo -e "${GREEN}${BOLD}完璧！全ての検証に成功しました${NC}"
         else
-            echo -e "${YELLOW}${BOLD}✅ 基本セットアップは完了。警告項目を確認してください${NC}"
+            echo -e "${YELLOW}${BOLD}基本セットアップは完了。警告項目を確認してください${NC}"
         fi
     else
-        echo -e "${RED}${BOLD}❌ いくつかの問題があります。bootstrap.shを再実行してください${NC}"
+        echo -e "${RED}${BOLD}いくつかの問題があります。bootstrap.shを再実行してください${NC}"
         echo -e "   ${CYAN}cd ~/dotfiles && bash bootstrap.sh${NC}"
     fi
 }
@@ -287,11 +260,7 @@ print_summary() {
 # メイン実行
 # ========================================
 main() {
-    echo -e "${BOLD}${CYAN}"
-    echo "╔═══════════════════════════════════════════════╗"
-    echo "║   dotfiles セットアップ検証ツール            ║"
-    echo "╚═══════════════════════════════════════════════╝"
-    echo -e "${NC}"
+    print_banner "dotfiles セットアップ検証ツール"
 
     verify_symlinks
     verify_required_tools
@@ -299,10 +268,10 @@ main() {
     verify_version_managers
     verify_configs
     verify_git_config
-    print_summary
+    show_summary
 
     # 終了コード
-    if [[ $FAIL -gt 0 ]]; then
+    if [[ $COMMON_CHECK_FAIL -gt 0 ]]; then
         exit 1
     fi
 }

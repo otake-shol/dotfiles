@@ -15,17 +15,24 @@ set -e  # エラーで停止
 # ========================================
 DRY_RUN=false
 VERBOSE=false
+# shellcheck disable=SC2034  # 将来の拡張用
 LINUX_ONLY=false
 SKIP_APPS=false
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# カラー出力
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-CYAN='\033[0;36m'
-NC='\033[0m' # No Color
+# 共通ライブラリ読み込み
+# shellcheck source=scripts/lib/common.sh
+if [[ -f "${SCRIPT_DIR}/scripts/lib/common.sh" ]]; then
+    source "${SCRIPT_DIR}/scripts/lib/common.sh"
+else
+    # フォールバック: common.shが無い場合の最小限の色定義
+    RED='\033[0;31m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[1;33m'
+    BLUE='\033[0;34m'
+    CYAN='\033[0;36m'
+    NC='\033[0m'
+fi
 
 # ログファイル
 LOG_FILE="$HOME/.dotfiles-setup.log"
@@ -67,6 +74,7 @@ while [[ "$#" -gt 0 ]]; do
             show_help
             ;;
         --linux-only)
+            # shellcheck disable=SC2034  # 将来の拡張用
             LINUX_ONLY=true
             ;;
         --skip-apps)
@@ -458,19 +466,19 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
 
         # Powerlevel10k
         git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \
-            ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+            "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/themes/powerlevel10k
 
         # zsh-autosuggestions
         git clone https://github.com/zsh-users/zsh-autosuggestions \
-            ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+            "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-autosuggestions
 
         # zsh-syntax-highlighting
         git clone https://github.com/zsh-users/zsh-syntax-highlighting \
-            ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+            "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-syntax-highlighting
 
         # zsh-completions
         git clone https://github.com/zsh-users/zsh-completions \
-            ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-completions
+            "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-completions
 
         echo -e "${GREEN}✓ Oh My Zshのセットアップが完了しました${NC}"
     fi
@@ -561,8 +569,8 @@ echo -e "\n${YELLOW}ローカル設定ファイルのセットアップ...${NC}"
 # .gitconfig.local
 if [ ! -f ~/.gitconfig.local ]; then
     echo -e "${YELLOW}Git ユーザー情報を設定します${NC}"
-    read -p "Git ユーザー名: " git_name
-    read -p "Git メールアドレス: " git_email
+    read -rp "Git ユーザー名: " git_name
+    read -rp "Git メールアドレス: " git_email
     cat > ~/.gitconfig.local << EOF
 [user]
 	name = $git_name

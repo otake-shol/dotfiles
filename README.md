@@ -12,6 +12,9 @@
   <a href="https://github.com/otake-shol/dotfiles/actions/workflows/lint.yml">
     <img src="https://github.com/otake-shol/dotfiles/actions/workflows/lint.yml/badge.svg" alt="Lint">
   </a>
+  <a href="https://codecov.io/gh/otake-shol/dotfiles">
+    <img src="https://codecov.io/gh/otake-shol/dotfiles/branch/master/graph/badge.svg" alt="Coverage">
+  </a>
   <a href="https://github.com/otake-shol/dotfiles/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/otake-shol/dotfiles" alt="License">
   </a>
@@ -19,6 +22,9 @@
     <img src="https://img.shields.io/github/last-commit/otake-shol/dotfiles" alt="Last Commit">
   </a>
   <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-blue" alt="Platform">
+  <a href="https://github.com/otake-shol/dotfiles/pulls">
+    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome">
+  </a>
 </p>
 
 <p align="center">

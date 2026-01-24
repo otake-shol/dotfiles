@@ -4,17 +4,11 @@
 
 set -euo pipefail
 
-# カラー出力
-# shellcheck disable=SC2034
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m'
-
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# shellcheck disable=SC1091
-source "$SCRIPT_DIR/../lib/os-detect.sh"
+
+# 共通ライブラリ読み込み（os-detect.shも含む）
+# shellcheck source=../lib/common.sh
+source "${SCRIPT_DIR}/../lib/common.sh"
 
 # ========================================
 # ディストリビューション検出

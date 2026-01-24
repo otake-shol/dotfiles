@@ -5,14 +5,14 @@
 
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# 共通ライブラリ読み込み
+# shellcheck source=../lib/common.sh
+source "${SCRIPT_DIR}/../lib/common.sh"
+
 BAT_CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/bat"
 THEMES_DIR="$BAT_CONFIG_DIR/themes"
-
-# 色定義
-CYAN='\033[0;36m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
 
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${CYAN} bat TokyoNight テーマインストール${NC}"

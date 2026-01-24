@@ -60,3 +60,119 @@ assert_symlink() {
         return 1
     fi
 }
+
+# ========================================
+# モック関数
+# ========================================
+
+# コマンドモック作成
+mock_command() {
+    local cmd="$1"
+    local output="${2:-}"
+    local exit_code="${3:-0}"
+
+    eval "${cmd}() { echo '${output}'; return ${exit_code}; }"
+    export -f "$cmd"
+}
+
+# コマンドモック削除
+unmock_command() {
+    local cmd="$1"
+    unset -f "$cmd" 2>/dev/null || true
+}
+
+# ========================================
+# 環境分離ヘルパー
+# ========================================
+
+# 隔離された環境でスクリプト実行
+run_isolated() {
+    local script="$1"
+    shift
+    (
+        setup_temp_home
+        bash "$script" "$@"
+        local result=$?
+        teardown_temp_home
+        return $result
+    )
+}
+
+# 環境変数のバックアップと復元
+backup_env() {
+    export _BACKUP_PATH="$PATH"
+    export _BACKUP_HOME="$HOME"
+}
+
+restore_env() {
+    export PATH="$_BACKUP_PATH"
+    export HOME="$_BACKUP_HOME"
+}
+
+# ========================================
+# アサーション拡張
+# ========================================
+
+# ファイルが特定の内容を含むことを確認
+assert_file_contains() {
+    local file="$1"
+    local pattern="$2"
+    if ! grep -q "$pattern" "$file" 2>/dev/null; then
+        echo "File $file does not contain pattern: $pattern" >&2
+        return 1
+    fi
+}
+
+# ファイルが特定のパーミッションを持つことを確認
+assert_file_permission() {
+    local file="$1"
+    local expected_perm="$2"
+    local actual_perm
+    actual_perm=$(stat -f "%Lp" "$file" 2>/dev/null || stat -c "%a" "$file" 2>/dev/null)
+    if [[ "$actual_perm" != "$expected_perm" ]]; then
+        echo "Permission mismatch for $file: expected $expected_perm, got $actual_perm" >&2
+        return 1
+    fi
+}
+
+# コマンドが存在することを確認
+assert_command_exists() {
+    local cmd="$1"
+    if ! command -v "$cmd" &>/dev/null; then
+        echo "Command not found: $cmd" >&2
+        return 1
+    fi
+}
+
+# ========================================
+# スキップヘルパー
+# ========================================
+
+# macOS専用テストのスキップ
+skip_if_not_macos() {
+    if [[ "$(uname -s)" != "Darwin" ]]; then
+        skip "This test requires macOS"
+    fi
+}
+
+# Linux専用テストのスキップ
+skip_if_not_linux() {
+    if [[ "$(uname -s)" != "Linux" ]]; then
+        skip "This test requires Linux"
+    fi
+}
+
+# CI環境でのスキップ
+skip_if_ci() {
+    if [[ "${CI:-}" == "true" ]]; then
+        skip "Skipping in CI environment"
+    fi
+}
+
+# 特定コマンド不在時のスキップ
+skip_if_no_command() {
+    local cmd="$1"
+    if ! command -v "$cmd" &>/dev/null; then
+        skip "Command $cmd not available"
+    fi
+}

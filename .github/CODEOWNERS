@@ -1,0 +1,19 @@
+# CODEOWNERS - Automatic reviewer assignment
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything
+* @otkshol
+
+# Shell scripts
+*.sh @otkshol
+
+# Nix configuration
+*.nix @otkshol
+flake.lock @otkshol
+
+# CI/CD
+.github/ @otkshol
+
+# Documentation
+*.md @otkshol
+docs/ @otkshol

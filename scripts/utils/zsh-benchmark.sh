@@ -6,14 +6,13 @@
 
 set -euo pipefail
 
-ITERATIONS="${1:-10}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# 色定義
-CYAN='\033[0;36m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
-BOLD='\033[1m'
+# 共通ライブラリ読み込み
+# shellcheck source=../lib/common.sh
+source "${SCRIPT_DIR}/../lib/common.sh"
+
+ITERATIONS="${1:-10}"
 
 echo -e "${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${BOLD}${CYAN} zsh 起動時間ベンチマーク${NC}"

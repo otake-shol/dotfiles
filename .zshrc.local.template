@@ -30,3 +30,20 @@
 # ローカル固有のPATH
 # ========================================
 # export PATH="$HOME/company-tools/bin:$PATH"
+
+# ========================================
+# SOPS/age 暗号化シークレット管理
+# ========================================
+# 詳細: docs/security/sops-age-setup.md
+#
+# export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"
+#
+# # 暗号化ファイルから環境変数を読み込む
+# if command -v sops &>/dev/null && [[ -f ~/dotfiles/secrets/api-keys.yaml ]]; then
+#     eval "$(sops -d ~/dotfiles/secrets/api-keys.yaml 2>/dev/null | yq -o=shell 2>/dev/null)" || true
+# fi
+
+# ========================================
+# ローカルエイリアス
+# ========================================
+# alias myproject="cd ~/projects/my-project"

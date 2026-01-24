@@ -1,0 +1,92 @@
+name: Feature Request
+description: Suggest a new feature or enhancement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature!
+        Please describe what you'd like to see added to dotfiles.
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Feature Category
+      description: What type of feature is this?
+      options:
+        - New alias / function
+        - Shell enhancement
+        - New tool integration
+        - Configuration improvement
+        - Script / Automation
+        - Documentation
+        - CI/CD improvement
+        - Cross-platform support
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: Is your feature request related to a problem? Describe it.
+      placeholder: |
+        I'm always frustrated when...
+        Currently, I have to manually...
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like
+      placeholder: |
+        I would like to have...
+        This could be implemented by...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: >-
+        Describe any alternative solutions or workarounds
+        you've considered
+
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Impact
+      description: How would this feature impact daily workflow?
+      options:
+        - High - Used multiple times daily
+        - Medium - Used regularly
+        - Low - Nice to have
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Implementation Complexity (Your Estimate)
+      description: How complex do you think this would be to implement?
+      options:
+        - Simple - Small change
+        - Moderate - Some work needed
+        - Complex - Significant effort
+        - Unknown
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: >-
+        Add any other context, screenshots, or examples
+        about the feature request
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I am willing to submit a PR for this feature

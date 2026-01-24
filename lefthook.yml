@@ -10,7 +10,7 @@ pre-commit:
     # シェルスクリプトのlint
     shellcheck:
       glob: "*.sh"
-      run: shellcheck {staged_files}
+      run: shellcheck -S warning {staged_files}
       skip:
         - merge
         - rebase

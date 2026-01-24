@@ -7,26 +7,18 @@
 
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
-ALIASES_DIR="$DOTFILES_DIR/aliases"
 
-# 色定義
-CYAN='\033[0;36m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-MAGENTA='\033[0;35m'
-NC='\033[0m' # No Color
-BOLD='\033[1m'
+# 共通ライブラリ読み込み
+# shellcheck source=../lib/common.sh
+source "${SCRIPT_DIR}/../lib/common.sh"
 
-print_header() {
+# dothelp固有のdothelp_header（装飾付き）
+dothelp_header() {
     echo -e "\n${BOLD}${CYAN}╔════════════════════════════════════════╗${NC}"
     echo -e "${BOLD}${CYAN}║${NC}  ${BOLD}$1${NC}"
     echo -e "${BOLD}${CYAN}╚════════════════════════════════════════╝${NC}\n"
-}
-
-print_section() {
-    echo -e "${YELLOW}▸ $1${NC}"
 }
 
 print_alias() {
@@ -208,7 +200,7 @@ show_all() {
 }
 
 show_usage() {
-    print_header "dothelp - dotfiles ヘルプ"
+    dothelp_header "dothelp - dotfiles ヘルプ"
     echo -e "${BOLD}使用方法:${NC}"
     echo "  dothelp [カテゴリ]"
     echo ""
@@ -232,39 +224,39 @@ show_usage() {
 # メイン処理
 case "${1:-}" in
     all)
-        print_header "dotfiles 全エイリアス・関数"
+        dothelp_header "dotfiles 全エイリアス・関数"
         show_all
         ;;
     core|basic)
-        print_header "基本操作"
+        dothelp_header "基本操作"
         show_core_aliases
         ;;
     git)
-        print_header "Git & GitHub CLI"
+        dothelp_header "Git & GitHub CLI"
         show_git_aliases
         ;;
     docker)
-        print_header "Docker & Docker Compose"
+        dothelp_header "Docker & Docker Compose"
         show_docker_aliases
         ;;
     k8s|kubernetes)
-        print_header "Kubernetes"
+        dothelp_header "Kubernetes"
         show_k8s_aliases
         ;;
     node|npm|yarn|pnpm)
-        print_header "Node.js パッケージマネージャー"
+        dothelp_header "Node.js パッケージマネージャー"
         show_node_aliases
         ;;
     dev)
-        print_header "開発ツール"
+        dothelp_header "開発ツール"
         show_dev_aliases
         ;;
     fzf)
-        print_header "fzf統合関数"
+        dothelp_header "fzf統合関数"
         show_fzf_functions
         ;;
     tools)
-        print_header "モダンCLIツール"
+        dothelp_header "モダンCLIツール"
         show_tools
         ;;
     -h|--help|"")

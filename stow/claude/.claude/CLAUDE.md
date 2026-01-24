@@ -138,11 +138,6 @@ Claudeとしてのおすすめ案を明示し、その理由を説明する。
 ## 手動更新時の手順
 1. `brew install <package>` でツールをインストール
 2. `~/dotfiles/Brewfile` を編集（ユーティリティセクション等に追加）
-3. 必要に応じて `~/dotfiles/Brewfile.full` も更新
-
-## Brewfileの構成
-- `Brewfile` - 必須ツールのみ（新規Mac用）
-- `Brewfile.full` - 全ツール（完全環境用）
 
 ---
 
@@ -205,8 +200,7 @@ export SENTRY_AUTH_TOKEN="sntrys_xxxxx"
 dotfiles/
 ├── bootstrap.sh           # セットアップスクリプト
 ├── Makefile               # GNU Stow操作
-├── Brewfile               # 必須パッケージ
-├── Brewfile.full          # 全パッケージ
+├── Brewfile               # Homebrewパッケージ
 ├── stow/                  # GNU Stowパッケージ
 │   ├── zsh/               # .zshrc, .aliases, .zsh/
 │   ├── git/               # .gitconfig

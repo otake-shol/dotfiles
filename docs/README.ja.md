@@ -6,7 +6,7 @@ macOS用の個人設定ファイル
 
 ## 特徴
 
-- **Claude Code統合** - MCPサーバー13個設定済み
+- **Claude Code統合** - MCPサーバー設定済み
 - **モダンCLI** - bat, eza, fzf, ripgrep等
 - **自動セットアップ** - bootstrap.shで一発構築
 
@@ -24,12 +24,12 @@ cd ~/dotfiles && bash bootstrap.sh
 | `stow/zsh/` | シェル設定（.zshrc, .aliases） |
 | `stow/claude/` | Claude Code（agents, commands, hooks） |
 | `Brewfile` | Homebrewパッケージ |
-| `nvim/` | Neovim設定 |
-| `tmux/` | tmux設定 |
-| `ghostty/` | Ghosttyターミナル |
-| `git/`, `gh/` | Git/GitHub CLI設定、コミット/PRテンプレート |
+| `stow/nvim/` | Neovim設定 |
+| `stow/tmux/` | tmux設定 |
+| `stow/ghostty/` | Ghosttyターミナル |
+| `stow/git/`, `gh/` | Git/GitHub CLI設定 |
 | `ssh/` | SSH設定 |
-| `bat/`, `atuin/` | bat/atuin設定 |
+| `stow/bat/`, `stow/atuin/` | bat/atuin設定 |
 | `raycast/` | Raycastスクリプト |
 | `antigravity/` | Antigravity設定 |
 | `scripts/` | ユーティリティスクリプト |
@@ -40,43 +40,14 @@ cd ~/dotfiles && bash bootstrap.sh
 
 - Neovim, tmux, Ghostty, bat
 
-## バックアップ
-
-### Raycast設定
-
-1. Raycast → Settings → Advanced → Export
-2. `~/dotfiles/raycast/` に保存
-
-### 1Password SSH Agent
-
-SSHキーを1Passwordで管理する場合は `ssh/config` のコメントを解除
-
 ## ドキュメント
 
-### AI駆動開発（推奨）
-
 | ファイル | 内容 |
 |---------|------|
-| [AI-DRIVEN-DEV-GUIDE.md](docs/ai-workflow/AI-DRIVEN-DEV-GUIDE.md) | AI駆動開発環境 完全ガイド |
-| [SPEC-DRIVEN-DEV.md](docs/ai-workflow/SPEC-DRIVEN-DEV.md) | 仕様駆動開発ガイド |
-| [AI-PROMPTS.md](docs/ai-workflow/AI-PROMPTS.md) | AIプロンプトテンプレート集 |
-
-### ツール連携
-
-| ファイル | 内容 |
-|---------|------|
-| [mcp-servers-guide.md](docs/integrations/mcp-servers-guide.md) | MCPサーバー設定ガイド |
-| [claude-code-jira-guide.md](docs/integrations/claude-code-jira-guide.md) | Claude Code × Jira連携 |
-| [confluence-requirements-doc-automation.md](docs/integrations/confluence-requirements-doc-automation.md) | Confluence要件書自動化 |
-| [slack-jira-workflow-guide.md](docs/integrations/slack-jira-workflow-guide.md) | Slack-Jiraワークフロー |
-
-### セットアップ・ツール
-
-| ファイル | 内容 |
-|---------|------|
-| [SETUP.md](docs/setup/SETUP.md) | 詳細セットアップ手順 |
-| [APPS.md](docs/setup/APPS.md) | アプリケーション一覧 |
-| [DOTFILES_MANAGER.md](docs/setup/DOTFILES_MANAGER.md) | dotfiles管理ツール比較 |
+| [SETUP.md](setup/SETUP.md) | 詳細セットアップ手順 |
+| [APPS.md](setup/APPS.md) | アプリケーション一覧 |
+| [mcp-servers-guide.md](integrations/mcp-servers-guide.md) | MCPサーバー設定ガイド |
+| [atlassian-guide.md](integrations/atlassian-guide.md) | Jira/Confluence連携 |
 
 ## 参考
 

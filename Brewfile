@@ -42,7 +42,8 @@ brew "jq"              # JSON処理ツール
 # 開発ツール
 brew "tokei"           # コード統計（プロジェクト分析）
 brew "lefthook"        # 高速Git hooks管理
-brew "markdownlint-cli" # Markdownリンター
+brew "shellcheck"      # シェルスクリプトlinter（lefthook依存）
+brew "yamllint"        # YAML linter（lefthook依存）
 
 # クラウド/AWS
 brew "awscli"          # AWS CLI

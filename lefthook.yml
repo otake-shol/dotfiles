@@ -23,14 +23,6 @@ pre-commit:
         - merge
         - rebase
 
-    # Markdown lint
-    markdownlint:
-      glob: "*.md"
-      run: markdownlint {staged_files} --fix
-      skip:
-        - merge
-        - rebase
-
     # Zsh構文チェック
     zsh-syntax:
       glob: "*.zsh"

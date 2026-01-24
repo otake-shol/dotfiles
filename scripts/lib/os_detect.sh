@@ -22,16 +22,12 @@ detect_arch() {
     esac
 }
 
-# Homebrew prefix検出
+# Homebrew prefix検出（macOS専用）
 detect_homebrew_prefix() {
-    if [ "$(detect_os)" = "macos" ]; then
-        if [ "$(detect_arch)" = "arm64" ]; then
-            echo "/opt/homebrew"
-        else
-            echo "/usr/local"
-        fi
+    if [ "$(detect_arch)" = "arm64" ]; then
+        echo "/opt/homebrew"
     else
-        echo "/home/linuxbrew/.linuxbrew"
+        echo "/usr/local"
     fi
 }
 
@@ -65,14 +61,6 @@ show_system_info() {
 # ========================================
 is_macos() {
     [[ "$(uname -s)" == "Darwin" ]]
-}
-
-is_linux() {
-    [[ "$(uname -s)" == "Linux" ]]
-}
-
-is_wsl() {
-    is_linux && grep -qEi "(Microsoft|WSL)" /proc/version 2>/dev/null
 }
 
 is_arm64() {

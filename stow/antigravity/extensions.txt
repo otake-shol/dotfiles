@@ -3,7 +3,6 @@ alefragnani.bookmarks
 alefragnani.project-manager
 cardinal90.multi-cursor-case-preserve
 christian-kohler.path-intellisense
-davidanson.vscode-markdownlint
 dbaeumer.vscode-eslint
 donjayamanne.githistory
 dsznajder.es7-react-js-snippets

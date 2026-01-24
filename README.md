@@ -1,6 +1,6 @@
 # dotfiles
 
-macOS/Linux向けの個人開発環境設定ファイル
+macOS向けの個人開発環境設定ファイル
 
 ## 特徴
 
@@ -25,58 +25,47 @@ bash bootstrap.sh --dry-run     # 変更プレビュー（実行しない）
 bash bootstrap.sh --skip-apps   # アプリインストールをスキップ
 ```
 
+### セットアップ確認
+
+```bash
+dotverify                       # 自動検証（推奨）
+```
+
+手動確認：
+- [ ] `brew --version` が動作する
+- [ ] `ls ~/.oh-my-zsh` でディレクトリが存在する
+- [ ] `git config --list` で設定が反映されている
+- [ ] `gh auth status` でログイン済み
+
 ## ディレクトリ構成
 
 ```
 dotfiles/
 ├── stow/                  # GNU Stowパッケージ
 │   ├── zsh/               # シェル設定（モジュール分割）
-│   │   ├── .zshrc         # メイン設定
-│   │   └── .zsh/          # モジュール群
-│   │       ├── core.zsh   # 基本設定
-│   │       ├── lazy.zsh   # 遅延読み込み
-│   │       ├── tools.zsh  # ツール設定
-│   │       ├── plugins.zsh # Oh My Zsh
-│   │       └── aliases/   # エイリアス
 │   ├── git/, gh/          # Git/GitHub CLI設定
-│   ├── claude/            # Claude Code (agents, commands, hooks)
-│   ├── nvim/              # Neovim（最小構成）
-│   ├── ghostty/           # ターミナル設定
-│   ├── bat/, atuin/       # ユーティリティ設定
-│   └── ssh/               # SSH設定テンプレート
-├── antigravity/           # エディタ設定（※後述）
+│   ├── claude/            # Claude Code設定
+│   ├── nvim/, ghostty/    # エディタ・ターミナル
+│   ├── bat/, atuin/       # ユーティリティ
+│   ├── ssh/               # SSH設定テンプレート
+│   └── antigravity/       # Antigravity拡張機能
 ├── scripts/               # ユーティリティスクリプト
-│   ├── setup/             # OS別セットアップ
-│   ├── maintenance/       # メンテナンススクリプト
-│   ├── utils/             # ユーティリティ
-│   └── lib/               # 共通ライブラリ
-├── docs/                  # ドキュメント
+├── docs/                  # 詳細ドキュメント
 ├── Brewfile               # Homebrewパッケージ一覧
 ├── Makefile               # Stow操作・開発コマンド
 └── bootstrap.sh           # 自動セットアップスクリプト
 ```
 
-> **Note**: `antigravity/` はmacOS固有パス（`~/Library/Application Support/`）を使用するため、GNU Stowではなく`bootstrap.sh`で個別にリンクを作成しています。
->
-> **antigravity/の内容:**
-> - `settings.json` - エディタ設定（テーマ、フォント、フォーマッタ等）
-> - `extensions.txt` - 推奨拡張機能リスト
+> **Note**: `stow/ssh/`と`stow/antigravity/`はテンプレート方式のため、`bootstrap.sh`で個別処理しています。
 
 ## 便利なコマンド
 
-### ヘルプ・情報
+### ヘルプ・メンテナンス
 
 ```bash
 dothelp              # エイリアス一覧・使い方
 dotverify            # セットアップ状態の検証
-dotsysinfo           # システム情報表示
-```
-
-### メンテナンス
-
-```bash
 dotupdate            # 全ツール一括更新
-dotup                # 更新チェック
 brewsync             # Brewfile同期チェック
 ```
 
@@ -87,7 +76,6 @@ fvim                 # ファイル選択 → nvimで開く
 fbr                  # ブランチ選択 → checkout
 fshow                # コミット履歴ブラウズ
 fkill                # プロセス選択 → kill
-fcd                  # ディレクトリ選択 → cd
 ```
 
 ### SSH鍵管理
@@ -108,17 +96,50 @@ dotsshlist           # SSH鍵一覧表示
 | cd | zoxide | 学習型ディレクトリジャンプ |
 | history | atuin | SQLite履歴・同期対応 |
 
-## 開発コマンド (Makefile)
+## 開発
+
+### Makefile
 
 ```bash
 make install         # 全Stowパッケージをインストール
 make uninstall       # 全Stowパッケージをアンインストール
-make check           # ドライラン（変更プレビュー）
 make lint            # ShellCheck実行
-make health          # lint + check
 make bench           # zsh起動時間ベンチマーク
-make deps            # Homebrewパッケージインストール
 ```
+
+### Git Hooks (lefthook)
+
+pre-commit時にShellCheck、yamllint、zsh構文チェックを自動実行。
+コミットメッセージはConventional Commits形式を強制。
+
+```bash
+lefthook install     # 初回セットアップ（bootstrap.shで自動実行）
+```
+
+### バージョン管理 (asdf)
+
+Node.js等のランタイムは[asdf](https://asdf-vm.com/)で管理。遅延読み込みにより初回実行時に自動初期化。
+
+## Claude Code統合
+
+設定ファイル: `stow/claude/.claude/`
+
+**カスタムコマンド:**
+- `/commit-push` - コミット＆プッシュ
+- `/test` - テスト生成
+- `/review` - コードレビュー
+- `/spec` - 仕様レビュー
+- `/organize-downloads` - ダウンロードフォルダ整理
+- `/pc-checkup` - PC健康診断
+
+**特化型エージェント:**
+- code-reviewer, test-engineer
+- frontend-engineer, architecture-reviewer, spec-analyst
+
+**MCPサーバー（13個）:**
+- Context7, Serena, Playwright, Sequential Thinking
+- Linear, Supabase, Notion, Figma, Slack (OAuth)
+- GitHub, Brave Search, Sentry (環境変数)
 
 ## トラブルシューティング
 
@@ -126,11 +147,9 @@ make deps            # Homebrewパッケージインストール
 
 ```bash
 # Apple Silicon Mac
-echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # Intel Mac
-echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zprofile
 eval "$(/usr/local/bin/brew shellenv)"
 ```
 
@@ -146,83 +165,13 @@ mv ~/.zshrc ~/.zshrc.backup  # バックアップ
 cd ~/dotfiles && make install-zsh
 ```
 
-## セットアップ確認チェックリスト
-
-- [ ] `brew --version` が動作する
-- [ ] `ls ~/.oh-my-zsh` でディレクトリが存在する
-- [ ] `git config --list` で設定が反映されている
-- [ ] `gh auth status` でログイン済み
-- [ ] `asdf --version` が動作する
-
-> 詳細なアプリケーション説明は [APPS.md](docs/setup/APPS.md) を参照
-
-## バージョン管理 (asdf)
-
-Node.js, Python, Ruby等のランタイムは[asdf](https://asdf-vm.com/)で管理しています。
-
-```bash
-# バージョン確認
-asdf current
-
-# プラグイン追加・バージョンインストール
-asdf plugin add nodejs
-asdf install nodejs latest
-asdf global nodejs latest
-```
-
-設定ファイル: `stow/zsh/.tool-versions`
-
-> **Note**: asdfは遅延読み込みされるため、初回のnode/npm実行時に自動で初期化されます。
-
-## Git Hooks (lefthook)
-
-[lefthook](https://github.com/evilmartians/lefthook)でpre-commit/commit-msgフックを管理しています。
-
-```bash
-# 初回セットアップ（bootstrap.shで自動実行）
-lefthook install
-
-# 手動でフック実行
-lefthook run pre-commit
-```
-
-**設定済みフック:**
-- ShellCheck, yamllint, markdownlint
-- zsh構文チェック
-- Conventional Commits形式チェック
-- 末尾空白・secrets検出
-
-設定ファイル: `lefthook.yml`
-
-## Claude Code統合
-
-Claude Codeの設定は `stow/claude/` で管理しています。
-
-```
-stow/claude/.claude/
-├── CLAUDE.md           # 開発ガイドライン・MCP設定
-├── settings.json       # hooks, permissions
-├── commands/           # カスタムスラッシュコマンド
-│   ├── commit-push.md  # /commit-push
-│   ├── test.md         # /test
-│   └── review.md       # /review
-└── agents/             # 特化型エージェント
-    ├── code-reviewer.md
-    └── test-engineer.md
-```
-
-**MCPサーバー（13個設定済み）:**
-- Context7, Serena, Playwright, Sequential Thinking
-- Linear, Supabase, Notion, Figma, Slack (OAuth)
-- GitHub, Brave Search, Sentry (環境変数)
-
 ## 動作環境
 
 - macOS 12.0+ (Monterey以降)
-- Linux (Ubuntu 20.04+, Debian 11+)
-- WSL2 (Windows Subsystem for Linux)
 
 ## 参考リンク
 
 - [GitHub does dotfiles](https://dotfiles.github.io/) - dotfiles管理のベストプラクティス
 - [Modern Unix](https://github.com/ibraheemdev/modern-unix) - モダンCLIツール一覧
+
+> 詳細なアプリケーション説明は [docs/setup/APPS.md](docs/setup/APPS.md) を参照

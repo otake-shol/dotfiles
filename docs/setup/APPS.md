@@ -15,9 +15,6 @@ brew bundle --file=~/dotfiles/Brewfile
 ### ターミナル
 
 #### Ghostty
-
-<img src="https://ghostty.org/social-share-card.jpg" width="600" alt="Ghostty">
-
 > GPU アクセラレーション対応の高速モダンターミナル
 
 | 項目 | 内容 |
@@ -37,9 +34,6 @@ brew bundle --file=~/dotfiles/Brewfile
 ### ユーティリティ
 
 #### Raycast
-
-<img src="https://www.raycast.com/opengraph-image-pwu6ef.png" width="600" alt="Raycast">
-
 > Spotlight を超える生産性ランチャー
 
 | 項目 | 内容 |
@@ -56,9 +50,6 @@ brew bundle --file=~/dotfiles/Brewfile
 ---
 
 #### AltTab
-
-<img src="https://alt-tab-macos.netlify.app/public/demo/frontpage.jpg" width="600" alt="AltTab">
-
 > Windows 風のウィンドウスイッチャー
 
 | 項目 | 内容 |
@@ -74,9 +65,6 @@ brew bundle --file=~/dotfiles/Brewfile
 ---
 
 #### Homerow
-
-<img src="https://www.homerow.app/app-icon.png" width="120" alt="Homerow">
-
 > キーボードだけで画面上のすべてを操作
 
 | 項目 | 内容 |
@@ -92,9 +80,6 @@ brew bundle --file=~/dotfiles/Brewfile
 ---
 
 #### Ice
-
-<img src="https://github.com/jordanbaird/Ice/raw/main/Ice/Assets.xcassets/AppIcon.appiconset/icon_256x256@2x.png" width="120" alt="Ice">
-
 > メニューバーアイコンの管理ツール
 
 | 項目 | 内容 |
@@ -110,9 +95,6 @@ brew bundle --file=~/dotfiles/Brewfile
 ---
 
 #### CleanShot X
-
-<img src="https://cleanshot.com/img/ogimage.png" width="600" alt="CleanShot X">
-
 > 高機能スクリーンショット・画面録画ツール
 
 | 項目 | 内容 |
@@ -130,9 +112,6 @@ brew bundle --file=~/dotfiles/Brewfile
 ---
 
 #### 1Password
-
-<img src="https://images.ctfassets.net/2h488pz7kgfv/36K8vzztKT56Ci2LHvAzEK/f015044f6a373996bfa5d27df650cf70/homepage-open-graph-graphic-1200x630__1_.webp" width="600" alt="1Password">
-
 > 安全で使いやすいパスワードマネージャー
 
 | 項目 | 内容 |
@@ -214,9 +193,6 @@ fi
 ### ブラウザ
 
 #### Arc
-
-<img src="https://arc.net/og.png" width="600" alt="Arc">
-
 > 次世代のブラウザ体験
 
 | 項目 | 内容 |
@@ -236,9 +212,6 @@ fi
 ### 生産性
 
 #### Spark
-
-<img src="https://cdn-rdstaticassets.readdle.com/spark/img/spark3/index/banner-device.png" width="600" alt="Spark">
-
 > スマートで高速なメールクライアント
 
 | 項目 | 内容 |
@@ -255,9 +228,6 @@ fi
 ---
 
 #### TickTick
-
-<img src="https://d107mjio2rjf74.cloudfront.net/sites/res/newHome/tick/header1.jpg" width="600" alt="TickTick">
-
 > オールインワンのタスク管理
 
 | 項目 | 内容 |
@@ -277,9 +247,6 @@ fi
 ### コミュニケーション
 
 #### Slack
-
-<img src="https://a.slack-edge.com/80588/marketing/img/meta/slack_hash_256.png" width="200" alt="Slack">
-
 > チームコラボレーションの定番
 
 | 項目 | 内容 |
@@ -292,9 +259,6 @@ fi
 ### デザイン
 
 #### Figma
-
-<img src="https://cdn.sanity.io/images/599r6htc/regionalized/1adfa5a99040c80af7b4b5e3e2cf845315ea2367-2400x1260.png?w=1200&q=70&fit=max&auto=format" width="600" alt="Figma">
-
 > コラボレーティブデザインツール
 
 | 項目 | 内容 |
@@ -313,9 +277,6 @@ fi
 ### 開発ツール
 
 #### Claude
-
-<img src="https://cdn.prod.website-files.com/67ce28cfec624e2b733f8a52/68309ab48369f7ad9b4a40e1_open-graph.jpg" width="600" alt="Claude">
-
 > AI コーディングアシスタント
 
 | 項目 | 内容 |
@@ -327,9 +288,6 @@ fi
 ---
 
 #### DBeaver Community
-
-<img src="https://dbeaver.io/wp-content/uploads/2015/09/beaver-head.png" width="120" alt="DBeaver">
-
 > ユニバーサルデータベース GUI クライアント
 
 | 項目 | 内容 |
@@ -346,9 +304,6 @@ fi
 ---
 
 #### OrbStack
-
-<img src="https://orbstack.dev/img/logo.png" width="120" alt="OrbStack">
-
 > 軽量・高速な Docker Desktop 代替
 
 | 項目 | 内容 |
@@ -382,9 +337,6 @@ fi
 ---
 
 #### Bruno
-
-<img src="https://raw.githubusercontent.com/usebruno/bruno/main/assets/images/landing-2.png" width="600" alt="Bruno">
-
 > オープンソース API クライアント
 
 | 項目 | 内容 |
@@ -465,9 +417,6 @@ atuin sync      # 手動同期
 ---
 
 #### fzf
-
-<img src="https://raw.githubusercontent.com/junegunn/i/master/fzf-preview.png" width="600" alt="fzf">
-
 > コマンドライン用ファジーファインダー
 
 | 項目 | 内容 |
@@ -483,9 +432,6 @@ atuin sync      # 手動同期
 ---
 
 #### zoxide
-
-<img src="https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/contrib/tutorial.webp" width="600" alt="zoxide">
-
 > スマートな cd コマンド
 
 | 項目 | 内容 |
@@ -503,9 +449,6 @@ zi            # インタラクティブ選択
 ---
 
 #### yazi
-
-<img src="https://raw.githubusercontent.com/sxyazi/yazi/main/assets/logo.png" width="100" alt="yazi">
-
 > 高速ターミナルファイルマネージャー（Rust製）
 
 | 項目 | 内容 |
@@ -553,9 +496,6 @@ function y() {
 ---
 
 #### bat
-
-<img src="https://imgur.com/rGsdnDe.png" width="600" alt="bat">
-
 > シンタックスハイライト付き cat
 
 | 項目 | 内容 |
@@ -592,9 +532,6 @@ function y() {
 従来のUnixコマンドの高機能・高速な代替ツール。
 
 #### eza
-
-<img src="https://raw.githubusercontent.com/eza-community/eza/main/docs/images/screenshots.png" width="600" alt="eza">
-
 > ls の高機能代替
 
 | 項目 | 内容 |
@@ -611,9 +548,6 @@ function y() {
 ---
 
 #### fd
-
-<img src="https://raw.githubusercontent.com/sharkdp/fd/master/doc/screencast.svg" width="600" alt="fd">
-
 > find の高速代替
 
 | 項目 | 内容 |
@@ -649,9 +583,6 @@ function y() {
 ### システムモニタリング
 
 #### btop
-
-<img src="https://github.com/aristocratos/btop/raw/main/Img/normal.png" width="600" alt="btop">
-
 > 美しいシステムモニター
 
 | 項目 | 内容 |
@@ -770,7 +701,6 @@ asdf install
 |--------|------|--------------|
 | **lefthook** | 高速Git hooks管理 | `brew install lefthook` |
 | **tokei** | コード統計・行数カウント | `brew install tokei` |
-| **markdownlint-cli** | Markdownリンター | `brew install markdownlint-cli` |
 
 ---
 
@@ -787,9 +717,6 @@ asdf install
 ### クラウド / AWS
 
 #### AWS CLI
-
-<img src="https://a0.awsstatic.com/libra-css/images/logos/aws_logo_smile_1200x630.png" width="300" alt="AWS CLI">
-
 > Amazon Web Services 公式 CLI
 
 | 項目 | 内容 |

@@ -1,5 +1,5 @@
 #!/bin/bash
-# bootstrap.sh - 新しいMac/Linuxの自動セットアップスクリプト
+# bootstrap.sh - 新しいMacの自動セットアップスクリプト
 # 使用方法: bash bootstrap.sh
 # オプション:
 #   -n, --dry-run    実際の変更を行わずシミュレーション
@@ -15,7 +15,6 @@ set -e  # エラーで停止
 DRY_RUN=false
 VERBOSE=false
 SKIP_APPS=false
-USE_SYSTEM_PKG=false
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # 共通ライブラリ読み込み
@@ -23,13 +22,15 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [[ -f "${SCRIPT_DIR}/scripts/lib/common.sh" ]]; then
     source "${SCRIPT_DIR}/scripts/lib/common.sh"
 else
-    # フォールバック: common.shが無い場合の最小限の色定義
+    # フォールバック: common.shが無い場合の最小限定義
     RED='\033[0;31m'
     GREEN='\033[0;32m'
     YELLOW='\033[1;33m'
     BLUE='\033[0;34m'
     CYAN='\033[0;36m'
     NC='\033[0m'
+    # safe_link関数の最小定義
+    safe_link() { ln -sf "$1" "$2"; }
 fi
 
 # ログファイル
@@ -312,22 +313,9 @@ detect_system() {
     OS="$(uname -s)"
     ARCH="$(uname -m)"
 
-    # os-detect.sh の関数を使用（common.sh経由で読み込み済み）
-    if is_macos; then
-        IS_MACOS=true
-        IS_LINUX=false
-    elif is_linux; then
-        IS_MACOS=false
-        IS_LINUX=true
-        # WSL検出
-        if is_wsl; then
-            IS_WSL=true
-            echo -e "${CYAN}WSL環境を検出しました${NC}"
-        else
-            IS_WSL=false
-        fi
-    else
-        echo -e "${RED}未対応のOS: $OS${NC}"
+    # macOS専用
+    if ! is_macos; then
+        echo -e "${RED}このスクリプトはmacOS専用です${NC}"
         exit 1
     fi
 
@@ -376,12 +364,7 @@ fi
 echo -e "\n${YELLOW}[1/7] Homebrewの確認...${NC}"
 if ! command -v brew &> /dev/null; then
     echo -e "${RED}Homebrewがインストールされていません。${NC}"
-    if [ "$IS_LINUX" = true ]; then
-        echo -e "${YELLOW}Linuxbrew (Homebrew for Linux) をインストールしますか? (y/n)${NC}"
-        echo -e "${CYAN}※ LinuxbrewなしでもLinux固有のパッケージマネージャーで続行可能です${NC}"
-    else
-        echo -e "${YELLOW}Homebrewをインストールしますか? (y/n)${NC}"
-    fi
+    echo -e "${YELLOW}Homebrewをインストールしますか? (y/n)${NC}"
     read -r answer
     if [ "$answer" = "y" ]; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -389,13 +372,8 @@ if ! command -v brew &> /dev/null; then
         eval "$("${HOMEBREW_PREFIX}/bin/brew" shellenv)"
         echo -e "${GREEN}Homebrewのインストールが完了しました。${NC}"
     else
-        if [ "$IS_MACOS" = true ]; then
-            echo -e "${RED}macOSではHomebrewが必要です。終了します。${NC}"
-            exit 1
-        else
-            echo -e "${YELLOW}⚠ Homebrew未インストール。Linux固有パッケージマネージャーを使用します${NC}"
-            USE_SYSTEM_PKG=true
-        fi
+        echo -e "${RED}macOSではHomebrewが必要です。終了します。${NC}"
+        exit 1
     fi
 else
     echo -e "${GREEN}✓ Homebrewはインストール済みです${NC}"
@@ -410,15 +388,8 @@ echo -e "\n${YELLOW}[2/7] アプリケーションのインストール...${NC}"
 
 if [ "$SKIP_APPS" = true ]; then
     echo -e "${CYAN}アプリケーションインストールをスキップします${NC}"
-elif [ "$USE_SYSTEM_PKG" = true ] && [ "$IS_LINUX" = true ]; then
-    # Linux固有パッケージマネージャーを使用
-    echo -e "${YELLOW}Linux固有パッケージマネージャーでツールをインストール...${NC}"
-    bash "$SCRIPT_DIR/scripts/setup/linux.sh"
 elif command -v brew &>/dev/null; then
     BREWFILE="Brewfile"
-    if [ "$IS_LINUX" = true ]; then
-        echo -e "${YELLOW}Linux環境: caskはスキップされます${NC}"
-    fi
     echo -e "${GREEN}Brewfileからツールをインストールします${NC}"
 
     if [ -f "$BREWFILE" ]; then
@@ -474,20 +445,27 @@ stow_package() {
 }
 
 # Stow パッケージのインストール
-STOW_PACKAGES=(zsh git nvim ghostty bat atuin claude gh ssh)
+# 注: sshはテンプレート方式のため別処理
+STOW_PACKAGES=(zsh git nvim ghostty bat atuin claude gh)
 
 for pkg in "${STOW_PACKAGES[@]}"; do
     stow_package "$pkg"
 done
 echo -e "${GREEN}✓ Stowパッケージをインストールしました (${STOW_PACKAGES[*]})${NC}"
 
-# ssh パーミッション設定（Stowでリンク後に適用）
+# SSH設定（テンプレートからコピー、既存ファイルは上書きしない）
 if [ "$DRY_RUN" != true ]; then
     mkdir -p ~/.ssh/sockets
     chmod 700 ~/.ssh
-    [ -f ~/.ssh/config ] && chmod 600 ~/.ssh/config
+    if [ ! -f ~/.ssh/config ]; then
+        cp "$SCRIPT_DIR/stow/ssh/.ssh/config.template" ~/.ssh/config
+        echo -e "${GREEN}✓ SSH configを作成しました${NC}"
+    else
+        echo -e "${GREEN}✓ SSH configは既存です（スキップ）${NC}"
+    fi
+    chmod 600 ~/.ssh/config
 else
-    echo -e "${CYAN}[DRY RUN] Would set ssh permissions${NC}"
+    echo -e "${CYAN}[DRY RUN] Would setup SSH config${NC}"
 fi
 
 # antigravity (macOS only)
@@ -495,9 +473,9 @@ if [ "$IS_MACOS" = true ]; then
     ANTIGRAVITY_USER_DIR="$HOME/Library/Application Support/Antigravity/User"
     if [ -d "$HOME/Library/Application Support/Antigravity" ]; then
         mkdir -p "$ANTIGRAVITY_USER_DIR"
-        safe_link ~/dotfiles/antigravity/settings.json "$ANTIGRAVITY_USER_DIR/settings.json"
-        if [ -f ~/dotfiles/antigravity/keybindings.json ]; then
-            safe_link ~/dotfiles/antigravity/keybindings.json "$ANTIGRAVITY_USER_DIR/keybindings.json"
+        safe_link ~/dotfiles/stow/antigravity/settings.json "$ANTIGRAVITY_USER_DIR/settings.json"
+        if [ -f ~/dotfiles/stow/antigravity/keybindings.json ]; then
+            safe_link ~/dotfiles/stow/antigravity/keybindings.json "$ANTIGRAVITY_USER_DIR/keybindings.json"
         fi
         echo -e "${GREEN}✓ Antigravity設定をリンクしました${NC}"
     else
@@ -548,16 +526,9 @@ fi
 # ========================================
 echo -e "\n${YELLOW}[5/7] 追加設定...${NC}"
 
-# OS固有設定
-if [ "$IS_MACOS" = true ]; then
-    if [ -f ~/dotfiles/scripts/setup/macos_defaults.sh ]; then
-        bash ~/dotfiles/scripts/setup/macos_defaults.sh
-    fi
-elif [ "$IS_LINUX" = true ]; then
-    if [ -f ~/dotfiles/scripts/setup/linux.sh ]; then
-        # Linux固有の追加設定（パッケージインストールはスキップ、設定のみ）
-        echo -e "${YELLOW}Linux固有設定を適用中...${NC}"
-    fi
+# macOS固有設定
+if [ -f ~/dotfiles/scripts/setup/macos_defaults.sh ]; then
+    bash ~/dotfiles/scripts/setup/macos_defaults.sh
 fi
 
 # git-secrets設定
@@ -639,20 +610,9 @@ else
 fi
 
 # ========================================
-# 6. Linux/WSL固有設定
+# 6. 追加のmacOS設定
 # ========================================
-if [ "$IS_LINUX" = true ]; then
-    echo -e "\n${YELLOW}[6/7] Linux固有設定...${NC}"
-    # linux.shの関数を活用（重複を避ける）
-    if [ -f "$SCRIPT_DIR/scripts/setup/linux.sh" ]; then
-        # shellcheck source=scripts/setup/linux.sh
-        source "$SCRIPT_DIR/scripts/setup/linux.sh"
-        setup_linux_defaults
-        setup_wsl
-    fi
-else
-    echo -e "\n${YELLOW}[6/7] macOS固有設定は適用済みです${NC}"
-fi
+echo -e "\n${YELLOW}[6/7] macOS固有設定は適用済みです${NC}"
 
 # ========================================
 # 7. 完了
@@ -669,7 +629,4 @@ echo -e "\n${YELLOW}次のステップ:${NC}"
 echo -e "  1. ターミナルを再起動するか、'source ~/.zshrc' を実行"
 echo -e "  2. Powerlevel10kの設定: 'p10k configure'"
 echo -e "  3. Nerd Fontをターミナルに設定"
-if [ "$IS_WSL" = true ]; then
-    echo -e "  4. WSLを再起動: wsl --shutdown (PowerShellから)"
-fi
 echo -e "\n${BLUE}追加のアプリケーションは docs/setup/APPS.md を参照してください${NC}"

@@ -1,6 +1,0 @@
-# Claude Code agent files (description field is intentionally long)
-stow/claude/.claude/agents/
-.claude/agents/
-
-# Node modules
-node_modules/

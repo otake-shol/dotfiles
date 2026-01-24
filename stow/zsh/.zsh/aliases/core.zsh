@@ -1,4 +1,9 @@
 # ========================================
+# 変数定義
+# ========================================
+DOTFILES_SCRIPTS="${DOTFILES_DIR:-$HOME/dotfiles}/scripts"
+
+# ========================================
 # 基本操作
 # ========================================
 
@@ -56,10 +61,6 @@ rm() {
   fi
 }
 
-# trash - ゴミ箱に移動（復元可能な安全な削除）
-alias del="trash"
-alias tp="trash -F"  # Finderのゴミ箱に移動
-
 # ========================================
 # Claude
 # ========================================
@@ -96,7 +97,6 @@ alias ji="zi"                         # インタラクティブ選択
 # ========================================
 # dotfiles管理
 # ========================================
-DOTFILES_SCRIPTS="${DOTFILES_DIR:-$HOME/dotfiles}/scripts"
 alias dotup="bash $DOTFILES_SCRIPTS/maintenance/check-updates.sh"       # 更新チェック
 alias dotupdate="bash $DOTFILES_SCRIPTS/maintenance/update-all.sh"      # 一括更新
 alias brewsync="bash $DOTFILES_SCRIPTS/maintenance/sync-brewfile.sh"    # Brewfile同期チェック

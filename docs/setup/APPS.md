@@ -408,16 +408,8 @@ fi
 |--------|------|--------------|
 | **git** | バージョン管理 | `brew install git` |
 | **gh** | GitHub CLI | `brew install gh` |
-| **lazygit** | Git TUI | `brew install lazygit` |
 | **git-secrets** | 認証情報漏洩防止 | `brew install git-secrets` |
 | **git-delta** | 美しい diff 表示 | `brew install git-delta` |
-| **difftastic** | 構文認識 diff | `brew install difftastic` |
-
-#### lazygit
-
-<img src="https://github.com/jesseduffield/lazygit/raw/assets/demo/commit_and_push-compressed.gif" width="600" alt="lazygit">
-
-> ターミナルで使える直感的な Git クライアント
 
 ---
 

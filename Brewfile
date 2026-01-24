@@ -13,7 +13,6 @@ brew "git"
 brew "gh"              # GitHub CLI
 brew "git-secrets"     # AWS認証情報の誤コミット防止
 brew "git-delta"       # git diffを美しく表示
-brew "git-cliff"       # CHANGELOG自動生成
 
 # バージョン管理
 brew "asdf"            # 複数言語のバージョン管理（Node.js含む）

@@ -35,7 +35,6 @@ help:
 	@echo "  make bench          Zsh起動速度ベンチマーク"
 	@echo "  make deps           Homebrew依存ツリー表示"
 	@echo "  make brewsync       Brewfile同期チェック"
-	@echo "  make changelog      CHANGELOG.md生成（git-cliff）"
 	@echo "  make clean          バックアップファイル削除"
 	@echo ""
 	@echo "パッケージ: $(PACKAGES)"
@@ -91,7 +90,7 @@ bootstrap:
 .PHONY: lint
 lint:
 	@echo "Running shellcheck..."
-	@shellcheck -S warning bootstrap.sh scripts/**/*.sh || true
+	@shellcheck -S warning bootstrap.sh scripts/**/*.sh
 
 # クリーン（バックアップファイル削除）
 .PHONY: clean
@@ -123,14 +122,3 @@ deps:
 .PHONY: brewsync
 brewsync:
 	@bash scripts/maintenance/sync-brewfile.sh
-
-# CHANGELOG生成
-.PHONY: changelog
-changelog:
-	@if command -v git-cliff >/dev/null 2>&1; then \
-		git-cliff -o CHANGELOG.md; \
-		echo "✓ CHANGELOG.md を生成しました"; \
-	else \
-		echo "⚠ git-cliff がインストールされていません"; \
-		echo "  brew install git-cliff でインストールしてください"; \
-	fi

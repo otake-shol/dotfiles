@@ -46,7 +46,7 @@ dotfiles/
 │   ├── ghostty/           # ターミナル設定
 │   ├── bat/, atuin/       # ユーティリティ設定
 │   └── ssh/               # SSH設定テンプレート
-├── antigravity/           # エディタ設定（Stow対象外）
+├── antigravity/           # エディタ設定（※後述）
 ├── scripts/               # ユーティリティスクリプト
 │   ├── setup/             # OS別セットアップ
 │   ├── maintenance/       # メンテナンススクリプト
@@ -57,6 +57,8 @@ dotfiles/
 ├── Makefile               # Stow操作・開発コマンド
 └── bootstrap.sh           # 自動セットアップスクリプト
 ```
+
+> **Note**: `antigravity/` はmacOS固有パス（`~/Library/Application Support/`）を使用するため、GNU Stowではなく`bootstrap.sh`で個別にリンクを作成しています。
 
 ## 便利なコマンド
 

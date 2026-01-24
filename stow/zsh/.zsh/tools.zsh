@@ -68,19 +68,25 @@ export BUN_INSTALL="$HOME/.bun"
 # Local environment
 [[ -f "$HOME/.local/bin/env" ]] && . "$HOME/.local/bin/env"
 
-# kiro shell integration
-if [[ "$TERM_PROGRAM" == "kiro" ]]; then
-  local kiro_path="$(kiro --locate-shell-integration-path zsh 2>/dev/null)"
-  [[ -n "$kiro_path" && -f "$kiro_path" ]] && . "$kiro_path"
-fi
 
 # ========================================
 # dotfiles更新リマインダー
 # ========================================
 _dotfiles_update_reminder() {
   local dotfiles_dir="$HOME/dotfiles"
-  if [[ -d "$dotfiles_dir/.git" ]]; then
-    local last_update=$(git -C "$dotfiles_dir" log -1 --format="%ct" 2>/dev/null)
+  local git_head="$dotfiles_dir/.git/refs/heads/master"
+  # masterがなければmainを試す
+  [[ -f "$git_head" ]] || git_head="$dotfiles_dir/.git/refs/heads/main"
+
+  if [[ -f "$git_head" ]]; then
+    # ファイルのmtimeを取得（git logより高速）
+    local last_update
+    if [[ "$(uname)" == "Darwin" ]]; then
+      last_update=$(stat -f %m "$git_head" 2>/dev/null)
+    else
+      last_update=$(stat -c %Y "$git_head" 2>/dev/null)
+    fi
+
     if [[ -n "$last_update" ]]; then
       local days_since=$(( ($(date +%s) - last_update) / 86400 ))
       if [[ $days_since -gt 30 ]]; then

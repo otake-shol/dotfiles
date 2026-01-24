@@ -83,9 +83,6 @@ verify_required_tools() {
         local desc="${tool_pair##*:}"
 
         if command -v "$cmd" &>/dev/null; then
-            # shellcheck disable=SC2034
-            local version
-            version=$($cmd --version 2>/dev/null | head -1 || echo "installed")
             check_pass "$cmd ($desc)"
         else
             check_fail "$cmd が見つかりません ($desc)"
@@ -106,7 +103,6 @@ verify_optional_tools() {
         "gh:GitHub CLI"
         "direnv:環境変数管理"
         "lefthook:Git hooks"
-        "trash:安全な削除"
     )
 
     for tool_pair in "${tools[@]}"; do

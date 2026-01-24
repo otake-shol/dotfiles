@@ -347,8 +347,10 @@ is_arm64() {
 }
 
 # ========================================
-# プログレスバー
+# プログレスバー・スピナー
 # ========================================
+
+# プログレスバー表示
 # 使用例: show_progress 3 10 "処理中..."
 show_progress() {
     local current=$1
@@ -371,23 +373,71 @@ show_progress() {
     fi
 }
 
-# スピナー表示（バックグラウンド処理用）
-# 使用例: start_spinner "処理中" & SPINNER_PID=$!; ...; stop_spinner $SPINNER_PID
-start_spinner() {
-    local message="${1:-処理中}"
-    local chars="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
-    local i=0
-    while true; do
-        printf '\r%s%s%s %s' "${CYAN}" "${chars:$i:1}" "${NC}" "${message}"
-        i=$(( (i + 1) % ${#chars} ))
-        sleep 0.1
-    done
+# 全体プログレスバー表示（コンパクト版）
+# 使用例: show_overall_progress 5 10
+show_overall_progress() {
+    local current=$1
+    local total=$2
+    local width=30
+    local percent=$((current * 100 / total))
+    local filled=$((width * current / total))
+    local empty=$((width - filled))
+
+    printf '%s[' "${BLUE}"
+    printf "%${filled}s" | tr ' ' '▓'
+    printf "%${empty}s" | tr ' ' '░'
+    printf '] %3d%% (%d/%d)%s' "$percent" "$current" "$total" "${NC}"
 }
 
+# インラインプログレスバー生成（文字列を返す）
+make_progress_bar() {
+    local current=$1
+    local total=$2
+    local width=20
+    local percent=$((current * 100 / total))
+    local filled=$((width * current / total))
+    local empty=$((width - filled))
+    local bar=""
+
+    bar="["
+    for ((j=0; j<filled; j++)); do bar+="▓"; done
+    for ((j=0; j<empty; j++)); do bar+="░"; done
+    bar+="]"
+
+    printf "%s %3d%%" "$bar" "$percent"
+}
+
+# スピナーアニメーション（プログレスバー付き）
+# 使用例: start_spinner "処理中..." 3 10
+SPINNER_FRAMES=("⠋" "⠙" "⠹" "⠸" "⠼" "⠴" "⠦" "⠧" "⠇" "⠏")
+SPINNER_PID=""
+
+start_spinner() {
+    local message="$1"
+    local current="${2:-0}"
+    local total="${3:-100}"
+
+    (
+        local i=0
+        while true; do
+            local bar
+            bar=$(make_progress_bar "$current" "$total")
+            printf "\r%s%s %s%s %s%s%s  " "${YELLOW}" "${SPINNER_FRAMES[$i]}" "${message}" "${NC}" "${CYAN}" "${bar}" "${NC}"
+            i=$(( (i + 1) % ${#SPINNER_FRAMES[@]} ))
+            sleep 0.1
+        done
+    ) &
+    SPINNER_PID=$!
+}
+
+# shellcheck disable=SC2120
 stop_spinner() {
-    local pid=$1
-    kill "$pid" 2>/dev/null
-    printf "\r"
+    if [ -n "$SPINNER_PID" ] && kill -0 "$SPINNER_PID" 2>/dev/null; then
+        kill "$SPINNER_PID" 2>/dev/null
+        wait "$SPINNER_PID" 2>/dev/null || true
+    fi
+    SPINNER_PID=""
+    printf "\r\033[K"
 }
 
 # ========================================

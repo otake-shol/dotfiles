@@ -187,9 +187,6 @@ export BRAVE_API_KEY="BSAxxxxx"
 export SENTRY_AUTH_TOKEN="sntrys_xxxxx"
 ```
 
-## MCPサーバーガイド
-詳細は `~/dotfiles/docs/integrations/mcp-servers-guide.md` を参照
-
 ---
 
 ## dotfiles 開発ガイドライン
@@ -243,6 +240,7 @@ bash scripts/utils/zsh-benchmark.sh
 ## CI/CD
 
 - **lint.yml**: ShellCheck, YAML Lint, Markdown Lint, セキュリティスキャン
+- **統合テスト**: 意図的に追加しない（ローカルでの `bootstrap.sh --dry-run` で十分）
 
 ## 貢献ガイドライン
 

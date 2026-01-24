@@ -5,7 +5,6 @@
 #   -n, --dry-run    実際の変更を行わずシミュレーション
 #   -h, --help       ヘルプを表示
 #   -v, --verbose    詳細出力
-#   --linux-only     Linuxセットアップのみ実行
 #   --skip-apps      アプリケーションインストールをスキップ
 
 set -e  # エラーで停止
@@ -15,8 +14,6 @@ set -e  # エラーで停止
 # ========================================
 DRY_RUN=false
 VERBOSE=false
-# shellcheck disable=SC2034  # 将来の拡張用
-LINUX_ONLY=false
 SKIP_APPS=false
 USE_SYSTEM_PKG=false
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -74,10 +71,6 @@ while [[ "$#" -gt 0 ]]; do
         -h|--help)
             show_help
             ;;
-        --linux-only)
-            # shellcheck disable=SC2034  # 将来の拡張用
-            LINUX_ONLY=true
-            ;;
         --skip-apps)
             SKIP_APPS=true
             ;;
@@ -92,33 +85,8 @@ done
 # ========================================
 # ユーティリティ関数
 # ========================================
-# Note: 以下のUI関数群（show_progress, show_step, start_spinner等）は
-# bootstrap.sh固有の複雑なプログレス表示に使用。
-# common.shにも類似関数があるが、こちらは一体で動作するため独自定義を維持。
-
-# プログレスバー表示
-# 使用例: show_progress 3 7 "シンボリックリンク作成"
-TOTAL_STEPS=7
-show_progress() {
-    local current=$1
-    local total=${2:-$TOTAL_STEPS}
-    local message="${3:-処理中}"
-    local width=40
-    local percent=$((current * 100 / total))
-    local filled=$((width * current / total))
-    local empty=$((width - filled))
-
-    # プログレスバーの描画
-    printf '\r%s[' "${BLUE}"
-    printf "%${filled}s" | tr ' ' '█'
-    printf "%${empty}s" | tr ' ' '░'
-    printf '] %3d%% %s%s' "$percent" "${NC}" "${message}"
-
-    # 完了時は改行
-    if [ "$current" -eq "$total" ]; then
-        echo ""
-    fi
-}
+# UI関数（show_progress, start_spinner等）はcommon.shで定義
+# bootstrap.sh固有の関数のみここで定義
 
 # ステップ表示（番号付き）
 show_step() {
@@ -129,89 +97,12 @@ show_step() {
     show_progress "$step" "$total" "$title"
 }
 
-# ログ関数
+# ログ関数（bootstrap.sh固有：LOG_FILE, VERBOSE使用）
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
     if [ "$VERBOSE" = true ]; then
         echo -e "${CYAN}[LOG] $1${NC}"
     fi
-}
-
-# ドライラン対応コマンド実行
-run_cmd() {
-    if [ "$DRY_RUN" = true ]; then
-        echo -e "${CYAN}[DRY RUN] $*${NC}"
-        log "[DRY RUN] $*"
-    else
-        "$@"
-    fi
-}
-
-# スピナーアニメーション（プログレスバー付き）
-SPINNER_FRAMES=("⠋" "⠙" "⠹" "⠸" "⠼" "⠴" "⠦" "⠧" "⠇" "⠏")
-SPINNER_PID=""
-
-# インラインプログレスバー生成
-make_progress_bar() {
-    local current=$1
-    local total=$2
-    local width=20
-    local percent=$((current * 100 / total))
-    local filled=$((width * current / total))
-    local empty=$((width - filled))
-    local bar=""
-
-    # プログレスバー文字列を構築
-    bar="["
-    for ((j=0; j<filled; j++)); do bar+="▓"; done
-    for ((j=0; j<empty; j++)); do bar+="░"; done
-    bar+="]"
-
-    printf "%s %3d%%" "$bar" "$percent"
-}
-
-start_spinner() {
-    local message="$1"
-    local current="${2:-0}"
-    local total="${3:-100}"
-
-    (
-        local i=0
-        while true; do
-            local bar
-            bar=$(make_progress_bar "$current" "$total")
-            # printf %s でエスケープ問題を回避
-            printf "\r%s%s %s%s %s%s%s  " "${YELLOW}" "${SPINNER_FRAMES[$i]}" "${message}" "${NC}" "${CYAN}" "${bar}" "${NC}"
-            i=$(( (i + 1) % ${#SPINNER_FRAMES[@]} ))
-            sleep 0.1
-        done
-    ) &
-    SPINNER_PID=$!
-}
-
-# shellcheck disable=SC2120
-stop_spinner() {
-    if [ -n "$SPINNER_PID" ] && kill -0 "$SPINNER_PID" 2>/dev/null; then
-        kill "$SPINNER_PID" 2>/dev/null
-        wait "$SPINNER_PID" 2>/dev/null || true
-    fi
-    SPINNER_PID=""
-    printf "\r\033[K"
-}
-
-# 全体プログレスバー表示
-show_overall_progress() {
-    local current=$1
-    local total=$2
-    local width=30
-    local percent=$((current * 100 / total))
-    local filled=$((width * current / total))
-    local empty=$((width - filled))
-
-    printf '%s[' "${BLUE}"
-    printf "%${filled}s" | tr ' ' '▓'
-    printf "%${empty}s" | tr ' ' '░'
-    printf '] %3d%% (%d/%d)%s' "$percent" "$current" "$total" "${NC}"
 }
 
 # Brewfileパッケージを個別インストール（状況表示付き）
@@ -490,7 +381,7 @@ fi
 # 0. Apple Silicon: Rosetta 2確認
 # ========================================
 if [[ "$ARCH" == "arm64" ]]; then
-    echo -e "\n${YELLOW}[0/6] Rosetta 2の確認...${NC}"
+    echo -e "\n${YELLOW}[0/7] Rosetta 2の確認（オプション）...${NC}"
     if ! /usr/bin/pgrep -q oahd; then
         echo -e "${YELLOW}Rosetta 2をインストールしますか? (一部のx86アプリに必要) (y/n)${NC}"
         read -r answer

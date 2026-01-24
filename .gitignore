@@ -10,13 +10,8 @@ Brewfile.lock.json
 .gitconfig.local
 .zshrc.local
 
-# Claude Code local settings
-.claude/settings.local.json
-
-# Claude Code plugins (user-specific, auto-generated)
-.claude/plugins/marketplaces/
-.claude/plugins/known_marketplaces.json
-.claude/plugins/installed_plugins.json
+# Claude Code project-local settings (auto-generated)
+.claude/
 
 # Serena tool internal files
 .serena/
@@ -29,6 +24,3 @@ firebase-debug.log
 
 # Personal resources (managed in cloud storage)
 docs/resources/
-
-# Stow creates symlinks here from home directory
-.claude/

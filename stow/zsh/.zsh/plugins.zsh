@@ -30,8 +30,8 @@ _plugin_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh-plugin-cache"
 _cache_valid=false
 
 if [[ -f "$_plugin_cache" ]]; then
-  # キャッシュが1日以内なら使用
-  if [[ $(find "$_plugin_cache" -mtime -1 2>/dev/null) ]]; then
+  # キャッシュが7日以内なら使用（atuin, zoxideと統一）
+  if [[ $(find "$_plugin_cache" -mtime -7 2>/dev/null) ]]; then
     _cache_valid=true
     source "$_plugin_cache"
   fi
@@ -70,14 +70,14 @@ plugins+=(web-search)
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
 # 補完キャッシュの設定（起動速度最適化）
+# Oh My Zshと同じダンプファイルを使用してcompinit重複を防ぐ
+export ZSH_COMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/zcompdump-${ZSH_VERSION}"
 autoload -Uz compinit
-_comp_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zcompdump-${ZSH_VERSION}"
-if [[ -n "$_comp_cache"(#qN.mh+24) ]]; then
+if [[ -n "$ZSH_COMPDUMP"(#qN.mh+24) ]]; then
   # キャッシュが24時間以上古い場合のみ再生成
-  compinit -d "$_comp_cache"
+  compinit -d "$ZSH_COMPDUMP"
 else
-  compinit -C -d "$_comp_cache"
+  compinit -C -d "$ZSH_COMPDUMP"
 fi
-unset _comp_cache
 
 source $ZSH/oh-my-zsh.sh

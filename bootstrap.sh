@@ -92,6 +92,9 @@ done
 # ========================================
 # ユーティリティ関数
 # ========================================
+# Note: 以下のUI関数群（show_progress, show_step, start_spinner等）は
+# bootstrap.sh固有の複雑なプログレス表示に使用。
+# common.shにも類似関数があるが、こちらは一体で動作するため独自定義を維持。
 
 # プログレスバー表示
 # 使用例: show_progress 3 7 "シンボリックリンク作成"
@@ -466,36 +469,7 @@ detect_system() {
     log "Detected: $OS ($ARCH), Homebrew prefix: $HOMEBREW_PREFIX"
 }
 
-# 冪等なシンボリックリンク作成関数
-safe_link() {
-    local src="$1"
-    local dest="$2"
-
-    if [ "$DRY_RUN" = true ]; then
-        if [ -L "$dest" ]; then
-            echo -e "${CYAN}[DRY RUN] Would update symlink: $dest -> $src${NC}"
-        elif [ -e "$dest" ]; then
-            echo -e "${CYAN}[DRY RUN] Would backup and link: $dest -> $src${NC}"
-        else
-            echo -e "${CYAN}[DRY RUN] Would create symlink: $dest -> $src${NC}"
-        fi
-        log "[DRY RUN] Link: $src -> $dest"
-        return
-    fi
-
-    if [ -L "$dest" ]; then
-        # 既存のシンボリックリンクを削除
-        rm "$dest"
-    elif [ -e "$dest" ]; then
-        # 既存ファイルをバックアップ
-        mv "$dest" "${dest}.backup.$(date +%Y%m%d%H%M%S)"
-        echo -e "${YELLOW}  バックアップ: ${dest}.backup.*${NC}"
-        log "Backed up: $dest"
-    fi
-
-    ln -sf "$src" "$dest"
-    log "Linked: $src -> $dest"
-}
+# safe_link関数はcommon.shで定義（重複を避ける）
 
 # ========================================
 # 初期化
@@ -716,15 +690,15 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
             "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/themes/powerlevel10k
 
         # zsh-autosuggestions
-        git clone https://github.com/zsh-users/zsh-autosuggestions \
+        git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions \
             "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-autosuggestions
 
         # zsh-syntax-highlighting
-        git clone https://github.com/zsh-users/zsh-syntax-highlighting \
+        git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting \
             "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-syntax-highlighting
 
         # zsh-completions
-        git clone https://github.com/zsh-users/zsh-completions \
+        git clone --depth=1 https://github.com/zsh-users/zsh-completions \
             "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-completions
 
         echo -e "${GREEN}✓ Oh My Zshのセットアップが完了しました${NC}"
@@ -843,47 +817,12 @@ fi
 # ========================================
 if [ "$IS_LINUX" = true ]; then
     echo -e "\n${YELLOW}[6/7] Linux固有設定...${NC}"
-
-    # デフォルトシェルをzshに変更
-    if [ "$(basename "$SHELL")" != "zsh" ] && command -v zsh &>/dev/null; then
-        echo -e "${YELLOW}デフォルトシェルをzshに変更しますか? (y/n)${NC}"
-        read -r answer
-        if [ "$answer" = "y" ]; then
-            chsh -s "$(which zsh)"
-            echo -e "${GREEN}✓ デフォルトシェルをzshに変更しました${NC}"
-        fi
-    else
-        echo -e "${GREEN}✓ zshは既にデフォルトシェルです${NC}"
-    fi
-
-    # WSL固有設定
-    if [ "$IS_WSL" = true ]; then
-        echo -e "${YELLOW}WSL固有設定を確認中...${NC}"
-
-        # Windows側のクリップボード連携設定
-        if [ -f /mnt/c/Windows/System32/clip.exe ]; then
-            echo -e "${GREEN}✓ Windowsクリップボード連携が利用可能です${NC}"
-        fi
-
-        # wsl.conf設定
-        if [ ! -f /etc/wsl.conf ]; then
-            echo -e "${YELLOW}wsl.confを作成しますか? (systemd有効化) (y/n)${NC}"
-            read -r answer
-            if [ "$answer" = "y" ]; then
-                sudo tee /etc/wsl.conf > /dev/null << 'WSLEOF'
-[boot]
-systemd=true
-
-[interop]
-appendWindowsPath=false
-
-[automount]
-enabled=true
-options="metadata,umask=22,fmask=11"
-WSLEOF
-                echo -e "${GREEN}✓ wsl.confを作成しました（WSL再起動が必要）${NC}"
-            fi
-        fi
+    # linux.shの関数を活用（重複を避ける）
+    if [ -f "$SCRIPT_DIR/scripts/setup/linux.sh" ]; then
+        # shellcheck source=scripts/setup/linux.sh
+        source "$SCRIPT_DIR/scripts/setup/linux.sh"
+        setup_linux_defaults
+        setup_wsl
     fi
 else
     echo -e "\n${YELLOW}[6/7] macOS固有設定は適用済みです${NC}"

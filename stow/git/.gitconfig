@@ -10,8 +10,6 @@
 	untrackedCache = true
 [feature]
 	manyFiles = true
-[commit]
-	template = ~/dotfiles/stow/git/commit-template.txt
 [interactive]
 	diffFilter = delta --color-only
 [delta]
@@ -115,6 +113,7 @@
 	# macOSの場合は gpg2 を使用することを推奨
 	# program = gpg
 [commit]
+	template = ~/dotfiles/stow/git/commit-template.txt
 	# GPG署名を有効にする場合はコメントを外す
 	# gpgsign = true
 [tag]

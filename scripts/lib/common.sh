@@ -295,12 +295,13 @@ safe_link() {
     local dest="$2"
 
     if [[ "${DRY_RUN:-false}" == "true" ]]; then
+        # DRY_RUNモードでは常にユーザーに見えるメッセージを出力
         if [[ -L "$dest" ]]; then
-            log_debug "[DRY RUN] Would update symlink: $dest -> $src"
+            echo -e "${CYAN}[DRY RUN] Would update symlink: $dest -> $src${NC}"
         elif [[ -e "$dest" ]]; then
-            log_debug "[DRY RUN] Would backup and link: $dest -> $src"
+            echo -e "${CYAN}[DRY RUN] Would backup and link: $dest -> $src${NC}"
         else
-            log_debug "[DRY RUN] Would create symlink: $dest -> $src"
+            echo -e "${CYAN}[DRY RUN] Would create symlink: $dest -> $src${NC}"
         fi
         return 0
     fi

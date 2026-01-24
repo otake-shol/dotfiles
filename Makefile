@@ -91,7 +91,7 @@ bootstrap:
 .PHONY: lint
 lint:
 	@echo "Running shellcheck..."
-	@find . -name "*.sh" -not -path "./.git/*" | xargs shellcheck || true
+	@shellcheck -S warning bootstrap.sh scripts/**/*.sh || true
 
 # クリーン（バックアップファイル削除）
 .PHONY: clean

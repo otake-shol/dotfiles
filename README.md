@@ -193,6 +193,14 @@ zshbench --profile   # Detailed profiling with zprof
 | [APPS.md](docs/setup/APPS.md) | Application list & descriptions |
 | [mcp-servers-guide.md](docs/integrations/mcp-servers-guide.md) | MCP server setup guide |
 | [atlassian-guide.md](docs/integrations/atlassian-guide.md) | Jira/Confluence integration |
+| [CHANGELOG.md](CHANGELOG.md) | Release notes & change history |
+
+### Additional Configurations
+
+| Directory | Description |
+|-----------|-------------|
+| [raycast/](raycast/) | Raycast script commands (Japanese dictionary) |
+| [antigravity/](antigravity/) | Antigravity editor settings & extensions |
 
 ## Requirements
 

@@ -23,7 +23,7 @@ brew bundle --file=~/dotfiles/Brewfile
 | 項目 | 内容 |
 |------|------|
 | インストール | `brew install --cask ghostty` |
-| 設定ファイル | `~/dotfiles/ghostty/config` |
+| 設定ファイル | `~/dotfiles/stow/ghostty/.config/ghostty/config` |
 | 公式サイト | https://ghostty.org/ |
 
 **特徴:**
@@ -447,7 +447,7 @@ fi
 | 項目 | 内容 |
 |------|------|
 | インストール | `brew install atuin` |
-| 設定ファイル | `~/dotfiles/atuin/.config/atuin/config.toml` |
+| 設定ファイル | `~/dotfiles/stow/atuin/.config/atuin/config.toml` |
 | 公式サイト | https://atuin.sh/ |
 | GitHub | https://github.com/atuinsh/atuin |
 

@@ -92,7 +92,7 @@ Claudeとしてのおすすめ案を明示し、その理由を説明する。
 - **Conventional Commits** に従う
 - フォーマット: `<type>: <subject>`
 - Type: feat, fix, docs, style, refactor, perf, test, chore, ci
-- 詳細は `~/dotfiles/git/commit-template.txt` を参照
+- 詳細は `~/dotfiles/stow/git/commit-template.txt` を参照
 
 ---
 
@@ -244,8 +244,6 @@ bash scripts/utils/zsh-benchmark.sh
 ## CI/CD
 
 - **lint.yml**: ShellCheck, YAML Lint, Markdown Lint, セキュリティスキャン
-- **demo.yml**: VHSデモGIF生成
-- **release.yml**: git-cliffでCHANGELOG生成
 
 ## 貢献ガイドライン
 

@@ -1,6 +1,5 @@
-# Brewfile - 必須ツールのみ
-# 新しいMacをセットアップする際に最低限必要なツールを記載
-# 完全な環境は Brewfile.full を参照
+# Brewfile - Homebrewパッケージ管理
+# 使用方法: brew bundle --file=Brewfile
 
 # Taps
 tap "oven-sh/bun"      # bun用

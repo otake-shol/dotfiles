@@ -18,6 +18,7 @@ VERBOSE=false
 # shellcheck disable=SC2034  # 将来の拡張用
 LINUX_ONLY=false
 SKIP_APPS=false
+USE_SYSTEM_PKG=false
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # 共通ライブラリ読み込み
@@ -141,6 +142,122 @@ run_cmd() {
     else
         "$@"
     fi
+}
+
+# Brewfileパッケージを個別インストール（状況表示付き）
+install_brewfile_packages() {
+    local brewfile="$1"
+    local success=0
+    local failed=0
+    local skipped=0
+    local failed_packages=()
+
+    # Brewfileをパース
+    local taps=()
+    local brews=()
+    local casks=()
+
+    while IFS= read -r line; do
+        # コメントと空行をスキップ
+        [[ "$line" =~ ^[[:space:]]*# ]] && continue
+        [[ -z "${line// }" ]] && continue
+
+        if [[ "$line" =~ ^tap[[:space:]]+\"([^\"]+)\" ]]; then
+            taps+=("${BASH_REMATCH[1]}")
+        elif [[ "$line" =~ ^brew[[:space:]]+\"([^\"]+)\" ]]; then
+            brews+=("${BASH_REMATCH[1]}")
+        elif [[ "$line" =~ ^cask[[:space:]]+\"([^\"]+)\" ]]; then
+            casks+=("${BASH_REMATCH[1]}")
+        fi
+    done < "$brewfile"
+
+    local total=$((${#taps[@]} + ${#brews[@]} + ${#casks[@]}))
+    local current=0
+
+    echo -e "${BLUE}総パッケージ数: $total (tap: ${#taps[@]}, brew: ${#brews[@]}, cask: ${#casks[@]})${NC}"
+    echo ""
+
+    # Taps
+    if [ ${#taps[@]} -gt 0 ]; then
+        echo -e "${CYAN}── Taps ──${NC}"
+        for tap in "${taps[@]}"; do
+            ((current++))
+            printf "[%3d/%3d] %-40s " "$current" "$total" "$tap"
+            if brew tap | grep -q "^${tap}$" 2>/dev/null; then
+                echo -e "${GREEN}✓ 済${NC}"
+                ((skipped++))
+            elif brew tap "$tap" 2>/dev/null; then
+                echo -e "${GREEN}✓ 追加${NC}"
+                ((success++))
+            else
+                echo -e "${RED}✗ 失敗${NC}"
+                ((failed++))
+                failed_packages+=("tap: $tap")
+            fi
+        done
+        echo ""
+    fi
+
+    # Brews (CLIツール)
+    if [ ${#brews[@]} -gt 0 ]; then
+        echo -e "${CYAN}── CLI Tools (brew) ──${NC}"
+        for pkg in "${brews[@]}"; do
+            ((current++))
+            printf "[%3d/%3d] %-40s " "$current" "$total" "$pkg"
+            if brew list --formula "$pkg" &>/dev/null; then
+                echo -e "${GREEN}✓ 済${NC}"
+                ((skipped++))
+            elif brew install "$pkg" 2>/dev/null; then
+                echo -e "${GREEN}✓ 完了${NC}"
+                ((success++))
+            else
+                echo -e "${RED}✗ 失敗${NC}"
+                ((failed++))
+                failed_packages+=("brew: $pkg")
+            fi
+        done
+        echo ""
+    fi
+
+    # Casks (GUIアプリ)
+    if [ ${#casks[@]} -gt 0 ]; then
+        echo -e "${CYAN}── GUI Apps (cask) ──${NC}"
+        for pkg in "${casks[@]}"; do
+            ((current++))
+            printf "[%3d/%3d] %-40s " "$current" "$total" "$pkg"
+            if brew list --cask "$pkg" &>/dev/null; then
+                echo -e "${GREEN}✓ 済${NC}"
+                ((skipped++))
+            elif brew install --cask "$pkg" 2>/dev/null; then
+                echo -e "${GREEN}✓ 完了${NC}"
+                ((success++))
+            else
+                echo -e "${RED}✗ 失敗${NC}"
+                ((failed++))
+                failed_packages+=("cask: $pkg")
+            fi
+        done
+        echo ""
+    fi
+
+    # サマリー表示
+    echo -e "${BLUE}════════════════════════════════════════${NC}"
+    echo -e "${BLUE}  インストール結果サマリー${NC}"
+    echo -e "${BLUE}════════════════════════════════════════${NC}"
+    echo -e "  ${GREEN}✓ 新規インストール: $success${NC}"
+    echo -e "  ${CYAN}○ スキップ（済）  : $skipped${NC}"
+    echo -e "  ${RED}✗ 失敗            : $failed${NC}"
+
+    if [ $failed -gt 0 ]; then
+        echo -e "\n${YELLOW}失敗したパッケージ:${NC}"
+        for pkg in "${failed_packages[@]}"; do
+            echo -e "  ${RED}- $pkg${NC}"
+        done
+        log "Failed packages: ${failed_packages[*]}"
+        return 1
+    fi
+
+    return 0
 }
 
 # クリーンアップ処理
@@ -366,8 +483,16 @@ elif command -v brew &>/dev/null; then
     fi
 
     if [ -f "$BREWFILE" ]; then
-        brew bundle --file="$BREWFILE"
-        echo -e "${GREEN}✓ アプリケーションのインストールが完了しました${NC}"
+        if install_brewfile_packages "$BREWFILE"; then
+            echo -e "${GREEN}✓ アプリケーションのインストールが完了しました${NC}"
+        else
+            echo -e "${YELLOW}続行しますか? (y/n)${NC}"
+            read -r answer
+            if [ "$answer" != "y" ]; then
+                echo -e "${RED}セットアップを中断しました${NC}"
+                exit 1
+            fi
+        fi
     else
         echo -e "${RED}$BREWFILE が見つかりません${NC}"
         exit 1
@@ -459,7 +584,9 @@ if [ "$IS_MACOS" = true ]; then
     if [ -d "$HOME/Library/Application Support/Antigravity" ]; then
         mkdir -p "$ANTIGRAVITY_USER_DIR"
         safe_link ~/dotfiles/antigravity/settings.json "$ANTIGRAVITY_USER_DIR/settings.json"
-        safe_link ~/dotfiles/antigravity/keybindings.json "$ANTIGRAVITY_USER_DIR/keybindings.json"
+        if [ -f ~/dotfiles/antigravity/keybindings.json ]; then
+            safe_link ~/dotfiles/antigravity/keybindings.json "$ANTIGRAVITY_USER_DIR/keybindings.json"
+        fi
         echo -e "${GREEN}✓ Antigravity設定をリンクしました${NC}"
     else
         echo -e "${YELLOW}⚠ Antigravityがインストールされていません。スキップします${NC}"
@@ -533,6 +660,7 @@ if command -v asdf &> /dev/null; then
     echo -e "${YELLOW}asdfプラグインをセットアップ中...${NC}"
     asdf plugin add nodejs 2>/dev/null || true
     asdf plugin add python 2>/dev/null || true
+    asdf plugin add terraform 2>/dev/null || true
 
     if [ -f ~/.tool-versions ]; then
         asdf install

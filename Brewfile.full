@@ -1,176 +1,118 @@
-# Brewfile.full - 完全な開発環境
-# 新しいMacに全ツールをインストールする際に使用
-# 必須ツールのみは Brewfile を参照
-
-# Taps
 tap "heroku/brew"
+tap "homebrew/cask-versions"
 tap "homebrew/services"
 tap "oven-sh/bun"
 tap "pivotal/tap"
-# NOTE: homebrew/cask-versions は homebrew/cask に統合されたため削除
-
-# ========================================
-# CLI Tools
-# ========================================
-
-# 基盤ライブラリ
 brew "apr-util"
-brew "libssh2"
-brew "libevent"
-brew "libzip"
-brew "libfido2"
-brew "berkeley-db", link: true
-brew "tcl-tk"
-brew "nss"
-brew "openssl@1.1"
-brew "rtmpdump"
-brew "freetds"
-
-# バージョン管理
+brew "asciinema"
 brew "asdf"
-# NOTE: Python は asdf で管理（python@3.8〜3.11 を削除）
-# 必要な場合: asdf plugin add python && asdf install python latest
-
-# Git関連
-brew "git"
+brew "atuin"
+brew "awscli", link: false
+brew "libssh2"
+brew "bat"
+brew "berkeley-db", link: true
+brew "btop"
+brew "cmatrix"
+brew "rtmpdump"
+brew "curl"
+brew "freetds"
+brew "libzip"
+brew "php"
+brew "composer"
+brew "cowsay"
+brew "difftastic"
+brew "direnv"
+brew "dust"
+brew "eza"
+brew "fd"
+brew "ffmpegthumbnailer"
+brew "fswatch"
+brew "fzf"
 brew "gh"
+brew "git"
 brew "git-absorb"
 brew "git-delta"
 brew "git-secrets"
-brew "lazygit"
-brew "tig"
-
-# シェル・ターミナル
-brew "atuin"
-brew "fzf"
-brew "zoxide"
-brew "direnv"
-brew "yazi"
-brew "tmux"
-# brew "zellij"  # ターミナル多重化はtmuxに統一
-
-# エディタ
-brew "neovim"
-brew "vim"
-
-# ファイル操作
-brew "bat"
-brew "eza"
-brew "fd"
-brew "ripgrep"
-brew "tree"
-brew "trash"
-brew "dust"
-brew "sd"
-
-# システム監視
-brew "btop"
-brew "procs"
-brew "tokei"
-brew "hyperfine"
-# NOTE: neofetch はメンテナンス終了。代替: brew install fastfetch
-brew "neofetch"
-
-# ネットワーク
-brew "curl"
-brew "wget"
-brew "httpie"
-
-# データ処理
-brew "jq"
-brew "yq"
-brew "imagemagick"
-brew "poppler"
-brew "ffmpegthumbnailer"
-brew "pdftk-java"
-
-# 開発ツール
-brew "stow"
-brew "shellcheck"
-brew "markdownlint-cli"
-brew "yamllint"
-brew "lefthook"
-brew "watchexec"
-brew "fswatch"
 brew "glow"
-brew "tldr"
-brew "nb"
-brew "asciinema"
-brew "unison"
-
-# セキュリティ
+brew "libevent"
 brew "gnupg"
-brew "pinentry-mac"
+brew "gradle"
+brew "httpie"
+brew "hyperfine"
+brew "imagemagick"
+brew "jq"
+brew "lazygit"
+brew "lefthook"
+brew "libfido2"
+brew "markdownlint-cli"
+brew "maven"
 brew "mkcert"
-
-# クラウド・インフラ
-brew "awscli", link: false
+brew "mysql"
+brew "ripgrep"
+brew "tig"
+brew "nb"
+brew "neovim"
+brew "nss"
+brew "openssl@1.1"
+brew "pdftk-java"
+brew "perl"
+brew "pinentry-mac"
+brew "poppler"
+brew "postgresql@14"
+brew "procs"
+brew "pure"
+brew "python@3.10"
+brew "python@3.11"
+brew "tcl-tk"
+brew "python@3.8"
+brew "python@3.9"
+brew "sd"
+brew "sheldon"
+brew "shellcheck"
+brew "sl"
+brew "starship"
+brew "stow"
 brew "terraform", link: false
 brew "terraform-docs"
 brew "tflint"
-brew "heroku/brew/heroku"
-
-# 言語・ランタイム
-brew "php"
-brew "composer"
-brew "perl"
-brew "uv"
-brew "yarn", link: false
-
-# Java関連
-brew "gradle"
-brew "maven"
+brew "tldr"
+brew "tmux"
+brew "tokei"
 brew "tomcat"
+brew "trash"
+brew "tree"
+brew "unison"
+brew "uv"
+brew "vim"
+brew "watchexec"
+brew "wget"
+brew "yamllint"
+brew "yarn", link: false
+brew "yazi"
+brew "yq"
+brew "zellij"
+brew "zoxide"
+brew "heroku/brew/heroku"
 brew "pivotal/tap/springboot"
-
-# データベース
-brew "mysql"
-brew "postgresql@14"
-
-# シェルプラグイン
-brew "sheldon"
-# NOTE: pure, starship 削除（Powerlevel10k使用のため不要）
-# NOTE: cmatrix, cowsay, sl 削除（ネタコマンド）
-
-# Diff
-brew "difftastic"
-
-# ========================================
-# GUI Applications
-# ========================================
-
-# パスワード管理
 cask "1password"
 cask "1password-cli"
-
-# ターミナル
-cask "ghostty"
-
-# ブラウザ
-cask "arc"
-
-# 開発ツール
-cask "bruno"
-cask "claude"
-cask "dbeaver-community"
-cask "orbstack"
-cask "ngrok"
-
-# ユーティリティ
 cask "alt-tab"
 cask "appcleaner"
+cask "arc"
+cask "bruno"
+cask "claude"
 cask "cleanshot"
+cask "dbeaver-community"
 cask "espanso"
+cask "font-hack-nerd-font"
+cask "font-jetbrains-mono-nerd-font"
+cask "ghostty"
 cask "homerow"
 cask "jordanbaird-ice"
+cask "ngrok"
 cask "omnidisksweeper"
+cask "orbstack"
 cask "raycast"
-
-# コミュニケーション
 cask "readdle-spark"
 cask "slack"
 cask "ticktick"
-
-# フォント
-cask "font-hack-nerd-font"
-cask "font-jetbrains-mono-nerd-font"

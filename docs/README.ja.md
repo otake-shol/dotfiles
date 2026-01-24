@@ -26,12 +26,9 @@ cd ~/dotfiles && bash bootstrap.sh
 | `stow/ssh/` | SSH設定 |
 | `stow/claude/` | Claude Code（agents, commands, hooks） |
 | `stow/nvim/` | Neovim設定 |
-| `stow/tmux/` | tmux設定 |
 | `stow/ghostty/` | Ghosttyターミナル |
 | `stow/bat/`, `stow/atuin/` | bat/atuin設定 |
-| `stow/espanso/` | Espansoスニペット ※ |
 | `Brewfile` | Homebrewパッケージ |
-| `raycast/` | Raycastスクリプト ※ |
 | `antigravity/` | Antigravity設定 ※ |
 | `scripts/` | ユーティリティスクリプト |
 
@@ -41,7 +38,7 @@ cd ~/dotfiles && bash bootstrap.sh
 
 全ツールで **TokyoNight** テーマを統一使用:
 
-- Neovim, tmux, Ghostty, bat
+- Neovim, Ghostty, bat
 
 ## ドキュメント
 

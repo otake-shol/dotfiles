@@ -206,7 +206,6 @@ dotfiles/
 │   ├── git/               # .gitconfig
 │   ├── claude/            # .claude/ (このファイル)
 │   ├── nvim/              # .config/nvim/
-│   ├── tmux/              # .tmux.conf
 │   ├── ghostty/           # .config/ghostty/
 │   ├── bat/               # .config/bat/
 │   └── atuin/             # .config/atuin/

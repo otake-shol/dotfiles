@@ -21,11 +21,6 @@ alias gst="git stash"
 alias gsta="git stash apply"
 alias gundo="git reset --soft HEAD^"
 
-# difftastic（構文認識diff）
-alias gdd="GIT_EXTERNAL_DIFF=difft git diff"          # 構文ベースdiff
-alias gdds="GIT_EXTERNAL_DIFF=difft git diff --staged" # ステージング済みの構文diff
-alias gdlog="GIT_EXTERNAL_DIFF=difft git log -p"      # ログを構文diffで表示
-
 # ========================================
 # GitHub CLI (gh)
 # ========================================

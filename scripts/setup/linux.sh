@@ -69,9 +69,6 @@ install_packages() {
         curl
         wget
         zsh
-        vim
-        tmux
-        tree
         jq
         fzf
         unzip
@@ -102,14 +99,14 @@ install_packages() {
         dnf|yum)
             sudo "$pkg_manager" install -y epel-release 2>/dev/null || true
             sudo "$pkg_manager" install -y \
-                git curl wget zsh vim tmux tree jq fzf unzip \
+                git curl wget zsh jq fzf unzip \
                 fd-find ripgrep bat eza zoxide \
                 2>/dev/null || true
             ;;
         pacman)
             sudo pacman -Syu --noconfirm
             sudo pacman -S --noconfirm \
-                git curl wget zsh vim tmux tree jq fzf unzip \
+                git curl wget zsh jq fzf unzip \
                 fd ripgrep bat eza zoxide \
                 2>/dev/null || true
             ;;

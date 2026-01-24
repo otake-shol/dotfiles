@@ -8,14 +8,6 @@ alias vim="nvim"
 alias nview="nvim -R"              # nvim読み取り専用モード
 alias view="bat"                   # 軽量ファイル閲覧（batに置き換え）
 
-# Tmux
-alias tm="tmux"
-alias tma="tmux a"                 # 最後のセッションにアタッチ
-alias tmat="tmux a -t"             # 指定セッションにアタッチ
-alias tmn="tmux new -s"            # 新規セッション作成
-alias tml="tmux ls"                # セッション一覧
-alias tmk="tmux kill-session -t"   # セッション削除
-
 # ========================================
 # Python
 # ========================================

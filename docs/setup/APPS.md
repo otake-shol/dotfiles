@@ -45,7 +45,6 @@ brew bundle --file=~/dotfiles/Brewfile
 | 項目 | 内容 |
 |------|------|
 | インストール | `brew install --cask raycast` |
-| 設定ファイル | `~/dotfiles/raycast/` |
 | 公式サイト | https://www.raycast.com/ |
 
 **特徴:**
@@ -53,22 +52,6 @@ brew bundle --file=~/dotfiles/Brewfile
 - スニペット・クリップボード履歴
 - 拡張機能エコシステム
 - ウィンドウ管理・計算機
-
-**自作 Script Commands:**
-
-macOS日本語入力のユーザー辞書を管理するスクリプト。
-
-| コマンド | 説明 |
-|---------|------|
-| ユーザー辞書に登録 | 読みと単語を入力して辞書に登録 |
-| ユーザー辞書一覧 | 登録済み単語を一覧表示 |
-| ユーザー辞書から削除 | 読みを入力して辞書から削除 |
-
-**セットアップ:**
-```bash
-# Raycast で "Import Script Command" を実行し、以下を選択
-~/dotfiles/raycast/scripts/
-```
 
 ---
 
@@ -593,24 +576,6 @@ function y() {
 - Git 差分表示
 - 行番号表示
 - ページャー機能
-
----
-
-#### tmux
-
-<img src="https://raw.githubusercontent.com/tmux/tmux/master/logo/tmux-logo-medium.png" width="200" alt="tmux">
-
-> ターミナルマルチプレクサ
-
-| 項目 | 内容 |
-|------|------|
-| インストール | `brew install tmux` |
-| 公式サイト | https://github.com/tmux/tmux |
-
-**特徴:**
-- セッション管理
-- ウィンドウ分割
-- SSH 接続維持
 
 ---
 

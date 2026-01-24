@@ -84,18 +84,14 @@ bash bootstrap.sh --linux-only  # Linux-specific setup only
 | `ls` | `eza` | Icons, Git integration, tree view |
 | `grep` | `rg` | ripgrep - blazingly fast search |
 | `find` | `fd` | User-friendly, fast file finder |
-| `du` | `dust` | Intuitive disk usage visualization |
-| `ps` | `procs` | Modern process viewer |
 | `cd` | `zoxide` | Smart directory jumping |
 | `diff` | `delta` | Beautiful side-by-side diffs |
-| `sed` | `sd` | Intuitive find & replace |
 
 ### Development Environment
 
 | Tool | Purpose |
 |------|---------|
-| **Neovim** | LSP, completion, formatters, linters |
-| **tmux** | Terminal multiplexer with TokyoNight theme |
+| **Neovim** | Minimal config for quick edits |
 | **Ghostty** | Fast, GPU-accelerated terminal |
 | **Git** | Enhanced with delta, git-secrets, hooks |
 | **asdf** | Multi-language version manager |
@@ -133,7 +129,6 @@ dotfiles/
 │   ├── git/                   # Git configuration
 │   ├── claude/                # Claude Code (agents, commands)
 │   ├── nvim/                  # Neovim
-│   ├── tmux/                  # tmux
 │   ├── ghostty/               # Ghostty terminal
 │   ├── bat/                   # bat (syntax highlighting)
 │   └── atuin/                 # Shell history
@@ -153,7 +148,6 @@ dotfiles/
 All tools use the **TokyoNight** color scheme for a unified look:
 
 - Neovim
-- tmux
 - Ghostty
 - bat
 - fzf
@@ -199,7 +193,6 @@ zshbench --profile   # Detailed profiling with zprof
 
 | Directory | Description |
 |-----------|-------------|
-| [raycast/](raycast/) | Raycast script commands (Japanese dictionary) |
 | [antigravity/](antigravity/) | Antigravity editor settings & extensions |
 
 ## Requirements

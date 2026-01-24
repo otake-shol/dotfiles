@@ -54,7 +54,6 @@ make install-zsh
 make install-git
 make install-claude
 make install-nvim
-make install-tmux
 make install-ghostty
 ```
 

@@ -81,15 +81,6 @@ alias his="history"
 alias df="df -h"
 alias top="top -o cpu"
 
-# モダンCLIツール（従来コマンドの高機能代替）
-alias du="dust"                    # ディスク使用量可視化
-alias dui="dust -r"                # 逆順（小さい順）
-alias ps="procs"                   # プロセス表示
-alias pst="procs --tree"           # プロセスツリー
-alias psg="procs --or"             # プロセス検索
-alias sdr="sd"                     # sd (Rust製の高速置換) ※sedとは構文が異なる
-alias bench="hyperfine"            # コマンドベンチマーク
-
 # ネットワーク
 alias myip="curl -s ifconfig.me"
 alias localip="ipconfig getifaddr en0"
@@ -136,22 +127,11 @@ alias bathelp="bat --help"           # batのヘルプ
 alias fp="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
 
 # ========================================
-# AI駆動開発ツール
+# 開発ツール
 # ========================================
-
-# ドキュメント閲覧
-alias md="glow"                        # マークダウン表示
-alias mdp="glow -p"                    # ページャーモード
-
-# ファイル監視・自動実行（TDD用）
-alias watch="watchexec"
-alias watchtest="watchexec -e ts,js,py 'npm test'"
 
 # コード統計
 alias loc="tokei"                      # Lines of Code
-
-# HTTPクライアント
-alias http="https"                     # HTTPie（HTTPS優先）
 
 # ========================================
 # エイリアス管理

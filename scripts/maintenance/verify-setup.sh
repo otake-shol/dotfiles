@@ -27,7 +27,6 @@ verify_symlinks() {
         "$HOME/.aliases:stow/zsh/.aliases"
         "$HOME/.gitconfig:stow/git/.gitconfig"
         "$HOME/.config/nvim:stow/nvim/.config/nvim"
-        "$HOME/.tmux.conf:stow/tmux/.tmux.conf"
         "$HOME/.config/ghostty:stow/ghostty/.config/ghostty"
         "$HOME/.tool-versions:stow/zsh/.tool-versions"
         "$HOME/.p10k.zsh:stow/zsh/.p10k.zsh"
@@ -102,10 +101,7 @@ verify_optional_tools() {
 
     local tools=(
         "delta:Git diff"
-        "dust:ディスク使用量"
-        "procs:プロセス表示"
         "tokei:コード統計"
-        "glow:Markdown表示"
         "atuin:シェル履歴"
         "gh:GitHub CLI"
         "direnv:環境変数管理"
@@ -189,13 +185,6 @@ verify_configs() {
         check_pass "Powerlevel10k テーマ"
     else
         check_warn "Powerlevel10k 未インストール"
-    fi
-
-    # tmux plugin manager
-    if [[ -d "$HOME/.tmux/plugins/tpm" ]]; then
-        check_pass "TPM (tmux plugin manager)"
-    else
-        check_warn "TPM 未インストール"
     fi
 }
 

@@ -23,7 +23,7 @@ echo -e "${BLUE}========================================${NC}"
 # ========================================
 # 1. Homebrew
 # ========================================
-echo -e "\n${YELLOW}[1/5] Homebrew...${NC}"
+echo -e "\n${YELLOW}[1/4] Homebrew...${NC}"
 if command -v brew &> /dev/null; then
     brew update && brew upgrade && brew cleanup
     UPDATED+=("Homebrew")
@@ -35,7 +35,7 @@ fi
 # ========================================
 # 2. Oh My Zsh
 # ========================================
-echo -e "\n${YELLOW}[2/5] Oh My Zsh...${NC}"
+echo -e "\n${YELLOW}[2/4] Oh My Zsh...${NC}"
 if [ -d "$HOME/.oh-my-zsh" ]; then
     cd "$HOME/.oh-my-zsh"
     if git pull --rebase origin master; then
@@ -52,7 +52,7 @@ fi
 # ========================================
 # 3. Zsh Plugins
 # ========================================
-echo -e "\n${YELLOW}[3/5] Zshプラグイン...${NC}"
+echo -e "\n${YELLOW}[3/4] Zshプラグイン...${NC}"
 ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 
 # Powerlevel10k
@@ -84,33 +84,13 @@ UPDATED+=("Zshプラグイン")
 # ========================================
 # 4. asdf
 # ========================================
-echo -e "\n${YELLOW}[4/5] asdf...${NC}"
+echo -e "\n${YELLOW}[4/4] asdf...${NC}"
 if command -v asdf &> /dev/null; then
     asdf plugin update --all 2>/dev/null || true
     UPDATED+=("asdf plugins")
     echo -e "${GREEN}✓ asdfプラグイン更新完了${NC}"
 else
     SKIPPED+=("asdf (未インストール)")
-fi
-
-# ========================================
-# 5. TPM (tmux plugin manager)
-# ========================================
-echo -e "\n${YELLOW}[5/5] TPM (tmuxプラグイン)...${NC}"
-TPM_DIR="$HOME/.tmux/plugins/tpm"
-if [ -d "$TPM_DIR" ]; then
-    cd "$TPM_DIR"
-    if git pull --quiet; then
-        # プラグイン更新
-        "$TPM_DIR/bin/update_plugins" all 2>/dev/null || true
-        UPDATED+=("TPM")
-        echo -e "${GREEN}✓ TPM更新完了${NC}"
-    else
-        FAILED+=("TPM")
-        echo -e "${RED}✗ TPM更新失敗${NC}"
-    fi
-else
-    SKIPPED+=("TPM (未インストール)")
 fi
 
 # ========================================

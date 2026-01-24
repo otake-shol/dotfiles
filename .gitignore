@@ -13,12 +13,6 @@ Brewfile.lock.json
 # Claude Code local settings
 .claude/settings.local.json
 
-# Raycast local snippets (contains personal info)
-raycast/snippets.local.json
-
-# Espanso local snippets (personal words)
-espanso/match/words.yml
-
 # Claude Code plugins (user-specific, auto-generated)
 .claude/plugins/marketplaces/
 .claude/plugins/known_marketplaces.json

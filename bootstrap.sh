@@ -624,7 +624,7 @@ stow_package() {
 }
 
 # Stow パッケージのインストール
-STOW_PACKAGES=(zsh git tmux nvim ghostty bat atuin claude gh ssh)
+STOW_PACKAGES=(zsh git nvim ghostty bat atuin claude gh ssh)
 
 for pkg in "${STOW_PACKAGES[@]}"; do
     stow_package "$pkg"
@@ -638,20 +638,6 @@ if [ "$DRY_RUN" != true ]; then
     [ -f ~/.ssh/config ] && chmod 600 ~/.ssh/config
 else
     echo -e "${CYAN}[DRY RUN] Would set ssh permissions${NC}"
-fi
-
-# espanso（macOS/Linuxでパスが異なるためStow対象外）
-if [ "$IS_MACOS" = true ]; then
-    ESPANSO_CONFIG_DIR="$HOME/Library/Application Support/espanso"
-else
-    ESPANSO_CONFIG_DIR="$HOME/.config/espanso"
-fi
-if command -v espanso &> /dev/null || [ -d "$ESPANSO_CONFIG_DIR" ]; then
-    mkdir -p "$ESPANSO_CONFIG_DIR/match"
-    safe_link ~/dotfiles/stow/espanso/.config/espanso/match/ai-prompts.yml "$ESPANSO_CONFIG_DIR/match/ai-prompts.yml"
-    echo -e "${GREEN}✓ espanso設定をリンクしました${NC}"
-else
-    echo -e "${YELLOW}⚠ espansoがインストールされていません。スキップします${NC}"
 fi
 
 # antigravity (macOS only)
@@ -752,16 +738,6 @@ if [ ! -d "$TOKYONIGHT_DIR" ]; then
     echo -e "${GREEN}✓ Neovim TokyoNightテーマをインストールしました${NC}"
 else
     echo -e "${GREEN}✓ Neovim TokyoNightテーマはインストール済みです${NC}"
-fi
-
-# TPM（tmuxプラグインマネージャー）
-TPM_DIR="$HOME/.tmux/plugins/tpm"
-if [ ! -d "$TPM_DIR" ]; then
-    git clone --depth=1 https://github.com/tmux-plugins/tpm "$TPM_DIR"
-    echo -e "${GREEN}✓ TPM（tmuxプラグインマネージャー）をインストールしました${NC}"
-    echo -e "${YELLOW}  ※ tmux起動後に prefix + I でプラグインをインストールしてください${NC}"
-else
-    echo -e "${GREEN}✓ TPMはインストール済みです${NC}"
 fi
 
 # bat TokyoNightテーマ

@@ -5,7 +5,7 @@
 # 使用方法: dothelp [カテゴリ]
 # カテゴリ: all, core, git, node, dev, fzf, tools
 
-set -e
+set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"

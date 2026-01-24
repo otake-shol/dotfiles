@@ -129,7 +129,10 @@ install_linuxbrew() {
     echo -e "${BLUE}Linuxbrewを使うと、macOSと同じBrewfileでツールを管理できます${NC}"
     read -r answer
     if [ "$answer" = "y" ]; then
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        if ! /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; then
+            echo -e "${RED}✗ Linuxbrewのインストールに失敗しました${NC}"
+            return 1
+        fi
 
         # PATHに追加
         BREW_PREFIX="/home/linuxbrew/.linuxbrew"
@@ -186,9 +189,12 @@ install_rust_tools() {
         echo -e "${YELLOW}Rustをインストールしますか? (モダンCLIツール用) (y/n)${NC}"
         read -r answer
         if [ "$answer" = "y" ]; then
-            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+            if ! curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y; then
+                echo -e "${RED}✗ Rustのインストールに失敗しました${NC}"
+                return 1
+            fi
             # shellcheck source=/dev/null
-            source "$HOME/.cargo/env"
+            [[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
         else
             return
         fi

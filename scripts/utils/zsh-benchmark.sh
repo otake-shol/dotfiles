@@ -6,6 +6,10 @@
 
 set -euo pipefail
 
+# 一時ファイルのクリーンアップ用trap
+TEMP_ZSHRC=""
+trap 'rm -f "$TEMP_ZSHRC" 2>/dev/null' EXIT INT TERM
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # 共通ライブラリ読み込み

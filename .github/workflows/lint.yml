@@ -68,7 +68,6 @@ jobs:
           npm install -g @taplo/cli
 
       - name: Validate TOML files
-        continue-on-error: true
         run: |
           find . -name "*.toml" -type f ! -path "./.git/*" | while read f; do
             echo "Validating $f"
@@ -93,7 +92,6 @@ jobs:
           done
 
       - name: Dry run bootstrap
-        continue-on-error: true
         run: bash bootstrap.sh --dry-run --skip-apps
         env:
           CI: true

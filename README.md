@@ -77,7 +77,6 @@ fshow                # コミット履歴ブラウズ
 |---------|------|
 | [SETUP.md](docs/setup/SETUP.md) | 詳細セットアップ手順 |
 | [APPS.md](docs/setup/APPS.md) | アプリケーション一覧 |
-| [mcp-servers-guide.md](docs/integrations/mcp-servers-guide.md) | MCPサーバー設定 |
 
 ## 動作環境
 

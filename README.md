@@ -8,16 +8,10 @@
   <a href="https://github.com/otake-shol/dotfiles/actions/workflows/lint.yml">
     <img src="https://github.com/otake-shol/dotfiles/actions/workflows/lint.yml/badge.svg" alt="Lint">
   </a>
-  <a href="https://github.com/otake-shol/dotfiles/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/otake-shol/dotfiles" alt="License">
-  </a>
   <a href="https://github.com/otake-shol/dotfiles/commits/master">
     <img src="https://img.shields.io/github/last-commit/otake-shol/dotfiles" alt="Last Commit">
   </a>
   <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-blue" alt="Platform">
-  <a href="https://github.com/otake-shol/dotfiles/pulls">
-    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome">
-  </a>
 </p>
 
 <p align="center">
@@ -217,16 +211,6 @@ zshbench --profile   # Detailed profiling with zprof
 - Windows 10/11 with WSL2
 - Ubuntu or Debian distribution recommended
 
-## Contributing
-
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
 ## Acknowledgments
 
 - [Oh My Zsh](https://ohmyz.sh/) - Zsh framework
@@ -234,10 +218,6 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for gu
 - [TokyoNight](https://github.com/folke/tokyonight.nvim) - Color scheme
 - [Modern Unix](https://github.com/ibraheemdev/modern-unix) - Tool inspiration
 - [GitHub does dotfiles](https://dotfiles.github.io/) - Community resources
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 

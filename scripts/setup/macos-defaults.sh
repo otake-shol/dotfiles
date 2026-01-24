@@ -131,12 +131,16 @@ echo -e "${GREEN}✓ Hot Corners: 左上=Mission Control, 右上=デスクトッ
 # Safari（開発者向け）
 # ========================================
 # 開発者メニューを有効化
-defaults write com.apple.Safari IncludeDevelopMenu -bool true
-defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
-defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true
-# すべてのWebページでWebインスペクタを許可
-defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
-echo -e "${GREEN}✓ Safari: 開発者メニュー有効化${NC}"
+# ※ macOS 15以降はSandbox制限により設定できない場合があります
+if defaults write com.apple.Safari IncludeDevelopMenu -bool true 2>/dev/null; then
+    defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true 2>/dev/null || true
+    defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true 2>/dev/null || true
+    # すべてのWebページでWebインスペクタを許可
+    defaults write NSGlobalDomain WebKitDeveloperExtras -bool true 2>/dev/null || true
+    echo -e "${GREEN}✓ Safari: 開発者メニュー有効化${NC}"
+else
+    echo -e "${YELLOW}⚠ Safari: macOS 15以降はシステム環境設定から手動で設定してください${NC}"
+fi
 
 # ========================================
 # セキュリティ

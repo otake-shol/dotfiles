@@ -1,0 +1,8 @@
+# ShellCheck設定
+# https://www.shellcheck.net/wiki/
+
+# SC1091: source先のファイルが見つからない（動的パス使用のため）
+disable=SC1091
+
+# SC2119: 関数呼び出し時に引数なし（stop_spinner等、意図的な設計）
+disable=SC2119

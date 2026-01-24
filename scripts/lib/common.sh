@@ -140,18 +140,72 @@ print_separator() {
 # ========================================
 # ユーティリティ関数
 # ========================================
-# コマンド存在確認
+
+# インストール方法のヒント（コマンド名 -> インストール方法）
+_get_install_hint() {
+    local cmd="$1"
+    local os_type
+    os_type="$(uname -s)"
+
+    # macOS用のインストール方法
+    local -A macos_hints=(
+        [git]="xcode-select --install"
+        [brew]="/bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
+        [stow]="brew install stow"
+        [zsh]="brew install zsh"
+        [fzf]="brew install fzf"
+        [rg]="brew install ripgrep"
+        [fd]="brew install fd"
+        [bat]="brew install bat"
+        [eza]="brew install eza"
+        [zoxide]="brew install zoxide"
+        [atuin]="brew install atuin"
+        [direnv]="brew install direnv"
+        [gh]="brew install gh"
+        [jq]="brew install jq"
+        [shellcheck]="brew install shellcheck"
+        [bats]="brew install bats-core"
+        [nix]="curl -L https://nixos.org/nix/install | sh"
+    )
+
+    # Linux用のインストール方法
+    local -A linux_hints=(
+        [git]="sudo apt install git  # または yum/dnf/pacman"
+        [stow]="sudo apt install stow"
+        [zsh]="sudo apt install zsh"
+        [fzf]="sudo apt install fzf  # または git clone"
+        [rg]="sudo apt install ripgrep"
+        [fd]="sudo apt install fd-find"
+        [bat]="sudo apt install bat"
+        [jq]="sudo apt install jq"
+        [shellcheck]="sudo apt install shellcheck"
+        [nix]="curl -L https://nixos.org/nix/install | sh"
+    )
+
+    if [[ "$os_type" == "Darwin" ]]; then
+        echo "${macos_hints[$cmd]:-brew install $cmd}"
+    else
+        echo "${linux_hints[$cmd]:-パッケージマネージャーでインストールしてください}"
+    fi
+}
+
+# コマンド存在確認（インストールヒント付き）
 require_command() {
     local cmd="$1"
-    local msg="${2:-$cmd が必要です}"
+    local msg="${2:-}"
     if ! command -v "$cmd" &>/dev/null; then
-        log_error "$msg"
+        if [[ -n "$msg" ]]; then
+            log_error "$msg"
+        else
+            log_error "$cmd が必要です"
+            log_info "インストール方法: $(_get_install_hint "$cmd")"
+        fi
         return 1
     fi
     return 0
 }
 
-# 複数コマンド存在確認
+# 複数コマンド存在確認（インストールヒント付き）
 require_commands() {
     local missing=()
     for cmd in "$@"; do
@@ -161,8 +215,44 @@ require_commands() {
     done
     if [[ ${#missing[@]} -gt 0 ]]; then
         log_error "必要なコマンドがインストールされていません: ${missing[*]}"
+        echo ""
+        for cmd in "${missing[@]}"; do
+            log_info "  $cmd: $(_get_install_hint "$cmd")"
+        done
         return 1
     fi
+    return 0
+}
+
+# バージョン要件チェック
+# 使用例: require_version "node" "18.0.0" "node --version"
+require_version() {
+    local cmd="$1"
+    local min_version="$2"
+    local version_cmd="${3:-$cmd --version}"
+
+    if ! command -v "$cmd" &>/dev/null; then
+        log_error "$cmd がインストールされていません"
+        log_info "インストール方法: $(_get_install_hint "$cmd")"
+        return 1
+    fi
+
+    # バージョン取得（数字部分のみ抽出）
+    local current_version
+    current_version=$(eval "$version_cmd" 2>/dev/null | grep -oE '[0-9]+\.[0-9]+(\.[0-9]+)?' | head -1)
+
+    if [[ -z "$current_version" ]]; then
+        log_warn "$cmd のバージョンを取得できませんでした"
+        return 0  # バージョン取得失敗は警告のみ
+    fi
+
+    # バージョン比較（シンプルな文字列比較）
+    if [[ "$(printf '%s\n' "$min_version" "$current_version" | sort -V | head -n1)" != "$min_version" ]]; then
+        log_error "$cmd のバージョンが古いです: $current_version (必要: >= $min_version)"
+        return 1
+    fi
+
+    log_debug "$cmd バージョン確認OK: $current_version (>= $min_version)"
     return 0
 }
 

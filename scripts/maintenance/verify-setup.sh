@@ -194,11 +194,11 @@ verify_configs() {
 verify_git_config() {
     print_header "Git設定検証"
 
-    # ユーザー設定
+    # ユーザー設定（include経由の設定も取得するため--globalなしで実行）
     local name
     local email
-    name=$(git config --global user.name 2>/dev/null || echo "")
-    email=$(git config --global user.email 2>/dev/null || echo "")
+    name=$(git -C "$DOTFILES_DIR" config user.name 2>/dev/null || echo "")
+    email=$(git -C "$DOTFILES_DIR" config user.email 2>/dev/null || echo "")
 
     if [[ -n "$name" ]]; then
         check_pass "Git user.name: $name"

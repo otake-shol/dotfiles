@@ -1,7 +1,11 @@
 #!/bin/bash
-# update-all.sh - 開発環境の一括更新スクリプト
-# 使用方法: bash scripts/update-all.sh
-# エイリアス: dotupdate (推奨)
+# update-all.sh - 開発環境の一括更新スクリプト（実行）
+# 使用方法: bash scripts/maintenance/update-all.sh
+# エイリアス: dotupdate
+#
+# 役割分担:
+#   check-updates.sh (dotup)   - 更新があるか確認するのみ（変更なし）
+#   update-all.sh (dotupdate)  - 実際に更新を実行する
 
 set -euo pipefail
 

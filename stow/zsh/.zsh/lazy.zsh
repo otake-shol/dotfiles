@@ -10,11 +10,13 @@ _asdf_loaded=false
 _asdf_init() {
   if [[ "$_asdf_loaded" = false ]]; then
     _asdf_loaded=true
+    local asdf_path
     if [[ $(uname -m) == "arm64" ]]; then
-      . /opt/homebrew/opt/asdf/libexec/asdf.sh
+      asdf_path="/opt/homebrew/opt/asdf/libexec/asdf.sh"
     else
-      . /usr/local/opt/asdf/libexec/asdf.sh
+      asdf_path="/usr/local/opt/asdf/libexec/asdf.sh"
     fi
+    [[ -f "$asdf_path" ]] && source "$asdf_path"
   fi
 }
 
@@ -53,12 +55,13 @@ fi
 # ========================================
 if command -v atuin &>/dev/null; then
   _atuin_cache="${XDG_CACHE_HOME:-$HOME/.cache}/atuin-init.zsh"
-  if [[ ! -f "$_atuin_cache" ]] || [[ $(find "$_atuin_cache" -mtime +7 2>/dev/null) ]]; then
+  _cache_ttl="${DOTFILES_CACHE_TTL_DAYS:-7}"
+  if [[ ! -f "$_atuin_cache" ]] || [[ $(find "$_atuin_cache" -mtime +"$_cache_ttl" 2>/dev/null) ]]; then
     mkdir -p "$(dirname "$_atuin_cache")"
     atuin init zsh > "$_atuin_cache" 2>/dev/null
   fi
   source "$_atuin_cache"
-  unset _atuin_cache
+  unset _atuin_cache _cache_ttl
 fi
 
 # ========================================

@@ -1,21 +1,34 @@
 # ========================================
 # dotfiles エイリアス設定
 # ========================================
-# カテゴリ別に分割されたエイリアスファイルを読み込み
+# カテゴリ別に分割されたファイルを読み込み
 #
 # 構成:
-#   ~/.zsh/aliases/core.zsh - 基本操作、システム、ネットワーク
-#   ~/.zsh/aliases/git.zsh  - Git、GitHub CLI
-#   ~/.zsh/aliases/node.zsh - npm、yarn、pnpm、bun
-#   ~/.zsh/aliases/dev.zsh  - エディタ、Python、便利関数
+#   ~/.zsh/aliases/   - 純粋なエイリアス定義
+#     core.zsh        - 基本操作、システム、ネットワーク
+#     git.zsh         - Git、GitHub CLI
+#     node.zsh        - npm、yarn、pnpm、bun
+#     dev.zsh         - エディタ、Python
+#
+#   ~/.zsh/functions/ - 関数定義
+#     fzf-functions.zsh   - fzf連携関数（遅延読み込み）
+#     git-functions.zsh   - Git関連関数
+#     util-functions.zsh  - ユーティリティ関数
 
-ALIASES_DIR="${HOME}/.zsh/aliases"
+ZSH_CONFIG_DIR="${HOME}/.zsh"
 
-# 分割ファイルの読み込み
-for alias_file in "$ALIASES_DIR"/*.zsh; do
+# 関数ファイルの読み込み（fzf-functions以外、fzfはlazy.zshで遅延読み込み）
+for func_file in "$ZSH_CONFIG_DIR/functions"/{git,util}-functions.zsh; do
+    if [[ -f "$func_file" ]]; then
+        source "$func_file"
+    fi
+done
+
+# エイリアスファイルの読み込み
+for alias_file in "$ZSH_CONFIG_DIR/aliases"/*.zsh; do
     if [[ -f "$alias_file" ]]; then
         source "$alias_file"
     fi
 done
 
-unset ALIASES_DIR
+unset ZSH_CONFIG_DIR func_file alias_file

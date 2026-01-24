@@ -1,6 +1,11 @@
 #!/bin/bash
-# check-updates.sh - dotfilesとBrewの更新状況を確認
+# check-updates.sh - dotfilesとBrewの更新状況を確認（読み取り専用）
 # 使用方法: bash scripts/check-updates.sh
+# エイリアス: dotup
+#
+# 役割分担:
+#   check-updates.sh (dotup)   - 更新があるか確認するのみ（変更なし）
+#   update-all.sh (dotupdate)  - 実際に更新を実行する
 
 set -euo pipefail
 

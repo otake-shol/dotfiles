@@ -29,29 +29,5 @@ alias brewdeps="brew deps --tree"  # 依存関係ツリー表示
 # ========================================
 # 便利関数
 # ========================================
-
-# ディレクトリ作成して移動
-mkcd() { mkdir -p "$1" && cd "$1"; }
-
-# ファイル作成して編集
-touchedit() { touch "$1" && nvim "$1"; }
-
-# ポート使用プロセス検索
-port() { lsof -i :"$1"; }
-
-# クリップボードのJSONを整形
-jsonf() { pbpaste | jq '.' | pbcopy && pbpaste; }
-
-# 一時ディレクトリで作業
-tmpcd() { cd "$(mktemp -d)"; }
-
-# base64エンコード/デコード
-b64e() { echo -n "$1" | base64; }
-b64d() { echo -n "$1" | base64 -d; }
-
-# URLエンコード/デコード
-urle() { python3 -c "import urllib.parse; print(urllib.parse.quote('$1'))"; }
-urld() { python3 -c "import urllib.parse; print(urllib.parse.unquote('$1'))"; }
-
-# パス内のコマンドを検索
-pathfind() { echo $PATH | tr ':' '\n' | xargs -I {} find {} -name "*$1*" 2>/dev/null; }
+# mkcd, touchedit, port, jsonf, tmpcd, b64e, b64d, urle, urld, pathfind
+# は functions/util-functions.zsh に定義

@@ -39,13 +39,4 @@ alias ghrw="gh run watch"              # Workflow実行を監視
 # ========================================
 # 便利なGit関数
 # ========================================
-
-# Gitルートに移動
-gitroot() {
-  local root
-  root=$(git rev-parse --show-toplevel 2>/dev/null) || {
-    echo "Error: Gitリポジトリ内ではありません" >&2
-    return 1
-  }
-  cd "$root"
-}
+# gitroot関数は functions/git-functions.zsh に定義

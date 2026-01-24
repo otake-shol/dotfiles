@@ -27,12 +27,13 @@ export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
 # ========================================
 if command -v zoxide &>/dev/null; then
   _zoxide_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zoxide-init.zsh"
-  if [[ ! -f "$_zoxide_cache" ]] || [[ $(find "$_zoxide_cache" -mtime +7 2>/dev/null) ]]; then
+  _cache_ttl="${DOTFILES_CACHE_TTL_DAYS:-7}"
+  if [[ ! -f "$_zoxide_cache" ]] || [[ $(find "$_zoxide_cache" -mtime +"$_cache_ttl" 2>/dev/null) ]]; then
     mkdir -p "$(dirname "$_zoxide_cache")"
     zoxide init zsh > "$_zoxide_cache" 2>/dev/null
   fi
   source "$_zoxide_cache"
-  unset _zoxide_cache
+  unset _zoxide_cache _cache_ttl
 fi
 
 # ========================================
@@ -96,10 +97,12 @@ _dotfiles_update_reminder() {
   fi
 }
 
-# 起動時にチェック（1日1回のみ）
+# 起動時にチェック（キャッシュTTL期間ごと）
 _dotfiles_reminder_cache="$HOME/.cache/dotfiles-reminder"
-if [[ ! -f "$_dotfiles_reminder_cache" ]] || [[ $(find "$_dotfiles_reminder_cache" -mtime +7 2>/dev/null) ]]; then
+_cache_ttl="${DOTFILES_CACHE_TTL_DAYS:-7}"
+if [[ ! -f "$_dotfiles_reminder_cache" ]] || [[ $(find "$_dotfiles_reminder_cache" -mtime +"$_cache_ttl" 2>/dev/null) ]]; then
   _dotfiles_update_reminder
   mkdir -p "$(dirname "$_dotfiles_reminder_cache")"
   touch "$_dotfiles_reminder_cache"
 fi
+unset _cache_ttl

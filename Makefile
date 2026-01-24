@@ -8,13 +8,11 @@
 #   make help         # ヘルプ表示
 
 STOW := stow
-STOW_FLAGS := -v --target=$(HOME) --restow
+STOW_DIR := stow
+STOW_FLAGS := -v --target=$(HOME) --dir=$(STOW_DIR) --restow
 
 # Stowパッケージ一覧
 PACKAGES := zsh git nvim tmux ghostty bat atuin claude
-
-# macOS専用パッケージ
-MACOS_PACKAGES := antigravity
 
 # デフォルトターゲット
 .PHONY: help
@@ -35,57 +33,42 @@ help:
 # パッケージ一覧表示
 .PHONY: list
 list:
-	@echo "利用可能なパッケージ:"
-	@echo "  共通: $(PACKAGES)"
-	@echo "  macOS: $(MACOS_PACKAGES)"
+	@echo "利用可能なパッケージ: $(PACKAGES)"
 
 # ドライラン
 .PHONY: check
 check:
 	@for pkg in $(PACKAGES); do \
 		echo "=== $$pkg ==="; \
-		$(STOW) --simulate $(STOW_FLAGS) stow/$$pkg 2>&1 || true; \
+		$(STOW) --simulate $(STOW_FLAGS) $$pkg 2>&1 || true; \
 	done
 
 # 全パッケージインストール
 .PHONY: install
 install: $(addprefix install-,$(PACKAGES))
 	@echo "✓ 全パッケージをインストールしました"
-ifeq ($(shell uname -s),Darwin)
-	@$(MAKE) install-macos
-endif
 
 # 全パッケージアンインストール
 .PHONY: uninstall
 uninstall: $(addprefix uninstall-,$(PACKAGES))
 	@echo "✓ 全パッケージをアンインストールしました"
-ifeq ($(shell uname -s),Darwin)
-	@$(MAKE) uninstall-macos
-endif
-
-# macOS専用パッケージ
-.PHONY: install-macos
-install-macos: $(addprefix install-,$(MACOS_PACKAGES))
-
-.PHONY: uninstall-macos
-uninstall-macos: $(addprefix uninstall-,$(MACOS_PACKAGES))
 
 # 個別パッケージのインストール/アンインストール
 .PHONY: install-%
 install-%:
-	@if [ -d "stow/$*" ]; then \
+	@if [ -d "$(STOW_DIR)/$*" ]; then \
 		echo "Installing $*..."; \
-		$(STOW) $(STOW_FLAGS) stow/$*; \
+		$(STOW) $(STOW_FLAGS) $*; \
 		echo "✓ $* をインストールしました"; \
 	else \
-		echo "⚠ パッケージ stow/$* が見つかりません"; \
+		echo "⚠ パッケージ $(STOW_DIR)/$* が見つかりません"; \
 	fi
 
 .PHONY: uninstall-%
 uninstall-%:
-	@if [ -d "stow/$*" ]; then \
+	@if [ -d "$(STOW_DIR)/$*" ]; then \
 		echo "Uninstalling $*..."; \
-		$(STOW) -D $(STOW_FLAGS) stow/$*; \
+		$(STOW) -D $(STOW_FLAGS) $*; \
 		echo "✓ $* をアンインストールしました"; \
 	fi
 

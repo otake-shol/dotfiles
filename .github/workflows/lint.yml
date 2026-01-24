@@ -135,7 +135,15 @@ jobs:
 
       - name: Check zsh files syntax
         run: |
-          for f in aliases/*.zsh .zshrc; do
+          # Check main zsh files
+          for f in stow/zsh/.zshrc stow/zsh/.aliases; do
+            if [ -f "$f" ]; then
+              echo "Checking: $f"
+              zsh -n "$f" || exit 1
+            fi
+          done
+          # Check modular zsh files
+          for f in stow/zsh/.zsh/*.zsh stow/zsh/.zsh/aliases/*.zsh stow/zsh/.zsh/functions/*.zsh; do
             if [ -f "$f" ]; then
               echo "Checking: $f"
               zsh -n "$f" || exit 1

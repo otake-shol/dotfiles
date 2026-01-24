@@ -1,91 +1,196 @@
+# Brewfile.full - 全ツール（完全環境用）
+# brew bundle dump で自動生成したものを整理
+# 最終更新: 2025-01
+#
+# 使用方法:
+#   brew bundle --file=Brewfile.full
+#
+# 必須ツールのみは Brewfile を参照
+
+# ========================================
+# Taps
+# ========================================
 tap "homebrew/cask-versions"
 tap "homebrew/services"
 tap "oven-sh/bun"
-brew "apr-util"
-brew "asciinema"
-brew "asdf"
-brew "atuin"
-brew "awscli", link: false
-brew "libssh2"
-brew "bat"
+
+# ========================================
+# CLI Tools - Git関連
+# ========================================
+brew "git"                 # バージョン管理
+brew "gh"                  # GitHub CLI
+brew "git-secrets"         # シークレット誤コミット防止
+brew "git-delta"           # 美しいdiff表示
+brew "git-absorb"          # fixup commit自動化
+brew "lazygit"             # Git TUI
+brew "tig"                 # Git履歴ビューア
+brew "difftastic"          # 構文認識diff
+
+# ========================================
+# CLI Tools - シェル・ターミナル
+# ========================================
+brew "atuin"               # シェル履歴管理
+brew "tmux"                # ターミナルマルチプレクサ
+brew "fzf"                 # ファジーファインダー
+brew "zoxide"              # 高速ディレクトリジャンプ
+brew "direnv"              # ディレクトリ別環境変数
+
+# ========================================
+# CLI Tools - ファイル操作・検索
+# ========================================
+brew "bat"                 # catの高機能代替
+brew "eza"                 # lsの高機能代替
+brew "fd"                  # findの高速代替
+brew "ripgrep"             # grepの超高速代替
+brew "yazi"                # ターミナルファイルマネージャー
+brew "ffmpegthumbnailer"   # 動画サムネイル（yazi依存）
+brew "poppler"             # PDFプレビュー（yazi依存）
+brew "tree"                # ディレクトリツリー表示
+brew "trash"               # 安全なファイル削除
+
+# ========================================
+# CLI Tools - モダン代替コマンド
+# ========================================
+brew "dust"                # du代替（ディスク使用量可視化）
+brew "procs"               # ps代替（プロセス表示）
+brew "sd"                  # sed代替（正規表現置換）
+brew "hyperfine"           # コマンドベンチマーク
+
+# ========================================
+# CLI Tools - エディタ
+# ========================================
+brew "neovim"              # モダンなVim
+brew "vim"                 # Vim
+
+# ========================================
+# CLI Tools - 開発ツール
+# ========================================
+brew "asdf"                # 多言語バージョン管理
+brew "stow"                # シンボリックリンク管理
+brew "jq"                  # JSON処理
+brew "yq"                  # YAML/TOML処理
+brew "curl"                # HTTPクライアント
+brew "wget"                # ファイルダウンロード
+brew "httpie"              # モダンHTTPクライアント
+brew "watchexec"           # ファイル監視・自動実行
+brew "tokei"               # コード統計
+brew "fswatch"             # ファイル変更監視
+brew "imagemagick"         # 画像処理
+
+# ========================================
+# CLI Tools - ドキュメント・ヘルプ
+# ========================================
+brew "glow"                # マークダウンレンダラー
+brew "tldr"                # manページ簡潔版
+brew "nb"                  # コマンドラインメモ
+
+# ========================================
+# CLI Tools - Lint・フォーマッタ
+# ========================================
+brew "shellcheck"          # シェルスクリプトlint
+brew "markdownlint-cli"    # Markdownリンター
+brew "yamllint"            # YAMLリンター
+brew "lefthook"            # Git hooks管理
+
+# ========================================
+# CLI Tools - セキュリティ・暗号化
+# ========================================
+brew "gnupg"               # GPG暗号化
+brew "pinentry-mac"        # GPG PIN入力
+brew "mkcert"              # ローカルHTTPS証明書
+brew "nss"                 # mkcert Firefox対応
+brew "libfido2"            # FIDO2認証
+
+# ========================================
+# CLI Tools - クラウド・インフラ
+# ========================================
+brew "awscli", link: false # AWS CLI
+
+# ========================================
+# CLI Tools - 録画・デモ
+# ========================================
+brew "asciinema"           # ターミナル録画
+brew "vhs"                 # ターミナルデモGIF生成（未インストール時はBrewfileから）
+
+# ========================================
+# CLI Tools - システム
+# ========================================
+brew "btop"                # システムモニター
+brew "mas"                 # Mac App Store CLI
+
+# ========================================
+# CLI Tools - ランタイム・言語
+# ========================================
+brew "oven-sh/bun/bun"     # 高速JS/TSランタイム
+brew "python@3.10"         # Python 3.10
+brew "python@3.11"         # Python 3.11
+brew "uv"                  # 高速Pythonパッケージマネージャー
+brew "perl"                # Perl
+brew "yarn", link: false   # Yarn（asdf管理のため未リンク）
+
+# ========================================
+# CLI Tools - ライブラリ（依存関係）
+# ========================================
+brew "apr-util"            # Apache Portable Runtime
 brew "berkeley-db", link: true
-brew "btop"
-brew "rtmpdump"
-brew "curl"
-brew "freetds"
-brew "libzip"
-brew "difftastic"
-brew "direnv"
-brew "dust"
-brew "eza"
-brew "fd"
-brew "ffmpegthumbnailer"
-brew "fswatch"
-brew "fzf"
-brew "gh"
-brew "git"
-brew "git-absorb"
-brew "git-delta"
-brew "git-secrets"
-brew "glow"
-brew "libevent"
-brew "gnupg"
-brew "httpie"
-brew "hyperfine"
-brew "imagemagick"
-brew "jq"
-brew "lazygit"
-brew "lefthook"
-brew "libfido2"
-brew "markdownlint-cli"
-brew "mkcert"
-brew "ripgrep"
-brew "tig"
-brew "nb"
-brew "neovim"
-brew "nss"
-brew "perl"
-brew "pinentry-mac"
-brew "poppler"
-brew "procs"
-brew "python@3.10"
-brew "python@3.11"
-brew "tcl-tk"
-brew "sd"
-brew "shellcheck"
-brew "stow"
-brew "tldr"
-brew "tmux"
-brew "tokei"
-brew "trash"
-brew "tree"
-brew "uv"
-brew "vim"
-brew "watchexec"
-brew "wget"
-brew "yamllint"
-brew "yarn", link: false
-brew "yazi"
-brew "yq"
-brew "zoxide"
-cask "1password"
-cask "1password-cli"
-cask "alt-tab"
-cask "appcleaner"
-cask "arc"
-cask "bruno"
-cask "claude"
-cask "cleanshot"
-cask "dbeaver-community"
-cask "espanso"
+brew "freetds"             # TDSプロトコル
+brew "libevent"            # イベント通知
+brew "libssh2"             # SSH2プロトコル
+brew "libzip"              # ZIP圧縮
+brew "rtmpdump"            # RTMPストリーミング
+brew "tcl-tk"              # Tcl/Tk
+
+# ========================================
+# GUI Apps - ターミナル
+# ========================================
+cask "ghostty"             # 高速ターミナル
+
+# ========================================
+# GUI Apps - ブラウザ
+# ========================================
+cask "arc"                 # モダンChromiumブラウザ
+
+# ========================================
+# GUI Apps - 開発ツール
+# ========================================
+cask "claude"              # Claude AI
+cask "dbeaver-community"   # データベースGUI
+cask "bruno"               # APIクライアント
+# cask "orbstack"          # Docker代替（必要に応じて）
+# cask "ngrok"             # トンネリング（必要に応じて）
+
+# ========================================
+# GUI Apps - ユーティリティ
+# ========================================
+cask "1password"           # パスワードマネージャー
+cask "1password-cli"       # 1Password CLI
+cask "alt-tab"             # タスクスイッチャー
+cask "appcleaner"          # アプリ完全削除
+cask "cleanshot"           # スクリーンショット
+cask "espanso"             # テキスト展開
+cask "homerow"             # キーボードナビゲーション
+cask "jordanbaird-ice"     # メニューバー管理
+cask "raycast"             # ランチャー
+cask "omnidisksweeper"     # ディスク使用量確認
+
+# ========================================
+# GUI Apps - コミュニケーション
+# ========================================
+cask "slack"               # チャット
+cask "readdle-spark"       # メール
+
+# ========================================
+# GUI Apps - 生産性
+# ========================================
+cask "ticktick"            # タスク管理
+
+# ========================================
+# GUI Apps - デザイン
+# ========================================
+# cask "figma"             # デザインツール（Brewfileから）
+
+# ========================================
+# フォント
+# ========================================
 cask "font-hack-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
-cask "ghostty"
-cask "homerow"
-cask "jordanbaird-ice"
-cask "ngrok"
-cask "omnidisksweeper"
-cask "raycast"
-cask "readdle-spark"
-cask "slack"
-cask "ticktick"

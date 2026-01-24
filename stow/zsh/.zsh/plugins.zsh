@@ -20,7 +20,7 @@ plugins=(
   github
 
   # ナビゲーション（必須）
-  z
+  # z  # zoxideを使用するため無効化（tools.zshで設定）
   fzf
   history
 )

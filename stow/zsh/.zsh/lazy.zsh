@@ -25,7 +25,7 @@ asdf() {
 }
 
 # node/python等使用時に自動初期化
-for cmd in node npm npx python python3 pip pip3 ruby gem; do
+for cmd in node npm npx python3 pip3 ruby gem; do
   eval "$cmd() { _asdf_init; unset -f $cmd; command $cmd \"\$@\"; }"
 done
 

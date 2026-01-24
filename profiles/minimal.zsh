@@ -22,16 +22,12 @@ export DOTFILES_MINIMAL=true
 export ZSH_DISABLE_PLUGIN_CACHE=true
 
 # ========================================
-# 最小限のエイリアス
+# エイリアス上書き（minimalモード用）
 # ========================================
-# 基本的なエイリアスのみ（重い拡張なし）
+# eza ではなく標準 ls を使用（軽量化）
 alias l="ls -la"
-alias ..="cd .."
-alias ...="cd ../.."
 
-# Git（最小限）
-alias gs="git status"
-alias gd="git diff"
+# git log は最新10件に制限（出力抑制）
 alias gl="git log --oneline -10"
 
 # ========================================

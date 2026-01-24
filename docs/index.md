@@ -117,13 +117,13 @@
 
     Step-by-step installation and configuration guide
 
-- [:material-robot: **AI Workflow**](guides/ai-workflow/ai-driven-dev-guide.md)
+- [:material-robot: **AI Workflow**](ai-workflow/AI-DRIVEN-DEV-GUIDE.md)
 
     ---
 
     Complete AI-driven development setup
 
-- [:material-puzzle: **Integrations**](guides/integrations/mcp-servers.md)
+- [:material-puzzle: **Integrations**](integrations/mcp-servers-guide.md)
 
     ---
 

@@ -55,6 +55,7 @@ brew "httpie"          # モダンHTTPクライアント（API開発）
 brew "watchexec"       # ファイル監視・自動実行（TDD）
 brew "tokei"           # コード統計（プロジェクト分析）
 brew "lefthook"        # 高速Git hooks管理
+brew "vhs"             # ターミナルデモGIF生成
 
 # モダンCLIツール（従来コマンドの高機能代替）
 brew "dust"            # du代替（ディスク使用量可視化）

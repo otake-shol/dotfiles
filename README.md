@@ -37,10 +37,28 @@
 
 ---
 
-<!-- Demo GIF - Generated with VHS -->
+<!-- Demo GIF - Generated with VHS (run `vhs demo/demo.tape` or trigger CI) -->
 <p align="center">
-  <img src="demo/demo.gif" alt="Demo" width="800">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="demo/demo.gif">
+    <source media="(prefers-color-scheme: light)" srcset="demo/demo.gif">
+    <img src="demo/demo.gif" alt="dotfiles demo - bootstrap, aliases, and modern CLI tools in action" width="800">
+  </picture>
 </p>
+
+<details>
+<summary>📹 Can't see the demo? Generate it locally</summary>
+
+```bash
+# Install VHS
+brew install vhs
+
+# Generate demo GIF
+vhs demo/demo.tape
+```
+
+Or trigger the [Demo Workflow](../../actions/workflows/demo.yml) manually.
+</details>
 
 ## Features
 

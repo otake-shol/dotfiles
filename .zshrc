@@ -79,6 +79,17 @@ plugins+=(web-search)
 # zsh-completions: 追加の補完定義を読み込み
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
+# 補完キャッシュの設定（起動速度最適化）
+autoload -Uz compinit
+_comp_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zcompdump-${ZSH_VERSION}"
+if [[ -n "$_comp_cache"(#qN.mh+24) ]]; then
+  # キャッシュが24時間以上古い場合のみ再生成
+  compinit -d "$_comp_cache"
+else
+  compinit -C -d "$_comp_cache"
+fi
+unset _comp_cache
+
 source $ZSH/oh-my-zsh.sh
 
 # エディタ設定
@@ -209,78 +220,23 @@ fi
 # ========================================
 # fzf 拡張関数（遅延読み込み）
 # ========================================
-# 関数は初回呼び出し時にのみ定義される
+# 関数は初回呼び出し時にのみ読み込まれる
 # これにより起動速度を向上
+_fzf_functions_file="${DOTFILES_DIR:-$HOME/dotfiles}/zsh/functions/fzf-functions.zsh"
+_fzf_funcs_loaded=false
 
-# fbr - ブランチをfzfで選択してチェックアウト
-fbr() {
-  local branches branch
-  branches=$(git branch -a --color=always | grep -v HEAD) &&
-  branch=$(echo "$branches" |
-    fzf --ansi --preview 'git log --oneline --graph --color=always $(echo {} | sed "s/.* //" | sed "s#remotes/origin/##") -- | head -50' \
-        --preview-window=right:50%) &&
-  git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/origin/##")
+_load_fzf_functions() {
+  if [[ "$_fzf_funcs_loaded" = false ]] && [[ -f "$_fzf_functions_file" ]]; then
+    source "$_fzf_functions_file"
+    _fzf_funcs_loaded=true
+  fi
 }
 
-# fshow - コミット履歴をfzfで閲覧・詳細表示
-fshow() {
-  git log --graph --color=always \
-    --format="%C(auto)%h%d %s %C(green)%cr %C(blue)<%an>" |
-  fzf --ansi --no-sort --reverse \
-    --preview 'echo {} | grep -o "[a-f0-9]\{7,\}" | head -1 | xargs git show --color=always' \
-    --preview-window=right:60% \
-    --bind 'enter:execute(echo {} | grep -o "[a-f0-9]\{7,\}" | head -1 | xargs git show --color=always | less -R)'
-}
-
-# fvim - ファイルをfzfで選択してnvimで開く
-fvim() {
-  local file
-  file=$(fzf --preview 'bat --color=always --style=numbers --line-range=:300 {}' \
-             --preview-window=right:60%) &&
-  [ -n "$file" ] && nvim "$file"
-}
-
-# fkill - プロセスをfzfで選択してkill
-fkill() {
-  local pid
-  pid=$(ps -ef | sed 1d | fzf --header='Select process to kill' \
-    --preview 'echo {}' --preview-window=down:3:wrap | awk '{print $2}')
-  [ -n "$pid" ] && kill -9 "$pid" && echo "Killed process $pid"
-}
-
-# fcd - ディレクトリをfzfで選択して移動
-fcd() {
-  local dir
-  dir=$(find ${1:-.} -type d 2>/dev/null | fzf --preview 'eza --tree --level=1 --color=always {}' \
-        --preview-window=right:50%) &&
-  cd "$dir"
-}
-
-# fstash - git stashをfzfで選択して適用
-fstash() {
-  local stash
-  stash=$(git stash list 2>/dev/null | fzf --preview 'echo {} | cut -d: -f1 | xargs git stash show -p --color=always')
-  [ -n "$stash" ] && git stash apply "$(echo "$stash" | cut -d: -f1)"
-}
-
-# fenv - 環境変数をfzfで検索
-fenv() {
-  local var
-  var=$(env | fzf --preview 'echo {}' --preview-window=down:3:wrap)
-  [ -n "$var" ] && echo "$var"
-}
-
-# fhistory - 履歴をfzfで検索して実行
-fhistory() {
-  local cmd
-  cmd=$(history | fzf --tac --preview 'echo {}' | sed 's/^ *[0-9]* *//')
-  [ -n "$cmd" ] && print -z "$cmd"
-}
-
-# fman - manページをfzfで検索
-fman() {
-  man -k . | fzf --preview 'echo {} | awk "{print \$1}" | xargs man' | awk '{print $1}' | xargs man
-}
+# fzf関数のスタブ（初回呼び出しで本体を読み込み）
+for _fn in fbr fshow fvim fkill fcd fstash fenv fhistory fman fdiff fgst; do
+  eval "$_fn() { _load_fzf_functions; $_fn \"\$@\"; }"
+done
+unset _fn
 
 # zoxide - 高速ディレクトリジャンプ（minimalモードではスキップ）
 if [[ -z "$DOTFILES_MINIMAL" ]]; then

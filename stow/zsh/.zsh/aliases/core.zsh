@@ -41,7 +41,7 @@ alias mv="mv -i"
 # rm -rf 保護機能（確認プロンプト表示）
 rm() {
   if [[ "$*" =~ "-rf" ]] || [[ "$*" =~ "-fr" ]]; then
-    echo "⚠️  rm -rf を実行しようとしています:"
+    echo "WARNING: rm -rf を実行しようとしています:"
     echo "   rm $@"
     echo ""
     read "confirm?本当に実行しますか？ [y/N]: "

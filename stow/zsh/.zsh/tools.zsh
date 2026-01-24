@@ -51,17 +51,19 @@ function y() {
 # bun - 高速JS/TSランタイム
 # ========================================
 export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
 [ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
 
 # ========================================
-# PATH設定
+# PATH設定（一元管理）
 # ========================================
+# bun
+[[ -d "$BUN_INSTALL/bin" ]] && export PATH="$BUN_INSTALL/bin:$PATH"
+
 # Antigravity
-export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
+[[ -d "$HOME/.antigravity/antigravity/bin" ]] && export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 
 # trash command (safe delete)
-export PATH="/usr/local/opt/trash/bin:$PATH"
+[[ -d "/usr/local/opt/trash/bin" ]] && export PATH="/usr/local/opt/trash/bin:$PATH"
 
 # Local environment
 [[ -f "$HOME/.local/bin/env" ]] && . "$HOME/.local/bin/env"
@@ -90,7 +92,7 @@ _dotfiles_update_reminder() {
 
 # 起動時にチェック（1日1回のみ）
 _dotfiles_reminder_cache="$HOME/.cache/dotfiles-reminder"
-if [[ ! -f "$_dotfiles_reminder_cache" ]] || [[ $(find "$_dotfiles_reminder_cache" -mtime +1 2>/dev/null) ]]; then
+if [[ ! -f "$_dotfiles_reminder_cache" ]] || [[ $(find "$_dotfiles_reminder_cache" -mtime +7 2>/dev/null) ]]; then
   _dotfiles_update_reminder
   mkdir -p "$(dirname "$_dotfiles_reminder_cache")"
   touch "$_dotfiles_reminder_cache"

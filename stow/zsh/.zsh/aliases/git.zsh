@@ -41,4 +41,11 @@ alias ghrw="gh run watch"              # Workflow実行を監視
 # ========================================
 
 # Gitルートに移動
-gitroot() { cd "$(git rev-parse --show-toplevel)"; }
+gitroot() {
+  local root
+  root=$(git rev-parse --show-toplevel 2>/dev/null) || {
+    echo "Error: Gitリポジトリ内ではありません" >&2
+    return 1
+  }
+  cd "$root"
+}

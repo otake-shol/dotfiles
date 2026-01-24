@@ -42,12 +42,6 @@ port() { lsof -i :"$1"; }
 # クリップボードのJSONを整形
 jsonf() { pbpaste | jq '.' | pbcopy && pbpaste; }
 
-# 天気表示
-weather() { curl -s "wttr.in/${1:-Tokyo}?format=3"; }
-
-# 詳細な天気
-weatherfull() { curl -s "wttr.in/${1:-Tokyo}"; }
-
 # 一時ディレクトリで作業
 tmpcd() { cd "$(mktemp -d)"; }
 

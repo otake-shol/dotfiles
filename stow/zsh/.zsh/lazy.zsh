@@ -25,7 +25,7 @@ asdf() {
 }
 
 # node/python等使用時に自動初期化
-for cmd in node npm npx python3 pip3 ruby gem; do
+for cmd in node npm npx claude python3 pip3 ruby gem; do
   eval "$cmd() { _asdf_init; unset -f $cmd; command $cmd \"\$@\"; }"
 done
 
@@ -68,9 +68,17 @@ _fzf_functions_file="${HOME}/.zsh/functions/fzf-functions.zsh"
 _fzf_funcs_loaded=false
 
 _load_fzf_functions() {
-  if [[ "$_fzf_funcs_loaded" = false ]] && [[ -f "$_fzf_functions_file" ]]; then
-    source "$_fzf_functions_file"
-    _fzf_funcs_loaded=true
+  if [[ "$_fzf_funcs_loaded" = false ]]; then
+    if [[ -f "$_fzf_functions_file" ]]; then
+      source "$_fzf_functions_file" || {
+        echo "Error: fzf-functions.zsh の読み込みに失敗しました" >&2
+        return 1
+      }
+      _fzf_funcs_loaded=true
+    else
+      echo "Error: $_fzf_functions_file が見つかりません" >&2
+      return 1
+    fi
   fi
 }
 

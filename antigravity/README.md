@@ -24,4 +24,4 @@ Antigravity（Google製VSCode互換エディタ）の設定ファイル。
 
 1. Antigravityをインストール
 2. `./install-extensions.sh` を実行
-3. `settings.json` と `keybindings.json` を `~/.config/Antigravity/User/` にコピー
+3. `settings.json` と `keybindings.json` は `bootstrap.sh` で自動リンクされます

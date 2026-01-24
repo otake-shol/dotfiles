@@ -3,7 +3,7 @@
 # dothelp - dotfiles自己文書化ヘルプ
 # ========================================
 # 使用方法: dothelp [カテゴリ]
-# カテゴリ: all, aliases, git, docker, k8s, node, dev, fzf, tools
+# カテゴリ: all, core, git, node, dev, fzf, tools
 
 set -e
 
@@ -81,38 +81,6 @@ show_git_aliases() {
     print_alias "ghic" "Issue作成"
 }
 
-show_docker_aliases() {
-    print_section "Docker"
-    print_alias "d" "docker"
-    print_alias "dps" "コンテナ一覧"
-    print_alias "di" "イメージ一覧"
-    print_alias "dex" "exec -it"
-    print_alias "dlogs" "ログ表示"
-    print_alias "dclean" "未使用リソース削除"
-
-    print_section "Docker Compose"
-    print_alias "dc" "docker compose"
-    print_alias "dcu" "up -d"
-    print_alias "dcd" "down"
-    print_alias "dcl" "logs -f"
-}
-
-show_k8s_aliases() {
-    print_section "kubectl"
-    print_alias "k" "kubectl"
-    print_alias "kgp" "get pods"
-    print_alias "kgs" "get services"
-    print_alias "kgd" "get deployments"
-    print_alias "kgn" "get nodes"
-    print_alias "kd" "describe"
-    print_alias "kl" "logs"
-    print_alias "kex" "exec -it"
-
-    print_section "fzf連携"
-    print_function "klogs" "fzfでPod選択→ログ表示"
-    print_function "kexec" "fzfでPod選択→シェル接続"
-}
-
 show_node_aliases() {
     print_section "npm"
     print_alias "ni" "npm install"
@@ -186,10 +154,6 @@ show_all() {
     echo ""
     show_git_aliases
     echo ""
-    show_docker_aliases
-    echo ""
-    show_k8s_aliases
-    echo ""
     show_node_aliases
     echo ""
     show_dev_aliases
@@ -208,9 +172,7 @@ show_usage() {
     print_alias "all" "全てのエイリアス・関数"
     print_alias "core" "基本操作（ls, cd, 検索など）"
     print_alias "git" "Git & GitHub CLI"
-    print_alias "docker" "Docker & Docker Compose"
-    print_alias "k8s" "Kubernetes (kubectl)"
-    print_alias "node" "npm / yarn / pnpm"
+    print_alias "node" "npm / yarn / pnpm / bun"
     print_alias "dev" "エディタ・開発ツール"
     print_alias "fzf" "fzf統合関数"
     print_alias "tools" "モダンCLIツール一覧"
@@ -235,15 +197,7 @@ case "${1:-}" in
         dothelp_header "Git & GitHub CLI"
         show_git_aliases
         ;;
-    docker)
-        dothelp_header "Docker & Docker Compose"
-        show_docker_aliases
-        ;;
-    k8s|kubernetes)
-        dothelp_header "Kubernetes"
-        show_k8s_aliases
-        ;;
-    node|npm|yarn|pnpm)
+    node|npm|yarn|pnpm|bun)
         dothelp_header "Node.js パッケージマネージャー"
         show_node_aliases
         ;;

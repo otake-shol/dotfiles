@@ -11,7 +11,7 @@
 [feature]
 	manyFiles = true
 [commit]
-	template = ~/dotfiles/git/commit-template.txt
+	template = ~/dotfiles/stow/git/commit-template.txt
 [interactive]
 	diffFilter = delta --color-only
 [delta]

@@ -36,6 +36,7 @@ brew "fd"              # findの高速代替
 brew "ripgrep"         # grepの超高速代替（rg）
 brew "stow"            # シンボリックリンク管理
 brew "btop"            # システムモニター
+brew "trash"           # 安全な削除（ゴミ箱へ移動）
 brew "curl"            # HTTPクライアント
 brew "jq"              # JSON処理ツール
 

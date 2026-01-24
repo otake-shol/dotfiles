@@ -1,9 +1,6 @@
-# ========================================
 # core.zsh - 基本設定・オプション
-# ========================================
-# 注: DOTFILES_CACHE_TTL_DAYS は cache.zsh で定義済み
 
-# エディタ設定
+# --- エディタ ---
 export EDITOR="nvim"
 export VISUAL="nvim"
 export GIT_EDITOR="nvim"

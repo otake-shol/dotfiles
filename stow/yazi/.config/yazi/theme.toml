@@ -1,0 +1,238 @@
+# ===========================================
+# theme.toml - yazi TokyoNightテーマ
+# ===========================================
+# 全ツールで統一しているTokyoNightカラースキーム
+
+[manager]
+# 現在のアイテム
+cwd = { fg = "#7aa2f7" }
+
+# ホバー状態
+hovered = { fg = "#c0caf5", bg = "#292e42", bold = true }
+preview_hovered = { underline = true }
+
+# 選択状態
+selected = { fg = "#9ece6a", bold = true, reversed = true }
+
+# ファインダー
+find_keyword = { fg = "#e0af68", bold = true, italic = true, underline = true }
+find_position = { fg = "#bb9af7", bg = "reset", bold = true, italic = true }
+
+# マーカー
+marker_selected = { fg = "#9ece6a", bg = "#9ece6a" }
+marker_copied = { fg = "#7aa2f7", bg = "#7aa2f7" }
+marker_cut = { fg = "#f7768e", bg = "#f7768e" }
+
+# タブ
+tab_active = { fg = "#1a1b26", bg = "#7aa2f7" }
+tab_inactive = { fg = "#c0caf5", bg = "#292e42" }
+tab_width = 1
+
+# カウント
+count_selected = { fg = "#1a1b26", bg = "#9ece6a" }
+count_copied = { fg = "#1a1b26", bg = "#7aa2f7" }
+count_cut = { fg = "#1a1b26", bg = "#f7768e" }
+
+# ボーダー
+border_symbol = "│"
+border_style = { fg = "#414868" }
+
+[status]
+# ステータスバー
+separator_open = ""
+separator_close = ""
+separator_style = { fg = "#414868", bg = "#414868" }
+
+# モード表示
+mode_normal = { fg = "#1a1b26", bg = "#7aa2f7", bold = true }
+mode_select = { fg = "#1a1b26", bg = "#9ece6a", bold = true }
+mode_unset = { fg = "#1a1b26", bg = "#bb9af7", bold = true }
+
+# プログレス
+progress_label = { fg = "#c0caf5", bold = true }
+progress_normal = { fg = "#7aa2f7", bg = "#414868" }
+progress_error = { fg = "#f7768e", bg = "#414868" }
+
+# パーミッション
+permissions_t = { fg = "#7aa2f7" }
+permissions_r = { fg = "#e0af68" }
+permissions_w = { fg = "#f7768e" }
+permissions_x = { fg = "#9ece6a" }
+permissions_s = { fg = "#565f89" }
+
+[input]
+# 入力フィールド
+border = { fg = "#7aa2f7" }
+title = { fg = "#c0caf5" }
+value = { fg = "#c0caf5" }
+selected = { reversed = true }
+
+[select]
+# 選択ダイアログ
+border = { fg = "#7aa2f7" }
+active = { fg = "#bb9af7", bold = true }
+inactive = { fg = "#565f89" }
+
+[tasks]
+# タスクマネージャー
+border = { fg = "#7aa2f7" }
+title = { fg = "#c0caf5" }
+hovered = { fg = "#c0caf5", bg = "#292e42", bold = true }
+
+[which]
+# Which-key表示
+mask = { bg = "#1a1b26" }
+cand = { fg = "#7dcfff" }
+rest = { fg = "#565f89" }
+desc = { fg = "#bb9af7" }
+separator = " → "
+separator_style = { fg = "#565f89" }
+
+[help]
+# ヘルプ表示
+on = { fg = "#7dcfff" }
+run = { fg = "#bb9af7" }
+desc = { fg = "#c0caf5" }
+hovered = { bg = "#292e42", bold = true }
+footer = { fg = "#565f89", bg = "#1a1b26" }
+
+[filetype]
+# ファイルタイプ別の色
+
+rules = [
+  # 画像
+  { mime = "image/*", fg = "#7dcfff" },
+
+  # 動画
+  { mime = "video/*", fg = "#e0af68" },
+
+  # 音声
+  { mime = "audio/*", fg = "#e0af68" },
+
+  # アーカイブ
+  { mime = "application/zip", fg = "#bb9af7" },
+  { mime = "application/gzip", fg = "#bb9af7" },
+  { mime = "application/x-tar", fg = "#bb9af7" },
+  { mime = "application/x-bzip*", fg = "#bb9af7" },
+  { mime = "application/x-7z-compressed", fg = "#bb9af7" },
+  { mime = "application/x-rar", fg = "#bb9af7" },
+
+  # ドキュメント
+  { mime = "application/pdf", fg = "#f7768e" },
+  { mime = "application/*doc*", fg = "#7aa2f7" },
+  { mime = "application/*sheet*", fg = "#9ece6a" },
+  { mime = "application/*presentation*", fg = "#e0af68" },
+
+  # テキスト/コード
+  { mime = "text/*", fg = "#c0caf5" },
+  { mime = "application/json", fg = "#e0af68" },
+  { mime = "application/javascript", fg = "#e0af68" },
+  { mime = "application/typescript", fg = "#7aa2f7" },
+  { mime = "application/x-yaml", fg = "#f7768e" },
+
+  # 実行ファイル
+  { mime = "application/x-executable", fg = "#9ece6a" },
+  { mime = "application/x-sharedlib", fg = "#9ece6a" },
+
+  # フォールバック
+  { name = "*", fg = "#c0caf5" },
+  { name = "*/", fg = "#7aa2f7" },
+]
+
+[icon]
+# ディレクトリアイコン
+globs = []
+dirs = [
+  { name = ".config", text = "" },
+  { name = ".git", text = "" },
+  { name = "Desktop", text = "" },
+  { name = "Documents", text = "" },
+  { name = "Downloads", text = "" },
+  { name = "Music", text = "" },
+  { name = "Pictures", text = "" },
+  { name = "Projects", text = "" },
+  { name = "Videos", text = "" },
+  { name = "node_modules", text = "" },
+]
+
+# ファイルアイコン
+files = [
+  { name = ".gitignore", text = "" },
+  { name = ".gitmodules", text = "" },
+  { name = "Makefile", text = "" },
+  { name = "Dockerfile", text = "" },
+  { name = "docker-compose.yml", text = "" },
+  { name = "package.json", text = "" },
+  { name = "tsconfig.json", text = "" },
+  { name = ".env", text = "" },
+  { name = ".env.local", text = "" },
+]
+
+# 拡張子別アイコン
+exts = [
+  # プログラミング言語
+  { name = "js", text = "" },
+  { name = "jsx", text = "" },
+  { name = "ts", text = "" },
+  { name = "tsx", text = "" },
+  { name = "py", text = "" },
+  { name = "rb", text = "" },
+  { name = "rs", text = "" },
+  { name = "go", text = "" },
+  { name = "lua", text = "" },
+  { name = "sh", text = "" },
+  { name = "zsh", text = "" },
+  { name = "bash", text = "" },
+  { name = "fish", text = "" },
+  { name = "vim", text = "" },
+
+  # Web
+  { name = "html", text = "" },
+  { name = "css", text = "" },
+  { name = "scss", text = "" },
+  { name = "sass", text = "" },
+  { name = "less", text = "" },
+
+  # データ/設定
+  { name = "json", text = "" },
+  { name = "yaml", text = "" },
+  { name = "yml", text = "" },
+  { name = "toml", text = "" },
+  { name = "xml", text = "" },
+  { name = "csv", text = "" },
+
+  # ドキュメント
+  { name = "md", text = "" },
+  { name = "txt", text = "" },
+  { name = "pdf", text = "" },
+  { name = "doc", text = "" },
+  { name = "docx", text = "" },
+
+  # 画像
+  { name = "png", text = "" },
+  { name = "jpg", text = "" },
+  { name = "jpeg", text = "" },
+  { name = "gif", text = "" },
+  { name = "svg", text = "" },
+  { name = "webp", text = "" },
+  { name = "ico", text = "" },
+
+  # 動画/音声
+  { name = "mp3", text = "" },
+  { name = "mp4", text = "" },
+  { name = "mov", text = "" },
+  { name = "avi", text = "" },
+  { name = "mkv", text = "" },
+  { name = "wav", text = "" },
+
+  # アーカイブ
+  { name = "zip", text = "" },
+  { name = "tar", text = "" },
+  { name = "gz", text = "" },
+  { name = "7z", text = "" },
+  { name = "rar", text = "" },
+
+  # その他
+  { name = "lock", text = "" },
+  { name = "log", text = "" },
+]

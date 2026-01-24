@@ -139,7 +139,7 @@ show_tools() {
     print_alias "ls → eza" "アイコン・Git対応ls"
     print_alias "grep → rg" "ripgrep (高速検索)"
     print_alias "find → fd" "fd (高速ファイル検索)"
-    print_alias "top → btop" "リソースモニター"
+    print_alias "top → btop" "モダンなリソースモニター"
     print_alias "diff → delta" "美しいdiff (git diff)"
     print_alias "cd → zoxide" "スマートディレクトリジャンプ"
     print_alias "y" "yazi (ターミナルファイルマネージャー)"

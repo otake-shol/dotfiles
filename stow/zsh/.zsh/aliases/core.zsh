@@ -63,7 +63,7 @@ alias zshbench="bash $DOTFILES_SCRIPTS/utils/zsh_benchmark.sh"  # 詳細ベン�
 alias path='echo -e ${PATH//:/\\n}'
 alias his="history"
 alias df="df -h"
-alias top="top -o cpu"
+alias top="btop"                     # モダンなシステムモニター
 
 # ネットワーク
 alias myip="curl -s ifconfig.me"

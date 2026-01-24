@@ -12,8 +12,20 @@ STOW_DIR := stow
 STOW_FLAGS := -v --target=$(HOME) --dir=$(STOW_DIR) --restow
 
 # Stowパッケージ一覧
-# 注: antigravityはOS固有パス、sshはテンプレート方式のためStow対象外
-PACKAGES := zsh git nvim ghostty bat atuin claude gh
+# 以下はStow管理対象：ホームディレクトリまたは~/.config/配下に展開
+PACKAGES := zsh git nvim ghostty bat atuin claude gh yazi
+
+# ========================================
+# Stow対象外パッケージ（bootstrap.shで個別処理）
+# ========================================
+# antigravity:
+#   - 理由: macOS固有パス（~/Library/Application Support/Antigravity/）
+#   - 対応: bootstrap.shでsafe_link関数を使用して手動リンク
+#
+# ssh:
+#   - 理由: セキュリティ上、テンプレート方式を採用
+#   - 対応: config.templateをコピーし、ユーザーが手動で編集
+#   - 補足: SSH鍵や接続先情報は機密性が高いためGit管理しない
 
 # デフォルトターゲット
 .PHONY: help

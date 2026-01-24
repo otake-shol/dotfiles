@@ -1,11 +1,7 @@
-# ========================================
 # lazy.zsh - 遅延読み込み設定
-# ========================================
-# asdf, atuin, direnv, fzf関数の遅延読み込み
+# asdf, atuin, direnv, fzf関数を遅延読み込みして起動を高速化
 
-# ========================================
-# asdf 遅延読み込み
-# ========================================
+# --- asdf ---
 typeset -g _asdf_loaded=false
 _asdf_init() {
   if [[ "$_asdf_loaded" = false ]]; then
@@ -33,9 +29,7 @@ pip3() { _asdf_init; unset -f pip3; command pip3 "$@"; }
 ruby() { _asdf_init; unset -f ruby; command ruby "$@"; }
 gem() { _asdf_init; unset -f gem; command gem "$@"; }
 
-# ========================================
-# direnv 遅延読み込み
-# ========================================
+# --- direnv ---
 if command -v direnv &>/dev/null; then
   _direnv_hook() {
     trap -- '' SIGINT
@@ -52,9 +46,7 @@ if command -v direnv &>/dev/null; then
   fi
 fi
 
-# ========================================
-# atuin 遅延読み込み
-# ========================================
+# --- atuin ---
 if command -v atuin &>/dev/null; then
   _atuin_cache="${XDG_CACHE_HOME:-$HOME/.cache}/atuin-init.zsh"
   if ! _cache_valid "$_atuin_cache"; then
@@ -64,9 +56,7 @@ if command -v atuin &>/dev/null; then
   unset _atuin_cache
 fi
 
-# ========================================
-# fzf 拡張関数（遅延読み込み）
-# ========================================
+# --- fzf拡張関数 ---
 typeset -g _fzf_functions_file="${HOME}/.zsh/functions/fzf-functions.zsh"
 typeset -g _fzf_funcs_loaded=false
 

@@ -1,14 +1,7 @@
-# ========================================
-# tools.zsh - ツール設定
-# ========================================
-# fzf, zoxide, yazi, bun 等
+# tools.zsh - ツール設定（fzf, zoxide, yazi, bun）
 
-# ========================================
-# fzf - ファジーファインダー設定
-# ========================================
-# 注: Ctrl+R（履歴検索）はatuinが上書きするため、fzfのキーバインドは
-#     設定していません。Ctrl+T（ファイル検索）が必要な場合は以下を有効化:
-#     source <(fzf --zsh)
+# --- fzf ---
+# 注: Ctrl+Rはatuinがオーバーライドするためfzfのキーバインドは無効
 export FZF_DEFAULT_OPTS="
   --height 60%
   --layout=reverse
@@ -25,9 +18,7 @@ export FZF_DEFAULT_OPTS="
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:200 {}'"
 export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
 
-# ========================================
-# zoxide - 高速ディレクトリジャンプ
-# ========================================
+# --- zoxide ---
 if command -v zoxide &>/dev/null; then
   _zoxide_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zoxide-init.zsh"
   if ! _cache_valid "$_zoxide_cache"; then
@@ -37,9 +28,7 @@ if command -v zoxide &>/dev/null; then
   unset _zoxide_cache
 fi
 
-# ========================================
-# yazi - ターミナルファイルマネージャー
-# ========================================
+# --- yazi ---
 function y() {
   local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
   yazi "$@" --cwd-file="$tmp"
@@ -49,15 +38,11 @@ function y() {
   rm -f -- "$tmp"
 }
 
-# ========================================
-# bun - 高速JS/TSランタイム
-# ========================================
+# --- bun ---
 export BUN_INSTALL="$HOME/.bun"
 [ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
 
-# ========================================
-# PATH設定（一元管理）
-# ========================================
+# --- PATH ---
 # bun
 [[ -d "$BUN_INSTALL/bin" ]] && export PATH="$BUN_INSTALL/bin:$PATH"
 
@@ -73,9 +58,7 @@ unset _trash_path
 [[ -f "$HOME/.local/bin/env" ]] && . "$HOME/.local/bin/env"
 
 
-# ========================================
-# dotfiles更新リマインダー
-# ========================================
+# --- dotfiles更新リマインダー ---
 _dotfiles_update_reminder() {
   local dotfiles_dir="$HOME/dotfiles"
   local git_head="$dotfiles_dir/.git/refs/heads/master"

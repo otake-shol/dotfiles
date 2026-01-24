@@ -33,6 +33,7 @@ verify_symlinks() {
         "$HOME/.config/bat:stow/bat/.config/bat"
         "$HOME/.config/atuin:stow/atuin/.config/atuin"
         "$HOME/.config/gh/config.yml:stow/gh/.config/gh/config.yml"
+        "$HOME/.config/yazi:stow/yazi/.config/yazi"
     )
 
     for link_pair in "${links[@]}"; do

@@ -3,8 +3,24 @@
 # zsh_benchmark.sh - zsh起動時間計測
 # ========================================
 # 使用方法: bash scripts/utils/zsh_benchmark.sh [回数]
+#
+# ■ パフォーマンス目標値
+#   - 理想:   < 0.1s (100ms) ... 体感でほぼ即時
+#   - 良好:   < 0.3s (300ms) ... 快適に使用可能
+#   - 許容:   < 0.5s (500ms) ... 実用上問題なし
+#   - 要改善: >= 0.5s        ... 遅延を感じる
+#
+# ■ 最適化のポイント
+#   - 遅延読み込み（lazy.zsh）を活用
+#   - 不要なプラグインを無効化
+#   - compinit のキャッシュを活用
 
 set -euo pipefail
+
+# 目標値の定義（秒）
+TARGET_IDEAL=0.1
+TARGET_GOOD=0.3
+TARGET_ACCEPTABLE=0.5
 
 # 一時ファイルのクリーンアップ用trap
 TEMP_ZSHRC=""
@@ -46,13 +62,22 @@ echo -e "${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━
 echo -e "  平均起動時間: ${GREEN}${avg}s${NC}"
 
 # 目標値との比較
-if (( $(echo "$avg < 0.5" | bc -l) )); then
-    echo -e "  ${GREEN}✓ 起動時間は良好です（0.5秒未満）${NC}"
-elif (( $(echo "$avg < 1.0" | bc -l) )); then
-    echo -e "  ${YELLOW}⚠ 起動時間はやや遅め（0.5〜1秒）${NC}"
+echo ""
+echo -e "${BOLD} 目標値との比較:${NC}"
+echo -e "  理想 (< ${TARGET_IDEAL}s): $(if (( $(echo "$avg < $TARGET_IDEAL" | bc -l) )); then echo -e "${GREEN}達成${NC}"; else echo -e "${DIM}未達${NC}"; fi)"
+echo -e "  良好 (< ${TARGET_GOOD}s): $(if (( $(echo "$avg < $TARGET_GOOD" | bc -l) )); then echo -e "${GREEN}達成${NC}"; else echo -e "${DIM}未達${NC}"; fi)"
+echo -e "  許容 (< ${TARGET_ACCEPTABLE}s): $(if (( $(echo "$avg < $TARGET_ACCEPTABLE" | bc -l) )); then echo -e "${GREEN}達成${NC}"; else echo -e "${DIM}未達${NC}"; fi)"
+echo ""
+
+if (( $(echo "$avg < $TARGET_IDEAL" | bc -l) )); then
+    echo -e "  ${GREEN}★ 素晴らしい！理想的な起動時間です${NC}"
+elif (( $(echo "$avg < $TARGET_GOOD" | bc -l) )); then
+    echo -e "  ${GREEN}✓ 良好な起動時間です${NC}"
+elif (( $(echo "$avg < $TARGET_ACCEPTABLE" | bc -l) )); then
+    echo -e "  ${YELLOW}○ 許容範囲内です${NC}"
 else
-    echo -e "  ${YELLOW}⚠ 起動時間が遅いです（1秒以上）${NC}"
-    echo -e "  ${CYAN}ヒント: プラグインを見直してください${NC}"
+    echo -e "  ${RED}✗ 起動時間が遅いです（${TARGET_ACCEPTABLE}秒以上）${NC}"
+    echo -e "  ${CYAN}ヒント: --profile オプションで詳細を確認してください${NC}"
 fi
 echo ""
 

@@ -446,7 +446,7 @@ stow_package() {
 
 # Stow パッケージのインストール
 # 注: sshはテンプレート方式のため別処理
-STOW_PACKAGES=(zsh git nvim ghostty bat atuin claude gh)
+STOW_PACKAGES=(zsh git nvim ghostty bat atuin claude gh yazi)
 
 for pkg in "${STOW_PACKAGES[@]}"; do
     stow_package "$pkg"

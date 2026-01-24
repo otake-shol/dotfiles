@@ -1,227 +1,91 @@
-<h1 align="center">dotfiles</h1>
+# dotfiles
 
-<p align="center">
-  <strong>A modern, cross-platform dotfiles repository with AI-driven development integration</strong>
-</p>
+macOS向けの個人開発環境設定ファイル
 
-<p align="center">
-  <a href="https://github.com/otake-shol/dotfiles/actions/workflows/lint.yml">
-    <img src="https://github.com/otake-shol/dotfiles/actions/workflows/lint.yml/badge.svg" alt="Lint">
-  </a>
-  <a href="https://github.com/otake-shol/dotfiles/commits/master">
-    <img src="https://img.shields.io/github/last-commit/otake-shol/dotfiles" alt="Last Commit">
-  </a>
-  <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-blue" alt="Platform">
-</p>
+[![Lint](https://github.com/otake-shol/dotfiles/actions/workflows/lint.yml/badge.svg)](https://github.com/otake-shol/dotfiles/actions/workflows/lint.yml)
 
-<p align="center">
-  <a href="docs/README.ja.md">🇯🇵 日本語</a> •
-  <a href="#features">Features</a> •
-  <a href="#quick-start">Quick Start</a> •
-  <a href="#whats-included">What's Included</a> •
-  <a href="#documentation">Documentation</a>
-</p>
+## 特徴
 
----
+- **Claude Code統合** - MCPサーバー・カスタムコマンド設定済み
+- **モダンCLI** - bat, eza, fzf, ripgrep, zoxide等
+- **自動セットアップ** - bootstrap.shで一発構築
+- **テーマ統一** - 全ツールでTokyoNight
 
-## Features
-
-- **Cross-Platform** - Works on macOS, Linux, and WSL
-- **AI-Driven Development** - Pre-configured Claude Code with MCP servers
-- **Modern CLI Tools** - bat, eza, fzf, ripgrep, zoxide, and more
-- **One-Command Setup** - Fully automated bootstrap script
-- **Idempotent** - Safe to run multiple times
-- **Theme Unified** - TokyoNight theme across all tools
-- **Well Documented** - Comprehensive guides for everything
-
-## Quick Start
-
-### macOS / Linux
+## クイックスタート
 
 ```bash
-# Clone the repository
 git clone https://github.com/otake-shol/dotfiles.git ~/dotfiles
-
-# Run the bootstrap script
 cd ~/dotfiles && bash bootstrap.sh
 ```
 
-### WSL (Windows Subsystem for Linux)
+### オプション
 
 ```bash
-# Clone the repository
-git clone https://github.com/otake-shol/dotfiles.git ~/dotfiles
-
-# Run with WSL support
-cd ~/dotfiles && bash bootstrap.sh
+bash bootstrap.sh --help        # ヘルプ表示
+bash bootstrap.sh --dry-run     # 変更プレビュー（実行しない）
+bash bootstrap.sh --skip-apps   # アプリインストールをスキップ
 ```
 
-### Options
-
-```bash
-bash bootstrap.sh --help        # Show help
-bash bootstrap.sh --dry-run     # Preview changes without applying
-bash bootstrap.sh --skip-apps   # Skip application installation
-bash bootstrap.sh --linux-only  # Linux-specific setup only
-```
-
-## What's Included
-
-### Shell Configuration
-
-| Component | Description |
-|-----------|-------------|
-| **Zsh** | Oh My Zsh + Powerlevel10k theme |
-| **Plugins** | autosuggestions, syntax-highlighting, completions |
-| **Aliases** | Modular aliases (git, docker, k8s, etc.) |
-| **Functions** | fzf integrations (fbr, fshow, fvim, etc.) |
-
-### Modern CLI Tools
-
-| Legacy | Modern | Description |
-|--------|--------|-------------|
-| `cat` | `bat` | Syntax highlighting, line numbers |
-| `ls` | `eza` | Icons, Git integration, tree view |
-| `grep` | `rg` | ripgrep - blazingly fast search |
-| `find` | `fd` | User-friendly, fast file finder |
-| `cd` | `zoxide` | Smart directory jumping |
-| `diff` | `delta` | Beautiful side-by-side diffs |
-
-### Development Environment
-
-| Tool | Purpose |
-|------|---------|
-| **Neovim** | Minimal config for quick edits |
-| **Ghostty** | Fast, GPU-accelerated terminal |
-| **Git** | Enhanced with delta, git-secrets, hooks |
-| **asdf** | Multi-language version manager |
-
-### AI-Driven Development
-
-| Component | Description |
-|-----------|-------------|
-| **Claude Code** | CLI AI assistant with custom agents |
-| **MCP Servers** | 13 pre-configured servers (Context7, Serena, Playwright, etc.) |
-| **Custom Commands** | `/commit-push`, `/review`, `/test`, `/spec`, etc. |
-| **Hooks** | Auto Brewfile update, completion notifications |
-
-## Directory Structure
+## 構成
 
 ```
 dotfiles/
-├── stow/                      # GNU Stow packages
-│   ├── zsh/                   # Zsh configuration
-│   │   ├── .zshrc
-│   │   ├── .aliases
-│   │   ├── .p10k.zsh
-│   │   ├── .tool-versions
-│   │   └── .zsh/
-│   │       ├── core.zsh       # Basic settings
-│   │       ├── plugins.zsh    # Oh My Zsh plugins
-│   │       ├── lazy.zsh       # Lazy loading (asdf, atuin)
-│   │       ├── tools.zsh      # Tool configs (fzf, zoxide)
-│   │       ├── aliases/       # Modular aliases
-│   │       │   ├── core.zsh
-│   │       │   ├── git.zsh
-│   │       │   ├── node.zsh
-│   │       │   └── dev.zsh
-│   │       └── functions/     # fzf integrations
-│   ├── git/                   # Git configuration
-│   ├── claude/                # Claude Code (agents, commands)
-│   ├── nvim/                  # Neovim
-│   ├── ghostty/               # Ghostty terminal
-│   ├── bat/                   # bat (syntax highlighting)
-│   └── atuin/                 # Shell history
-├── scripts/                   # Utility scripts
-│   ├── setup/                 # OS-specific setup
-│   ├── maintenance/           # verify-setup.sh, etc.
-│   ├── utils/                 # Helper scripts
-│   └── lib/                   # Shared libraries
-├── docs/                      # Documentation
-├── Makefile                   # GNU Stow operations
-├── Brewfile                   # Homebrew packages
-└── bootstrap.sh               # Main setup script
+├── stow/                  # GNU Stowパッケージ
+│   ├── zsh/               # シェル設定
+│   ├── git/, gh/          # Git/GitHub CLI
+│   ├── claude/            # Claude Code (agents, commands)
+│   ├── nvim/              # Neovim（最小構成）
+│   ├── ghostty/           # ターミナル
+│   ├── bat/, atuin/       # ユーティリティ
+│   └── ssh/               # SSH設定
+├── antigravity/           # エディタ設定
+├── scripts/               # ユーティリティスクリプト
+├── Brewfile               # Homebrewパッケージ
+└── bootstrap.sh           # セットアップスクリプト
 ```
 
-## Theme
-
-All tools use the **TokyoNight** color scheme for a unified look:
-
-- Neovim
-- Ghostty
-- bat
-- fzf
-
-## Useful Commands
+## 便利なコマンド
 
 ```bash
-# Documentation
-dothelp              # Show all aliases and functions
-dothelp git          # Show Git-related aliases
-dothelp fzf          # Show fzf integration functions
+# ヘルプ・情報
+dothelp              # エイリアス一覧
+dotverify            # セットアップ検証
 
-# Maintenance
-dotverify            # Verify setup (symlinks, tools, configs)
-dotup                # Check for updates
-dotupdate            # Update all tools
-brewsync             # Check Brewfile sync status
+# メンテナンス
+dotupdate            # 全ツール更新
+brewsync             # Brewfile同期チェック
 
-# fzf Integrations
-fvim                 # Select file → open in nvim
-fbr                  # Select branch → checkout
-fshow                # Browse commit history with preview
-fkill                # Select process → kill
-fcd                  # Fuzzy directory navigation
-fstash               # Select stash → apply
-
-# Benchmarking
-zshbench             # Measure zsh startup time
-zshbench --profile   # Detailed profiling with zprof
+# fzf連携
+fvim                 # ファイル選択 → nvim
+fbr                  # ブランチ選択 → checkout
+fshow                # コミット履歴ブラウズ
 ```
 
-## Documentation
+## モダンCLI
 
-| Document | Description |
-|----------|-------------|
-| [SETUP.md](docs/setup/SETUP.md) | Detailed setup instructions |
-| [APPS.md](docs/setup/APPS.md) | Application list & descriptions |
-| [mcp-servers-guide.md](docs/integrations/mcp-servers-guide.md) | MCP server setup guide |
-| [atlassian-guide.md](docs/integrations/atlassian-guide.md) | Jira/Confluence integration |
-| [CHANGELOG.md](CHANGELOG.md) | Release notes & change history |
+| 従来 | モダン | 説明 |
+|------|--------|------|
+| cat | bat | シンタックスハイライト |
+| ls | eza | アイコン・Git連携 |
+| grep | rg | 高速検索 |
+| find | fd | 高速ファイル検索 |
+| cd | zoxide | スマートジャンプ |
 
-### Additional Configurations
+## ドキュメント
 
-| Directory | Description |
-|-----------|-------------|
-| [antigravity/](antigravity/) | Antigravity editor settings & extensions |
+| ファイル | 内容 |
+|---------|------|
+| [SETUP.md](docs/setup/SETUP.md) | 詳細セットアップ手順 |
+| [APPS.md](docs/setup/APPS.md) | アプリケーション一覧 |
+| [mcp-servers-guide.md](docs/integrations/mcp-servers-guide.md) | MCPサーバー設定 |
 
-## Requirements
+## 動作環境
 
-### macOS
+- macOS 12.0+
+- Linux (Ubuntu 20.04+, Debian 11+)
+- WSL2
 
-- macOS 12.0+ (Monterey or later)
-- Xcode Command Line Tools
+## 参考
 
-### Linux
-
-- Ubuntu 20.04+ / Debian 11+ / Fedora 35+ / Arch Linux
-- curl, git
-
-### WSL
-
-- Windows 10/11 with WSL2
-- Ubuntu or Debian distribution recommended
-
-## Acknowledgments
-
-- [Oh My Zsh](https://ohmyz.sh/) - Zsh framework
-- [Powerlevel10k](https://github.com/romkatv/powerlevel10k) - Zsh theme
-- [TokyoNight](https://github.com/folke/tokyonight.nvim) - Color scheme
-- [Modern Unix](https://github.com/ibraheemdev/modern-unix) - Tool inspiration
-- [GitHub does dotfiles](https://dotfiles.github.io/) - Community resources
-
----
-
-<p align="center">
-  Made with ❤️ by <a href="https://github.com/otake-shol">otake-shol</a>
-</p>
+- [GitHub does dotfiles](https://dotfiles.github.io/)
+- [Modern Unix](https://github.com/ibraheemdev/modern-unix)

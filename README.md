@@ -150,34 +150,45 @@ bash bootstrap.sh --linux-only  # Linux-specific setup only
 
 ```
 dotfiles/
-├── .zshrc                    # Zsh configuration
-├── .aliases                  # Alias loader
-├── aliases/                  # Modular aliases
-│   ├── core.zsh             # Basic commands, navigation
-│   ├── git.zsh              # Git & GitHub CLI
-│   ├── docker.zsh           # Docker & Compose
-│   ├── kubernetes.zsh       # kubectl, helm
+├── stow/                      # GNU Stow packages (single source of truth)
+│   ├── zsh/                  # Zsh configuration
+│   │   ├── .zshrc
+│   │   ├── .aliases
+│   │   ├── .editorconfig
+│   │   └── .tool-versions
+│   ├── git/                  # Git configuration
+│   │   ├── .gitconfig
+│   │   └── .gitignore_global
+│   ├── claude/               # Claude Code configuration
+│   │   └── .claude/
+│   │       ├── CLAUDE.md
+│   │       ├── settings.json
+│   │       ├── agents/
+│   │       └── commands/
+│   ├── nvim/                 # Neovim configuration
+│   │   └── .config/nvim/
+│   ├── tmux/                 # tmux configuration
+│   │   └── .tmux.conf
+│   ├── ghostty/              # Ghostty terminal
+│   │   └── .config/ghostty/
+│   ├── bat/                  # bat configuration
+│   │   └── .config/bat/
+│   └── atuin/                # Atuin shell history
+│       └── .config/atuin/
+├── aliases/                   # Modular aliases (loaded by .zshrc)
+│   ├── core.zsh              # Basic commands, navigation
+│   ├── git.zsh               # Git & GitHub CLI
+│   ├── docker.zsh            # Docker & Compose
+│   ├── kubernetes.zsh        # kubectl, helm
 │   └── ...
-├── .claude/                   # Claude Code configuration
-│   ├── CLAUDE.md             # Global instructions
-│   ├── settings.json         # Permissions & hooks
-│   ├── agents/               # Custom AI agents
-│   └── commands/             # Slash commands
-├── nvim/.config/nvim/        # Neovim configuration
-├── tmux/.tmux.conf           # tmux configuration
-├── ghostty/config            # Ghostty terminal
-├── git/                      # Git configuration
-│   ├── .gitconfig           # Global settings
-│   ├── .gitignore_global    # Global ignores
-│   └── commit-template.txt  # Commit message template
-├── scripts/                  # Utility scripts
-│   ├── setup/               # OS-specific setup
-│   ├── maintenance/         # Update, verify scripts
-│   └── utils/               # Helper scripts
-├── Brewfile                  # Essential packages
-├── Brewfile.full             # All packages
-├── Brewfile.linux            # Linux CLI tools only
-└── bootstrap.sh              # Main setup script
+├── scripts/                   # Utility scripts
+│   ├── setup/                # OS-specific setup
+│   ├── maintenance/          # Update, verify scripts
+│   └── utils/                # Helper scripts
+├── Makefile                   # GNU Stow operations
+├── Brewfile                   # Essential packages
+├── Brewfile.full              # All packages
+└── bootstrap.sh               # Main setup script
 ```
 
 ## Theme

@@ -1,1 +1,84 @@
-../../git/.gitignore_global
+# ===========================================
+# Gitグローバルignore
+# 全リポジトリで除外するファイル
+# ===========================================
+
+# ===========================================
+# macOS
+# ===========================================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# ===========================================
+# エディタ・IDE
+# ===========================================
+# Vim
+*.swp
+*.swo
+*~
+.netrwhist
+
+# JetBrains (IntelliJ, WebStorm等)
+.idea/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ===========================================
+# 環境・機密ファイル
+# ===========================================
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.p12
+.envrc
+.direnv/
+
+# ===========================================
+# ビルド成果物・依存関係
+# ===========================================
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+.cache/
+dist/
+build/
+*.egg-info/
+.eggs/
+*.egg
+.tox/
+.pytest_cache/
+.mypy_cache/
+
+# ===========================================
+# ログ・一時ファイル
+# ===========================================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.tmp
+*.temp
+
+# ===========================================
+# その他
+# ===========================================
+.history/
+.ionide/
+Thumbs.db

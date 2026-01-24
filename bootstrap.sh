@@ -378,26 +378,46 @@ else
 fi
 
 # ========================================
-# 3. dotfilesのシンボリックリンク作成
+# 3. dotfilesのシンボリックリンク作成（GNU Stow使用）
 # ========================================
 echo -e "\n${YELLOW}[3/7] dotfilesのシンボリックリンク作成...${NC}"
 
-# zsh
-safe_link ~/dotfiles/.zshrc ~/.zshrc
-safe_link ~/dotfiles/.aliases ~/.aliases
-echo -e "${GREEN}✓ zsh設定をリンクしました${NC}"
+# GNU Stow がインストールされているか確認
+if ! command -v stow &>/dev/null; then
+    echo -e "${RED}GNU Stow がインストールされていません${NC}"
+    echo -e "${YELLOW}brew install stow でインストールしてください${NC}"
+    exit 1
+fi
 
-# editorconfig / tool-versions
-safe_link ~/dotfiles/.editorconfig ~/.editorconfig
-safe_link ~/dotfiles/.tool-versions ~/.tool-versions
-echo -e "${GREEN}✓ editorconfig/tool-versionsをリンクしました${NC}"
+# Stow でパッケージをインストールする関数
+stow_package() {
+    local pkg="$1"
+    local pkg_dir="$SCRIPT_DIR/stow/$pkg"
 
-# git
-safe_link ~/dotfiles/git/.gitconfig ~/.gitconfig
-safe_link ~/dotfiles/git/.gitignore_global ~/.gitignore_global
-echo -e "${GREEN}✓ git設定をリンクしました${NC}"
+    if [ ! -d "$pkg_dir" ]; then
+        echo -e "${YELLOW}⚠ パッケージ $pkg が見つかりません${NC}"
+        return 1
+    fi
 
-# ssh
+    if [ "$DRY_RUN" = true ]; then
+        echo -e "${CYAN}[DRY RUN] Would stow: $pkg${NC}"
+        stow --simulate -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg" 2>&1 || true
+    else
+        # 既存のシンボリックリンクを削除してから再作成（--adoptで既存ファイルを取り込み）
+        stow -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow --adopt "$pkg" 2>/dev/null || \
+        stow -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg"
+    fi
+}
+
+# Stow パッケージのインストール
+STOW_PACKAGES=(zsh git tmux nvim ghostty bat atuin claude)
+
+for pkg in "${STOW_PACKAGES[@]}"; do
+    stow_package "$pkg"
+done
+echo -e "${GREEN}✓ Stowパッケージをインストールしました (${STOW_PACKAGES[*]})${NC}"
+
+# ssh（Stow対象外 - パーミッション設定が必要）
 if [ "$DRY_RUN" != true ]; then
     mkdir -p ~/.ssh/sockets
     chmod 700 ~/.ssh
@@ -414,45 +434,10 @@ else
     echo -e "${YELLOW}⚠ ssh設定は既存ファイルのため、スキップしました${NC}"
 fi
 
-# ghostty
-mkdir -p ~/.config/ghostty
-safe_link ~/dotfiles/ghostty/config ~/.config/ghostty/config
-echo -e "${GREEN}✓ ghostty設定をリンクしました${NC}"
-
-# claude
-mkdir -p ~/.claude
-safe_link ~/dotfiles/.claude/CLAUDE.md ~/.claude/CLAUDE.md
-safe_link ~/dotfiles/.claude/settings.json ~/.claude/settings.json
-safe_link ~/dotfiles/.claude/agents ~/.claude/agents
-safe_link ~/dotfiles/.claude/plugins ~/.claude/plugins
-safe_link ~/dotfiles/.claude/hooks ~/.claude/hooks
-safe_link ~/dotfiles/.claude/commands ~/.claude/commands
-echo -e "${GREEN}✓ Claude Code設定をリンクしました${NC}"
-
-# gh (GitHub CLI)
+# gh (GitHub CLI) - Stow対象外
 mkdir -p ~/.config/gh
 safe_link ~/dotfiles/gh/config.yml ~/.config/gh/config.yml
 echo -e "${GREEN}✓ GitHub CLI設定をリンクしました${NC}"
-
-# nvim
-mkdir -p ~/.config/nvim
-mkdir -p ~/.config/nvim/lua
-safe_link ~/dotfiles/nvim/.config/nvim/init.lua ~/.config/nvim/init.lua
-echo -e "${GREEN}✓ Neovim設定をリンクしました${NC}"
-
-# tmux
-safe_link ~/dotfiles/tmux/.tmux.conf ~/.tmux.conf
-echo -e "${GREEN}✓ tmux設定をリンクしました${NC}"
-
-# bat
-mkdir -p ~/.config/bat
-safe_link ~/dotfiles/bat/.config/bat/config ~/.config/bat/config
-echo -e "${GREEN}✓ bat設定をリンクしました${NC}"
-
-# atuin
-mkdir -p ~/.config/atuin
-safe_link ~/dotfiles/atuin/.config/atuin/config.toml ~/.config/atuin/config.toml
-echo -e "${GREEN}✓ atuin設定をリンクしました${NC}"
 
 # espanso
 if [ "$IS_MACOS" = true ]; then

@@ -1,1 +1,25 @@
-../../.aliases
+# ========================================
+# dotfiles エイリアス設定
+# ========================================
+# カテゴリ別に分割されたエイリアスファイルを読み込み
+#
+# 構成:
+#   aliases/core.zsh       - 基本操作、システム、ネットワーク
+#   aliases/git.zsh        - Git、GitHub CLI
+#   aliases/docker.zsh     - Docker、Docker Compose
+#   aliases/kubernetes.zsh - Kubernetes
+#   aliases/terraform.zsh  - Terraform、AWS
+#   aliases/node.zsh       - npm、yarn、pnpm、bun
+#   aliases/dev.zsh        - エディタ、Python、便利関数
+
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+ALIASES_DIR="$DOTFILES_DIR/aliases"
+
+# 分割ファイルの読み込み
+for alias_file in "$ALIASES_DIR"/*.zsh; do
+    if [[ -f "$alias_file" ]]; then
+        source "$alias_file"
+    fi
+done
+
+unset ALIASES_DIR

@@ -11,7 +11,7 @@ STOW := stow
 STOW_FLAGS := -v --target=$(HOME) --restow
 
 # Stowパッケージ一覧
-PACKAGES := zsh git nvim tmux ghostty bat atuin
+PACKAGES := zsh git nvim tmux ghostty bat atuin claude
 
 # macOS専用パッケージ
 MACOS_PACKAGES := antigravity

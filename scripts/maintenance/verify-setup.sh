@@ -33,6 +33,8 @@ verify_symlinks() {
         "$HOME/.p10k.zsh:stow/zsh/.p10k.zsh"
         "$HOME/.config/bat:stow/bat/.config/bat"
         "$HOME/.config/atuin:stow/atuin/.config/atuin"
+        "$HOME/.config/gh/config.yml:stow/gh/.config/gh/config.yml"
+        "$HOME/.ssh/config:stow/ssh/.ssh/config"
     )
 
     for link_pair in "${links[@]}"; do

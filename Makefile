@@ -12,7 +12,8 @@ STOW_DIR := stow
 STOW_FLAGS := -v --target=$(HOME) --dir=$(STOW_DIR) --restow
 
 # Stowパッケージ一覧
-PACKAGES := zsh git nvim tmux ghostty bat atuin claude
+# 注: espanso, raycast, antigravityはOS固有パスのためStow対象外（bootstrap.shで個別処理）
+PACKAGES := zsh git nvim tmux ghostty bat atuin claude gh ssh
 
 # デフォルトターゲット
 .PHONY: help

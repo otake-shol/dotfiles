@@ -22,17 +22,20 @@ cd ~/dotfiles && bash bootstrap.sh
 | ディレクトリ | 内容 |
 |-------------|------|
 | `stow/zsh/` | シェル設定（.zshrc, .aliases） |
+| `stow/git/`, `stow/gh/` | Git/GitHub CLI設定 |
+| `stow/ssh/` | SSH設定 |
 | `stow/claude/` | Claude Code（agents, commands, hooks） |
-| `Brewfile` | Homebrewパッケージ |
 | `stow/nvim/` | Neovim設定 |
 | `stow/tmux/` | tmux設定 |
 | `stow/ghostty/` | Ghosttyターミナル |
-| `stow/git/`, `gh/` | Git/GitHub CLI設定 |
-| `ssh/` | SSH設定 |
 | `stow/bat/`, `stow/atuin/` | bat/atuin設定 |
-| `raycast/` | Raycastスクリプト |
-| `antigravity/` | Antigravity設定 |
+| `stow/espanso/` | Espansoスニペット ※ |
+| `Brewfile` | Homebrewパッケージ |
+| `raycast/` | Raycastスクリプト ※ |
+| `antigravity/` | Antigravity設定 ※ |
 | `scripts/` | ユーティリティスクリプト |
+
+※ OS固有パスのため、bootstrap.shで個別リンク
 
 ## テーマ
 

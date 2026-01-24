@@ -590,19 +590,11 @@ elif [ "$USE_SYSTEM_PKG" = true ] && [ "$IS_LINUX" = true ]; then
     echo -e "${YELLOW}Linux固有パッケージマネージャーでツールをインストール...${NC}"
     bash "$SCRIPT_DIR/scripts/setup/linux.sh"
 elif command -v brew &>/dev/null; then
-    # Homebrewを使用
+    BREWFILE="Brewfile"
     if [ "$IS_LINUX" = true ]; then
-        # Linux用Brewfile（GUIアプリを除外）
-        BREWFILE="Brewfile.linux"
-        if [ ! -f "$BREWFILE" ]; then
-            # LinuxにはGUIアプリなしのBrewfileを生成
-            echo -e "${YELLOW}Linux用Brewfile (CLI tools only) を使用します${NC}"
-            BREWFILE="Brewfile"
-        fi
-    else
-        BREWFILE="Brewfile"
-        echo -e "${GREEN}Brewfileからツールをインストールします${NC}"
+        echo -e "${YELLOW}Linux環境: caskはスキップされます${NC}"
     fi
+    echo -e "${GREEN}Brewfileからツールをインストールします${NC}"
 
     if [ -f "$BREWFILE" ]; then
         if install_brewfile_packages "$BREWFILE"; then
@@ -657,36 +649,23 @@ stow_package() {
 }
 
 # Stow パッケージのインストール
-STOW_PACKAGES=(zsh git tmux nvim ghostty bat atuin claude)
+STOW_PACKAGES=(zsh git tmux nvim ghostty bat atuin claude gh ssh)
 
 for pkg in "${STOW_PACKAGES[@]}"; do
     stow_package "$pkg"
 done
 echo -e "${GREEN}✓ Stowパッケージをインストールしました (${STOW_PACKAGES[*]})${NC}"
 
-# ssh（Stow対象外 - パーミッション設定が必要）
+# ssh パーミッション設定（Stowでリンク後に適用）
 if [ "$DRY_RUN" != true ]; then
     mkdir -p ~/.ssh/sockets
     chmod 700 ~/.ssh
+    [ -f ~/.ssh/config ] && chmod 600 ~/.ssh/config
 else
-    echo -e "${CYAN}[DRY RUN] Would create ~/.ssh/sockets with mode 700${NC}"
-fi
-if [ ! -f ~/.ssh/config ] || [ -L ~/.ssh/config ]; then
-    safe_link ~/dotfiles/ssh/config ~/.ssh/config
-    if [ "$DRY_RUN" != true ]; then
-        chmod 600 ~/.ssh/config
-    fi
-    echo -e "${GREEN}✓ ssh設定をリンクしました${NC}"
-else
-    echo -e "${YELLOW}⚠ ssh設定は既存ファイルのため、スキップしました${NC}"
+    echo -e "${CYAN}[DRY RUN] Would set ssh permissions${NC}"
 fi
 
-# gh (GitHub CLI) - Stow対象外
-mkdir -p ~/.config/gh
-safe_link ~/dotfiles/gh/config.yml ~/.config/gh/config.yml
-echo -e "${GREEN}✓ GitHub CLI設定をリンクしました${NC}"
-
-# espanso
+# espanso（macOS/Linuxでパスが異なるためStow対象外）
 if [ "$IS_MACOS" = true ]; then
     ESPANSO_CONFIG_DIR="$HOME/Library/Application Support/espanso"
 else
@@ -694,7 +673,7 @@ else
 fi
 if command -v espanso &> /dev/null || [ -d "$ESPANSO_CONFIG_DIR" ]; then
     mkdir -p "$ESPANSO_CONFIG_DIR/match"
-    safe_link ~/dotfiles/espanso/match/ai-prompts.yml "$ESPANSO_CONFIG_DIR/match/ai-prompts.yml"
+    safe_link ~/dotfiles/stow/espanso/.config/espanso/match/ai-prompts.yml "$ESPANSO_CONFIG_DIR/match/ai-prompts.yml"
     echo -e "${GREEN}✓ espanso設定をリンクしました${NC}"
 else
     echo -e "${YELLOW}⚠ espansoがインストールされていません。スキップします${NC}"

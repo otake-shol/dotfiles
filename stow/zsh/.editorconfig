@@ -51,10 +51,6 @@ indent_size = 4
 [*.lua]
 indent_size = 2
 
-# Nix
-[*.nix]
-indent_size = 2
-
 # Zsh設定ファイル
 [*.zsh]
 indent_size = 2

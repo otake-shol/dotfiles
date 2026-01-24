@@ -209,8 +209,6 @@ dotfiles/
 ├── Makefile               # GNU Stow操作
 ├── Brewfile               # 必須パッケージ
 ├── Brewfile.full          # 全パッケージ
-├── flake.nix              # Nix設定
-├── home.nix               # home-manager設定
 ├── stow/                   # GNU Stowパッケージ
 │   ├── zsh/
 │   ├── git/
@@ -271,16 +269,6 @@ bash scripts/utils/zsh-benchmark.sh
 1. `profiles/<name>.zsh` を作成
 2. `DOTFILES_PROFILE=<name>` で切り替え
 3. `.zshrc` で自動読み込み
-
-## Nix使用方法
-
-```bash
-# 開発シェル
-nix develop
-
-# home-manager適用
-nix run home-manager -- switch --flake .
-```
 
 ## CI/CD
 

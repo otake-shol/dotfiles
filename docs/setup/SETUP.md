@@ -220,62 +220,6 @@ brew bundle --file=Brewfile
 
 ---
 
-## ❄️ Alternative: Nix Flakes
-
-Homebrewの代替として、Nixを使った再現可能な環境構築も可能です。
-
-### Nixのインストール
-
-```bash
-# Nixインストール（マルチユーザー）
-curl -L https://nixos.org/nix/install | sh
-
-# Flakesを有効化（~/.config/nix/nix.conf）
-mkdir -p ~/.config/nix
-echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf
-```
-
-### 使い方
-
-```bash
-cd ~/dotfiles
-
-# 開発シェルに入る（一時的に全ツールが使用可能）
-nix develop
-
-# home-managerで永続的に設定を適用
-nix run home-manager -- switch --flake .
-
-# パッケージのビルドのみ
-nix build
-```
-
-### Nixの利点
-
-| 特徴 | 説明 |
-|------|------|
-| **再現性** | 同じflake.lockから完全に同じ環境を再構築可能 |
-| **アトミック** | 設定変更が失敗しても以前の状態に戻せる |
-| **宣言的** | 設定ファイルで環境を完全に記述 |
-| **クロスプラットフォーム** | macOS/Linux両対応 |
-
-### 設定ファイル
-
-- `flake.nix` - Flake設定（入力、出力、サポートシステム）
-- `home.nix` - home-manager設定（ユーザー環境、パッケージ）
-
-### Homebrew vs Nix
-
-| 観点 | Homebrew | Nix |
-|------|----------|-----|
-| 学習コスト | 低 | 高 |
-| 再現性 | 中 | 高 |
-| macOSアプリ | ✅ Cask対応 | △ 限定的 |
-| 設定管理 | 別途必要 | 統合可能 |
-| 推奨 | 一般ユーザー | DevOps/SRE |
-
----
-
 ## 📚 参考リンク
 
 - [Homebrew](https://brew.sh/)
@@ -283,8 +227,6 @@ nix build
 - [Powerlevel10k](https://github.com/romkatv/powerlevel10k)
 - [Nerd Fonts](https://www.nerdfonts.com/)
 - [Ghostty](https://ghostty.org/)
-- [Nix](https://nixos.org/)
-- [home-manager](https://github.com/nix-community/home-manager)
 
 ---
 

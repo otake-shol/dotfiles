@@ -34,7 +34,6 @@
 
     # ターミナル多重化
     tmux
-    zellij
 
     # JSON/YAML
     jq
@@ -43,7 +42,7 @@
     # モダンCLI
     dust
     procs
-    bottom
+    btop
     hyperfine
     tokei
     tealdeer

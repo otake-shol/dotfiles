@@ -179,8 +179,8 @@ brew "yarn", link: false
 brew "yazi"
 # Process YAML, JSON, XML, CSV and properties documents from the CLI
 brew "yq"
-# Pluggable terminal workspace, with terminal multiplexer as the base feature
-brew "zellij"
+# ターミナル多重化はtmuxに統一（zellijは必要に応じてインストール）
+# brew "zellij"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
 # Everything you need to get started with Heroku

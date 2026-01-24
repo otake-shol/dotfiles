@@ -50,7 +50,6 @@
         fd
         ripgrep
         fzf
-        zellij
         yazi
 
         # Git
@@ -69,7 +68,7 @@
         # モダンCLI
         dust
         procs
-        bottom
+        btop
         hyperfine
         tokei
         tealdeer

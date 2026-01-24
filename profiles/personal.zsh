@@ -12,4 +12,5 @@ alias proj="cd $PROJECTS_DIR"
 # 個人用Git設定（必要に応じて）
 # git config --global user.email "personal@example.com"
 
-echo "🏠 Personal profile loaded"
+# プロファイル読み込み通知（VERBOSEモードまたは明示的に有効化時のみ）
+[[ "${DOTFILES_VERBOSE:-}" == "true" ]] && echo "🏠 Personal profile loaded"

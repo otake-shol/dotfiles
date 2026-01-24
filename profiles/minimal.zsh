@@ -124,4 +124,5 @@ compare_startup() {
     done
 }
 
-echo "⚡ Minimal profile loaded (fast startup mode)"
+# プロファイル読み込み通知（VERBOSEモードまたは明示的に有効化時のみ）
+[[ "${DOTFILES_VERBOSE:-}" == "true" ]] && echo "⚡ Minimal profile loaded (fast startup mode)"

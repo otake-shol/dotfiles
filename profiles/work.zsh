@@ -129,9 +129,9 @@ work_log() {
 # ========================================
 # セキュリティ関連
 # ========================================
-# 機密情報の漏洩防止リマインダー
+# 機密情報の漏洩防止リマインダー（VERBOSEモード時のみ）
 _work_security_reminder() {
-    echo "⚠️  Work profile: Be careful with sensitive data"
+    [[ "${DOTFILES_VERBOSE:-}" == "true" ]] && echo "⚠️  Work profile: Be careful with sensitive data"
 }
 
 # 初回のみ表示
@@ -140,4 +140,5 @@ if [[ -z "$_WORK_REMINDER_SHOWN" ]]; then
     export _WORK_REMINDER_SHOWN=1
 fi
 
-echo "💼 Work profile loaded"
+# プロファイル読み込み通知（VERBOSEモードまたは明示的に有効化時のみ）
+[[ "${DOTFILES_VERBOSE:-}" == "true" ]] && echo "💼 Work profile loaded"

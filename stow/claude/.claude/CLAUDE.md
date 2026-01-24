@@ -203,31 +203,25 @@ export SENTRY_AUTH_TOKEN="sntrys_xxxxx"
 
 ```
 dotfiles/
-├── .zshrc                 # メインzsh設定
-├── .aliases               # エイリアス定義
 ├── bootstrap.sh           # セットアップスクリプト
 ├── Makefile               # GNU Stow操作
 ├── Brewfile               # 必須パッケージ
 ├── Brewfile.full          # 全パッケージ
-├── stow/                   # GNU Stowパッケージ
-│   ├── zsh/
-│   ├── git/
-│   ├── nvim/
-│   └── ...
-├── profiles/              # 環境別プロファイル
-│   ├── personal.zsh
-│   ├── work.zsh
-│   └── minimal.zsh
+├── stow/                  # GNU Stowパッケージ
+│   ├── zsh/               # .zshrc, .aliases, .zsh/
+│   ├── git/               # .gitconfig
+│   ├── claude/            # .claude/ (このファイル)
+│   ├── nvim/              # .config/nvim/
+│   ├── tmux/              # .tmux.conf
+│   ├── ghostty/           # .config/ghostty/
+│   ├── bat/               # .config/bat/
+│   └── atuin/             # .config/atuin/
 ├── scripts/               # ユーティリティスクリプト
-│   ├── setup/
-│   ├── maintenance/
-│   ├── utils/
-│   └── lib/
-├── tests/                 # Batsテスト
-│   ├── *.bats
-│   └── Dockerfile
-└── demo/                  # VHSデモ録画
-    └── scenarios/
+│   ├── setup/             # OS別セットアップ
+│   ├── maintenance/       # verify-setup.sh 等
+│   ├── utils/             # ヘルパースクリプト
+│   └── lib/               # 共通ライブラリ
+└── docs/                  # ドキュメント
 ```
 
 ## 開発コマンド

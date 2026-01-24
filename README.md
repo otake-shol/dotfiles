@@ -150,41 +150,36 @@ bash bootstrap.sh --linux-only  # Linux-specific setup only
 
 ```
 dotfiles/
-├── stow/                      # GNU Stow packages (single source of truth)
-│   ├── zsh/                  # Zsh configuration
+├── stow/                      # GNU Stow packages
+│   ├── zsh/                   # Zsh configuration
 │   │   ├── .zshrc
 │   │   ├── .aliases
-│   │   ├── .editorconfig
-│   │   └── .tool-versions
-│   ├── git/                  # Git configuration
-│   │   ├── .gitconfig
-│   │   └── .gitignore_global
-│   ├── claude/               # Claude Code configuration
-│   │   └── .claude/
-│   │       ├── CLAUDE.md
-│   │       ├── settings.json
-│   │       ├── agents/
-│   │       └── commands/
-│   ├── nvim/                 # Neovim configuration
-│   │   └── .config/nvim/
-│   ├── tmux/                 # tmux configuration
-│   │   └── .tmux.conf
-│   ├── ghostty/              # Ghostty terminal
-│   │   └── .config/ghostty/
-│   ├── bat/                  # bat configuration
-│   │   └── .config/bat/
-│   └── atuin/                # Atuin shell history
-│       └── .config/atuin/
-├── aliases/                   # Modular aliases (loaded by .zshrc)
-│   ├── core.zsh              # Basic commands, navigation
-│   ├── git.zsh               # Git & GitHub CLI
-│   ├── docker.zsh            # Docker & Compose
-│   ├── kubernetes.zsh        # kubectl, helm
-│   └── ...
+│   │   ├── .p10k.zsh
+│   │   ├── .tool-versions
+│   │   └── .zsh/
+│   │       ├── core.zsh       # Basic settings
+│   │       ├── plugins.zsh    # Oh My Zsh plugins
+│   │       ├── lazy.zsh       # Lazy loading (asdf, atuin)
+│   │       ├── tools.zsh      # Tool configs (fzf, zoxide)
+│   │       ├── aliases/       # Modular aliases
+│   │       │   ├── core.zsh
+│   │       │   ├── git.zsh
+│   │       │   ├── node.zsh
+│   │       │   └── dev.zsh
+│   │       └── functions/     # fzf integrations
+│   ├── git/                   # Git configuration
+│   ├── claude/                # Claude Code (agents, commands)
+│   ├── nvim/                  # Neovim
+│   ├── tmux/                  # tmux
+│   ├── ghostty/               # Ghostty terminal
+│   ├── bat/                   # bat (syntax highlighting)
+│   └── atuin/                 # Shell history
 ├── scripts/                   # Utility scripts
-│   ├── setup/                # OS-specific setup
-│   ├── maintenance/          # Update, verify scripts
-│   └── utils/                # Helper scripts
+│   ├── setup/                 # OS-specific setup
+│   ├── maintenance/           # verify-setup.sh, etc.
+│   ├── utils/                 # Helper scripts
+│   └── lib/                   # Shared libraries
+├── docs/                      # Documentation
 ├── Makefile                   # GNU Stow operations
 ├── Brewfile                   # Essential packages
 ├── Brewfile.full              # All packages

@@ -21,27 +21,32 @@ source "${SCRIPT_DIR}/../lib/common.sh"
 verify_symlinks() {
     print_header "シンボリックリンク検証"
 
+    # stow/配下のパスパターン（相対パスで作成されるため末尾で判定）
     local links=(
-        "$HOME/.zshrc:$DOTFILES_DIR/.zshrc"
-        "$HOME/.aliases:$DOTFILES_DIR/.aliases"
-        "$HOME/.gitconfig:$DOTFILES_DIR/git/.gitconfig"
-        "$HOME/.config/nvim:$DOTFILES_DIR/nvim/.config/nvim"
-        "$HOME/.tmux.conf:$DOTFILES_DIR/tmux/.tmux.conf"
-        "$HOME/.config/ghostty:$DOTFILES_DIR/ghostty"
-        "$HOME/.tool-versions:$DOTFILES_DIR/.tool-versions"
+        "$HOME/.zshrc:stow/zsh/.zshrc"
+        "$HOME/.aliases:stow/zsh/.aliases"
+        "$HOME/.gitconfig:stow/git/.gitconfig"
+        "$HOME/.config/nvim:stow/nvim/.config/nvim"
+        "$HOME/.tmux.conf:stow/tmux/.tmux.conf"
+        "$HOME/.config/ghostty:stow/ghostty/.config/ghostty"
+        "$HOME/.tool-versions:stow/zsh/.tool-versions"
+        "$HOME/.p10k.zsh:stow/zsh/.p10k.zsh"
+        "$HOME/.config/bat:stow/bat/.config/bat"
+        "$HOME/.config/atuin:stow/atuin/.config/atuin"
     )
 
     for link_pair in "${links[@]}"; do
         local target="${link_pair%%:*}"
-        local source="${link_pair##*:}"
+        local expected_suffix="${link_pair##*:}"
         local name
         name=$(basename "$target")
 
         if [[ -L "$target" ]]; then
             local actual_source
             actual_source=$(readlink "$target")
-            if [[ "$actual_source" == "$source" ]]; then
-                check_pass "$name → $source"
+            # 相対パスの末尾が期待するパターンと一致するかチェック
+            if [[ "$actual_source" == *"$expected_suffix" ]]; then
+                check_pass "$name"
             else
                 check_warn "$name リンク先が異なる: $actual_source"
             fi

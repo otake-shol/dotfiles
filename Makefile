@@ -28,6 +28,15 @@ help:
 	@echo "  make check          Stowのドライラン（変更確認）"
 	@echo "  make bootstrap      完全セットアップ（bootstrap.sh実行）"
 	@echo ""
+	@echo "検証・メンテナンス:"
+	@echo "  make test           Batsテスト実行"
+	@echo "  make lint           ShellCheckでlint"
+	@echo "  make health         全体ヘルスチェック（lint+test+verify）"
+	@echo "  make bench          Zsh起動速度ベンチマーク"
+	@echo "  make deps           Homebrew依存ツリー表示"
+	@echo "  make brewsync       Brewfile同期チェック"
+	@echo "  make clean          バックアップファイル削除"
+	@echo ""
 	@echo "パッケージ: $(PACKAGES)"
 
 # パッケージ一覧表示
@@ -99,3 +108,27 @@ clean:
 	@find . -name "*.backup.*" -delete
 	@find . -name "*~" -delete
 	@echo "✓ バックアップファイルを削除しました"
+
+# zsh起動速度ベンチマーク
+.PHONY: bench
+bench:
+	@echo "=== Zsh起動速度ベンチマーク ==="
+	@bash scripts/utils/zsh-benchmark.sh
+
+# 全体ヘルスチェック
+.PHONY: health
+health: lint test check
+	@echo ""
+	@echo "=== セットアップ検証 ==="
+	@bash scripts/maintenance/verify-setup.sh
+
+# Homebrew依存ツリー表示
+.PHONY: deps
+deps:
+	@echo "=== Brewfile 依存関係 ==="
+	@brew deps --tree stow bat eza fzf ripgrep zoxide 2>/dev/null || echo "brew deps 実行にはHomebrewが必要です"
+
+# Brewfile同期チェック
+.PHONY: brewsync
+brewsync:
+	@bash scripts/maintenance/sync-brewfile.sh

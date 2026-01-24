@@ -1,8 +1,4 @@
-<h1 align="center">
-  <img src="https://raw.githubusercontent.com/otake-shol/dotfiles/master/docs/assets/logo.png" alt="dotfiles" width="200">
-  <br>
-  dotfiles
-</h1>
+<h1 align="center">dotfiles</h1>
 
 <p align="center">
   <strong>A modern, cross-platform dotfiles repository with AI-driven development integration</strong>

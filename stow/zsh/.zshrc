@@ -52,5 +52,22 @@ ZSH_CONFIG_DIR="${HOME}/.zsh"
 # ========================================
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 
+# ========================================
+# 起動時自己診断（重要な関数の存在確認）
+# ========================================
+_zsh_startup_check() {
+  local missing=()
+  # 遅延読み込み関数の確認
+  (( ! $+functions[_asdf_init] )) && missing+=("_asdf_init")
+  (( ! $+functions[claude] )) && missing+=("claude")
+
+  if (( ${#missing} > 0 )); then
+    echo "⚠️  zsh: 重要な関数が未定義: ${missing[*]}" >&2
+    echo "   → source ~/.zsh/lazy.zsh を確認してください" >&2
+  fi
+}
+_zsh_startup_check
+unset -f _zsh_startup_check
+
 # プロファイリング結果表示（デバッグ時のみ）
 # zprof

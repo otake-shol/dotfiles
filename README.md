@@ -143,6 +143,8 @@ Node.js等のランタイムは[asdf](https://asdf-vm.com/)で管理。遅延読
 
 ## トラブルシューティング
 
+> 詳細な診断手順は [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) を参照
+
 ### Homebrewのパスが通らない
 
 ```bash

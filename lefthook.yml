@@ -34,6 +34,22 @@ pre-commit:
         - merge
         - rebase
 
+    # 保護された変数のunsetチェック
+    protected-vars:
+      glob: "*.{zsh,sh}"
+      run: |
+        protected="ZSH_CONFIG_DIR|DOTFILES_DIR|HOME|PATH|SHELL"
+        for f in {staged_files}; do
+          if grep -qE "unset.+($protected)" "$f"; then
+            echo "❌ $f: 保護された変数をunsetしています"
+            grep -nE "unset.+($protected)" "$f"
+            exit 1
+          fi
+        done
+      skip:
+        - merge
+        - rebase
+
     # 末尾の空白チェック
     trailing-whitespace:
       run: git diff --check --cached

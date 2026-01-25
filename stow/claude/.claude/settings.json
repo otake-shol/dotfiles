@@ -1,27 +1,4 @@
 {
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/dotfiles/.claude/hooks/update-brewfile.sh"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "osascript -e 'display notification \"処理が完了しました\" with title \"Claude Code\" sound name \"Glass\"'"
-          }
-        ]
-      }
-    ]
-  },
   "permissions": {
     "allow": [
       "Bash",
@@ -56,6 +33,32 @@
     "additionalDirectories": [
       "~/dotfiles/"
     ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/dotfiles/.claude/hooks/update-brewfile.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"処理が完了しました\" with title \"Claude Code\" sound name \"Glass\"'"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "superpowers@superpowers-marketplace": true
   },
   "language": "日本語"
 }

@@ -189,6 +189,34 @@ export SENTRY_AUTH_TOKEN="sntrys_xxxxx"
 
 ---
 
+## プラグイン設定
+
+### インストール済みプラグイン
+
+| プラグイン | マーケットプレイス | 用途 |
+|-----------|-------------------|------|
+| superpowers | obra/superpowers-marketplace | 開発ワークフロー強化（TDD、コードレビュー、デバッグ等） |
+
+### 新規マシンでのセットアップ
+
+```bash
+# 1. マーケットプレイスを追加
+claude /plugin marketplace add obra/superpowers-marketplace
+
+# 2. プラグインをインストール
+claude /plugin install superpowers@superpowers-marketplace
+```
+
+### superpowersプラグインの主要スキル
+
+- `/brainstorming` - 機能設計前のブレインストーミング
+- `/test-driven-development` - TDDワークフロー
+- `/systematic-debugging` - 体系的デバッグ
+- `/requesting-code-review` - コードレビュー依頼
+- `/writing-plans` - 実装計画作成
+
+---
+
 ## dotfiles 開発ガイドライン
 
 ## ディレクトリ構造

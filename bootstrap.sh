@@ -3,6 +3,7 @@
 # 使用方法: bash bootstrap.sh
 # オプション:
 #   -n, --dry-run    実際の変更を行わずシミュレーション
+#   -y, --yes        対話プロンプトをすべてYesで自動応答
 #   -h, --help       ヘルプを表示
 #   -v, --verbose    詳細出力
 #   --skip-apps      アプリケーションインストールをスキップ
@@ -15,6 +16,7 @@ set -e  # エラーで停止
 DRY_RUN=false
 VERBOSE=false
 SKIP_APPS=false
+ASSUME_YES=false
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # 共通ライブラリ読み込み
@@ -47,13 +49,16 @@ show_help() {
 
 オプション:
   -n, --dry-run    実際の変更を行わずシミュレーション実行
+  -y, --yes        対話プロンプトをすべてYesで自動応答（完全自動化）
   -v, --verbose    詳細な出力を表示
+  --skip-apps      アプリケーションインストールをスキップ
   -h, --help       このヘルプを表示
 
 例:
   bash bootstrap.sh           # 通常実行
   bash bootstrap.sh --dry-run # ドライラン（変更なし）
   bash bootstrap.sh -n -v     # ドライラン + 詳細出力
+  bash bootstrap.sh -y        # 完全自動実行（対話なし）
 EOF
     exit 0
 }
@@ -65,6 +70,9 @@ while [[ "$#" -gt 0 ]]; do
     case $1 in
         -n|--dry-run)
             DRY_RUN=true
+            ;;
+        -y|--yes)
+            ASSUME_YES=true
             ;;
         -v|--verbose)
             VERBOSE=true
@@ -346,8 +354,12 @@ fi
 if [[ "$ARCH" == "arm64" ]]; then
     echo -e "\n${YELLOW}[0/7] Rosetta 2の確認（オプション）...${NC}"
     if ! /usr/bin/pgrep -q oahd; then
-        echo -e "${YELLOW}Rosetta 2をインストールしますか? (一部のx86アプリに必要) (y/n)${NC}"
-        read -r answer
+        if [ "$ASSUME_YES" = true ]; then
+            answer="y"
+        else
+            echo -e "${YELLOW}Rosetta 2をインストールしますか? (一部のx86アプリに必要) (y/n)${NC}"
+            read -r answer
+        fi
         if [ "$answer" = "y" ]; then
             softwareupdate --install-rosetta --agree-to-license
             echo -e "${GREEN}✓ Rosetta 2をインストールしました${NC}"
@@ -364,8 +376,12 @@ fi
 echo -e "\n${YELLOW}[1/7] Homebrewの確認...${NC}"
 if ! command -v brew &> /dev/null; then
     echo -e "${RED}Homebrewがインストールされていません。${NC}"
-    echo -e "${YELLOW}Homebrewをインストールしますか? (y/n)${NC}"
-    read -r answer
+    if [ "$ASSUME_YES" = true ]; then
+        answer="y"
+    else
+        echo -e "${YELLOW}Homebrewをインストールしますか? (y/n)${NC}"
+        read -r answer
+    fi
     if [ "$answer" = "y" ]; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         # Homebrew PATH設定（HOMEBREW_PREFIXを使用）
@@ -396,8 +412,12 @@ elif command -v brew &>/dev/null; then
         if install_brewfile_packages "$BREWFILE"; then
             echo -e "${GREEN}✓ アプリケーションのインストールが完了しました${NC}"
         else
-            echo -e "${YELLOW}続行しますか? (y/n)${NC}"
-            read -r answer
+            if [ "$ASSUME_YES" = true ]; then
+                answer="y"
+            else
+                echo -e "${YELLOW}続行しますか? (y/n)${NC}"
+                read -r answer
+            fi
             if [ "$answer" != "y" ]; then
                 echo -e "${RED}セットアップを中断しました${NC}"
                 exit 1
@@ -469,7 +489,7 @@ else
 fi
 
 # antigravity (macOS only)
-if [ "$IS_MACOS" = true ]; then
+if is_macos; then
     ANTIGRAVITY_USER_DIR="$HOME/Library/Application Support/Antigravity/User"
     if [ -d "$HOME/Library/Application Support/Antigravity" ]; then
         mkdir -p "$ANTIGRAVITY_USER_DIR"
@@ -492,6 +512,8 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
     if [ "$DRY_RUN" = true ] || [ "$CI" = "true" ]; then
         echo -e "${CYAN}[DRY RUN/CI] Oh My Zshのインストールをスキップします${NC}"
         answer="n"
+    elif [ "$ASSUME_YES" = true ]; then
+        answer="y"
     else
         echo -e "${YELLOW}Oh My Zshをインストールしますか? (y/n)${NC}"
         read -r answer
@@ -587,15 +609,22 @@ echo -e "\n${YELLOW}ローカル設定ファイルのセットアップ...${NC}"
 
 # .gitconfig.local
 if [ ! -f ~/.gitconfig.local ]; then
-    echo -e "${YELLOW}Git ユーザー情報を設定します${NC}"
-    read -rp "Git ユーザー名: " git_name
-    read -rp "Git メールアドレス: " git_email
-    cat > ~/.gitconfig.local << EOF
+    if [ "$ASSUME_YES" = true ]; then
+        # 自動モード: テンプレートからコピー（後で編集を促す）
+        cp ~/dotfiles/stow/git/.gitconfig.local.template ~/.gitconfig.local
+        echo -e "${GREEN}✓ ~/.gitconfig.local を作成しました（テンプレートからコピー）${NC}"
+        echo -e "${YELLOW}  ※ ~/.gitconfig.local を編集してGitユーザー情報を設定してください${NC}"
+    else
+        echo -e "${YELLOW}Git ユーザー情報を設定します${NC}"
+        read -rp "Git ユーザー名: " git_name
+        read -rp "Git メールアドレス: " git_email
+        cat > ~/.gitconfig.local << EOF
 [user]
 	name = $git_name
 	email = $git_email
 EOF
-    echo -e "${GREEN}✓ ~/.gitconfig.local を作成しました${NC}"
+        echo -e "${GREEN}✓ ~/.gitconfig.local を作成しました${NC}"
+    fi
 else
     echo -e "${GREEN}✓ ~/.gitconfig.local は既存です${NC}"
 fi

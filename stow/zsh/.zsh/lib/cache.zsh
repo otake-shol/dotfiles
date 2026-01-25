@@ -9,7 +9,7 @@
 #   fi
 #   source "$cache_file"
 
-# キャッシュが有効かチェック
+# キャッシュが有効かチェック（macOS専用）
 # Usage: _cache_valid "$cache_file" && source "$cache_file"
 # Returns: 0 if valid, 1 if invalid or not exists
 _cache_valid() {
@@ -19,11 +19,7 @@ _cache_valid() {
   [[ ! -f "$cache_file" ]] && return 1
 
   local mtime
-  if [[ "$(uname)" == "Darwin" ]]; then
-    mtime=$(stat -f %m "$cache_file" 2>/dev/null)
-  else
-    mtime=$(stat -c %Y "$cache_file" 2>/dev/null)
-  fi
+  mtime=$(stat -f %m "$cache_file" 2>/dev/null)
 
   [[ -n "$mtime" && $(( $(date +%s) - mtime )) -lt $ttl_sec ]]
 }

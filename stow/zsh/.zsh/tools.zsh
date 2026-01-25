@@ -58,7 +58,7 @@ unset _trash_path
 [[ -f "$HOME/.local/bin/env" ]] && . "$HOME/.local/bin/env"
 
 
-# --- dotfiles更新リマインダー ---
+# --- dotfiles更新リマインダー（macOS専用） ---
 _dotfiles_update_reminder() {
   local dotfiles_dir="$HOME/dotfiles"
   local git_head="$dotfiles_dir/.git/refs/heads/master"
@@ -68,11 +68,7 @@ _dotfiles_update_reminder() {
   if [[ -f "$git_head" ]]; then
     # ファイルのmtimeを取得（git logより高速）
     local last_update
-    if [[ "$(uname)" == "Darwin" ]]; then
-      last_update=$(stat -f %m "$git_head" 2>/dev/null)
-    else
-      last_update=$(stat -c %Y "$git_head" 2>/dev/null)
-    fi
+    last_update=$(stat -f %m "$git_head" 2>/dev/null)
 
     if [[ -n "$last_update" ]]; then
       local days_since=$(( ($(date +%s) - last_update) / 86400 ))

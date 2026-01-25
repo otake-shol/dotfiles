@@ -10,7 +10,8 @@ Brewfile.lock.json
 .gitconfig.local
 .zshrc.local
 
-# Claude Code project-local settings (auto-generated, root only)
+# Claude Code project-local settings (auto-generated at repo root)
+# Note: stow/claude/.claude/ is user config (tracked), this is project-specific (ignored)
 /.claude/
 
 # Serena tool internal files

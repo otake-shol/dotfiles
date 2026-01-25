@@ -18,6 +18,7 @@ VERBOSE=false
 SKIP_APPS=false
 ASSUME_YES=false
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CURRENT_STEP=""  # エラー時のステップ特定用
 
 # 共通ライブラリ読み込み
 # shellcheck source=scripts/lib/common.sh
@@ -100,7 +101,8 @@ show_step() {
     local step=$1
     local total=$2
     local title=$3
-    echo -e "\n${YELLOW}[$step/$total] ${title}${NC}"
+    CURRENT_STEP="[$step/$total] $title"
+    echo -e "\n${YELLOW}${CURRENT_STEP}${NC}"
 }
 
 # ログ関数（bootstrap.sh固有：LOG_FILE, VERBOSE使用）
@@ -261,6 +263,7 @@ cleanup() {
         echo -e "${RED}║  ❌ エラーが発生しました                               ║${NC}"
         echo -e "${RED}╠════════════════════════════════════════════════════════╣${NC}"
         echo -e "${RED}║${NC}  終了コード: $exit_code"
+        echo -e "${RED}║${NC}  失敗ステップ: ${CURRENT_STEP:-初期化中}"
         echo -e "${RED}║${NC}  ログファイル: $LOG_FILE"
         echo -e "${RED}╚════════════════════════════════════════════════════════╝${NC}"
 
@@ -352,7 +355,7 @@ fi
 # 0. Apple Silicon: Rosetta 2確認
 # ========================================
 if [[ "$ARCH" == "arm64" ]]; then
-    echo -e "\n${YELLOW}[0/7] Rosetta 2の確認（オプション）...${NC}"
+    show_step 0 7 "Rosetta 2の確認（オプション）"
     if ! /usr/bin/pgrep -q oahd; then
         if [ "$ASSUME_YES" = true ]; then
             answer="y"
@@ -373,7 +376,7 @@ fi
 # ========================================
 # 1. Homebrewのインストール確認
 # ========================================
-echo -e "\n${YELLOW}[1/7] Homebrewの確認...${NC}"
+show_step 1 7 "Homebrewの確認"
 if ! command -v brew &> /dev/null; then
     echo -e "${RED}Homebrewがインストールされていません。${NC}"
     if [ "$ASSUME_YES" = true ]; then
@@ -400,7 +403,7 @@ fi
 # ========================================
 # 2. アプリケーションのインストール
 # ========================================
-echo -e "\n${YELLOW}[2/7] アプリケーションのインストール...${NC}"
+show_step 2 7 "アプリケーションのインストール"
 
 if [ "$SKIP_APPS" = true ]; then
     echo -e "${CYAN}アプリケーションインストールをスキップします${NC}"
@@ -435,7 +438,7 @@ fi
 # ========================================
 # 3. dotfilesのシンボリックリンク作成（GNU Stow使用）
 # ========================================
-echo -e "\n${YELLOW}[3/7] dotfilesのシンボリックリンク作成...${NC}"
+show_step 3 7 "dotfilesのシンボリックリンク作成"
 
 # GNU Stow がインストールされているか確認
 if ! command -v stow &>/dev/null; then
@@ -506,7 +509,7 @@ fi
 # ========================================
 # 4. Oh My Zshのセットアップ
 # ========================================
-echo -e "\n${YELLOW}[4/7] Oh My Zshのセットアップ...${NC}"
+show_step 4 7 "Oh My Zshのセットアップ"
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
     # CI環境またはドライランモードではスキップ
     if [ "$DRY_RUN" = true ] || [ "$CI" = "true" ]; then
@@ -546,7 +549,7 @@ fi
 # ========================================
 # 5. 追加設定
 # ========================================
-echo -e "\n${YELLOW}[5/7] 追加設定...${NC}"
+show_step 5 7 "追加設定"
 
 # macOS固有設定
 if [ -f ~/dotfiles/scripts/setup/macos_defaults.sh ]; then
@@ -641,7 +644,7 @@ fi
 # ========================================
 # 6. 追加のmacOS設定
 # ========================================
-echo -e "\n${YELLOW}[6/7] macOS固有設定は適用済みです${NC}"
+show_step 6 7 "macOS固有設定は適用済みです"
 
 # ========================================
 # 7. 完了

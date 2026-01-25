@@ -23,6 +23,7 @@ setopt share_history
 setopt inc_append_history
 setopt extended_history        # タイムスタンプを記録
 setopt correct                 # コマンドのスペルミスを修正
+CORRECT_IGNORE='_*|claude'     # claude は遅延読み込みのため除外
 setopt complete_in_word        # 単語の途中でも補完
 
 # Ctrl+Z でfg/bgトグル

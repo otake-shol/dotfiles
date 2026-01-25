@@ -32,4 +32,4 @@ for alias_file in "$ZSH_CONFIG_DIR/aliases"/*.zsh; do
     fi
 done
 
-unset ZSH_CONFIG_DIR func_file alias_file
+unset func_file alias_file

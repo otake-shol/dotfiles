@@ -6,8 +6,11 @@
 #
 # このライブラリは以下を提供します:
 #   - 色定義（統一されたカラーコード）
-#   - チェック関数（check_pass, check_fail, check_warn）
-#   - UI関数（print_header, print_section, print_banner）
+#   - チェック関数（dotfiles_check_pass, dotfiles_check_fail, dotfiles_check_warn）
+#   - UI関数（dotfiles_print_header, dotfiles_print_section, dotfiles_print_banner）
+#   - ユーティリティ（dotfiles_safe_link, dotfiles_update_zsh_plugin）
+#
+# 注: 後方互換性のため、接頭辞なしの関数名もエイリアスとして利用可能
 
 # 二重読み込み防止
 [[ -n "${_COMMON_SH_LOADED:-}" ]] && return 0
@@ -47,28 +50,33 @@ COMMON_CHECK_FAIL=0
 COMMON_CHECK_WARN=0
 
 # 成功チェック
-check_pass() {
+dotfiles_check_pass() {
     echo -e "  ${GREEN}✓${NC} $*"
     ((COMMON_CHECK_PASS++)) || true
 }
 
 # 失敗チェック
-check_fail() {
+dotfiles_check_fail() {
     echo -e "  ${RED}✗${NC} $*"
     ((COMMON_CHECK_FAIL++)) || true
 }
 
 # 警告チェック
-check_warn() {
+dotfiles_check_warn() {
     echo -e "  ${YELLOW}⚠${NC} $*"
     ((COMMON_CHECK_WARN++)) || true
 }
+
+# 後方互換性エイリアス（非推奨、将来削除予定）
+check_pass() { dotfiles_check_pass "$@"; }
+check_fail() { dotfiles_check_fail "$@"; }
+check_warn() { dotfiles_check_warn "$@"; }
 
 # ========================================
 # UI関数
 # ========================================
 # ヘッダー表示（大きな区切り）
-print_header() {
+dotfiles_print_header() {
     local title="$1"
     echo -e "\n${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo -e "${BOLD}${CYAN} ${title}${NC}"
@@ -76,13 +84,13 @@ print_header() {
 }
 
 # セクション表示（小さな区切り）
-print_section() {
+dotfiles_print_section() {
     local title="$1"
     echo -e "\n${BOLD}${BLUE}▸ ${title}${NC}"
 }
 
 # バナー表示（スクリプト開始時用）
-print_banner() {
+dotfiles_print_banner() {
     local title="$1"
     echo -e "${BOLD}${CYAN}"
     echo "╔═══════════════════════════════════════════════╗"
@@ -91,11 +99,16 @@ print_banner() {
     echo -e "${NC}"
 }
 
+# 後方互換性エイリアス（非推奨、将来削除予定）
+print_header() { dotfiles_print_header "$@"; }
+print_section() { dotfiles_print_section "$@"; }
+print_banner() { dotfiles_print_banner "$@"; }
+
 # ========================================
 # Zshプラグイン更新（update-all.shで使用）
 # ========================================
 # 引数: プラグイン名, プラグインパス
-update_zsh_plugin() {
+dotfiles_update_zsh_plugin() {
     local name="$1"
     local path="$2"
 
@@ -111,12 +124,15 @@ update_zsh_plugin() {
     fi
 }
 
+# 後方互換性エイリアス
+update_zsh_plugin() { dotfiles_update_zsh_plugin "$@"; }
+
 # ========================================
 # ファイルリンク関数
 # ========================================
 # 安全にシンボリックリンクを作成（既存ファイルのバックアップ付き）
-# Usage: safe_link "/path/to/source" "/path/to/destination"
-safe_link() {
+# Usage: dotfiles_safe_link "/path/to/source" "/path/to/destination"
+dotfiles_safe_link() {
     local src="$1"
     local dst="$2"
 
@@ -137,6 +153,9 @@ safe_link() {
     # シンボリックリンク作成
     ln -sf "$src" "$dst"
 }
+
+# 後方互換性エイリアス
+safe_link() { dotfiles_safe_link "$@"; }
 
 # ========================================
 # OS検出（os-detect.shとの連携）

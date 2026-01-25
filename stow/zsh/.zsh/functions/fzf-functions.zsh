@@ -33,6 +33,14 @@ fvim() {
   [[ -n "$file" ]] && nvim "$file"
 }
 
+# fp - ファイルをfzfでプレビュー（yazi代替）
+fp() {
+  local file
+  file=$(fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' \
+             --preview-window=right:70% \
+             --bind 'enter:execute(bat --paging=always {})') || return 0
+}
+
 # fkill - プロセスをfzfで選択してkill
 fkill() {
   local pid

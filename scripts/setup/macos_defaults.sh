@@ -1,5 +1,5 @@
 #!/bin/bash
-# macos_defaults.sh - macOS固有の設定
+# macos_defaults.sh - macOS開発者向け設定
 # 使用方法: bash scripts/setup/macos_defaults.sh
 
 set -uo pipefail  # -e を外してエラー時も継続
@@ -13,7 +13,7 @@ source "${SCRIPT_DIR}/../lib/common.sh"
 # ヘルプ表示
 show_help() {
     cat << 'EOF'
-macos-defaults.sh - macOS固有の設定を適用
+macos-defaults.sh - macOS開発者向け設定を適用
 
 使用方法:
     bash scripts/setup/macos-defaults.sh
@@ -25,55 +25,15 @@ macos-defaults.sh - macOS固有の設定を適用
     - Dock: 自動非表示、高速アニメーション
     - Finder: 隠しファイル表示、パスバー
     - キーボード: 高速キーリピート、自動変換無効化
-    - トラックパッド: タップでクリック、3本指ドラッグ
-    - Mission Control: スペース固定
-    - Hot Corners: 四隅アクション設定
-    - Safari: 開発者メニュー
     - セキュリティ: スクリーンセーバーパスワード
+    - プライバシー: 広告トラッキング制限
+    - DS_Store: ネットワーク/USBで作成しない
 EOF
 }
 
 [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]] && show_help && exit 0
 
-# エラーカウンター
-_defaults_errors=0
-
-# defaultsコマンドのラッパー（エラー時に警告を出力）
-safe_defaults() {
-    if ! defaults write "$@" 2>/dev/null; then
-        echo -e "${YELLOW}⚠ defaults write $1 $2 の設定に失敗しました${NC}" >&2
-        ((_defaults_errors++)) || true
-        return 1
-    fi
-    return 0
-}
-
 echo -e "${YELLOW}macOS defaults設定を適用中...${NC}"
-
-# ========================================
-# スクリーンショット
-# ========================================
-# 保存先をiCloud Driveに変更
-SCREENSHOT_DIR="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Contents/00_スクリーンショット"
-if [ -d "$SCREENSHOT_DIR" ]; then
-    defaults write com.apple.screencapture location "$SCREENSHOT_DIR"
-    echo -e "${GREEN}✓ スクリーンショット保存先: $SCREENSHOT_DIR${NC}"
-else
-    echo -e "${YELLOW}⚠ スクリーンショット保存先ディレクトリが存在しません。スキップします${NC}"
-fi
-
-# ========================================
-# ダウンロード
-# ========================================
-# ダウンロード先フォルダをiCloud Driveに作成（ブラウザ設定は手動で変更が必要）
-DOWNLOAD_DIR="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Contents/01_ダウンロード"
-if [ ! -d "$DOWNLOAD_DIR" ]; then
-    mkdir -p "$DOWNLOAD_DIR"
-    echo -e "${GREEN}✓ ダウンロードフォルダ作成: $DOWNLOAD_DIR${NC}"
-    echo -e "${YELLOW}  ※ブラウザのダウンロード先は手動で設定してください${NC}"
-else
-    echo -e "${GREEN}✓ ダウンロードフォルダ: $DOWNLOAD_DIR${NC}"
-fi
 
 # ========================================
 # Dock
@@ -128,72 +88,12 @@ defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 echo -e "${GREEN}✓ キーボード: 高速キーリピート、自動変換無効化${NC}"
 
 # ========================================
-# トラックパッド
-# ========================================
-# タップでクリック
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
-defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
-# 3本指ドラッグを有効化（アクセシビリティ設定）
-defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
-echo -e "${GREEN}✓ トラックパッド: タップでクリック、3本指ドラッグ${NC}"
-
-# ========================================
-# Mission Control
-# ========================================
-# スペースを最近使用順に並び替えない（位置を固定）
-defaults write com.apple.dock mru-spaces -bool false
-# Mission Controlアニメーション高速化
-defaults write com.apple.dock expose-animation-duration -float 0.1
-# アプリケーションごとにウィンドウをグループ化
-defaults write com.apple.dock expose-group-apps -bool true
-echo -e "${GREEN}✓ Mission Control: スペース固定、高速アニメーション${NC}"
-
-# ========================================
-# Hot Corners（画面四隅のアクション）
-# ========================================
-# 左上: Mission Control (2)
-defaults write com.apple.dock wvous-tl-corner -int 2
-defaults write com.apple.dock wvous-tl-modifier -int 0
-# 右上: デスクトップ表示 (4)
-defaults write com.apple.dock wvous-tr-corner -int 4
-defaults write com.apple.dock wvous-tr-modifier -int 0
-# 左下: なし (0)
-defaults write com.apple.dock wvous-bl-corner -int 0
-defaults write com.apple.dock wvous-bl-modifier -int 0
-# 右下: Launchpad (11)
-defaults write com.apple.dock wvous-br-corner -int 11
-defaults write com.apple.dock wvous-br-modifier -int 0
-echo -e "${GREEN}✓ Hot Corners: 左上=Mission Control, 右上=デスクトップ, 右下=Launchpad${NC}"
-
-# ========================================
-# Safari（開発者向け）
-# ========================================
-# 開発者メニューを有効化
-# ※ macOS 15以降はSandbox制限により設定できない場合があります
-if defaults write com.apple.Safari IncludeDevelopMenu -bool true 2>/dev/null; then
-    defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true 2>/dev/null || true
-    defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true 2>/dev/null || true
-    # すべてのWebページでWebインスペクタを許可
-    defaults write NSGlobalDomain WebKitDeveloperExtras -bool true 2>/dev/null || true
-    echo -e "${GREEN}✓ Safari: 開発者メニュー有効化${NC}"
-else
-    echo -e "${YELLOW}⚠ Safari: macOS 15以降はシステム環境設定から手動で設定してください${NC}"
-fi
-
-# ========================================
 # セキュリティ
 # ========================================
 # スクリーンセーバー解除時に即座にパスワード要求
 defaults write com.apple.screensaver askForPassword -int 1
 defaults write com.apple.screensaver askForPasswordDelay -int 0
 echo -e "${GREEN}✓ セキュリティ: スクリーンセーバー解除時に即パスワード要求${NC}"
-
-# ========================================
-# Bluetooth（音質向上）
-# ========================================
-# Bluetoothヘッドフォンの音質を向上（AAC/aptX優先）
-defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
-echo -e "${GREEN}✓ Bluetooth: ヘッドフォン音質向上${NC}"
 
 # ========================================
 # プライバシー
@@ -208,25 +108,13 @@ echo -e "${GREEN}✓ プライバシー: ターゲティング広告制限${NC}"
 # .DS_Storeファイルをネットワークドライブに作成しない
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
-echo -e "${GREEN}✓ .DS_Store: ネットワーク/USBドライブで作成しない${NC}"
-
-# クラッシュレポートを通知センターに表示しない
-defaults write com.apple.CrashReporter DialogType -string "none"
-echo -e "${GREEN}✓ クラッシュレポート: 通知センターに非表示${NC}"
+echo -e "${GREEN}✓ DS_Store: ネットワーク/USBドライブで作成しない${NC}"
 
 # ========================================
 # 設定の反映
 # ========================================
 killall Dock 2>/dev/null || true
 killall Finder 2>/dev/null || true
-killall SystemUIServer 2>/dev/null || true
 
-# ========================================
-# 結果サマリー
-# ========================================
-if [[ $_defaults_errors -eq 0 ]]; then
-    echo -e "${GREEN}✓ macOS defaults設定がすべて正常に完了しました${NC}"
-else
-    echo -e "${YELLOW}⚠ macOS defaults設定が完了しました（${_defaults_errors}件の警告あり）${NC}"
-fi
+echo -e "${GREEN}✓ macOS defaults設定が完了しました${NC}"
 echo -e "${YELLOW}※ 一部の設定は再起動後に反映されます${NC}"

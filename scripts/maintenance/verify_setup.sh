@@ -123,9 +123,9 @@ verify_optional_tools() {
 verify_version_managers() {
     print_header "バージョンマネージャー検証"
 
-    # asdf
-    if command -v asdf &>/dev/null; then
-        check_pass "asdf インストール済み"
+    # mise
+    if command -v mise &>/dev/null; then
+        check_pass "mise インストール済み"
 
         # .tool-versions確認
         if [[ -f "$HOME/.tool-versions" ]]; then
@@ -134,10 +134,10 @@ verify_version_managers() {
             # 各言語のバージョン確認
             while IFS=' ' read -r lang version; do
                 if [[ -n "$lang" && ! "$lang" =~ ^# ]]; then
-                    if asdf list "$lang" 2>/dev/null | grep -q "$version"; then
+                    if mise list "$lang" 2>/dev/null | grep -q "$version"; then
                         check_pass "$lang $version インストール済み"
                     else
-                        check_warn "$lang $version 未インストール (asdf install で解決)"
+                        check_warn "$lang $version 未インストール (mise install で解決)"
                     fi
                 fi
             done < "$HOME/.tool-versions"
@@ -145,7 +145,7 @@ verify_version_managers() {
             check_warn ".tool-versions が見つかりません"
         fi
     else
-        check_fail "asdf が見つかりません"
+        check_fail "mise が見つかりません"
     fi
 }
 

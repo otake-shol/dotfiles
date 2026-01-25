@@ -20,6 +20,7 @@ brew "git"
 brew "gh"
 #   選定理由: GitHub公式CLI。API操作・PR作成が高速
 #   代替候補: hub（非推奨化）
+#   拡張: gh-dash（gh extension install dlvhdr/gh-dash）
 
 brew "git-secrets"
 #   選定理由: AWS/APIキーの誤コミット防止。pre-commit hookで自動スキャン
@@ -35,9 +36,10 @@ brew "difftastic"
 #   用途: 大規模リファクタリング、PRレビュー時に使い分け
 
 # --- バージョン管理 ---
-brew "asdf"
-#   選定理由: Node/Python/Terraform等を統一管理。.tool-versionsでプロジェクト別バージョン固定
-#   代替候補: nvm+pyenv（ツールごとに分散）、mise（新興で実績少ない）
+brew "mise"
+#   選定理由: Rust製高速ランタイム管理。.tool-versions互換・環境変数管理・ゼロオーバーヘッド
+#   代替候補: asdf（shim方式で~120msオーバーヘッド）、nvm+pyenv（ツールごとに分散）
+#   統合機能: direnv代替（環境変数管理）、タスクランナー
 
 # --- エディタ ---
 brew "neovim"
@@ -58,19 +60,8 @@ brew "zoxide"
 #   選定理由: 学習型cd。使用頻度でディレクトリをランク付け
 #   代替候補: autojump（Python依存で遅い）、z.lua（Lua依存）
 
-brew "direnv"
-#   選定理由: ディレクトリ別.envrc自動読み込み。プロジェクト切り替えが楽
-#   代替候補: dotenv（手動source必要）
-
-brew "yazi"
-#   選定理由: Rust製高速TUIファイラー。プレビュー・vim風操作
-#   代替候補: ranger（Python製で遅い）、lf（Go製、機能少ない）
-
-brew "ffmpegthumbnailer"
-#   選定理由: yazi動画サムネイル依存
-
-brew "poppler"
-#   選定理由: yaziPDFプレビュー依存
+# direnvはmiseに統合（miseの環境変数管理機能を使用）
+# brew "direnv"
 
 # --- ユーティリティ ---
 brew "bat"
@@ -133,7 +124,7 @@ brew "awscli"
 brew "oven-sh/bun/bun"
 #   選定理由: 超高速JS/TSランタイム。npm互換・バンドラー内蔵
 #   代替候補: deno（npm互換性問題）
-#   補完関係: Node.js（asdf管理）と併用
+#   補完関係: Node.js（mise管理）と併用
 
 # ========================================
 # GUI Applications
@@ -230,10 +221,10 @@ cask "font-jetbrains-mono-nerd-font"
 # オプション：開発環境
 # ========================================
 # 必要に応じてコメントアウトを外してインストール
-# asdfで管理する場合は不要
+# miseで管理する場合は不要
 
-# brew "node"           # asdf推奨
-# brew "python@3.13"    # asdf推奨
+# brew "node"           # mise推奨
+# brew "python@3.13"    # mise推奨
 # brew "php"
 # brew "composer"
 # brew "mysql"

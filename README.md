@@ -116,9 +116,9 @@ pre-commit時にShellCheck、yamllint、zsh構文チェックを自動実行。
 lefthook install     # 初回セットアップ（bootstrap.shで自動実行）
 ```
 
-### バージョン管理 (asdf)
+### バージョン管理 (mise)
 
-Node.js等のランタイムは[asdf](https://asdf-vm.com/)で管理。遅延読み込みにより初回実行時に自動初期化。
+Node.js等のランタイムは[mise](https://mise.jdx.dev/)で管理。PATH直接更新でゼロオーバーヘッド。環境変数管理（direnv代替）も統合。
 
 ## Claude Code統合
 

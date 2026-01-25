@@ -25,7 +25,7 @@ update_all.sh - 開発環境の一括更新スクリプト
     - Homebrew (brew update && upgrade && cleanup)
     - Oh My Zsh
     - Zshプラグイン (Powerlevel10k, autosuggestions, syntax-highlighting, completions)
-    - asdfプラグイン
+    - miseランタイム
 
 説明:
     このスクリプトは実際に更新を実行します。
@@ -102,15 +102,15 @@ done
 UPDATED+=("Zshプラグイン")
 
 # ========================================
-# 4. asdf
+# 4. mise
 # ========================================
-echo -e "\n${YELLOW}[4/4] asdf...${NC}"
-if command -v asdf &> /dev/null; then
-    asdf plugin update --all 2>/dev/null || true
-    UPDATED+=("asdf plugins")
-    echo -e "${GREEN}✓ asdfプラグイン更新完了${NC}"
+echo -e "\n${YELLOW}[4/4] mise...${NC}"
+if command -v mise &> /dev/null; then
+    mise upgrade 2>/dev/null || true
+    UPDATED+=("mise runtimes")
+    echo -e "${GREEN}✓ miseランタイム更新完了${NC}"
 else
-    SKIPPED+=("asdf (未インストール)")
+    SKIPPED+=("mise (未インストール)")
 fi
 
 # ========================================

@@ -480,13 +480,18 @@ echo -e "${GREEN}✓ Stowパッケージをインストールしました (${STO
 if [ "$DRY_RUN" != true ]; then
     mkdir -p ~/.ssh/sockets
     chmod 700 ~/.ssh
+    # 壊れたシンボリックリンクも削除（-Lでリンク自体の存在をチェック）
+    if [[ -L ~/.ssh/config && ! -e ~/.ssh/config ]]; then
+        rm ~/.ssh/config
+        echo -e "${YELLOW}⚠ 壊れたSSH configリンクを削除しました${NC}"
+    fi
     if [ ! -f ~/.ssh/config ]; then
         cp "$SCRIPT_DIR/stow/ssh/.ssh/config.template" ~/.ssh/config
+        chmod 600 ~/.ssh/config
         echo -e "${GREEN}✓ SSH configを作成しました${NC}"
     else
         echo -e "${GREEN}✓ SSH configは既存です（スキップ）${NC}"
     fi
-    chmod 600 ~/.ssh/config
 else
     echo -e "${CYAN}[DRY RUN] Would setup SSH config${NC}"
 fi
@@ -658,10 +663,12 @@ echo -e "\n${GREEN}========================================${NC}"
 echo -e "${GREEN}  セットアップが完了しました！${NC}"
 echo -e "${GREEN}========================================${NC}"
 echo -e "\n${YELLOW}次のステップ:${NC}"
-echo -e "  1. ターミナルを再起動するか、'source ~/.zshrc' を実行"
-echo -e "  2. Powerlevel10kの設定: 'p10k configure'"
-echo -e "  3. Nerd Fontをターミナルに設定"
-echo -e "  4. Claude Codeプラグイン: 以下を実行"
-echo -e "     ${CYAN}claude /plugin marketplace add obra/superpowers-marketplace${NC}"
-echo -e "     ${CYAN}claude /plugin install superpowers@superpowers-marketplace${NC}"
+echo -e "  1. ターミナルを再起動（または 'exec zsh'）"
+echo -e "  2. ターミナルのフォントを Nerd Font に変更"
+echo -e "     Ghostty: font-family = \"Hack Nerd Font\""
+echo -e "\n${YELLOW}オプション:${NC}"
+echo -e "  - Powerlevel10kカスタマイズ: ${CYAN}p10k configure${NC}"
+echo -e "  - Claude Codeプラグイン:"
+echo -e "      ${CYAN}claude /plugin marketplace add obra/superpowers-marketplace${NC}"
+echo -e "      ${CYAN}claude /plugin install superpowers@superpowers-marketplace${NC}"
 echo -e "\n${BLUE}追加のアプリケーションは docs/setup/APPS.md を参照してください${NC}"

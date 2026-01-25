@@ -1,6 +1,6 @@
-# mise バージョン管理（asdf互換形式）
-# 使用方法: mise install でインストール
-# 参照: https://mise.jdx.dev/
+# asdf バージョン管理
+# 使用方法: asdf install でインストール
+# 参照: https://asdf-vm.com/
 
 # Node.js LTS (2026-01時点の最新LTS)
 nodejs 22.13.0

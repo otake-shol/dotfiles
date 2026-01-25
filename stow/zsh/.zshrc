@@ -7,7 +7,7 @@
 # 構成:
 #   plugins.zsh - Oh My Zsh プラグイン
 #   core.zsh    - 基本設定・オプション
-#   lazy.zsh    - 遅延読み込み（mise, atuin）
+#   lazy.zsh    - 遅延読み込み（asdf, atuin, direnv）
 #   tools.zsh   - ツール設定（fzf, zoxide, yazi, bun）
 #
 # プロファイリング有効化（デバッグ時のみ）
@@ -53,13 +53,17 @@ ZSH_CONFIG_DIR="${HOME}/.zsh"
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 
 # ========================================
-# 起動時自己診断（miseの確認）
+# 起動時自己診断（重要な関数の存在確認）
 # ========================================
 _zsh_startup_check() {
-  # miseがPATHに含まれているか確認
-  if ! command -v mise &>/dev/null; then
-    echo "⚠️  zsh: mise が見つかりません" >&2
-    echo "   → brew install mise を実行してください" >&2
+  local missing=()
+  # 遅延読み込み関数の確認
+  (( ! $+functions[_asdf_init] )) && missing+=("_asdf_init")
+  (( ! $+functions[claude] )) && missing+=("claude")
+
+  if (( ${#missing} > 0 )); then
+    echo "⚠️  zsh: 重要な関数が未定義: ${missing[*]}" >&2
+    echo "   → source ~/.zsh/lazy.zsh を確認してください" >&2
   fi
 }
 _zsh_startup_check

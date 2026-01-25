@@ -61,7 +61,8 @@ flowchart TD
 
     subgraph "遅延読み込み"
         D --> F["lazy.zsh"]
-        F --> F1["mise<br>（キャッシュ）"]
+        F --> F1["asdf<br>（初回使用時）"]
+        F --> F2["direnv<br>（precmd hook）"]
         F --> F3["atuin<br>（キャッシュ）"]
         F --> F4["fzf関数<br>（初回呼び出し時）"]
     end

@@ -89,15 +89,15 @@ stow --restow --target=$HOME --dir=stow zsh
 
 #### 症状
 ```
-⚠️  zsh: mise が見つかりません
+⚠️  zsh: 重要な関数が未定義: _asdf_init claude
 ```
 
 #### 原因
-miseがインストールされていない、またはPATHに含まれていない。
+lazy.zsh が正しく読み込まれていない。
 
 #### 対処
-1. `brew install mise` を実行
-2. シェルを再起動: `exec zsh`
+1. 上記「コマンドが見つからない」の診断手順を実行
+2. `.aliases` で `ZSH_CONFIG_DIR` を unset していないか確認
 
 ---
 
@@ -107,7 +107,8 @@ miseがインストールされていない、またはPATHに含まれていな
 # 全体的な状態確認
 echo "CORRECT_IGNORE: $CORRECT_IGNORE"
 echo "ZSH_CONFIG_DIR: $ZSH_CONFIG_DIR"
-mise doctor
+functions claude
+functions _asdf_init
 
 # シンボリンク確認
 ls -la ~ | grep zsh

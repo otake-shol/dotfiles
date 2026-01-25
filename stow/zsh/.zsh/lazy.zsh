@@ -1,20 +1,50 @@
 # lazy.zsh - 遅延読み込み設定
-# mise, atuin, fzf関数を遅延読み込みして起動を高速化
+# asdf, atuin, direnv, fzf関数を遅延読み込みして起動を高速化
 
-# --- mise ---
-# miseはPATH直接更新でゼロオーバーヘッド
-# activate結果をキャッシュして起動を高速化
-if command -v mise &>/dev/null; then
-  _mise_cache="${XDG_CACHE_HOME:-$HOME/.cache}/mise-init.zsh"
-  if ! _cache_valid "$_mise_cache"; then
-    _cache_update "$_mise_cache" "mise activate zsh"
+# --- asdf ---
+typeset -g _asdf_loaded=false
+_asdf_init() {
+  if [[ "$_asdf_loaded" = false ]]; then
+    _asdf_loaded=true
+    # HOMEBREW_PREFIXを使用（brew shellenvで設定済み、未設定時はアーキテクチャから推測）
+    local brew_prefix="${HOMEBREW_PREFIX:-$([[ $(uname -m) == "arm64" ]] && echo /opt/homebrew || echo /usr/local)}"
+    local asdf_path="${brew_prefix}/opt/asdf/libexec/asdf.sh"
+    [[ -f "$asdf_path" ]] && source "$asdf_path"
   fi
-  source "$_mise_cache"
-  unset _mise_cache
-fi
+}
 
-# 注: miseはdirenvの機能も統合しているため、direnvは不要
-# .envrcの代わりに.mise.tomlの[env]セクションを使用
+# asdfコマンドのラッパー（遅延読み込み）
+asdf() {
+  _asdf_init
+  command asdf "$@"
+}
+
+# node/python等使用時に自動初期化（evalを避けて直接定義）
+node() { _asdf_init; unset -f node; command node "$@"; }
+npm() { _asdf_init; unset -f npm; command npm "$@"; }
+npx() { _asdf_init; unset -f npx; command npx "$@"; }
+claude() { _asdf_init; unset -f claude; command claude "$@"; }
+python3() { _asdf_init; unset -f python3; command python3 "$@"; }
+pip3() { _asdf_init; unset -f pip3; command pip3 "$@"; }
+ruby() { _asdf_init; unset -f ruby; command ruby "$@"; }
+gem() { _asdf_init; unset -f gem; command gem "$@"; }
+
+# --- direnv ---
+if command -v direnv &>/dev/null; then
+  _direnv_hook() {
+    trap -- '' SIGINT
+    eval "$(direnv export zsh 2>/dev/null)"
+    trap - SIGINT
+  }
+  typeset -ag precmd_functions
+  if (( ! ${precmd_functions[(I)_direnv_hook]} )); then
+    precmd_functions=(_direnv_hook $precmd_functions)
+  fi
+  typeset -ag chpwd_functions
+  if (( ! ${chpwd_functions[(I)_direnv_hook]} )); then
+    chpwd_functions=(_direnv_hook $chpwd_functions)
+  fi
+fi
 
 # --- atuin ---
 if command -v atuin &>/dev/null; then

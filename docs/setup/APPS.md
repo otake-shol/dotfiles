@@ -654,47 +654,43 @@ bunx create-next-app
 
 ### バージョン管理
 
-#### mise
+#### asdf
 
 > 複数言語を1つのツールで管理（推奨）
 
 | 項目 | 内容 |
 |------|------|
-| インストール | `brew install mise` |
-| 公式サイト | https://mise.jdx.dev/ |
+| インストール | `brew install asdf` |
+| 公式サイト | https://asdf-vm.com/ |
 
 **特徴:**
 - Node.js, Python, Terraform, Ruby, Go 等を1ツールで管理
-- `.tool-versions` ファイルでプロジェクトごとにバージョン固定（asdf互換）
-- Rust製で高速（asdfの~120msオーバーヘッドがゼロ）
-- 環境変数管理（direnv代替）を統合
-- タスクランナー機能
+- `.tool-versions` ファイルでプロジェクトごとにバージョン固定
+- 600以上のプラグイン対応
 
 **セットアップ:**
 ```bash
-# バージョンインストール（プラグイン追加不要、自動検出）
-mise use node@20
-mise use python@3.12
-mise use terraform@1.7
+# プラグイン追加
+asdf plugin add nodejs
+asdf plugin add python
+asdf plugin add terraform
 
-# または .tool-versions から一括インストール
-mise install
+# バージョンインストール
+asdf install nodejs 20.11.0
+asdf install python 3.12.1
+asdf install terraform 1.7.0
+
+# グローバル設定
+asdf global nodejs 20.11.0
+asdf global python 3.12.1
+asdf global terraform 1.7.0
 ```
 
 **プロジェクト別設定:**
 ```bash
 # プロジェクトルートで
-mise use node@18
-# → .tool-versions に自動追記
-```
-
-**環境変数管理（direnv代替）:**
-```bash
-# .mise.toml で環境変数を設定
-cat > .mise.toml << 'EOF'
-[env]
-DATABASE_URL = "postgres://localhost/mydb"
-EOF
+echo "nodejs 18.19.0" >> .tool-versions
+asdf install
 ```
 
 ---

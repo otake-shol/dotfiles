@@ -568,14 +568,16 @@ if command -v git-secrets &> /dev/null; then
     echo -e "${GREEN}✓ git-secretsを設定しました${NC}"
 fi
 
-# mise ランタイムインストール
-# miseは.tool-versionsを自動検出してインストール（プラグイン追加不要）
-if command -v mise &> /dev/null; then
-    echo -e "${YELLOW}miseでランタイムをセットアップ中...${NC}"
-    mise trust ~/.tool-versions 2>/dev/null || true
+# asdf プラグイン・バージョンインストール
+if command -v asdf &> /dev/null; then
+    echo -e "${YELLOW}asdfプラグインをセットアップ中...${NC}"
+    asdf plugin add nodejs 2>/dev/null || true
+    asdf plugin add python 2>/dev/null || true
+    asdf plugin add terraform 2>/dev/null || true
+
     if [ -f ~/.tool-versions ]; then
-        mise install
-        echo -e "${GREEN}✓ miseでランタイムをインストールしました${NC}"
+        asdf install
+        echo -e "${GREEN}✓ asdfバージョンをインストールしました${NC}"
     fi
 fi
 

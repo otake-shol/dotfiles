@@ -20,6 +20,7 @@ brew "git"
 brew "gh"
 #   選定理由: GitHub公式CLI。API操作・PR作成が高速
 #   代替候補: hub（非推奨化）
+#   拡張: gh-dash（gh extension install dlvhdr/gh-dash）
 
 brew "git-secrets"
 #   選定理由: AWS/APIキーの誤コミット防止。pre-commit hookで自動スキャン

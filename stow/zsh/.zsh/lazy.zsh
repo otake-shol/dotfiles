@@ -23,6 +23,7 @@ asdf() {
 node() { _asdf_init; unset -f node; command node "$@"; }
 npm() { _asdf_init; unset -f npm; command npm "$@"; }
 npx() { _asdf_init; unset -f npx; command npx "$@"; }
+claude() { _asdf_init; unset -f claude; command claude "$@"; }
 python3() { _asdf_init; unset -f python3; command python3 "$@"; }
 pip3() { _asdf_init; unset -f pip3; command pip3 "$@"; }
 ruby() { _asdf_init; unset -f ruby; command ruby "$@"; }

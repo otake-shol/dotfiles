@@ -27,7 +27,12 @@ brew "git-secrets"
 
 brew "git-delta"
 #   選定理由: diff表示が美しい。side-by-side・行番号・シンタックスハイライト
-#   代替候補: diff-so-fancy（機能少ない）、difftastic（AST比較で用途が異なる）
+#   代替候補: diff-so-fancy（機能少ない）
+#   補完関係: difftastic（AST比較）と併用
+
+brew "difftastic"
+#   選定理由: AST比較でリファクタリング時の本質的な変更を検出
+#   用途: 大規模リファクタリング、PRレビュー時に使い分け
 
 # --- バージョン管理 ---
 brew "asdf"

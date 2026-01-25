@@ -70,6 +70,7 @@ alias myip="curl -s ifconfig.me"
 alias localip="ipconfig getifaddr en0"
 alias ips="echo 'Local:' && ipconfig getifaddr en0 && echo 'Global:' && curl -s ifconfig.me"
 alias ports="lsof -i -P | grep LISTEN"
+alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 
 # ========================================
 # zoxide（高速ディレクトリジャンプ）

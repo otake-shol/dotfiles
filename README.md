@@ -124,6 +124,8 @@ Node.js等のランタイムは[asdf](https://asdf-vm.com/)で管理。遅延読
 
 設定ファイル: `stow/claude/.claude/`
 
+> 外出先からの操作は [docs/remote-access.md](docs/remote-access.md) を参照
+
 **カスタムコマンド:**
 - `/commit-push` - コミット＆プッシュ
 - `/test` - テスト生成

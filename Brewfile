@@ -147,6 +147,10 @@ cask "1password"
 cask "1password-cli"
 #   選定理由: 1Passwordのシークレットをスクリプトから取得
 
+cask "tailscale"
+#   選定理由: VPNメッシュネットワーク。外出先からSSH接続
+#   代替候補: ZeroTier（設定複雑）、WireGuard（手動設定必要）
+
 cask "alt-tab"
 #   選定理由: Windows風Cmd+Tab。ウィンドウプレビュー表示
 #   代替候補: macOS標準（アプリ単位でウィンドウ選べない）

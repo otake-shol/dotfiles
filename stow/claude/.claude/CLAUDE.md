@@ -152,7 +152,7 @@ Claudeとしてのおすすめ案を明示し、その理由を説明する。
 
 ## MCPサーバー設定
 
-## 有効なMCPサーバー（12個）
+## 有効なMCPサーバー（5個）
 
 ### 認証不要（すぐ使える）
 | サーバー | 用途 |
@@ -160,31 +160,12 @@ Claudeとしてのおすすめ案を明示し、その理由を説明する。
 | Context7 | リアルタイムドキュメント参照 |
 | Serena | シンボリックコード解析（LSP統合） |
 | Playwright | ブラウザ自動化・E2Eテスト |
-| Sequential Thinking | 構造化された問題解決 |
+| Atlassian | Jira/Confluence操作 |
 
 ### OAuth認証が必要（初回接続時に認証）
 | サーバー | 用途 |
 |---------|------|
-| Linear | Issue/プロジェクト管理 |
-| Supabase | BaaS（DB/認証/ストレージ） |
-| Notion | ドキュメント/ナレッジベース |
 | Figma | デザイン→コード変換 |
-| Slack | チームコミュニケーション |
-
-### 環境変数が必要
-| サーバー | 必要な環境変数 | 取得方法 |
-|---------|---------------|---------|
-| GitHub | `GITHUB_PERSONAL_ACCESS_TOKEN` | Settings → Developer settings → PAT |
-| Brave Search | `BRAVE_API_KEY` | https://brave.com/search/api/ |
-| Sentry | `SENTRY_AUTH_TOKEN` | Settings → Auth Tokens |
-
-## 環境変数の設定（.zshrcに追加）
-```bash
-# MCP認証用（必要に応じて設定）
-export GITHUB_PERSONAL_ACCESS_TOKEN="ghp_xxxxx"
-export BRAVE_API_KEY="BSAxxxxx"
-export SENTRY_AUTH_TOKEN="sntrys_xxxxx"
-```
 
 ---
 

@@ -212,10 +212,7 @@ echo -e "${GREEN}✓ .DS_Store: ネットワーク/USBドライブで作成し�
 
 # クラッシュレポートを通知センターに表示しない
 defaults write com.apple.CrashReporter DialogType -string "none"
-
-# 起動音を無効化
-sudo nvram StartupMute=%01 2>/dev/null || true
-echo -e "${GREEN}✓ 起動音: 無効化${NC}"
+echo -e "${GREEN}✓ クラッシュレポート: 通知センターに非表示${NC}"
 
 # ========================================
 # 設定の反映

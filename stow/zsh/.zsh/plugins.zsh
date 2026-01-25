@@ -62,8 +62,8 @@ fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 # Oh My Zshと同じダンプファイルを使用してcompinit重複を防ぐ
 export ZSH_COMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/zcompdump-${ZSH_VERSION}"
 autoload -Uz compinit
-if [[ -n "$ZSH_COMPDUMP"(#qN.mh+24) ]]; then
-  # キャッシュが24時間以上古い場合のみ再生成
+if [[ -n "$ZSH_COMPDUMP"(#qN.mh+168) ]]; then
+  # キャッシュが7日以上古い場合のみ再生成
   compinit -d "$ZSH_COMPDUMP"
 else
   compinit -C -d "$ZSH_COMPDUMP"

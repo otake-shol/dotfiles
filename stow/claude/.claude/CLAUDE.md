@@ -253,7 +253,7 @@ make install               # 全パッケージインストール
 make install-zsh           # 個別パッケージ
 
 # ベンチマーク
-bash scripts/utils/zsh-benchmark.sh
+bash scripts/utils/zsh_benchmark.sh
 ```
 
 ## シェルスクリプト規約

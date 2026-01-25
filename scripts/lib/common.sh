@@ -67,7 +67,7 @@ dotfiles_check_warn() {
     ((COMMON_CHECK_WARN++)) || true
 }
 
-# 後方互換性エイリアス（非推奨、将来削除予定）
+# 短縮エイリアス（各スクリプトで使用）
 check_pass() { dotfiles_check_pass "$@"; }
 check_fail() { dotfiles_check_fail "$@"; }
 check_warn() { dotfiles_check_warn "$@"; }
@@ -99,7 +99,7 @@ dotfiles_print_banner() {
     echo -e "${NC}"
 }
 
-# 後方互換性エイリアス（非推奨、将来削除予定）
+# 短縮エイリアス（各スクリプトで使用）
 print_header() { dotfiles_print_header "$@"; }
 print_section() { dotfiles_print_section "$@"; }
 print_banner() { dotfiles_print_banner "$@"; }
@@ -124,7 +124,7 @@ dotfiles_update_zsh_plugin() {
     fi
 }
 
-# 後方互換性エイリアス
+# 短縮エイリアス（各スクリプトで使用）
 update_zsh_plugin() { dotfiles_update_zsh_plugin "$@"; }
 
 # ========================================
@@ -154,7 +154,7 @@ dotfiles_safe_link() {
     ln -sf "$src" "$dst"
 }
 
-# 後方互換性エイリアス
+# 短縮エイリアス（bootstrap.shで使用）
 safe_link() { dotfiles_safe_link "$@"; }
 
 # ========================================

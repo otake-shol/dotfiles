@@ -18,6 +18,7 @@
 - React / Next.js
 - TypeScript（厳格モード推奨）
 - Node.js 20.x（.tool-versionsで管理）
+- Java（API開発）
 
 ## パッケージマネージャー
 - npm / yarn / pnpm いずれも可

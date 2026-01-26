@@ -4,7 +4,7 @@ macOS向けの個人開発環境設定ファイル
 
 ## 特徴
 
-- **Claude Code統合** - MCPサーバー13個・カスタムコマンド設定済み
+- **Claude Code統合** - MCPサーバー5個・カスタムコマンド設定済み
 - **モダンCLI** - bat, eza, fzf, ripgrep, zoxide等のモダンツール
 - **自動セットアップ** - bootstrap.shで一発構築
 - **テーマ統一** - 全ツールでTokyoNightテーマ
@@ -138,10 +138,9 @@ Node.js等のランタイムは[asdf](https://asdf-vm.com/)で管理。遅延読
 - code-reviewer, test-engineer
 - frontend-engineer, architecture-reviewer, spec-analyst
 
-**MCPサーバー（13個）:**
-- Context7, Serena, Playwright, Sequential Thinking
-- Linear, Supabase, Notion, Figma, Slack (OAuth)
-- GitHub, Brave Search, Sentry (環境変数)
+**MCPサーバー（5個）:**
+- Context7, Serena, Playwright, Atlassian
+- Figma (OAuth認証)
 
 ## トラブルシューティング
 

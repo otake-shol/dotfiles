@@ -12,8 +12,25 @@ duration_ms=$(echo "$input" | jq -r '.cost.total_duration_ms // 0')
 lines_added=$(echo "$input" | jq -r '.cost.total_lines_added // 0')
 lines_removed=$(echo "$input" | jq -r '.cost.total_lines_removed // 0')
 
-# モデル名短縮
-short_model=$(echo "$model" | sed -E 's/Claude //' | sed -E 's/Opus 4.5/O4.5/' | sed -E 's/Sonnet 4/S4/' | sed -E 's/Haiku 3.5/H3.5/')
+# モデル名とカラー設定
+case "$model" in
+    *Opus*)
+        short_model="Opus"
+        MODEL_COLOR='\033[35m'   # 紫（高級感）
+        ;;
+    *Sonnet*)
+        short_model="Sonnet"
+        MODEL_COLOR='\033[34m'   # 青
+        ;;
+    *Haiku*)
+        short_model="Haiku"
+        MODEL_COLOR='\033[32m'   # 緑（軽量）
+        ;;
+    *)
+        short_model="$model"
+        MODEL_COLOR='\033[37m'   # 白（デフォルト）
+        ;;
+esac
 
 # 経過時間フォーマット（ms → 分/時間）
 format_duration() {
@@ -47,7 +64,6 @@ MAGENTA='\033[35m'
 YELLOW='\033[33m'
 GREEN='\033[32m'
 RED='\033[31m'
-BLUE='\033[34m'
 
 # Nerd Font アイコン（UTF-8バイト列で指定）
 # U+F07B (folder)    → UTF-8: EF 81 BB
@@ -92,7 +108,7 @@ if [ -n "$branch" ]; then
 fi
 
 # 右セクション: モデル + コンテキスト + 行数 + 時間 + コスト
-right="${BLUE}${BOLD}${ICON_MODEL} ${short_model}${RESET}"
+right="${MODEL_COLOR}${BOLD}${ICON_MODEL} ${short_model}${RESET}"
 right+=" ${PCT_COLOR}${ICON_BRAIN} ${bar} ${used_pct}%${RESET}"
 right+=" ${DIM}${ICON_DIFF}${RESET}${GREEN}+${lines_added}${RESET}${RED}-${lines_removed}${RESET}"
 right+=" ${DIM}${ICON_CLOCK} ${duration_fmt}${RESET}"

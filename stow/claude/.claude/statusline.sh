@@ -154,7 +154,7 @@ for ((i=0; i<empty; i++)); do bar+="▱"; done
 cost_fmt=$(printf "%.2f" "$cost")
 
 # 左セクション: 時刻 + アイコン + ディレクトリ + ブランチ
-left="${DIM}${ICON_TIME}${current_time}${RESET}"
+left="${BOLD}${ICON_TIME}${current_time}${RESET}"
 left+=" ${CYAN}${BOLD}${ICON_FOLDER} ${dir}${RESET}"
 if [ -n "$branch" ]; then
     left+=" ${MAGENTA}${ICON_BRANCH} ${branch}${RESET}"

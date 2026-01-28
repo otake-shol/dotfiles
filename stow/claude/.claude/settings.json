@@ -1,64 +1,7 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash",
-      "Read",
-      "Edit",
-      "Write",
-      "WebFetch",
-      "Glob",
-      "Grep"
-    ],
-    "deny": [
-      "Bash(sudo:*)",
-      "Bash(rm -rf:*)",
-      "Bash(rm -r:*)",
-      "Bash(git reset:*)",
-      "Bash(git rebase:*)",
-      "Bash(git push --force:*)",
-      "Bash(git push -f:*)",
-      "Bash(git clean:*)",
-      "Bash(dd:*)",
-      "Bash(mkfs:*)",
-      "Bash(wget:*)",
-      "Read(**/.env*)",
-      "Read(id_rsa)",
-      "Read(id_ed25519)",
-      "Read(**/*token*)",
-      "Read(**/*key*)",
-      "Write(**/.env*)",
-      "Write(**/secrets/**)"
-    ],
-    "ask": [],
-    "additionalDirectories": [
-      "~/dotfiles/"
-    ]
-  },
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/dotfiles/.claude/hooks/update-brewfile.sh"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "osascript -e 'display notification \"処理が完了しました\" with title \"Claude Code\" sound name \"Glass\"'"
-          }
-        ]
-      }
-    ]
-  },
-  "enabledPlugins": {
-    "superpowers@superpowers-marketplace": true
-  },
-  "language": "日本語"
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh",
+    "padding": 0
+  }
 }

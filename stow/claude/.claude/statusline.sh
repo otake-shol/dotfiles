@@ -49,14 +49,21 @@ GREEN='\033[32m'
 RED='\033[31m'
 BLUE='\033[34m'
 
-# Nerd Font アイコン（printf でUnicode生成）
-ICON_FOLDER=$(printf '\uf07b')     #
-ICON_BRANCH=$(printf '\ue725')     #
-ICON_MODEL=$(printf '\uf544')      #  (robot)
-ICON_BRAIN=$(printf '\uf5dc')      #  (brain/context)
-ICON_DIFF=$(printf '\uf040')       #  (edit/pencil)
-ICON_CLOCK=$(printf '\uf017')      #
-ICON_MONEY=$(printf '\uf155')      #
+# Nerd Font アイコン（UTF-8バイト列で指定）
+# U+F07B (folder)    → UTF-8: EF 81 BB
+# U+E725 (branch)    → UTF-8: EE 9C A5
+# U+F544 (robot)     → UTF-8: EF 95 84
+# U+F5DC (brain)     → UTF-8: EF 97 9C
+# U+F040 (pencil)    → UTF-8: EF 81 80
+# U+F017 (clock)     → UTF-8: EF 80 97
+# U+F155 (dollar)    → UTF-8: EF 85 95
+ICON_FOLDER=$(printf '\xef\x81\xbb')
+ICON_BRANCH=$(printf '\xee\x9c\xa5')
+ICON_MODEL=$(printf '\xef\x95\x84')
+ICON_BRAIN=$(printf '\xef\x97\x9c')
+ICON_DIFF=$(printf '\xef\x81\x80')
+ICON_CLOCK=$(printf '\xef\x80\x97')
+ICON_MONEY=$(printf '\xef\x85\x95')
 
 # コンテキスト使用率に応じた色
 if [ "$used_pct" -lt 50 ]; then

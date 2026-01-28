@@ -49,6 +49,15 @@ GREEN='\033[32m'
 RED='\033[31m'
 BLUE='\033[34m'
 
+# Nerd Font アイコン（printf でUnicode生成）
+ICON_FOLDER=$(printf '\uf07b')     #
+ICON_BRANCH=$(printf '\ue725')     #
+ICON_MODEL=$(printf '\uf544')      #  (robot)
+ICON_BRAIN=$(printf '\uf5dc')      #  (brain/context)
+ICON_DIFF=$(printf '\uf040')       #  (edit/pencil)
+ICON_CLOCK=$(printf '\uf017')      #
+ICON_MONEY=$(printf '\uf155')      #
+
 # コンテキスト使用率に応じた色
 if [ "$used_pct" -lt 50 ]; then
     PCT_COLOR=$GREEN
@@ -70,17 +79,16 @@ for ((i=0; i<empty; i++)); do bar+="▱"; done
 cost_fmt=$(printf "%.2f" "$cost")
 
 # 左セクション: アイコン + ディレクトリ + ブランチ
-left="${CYAN}${BOLD} ${dir}${RESET}"
+left="${CYAN}${BOLD}${ICON_FOLDER} ${dir}${RESET}"
 if [ -n "$branch" ]; then
-    left+=" ${MAGENTA} ${branch}${RESET}"
+    left+=" ${MAGENTA}${ICON_BRANCH} ${branch}${RESET}"
 fi
 
 # 右セクション: モデル + コンテキスト + 行数 + 時間 + コスト
-# 各項目にアイコン付き
-right="${BLUE}${BOLD} ${short_model}${RESET}"
-right+=" ${PCT_COLOR} ${bar} ${used_pct}%${RESET}"
-right+=" ${DIM}${RESET}${GREEN}+${lines_added}${RESET}${RED}-${lines_removed}${RESET}"
-right+=" ${DIM} ${duration_fmt}${RESET}"
-right+=" ${GREEN} \$${cost_fmt}${RESET}"
+right="${BLUE}${BOLD}${ICON_MODEL} ${short_model}${RESET}"
+right+=" ${PCT_COLOR}${ICON_BRAIN} ${bar} ${used_pct}%${RESET}"
+right+=" ${DIM}${ICON_DIFF}${RESET}${GREEN}+${lines_added}${RESET}${RED}-${lines_removed}${RESET}"
+right+=" ${DIM}${ICON_CLOCK} ${duration_fmt}${RESET}"
+right+=" ${GREEN}${ICON_MONEY} \$${cost_fmt}${RESET}"
 
 echo -e "${left} ${DIM}│${RESET} ${right}"

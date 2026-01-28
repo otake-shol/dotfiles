@@ -8,9 +8,29 @@ dir=$(echo "$input" | jq -r '.workspace.current_dir // "~"' | xargs basename)
 model=$(echo "$input" | jq -r '.model.display_name // "Claude"')
 used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // 0' | cut -d. -f1)
 cost=$(echo "$input" | jq -r '.cost.total_cost_usd // 0')
+duration_ms=$(echo "$input" | jq -r '.cost.total_duration_ms // 0')
+lines_added=$(echo "$input" | jq -r '.cost.total_lines_added // 0')
+lines_removed=$(echo "$input" | jq -r '.cost.total_lines_removed // 0')
 
 # モデル名短縮
 short_model=$(echo "$model" | sed -E 's/Claude //' | sed -E 's/Opus 4.5/O4.5/' | sed -E 's/Sonnet 4/S4/' | sed -E 's/Haiku 3.5/H3.5/')
+
+# 経過時間フォーマット（ms → 分/時間）
+format_duration() {
+    local ms=$1
+    local seconds=$((ms / 1000))
+    local minutes=$((seconds / 60))
+    local hours=$((minutes / 60))
+
+    if [ "$hours" -gt 0 ]; then
+        echo "${hours}h$((minutes % 60))m"
+    elif [ "$minutes" -gt 0 ]; then
+        echo "${minutes}m"
+    else
+        echo "${seconds}s"
+    fi
+}
+duration_fmt=$(format_duration "$duration_ms")
 
 # Git ブランチ取得
 branch=""
@@ -55,9 +75,11 @@ if [ -n "$branch" ]; then
     left+=" ${MAGENTA} ${branch}${RESET}"
 fi
 
-# 右セクション: モデル + バー + % + コスト
+# 右セクション: モデル + バー + % + 行数 + 時間 + コスト
 right="${BLUE}${BOLD} ${short_model}${RESET}"
 right+=" ${PCT_COLOR}${bar} ${used_pct}%${RESET}"
+right+=" ${GREEN}+${lines_added}${RESET} ${RED}-${lines_removed}${RESET}"
+right+=" ${DIM} ${duration_fmt}${RESET}"
 right+=" ${GREEN} \$${cost_fmt}${RESET}"
 
 echo -e "${left} ${DIM}│${RESET} ${right}"

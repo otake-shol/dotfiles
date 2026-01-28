@@ -75,10 +75,11 @@ if [ -n "$branch" ]; then
     left+=" ${MAGENTA} ${branch}${RESET}"
 fi
 
-# 右セクション: モデル + バー + % + 行数 + 時間 + コスト
+# 右セクション: モデル + コンテキスト + 行数 + 時間 + コスト
+# 各項目にアイコン付き
 right="${BLUE}${BOLD} ${short_model}${RESET}"
-right+=" ${PCT_COLOR}${bar} ${used_pct}%${RESET}"
-right+=" ${GREEN}+${lines_added}${RESET} ${RED}-${lines_removed}${RESET}"
+right+=" ${PCT_COLOR} ${bar} ${used_pct}%${RESET}"
+right+=" ${DIM}${RESET}${GREEN}+${lines_added}${RESET}${RED}-${lines_removed}${RESET}"
 right+=" ${DIM} ${duration_fmt}${RESET}"
 right+=" ${GREEN} \$${cost_fmt}${RESET}"
 

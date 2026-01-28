@@ -9,6 +9,7 @@ model=$(echo "$input" | jq -r '.model.display_name // "Claude"')
 used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // 0' | cut -d. -f1)
 cost=$(echo "$input" | jq -r '.cost.total_cost_usd // 0')
 duration_ms=$(echo "$input" | jq -r '.cost.total_duration_ms // 0')
+session_id=$(echo "$input" | jq -r '.session_id // ""' | cut -c1-8)
 lines_added=$(echo "$input" | jq -r '.cost.total_lines_added // 0')
 lines_removed=$(echo "$input" | jq -r '.cost.total_lines_removed // 0')
 
@@ -113,5 +114,8 @@ right+=" ${PCT_COLOR}${ICON_BRAIN} ${bar} ${used_pct}%${RESET}"
 right+=" ${DIM}${ICON_DIFF}${RESET}${GREEN}+${lines_added}${RESET}${RED}-${lines_removed}${RESET}"
 right+=" ${DIM}${ICON_CLOCK} ${duration_fmt}${RESET}"
 right+=" ${GREEN}${ICON_MONEY} \$${cost_fmt}${RESET}"
+if [ -n "$session_id" ]; then
+    right+=" ${DIM}#${session_id}${RESET}"
+fi
 
 echo -e "${left} ${DIM}│${RESET} ${right}"

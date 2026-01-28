@@ -86,6 +86,22 @@ else
     NET_COLOR=$RED
 fi
 
+# 現在時刻
+current_time=$(date +"%H:%M")
+
+# VPN状態（Tailscale）
+if command -v tailscale &>/dev/null; then
+    if tailscale status &>/dev/null; then
+        vpn_status="on"
+        VPN_COLOR=$GREEN
+    else
+        vpn_status="off"
+        VPN_COLOR=$RED
+    fi
+else
+    vpn_status=""
+fi
+
 # カラー定義
 RESET='\033[0m'
 DIM='\033[2m'
@@ -114,6 +130,8 @@ ICON_MONEY=$(printf '\xef\x85\x95')
 ICON_CPU=$(printf '\xef\x92\xbc')      # U+F4BC
 ICON_MEM=$(printf '\xee\xbf\x85')      # U+EFC5
 ICON_NET=$(printf '\xef\x82\xac')      # U+F0AC
+ICON_TIME=$(printf '\xef\x80\x97')     # U+F017 (clock)
+ICON_VPN=$(printf '\xef\x83\xa2')      # U+F0E2 (shield)
 
 # コンテキスト使用率に応じた色
 if [ "$used_pct" -lt 50 ]; then
@@ -155,5 +173,9 @@ fi
 sys="${DIM}${ICON_CPU}${RESET}${cpu_usage}%"
 sys+=" ${DIM}${ICON_MEM}${RESET}${mem_usage}%"
 sys+=" ${NET_COLOR}${ICON_NET}${net_status}${RESET}"
+if [ -n "$vpn_status" ]; then
+    sys+=" ${VPN_COLOR}${ICON_VPN}${vpn_status}${RESET}"
+fi
+sys+=" ${DIM}${ICON_TIME}${current_time}${RESET}"
 
 echo -e "${left} ${DIM}│${RESET} ${right} ${DIM}│${RESET} ${sys}"

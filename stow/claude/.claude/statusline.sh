@@ -75,7 +75,7 @@ RED='\033[31m'
 # U+F155 (dollar)    → UTF-8: EF 85 95
 ICON_FOLDER=$(printf '\xef\x81\xbb')
 ICON_BRANCH=$(printf '\xee\x9c\xa5')
-ICON_MODEL=$(printf '\xf3\xb0\xb7\x91')
+ICON_MODEL=$(printf '\xf3\xb1\x8c\xbc')
 ICON_BRAIN=$(printf '\xef\x97\x9c')
 ICON_DIFF=$(printf '\xef\x81\x80')
 ICON_CLOCK=$(printf '\xef\x80\x97')

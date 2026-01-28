@@ -1,0 +1,17 @@
+// Zellij設定
+// デフォルト設定が優秀なので最小限のカスタマイズのみ
+
+// テーマ
+theme "tokyo-night"
+
+// コピー時にクリップボードにも送る
+copy_on_select true
+
+// マウスモード有効
+mouse_mode true
+
+// ペインフレーム表示
+pane_frames true
+
+// セッション終了時の動作（セッションを残す）
+on_force_close "detach"

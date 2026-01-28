@@ -111,9 +111,9 @@ ICON_BRAIN=$(printf '\xef\x97\x9c')
 ICON_DIFF=$(printf '\xef\x81\x80')
 ICON_CLOCK=$(printf '\xef\x80\x97')
 ICON_MONEY=$(printf '\xef\x85\x95')
-ICON_CPU=$(printf '\xef\x85\xb4')      # U+F174 (chip)
-ICON_MEM=$(printf '\xef\x94\xb8')      # U+F538 (memory)
-ICON_NET=$(printf '\xef\x87\xbe')      # U+F1FE (wifi)
+ICON_CPU=$(printf '\xef\x92\xbc')      # U+F4BC
+ICON_MEM=$(printf '\xee\xbf\x85')      # U+EFC5
+ICON_NET=$(printf '\xef\x82\xac')      # U+F0AC
 
 # コンテキスト使用率に応じた色
 if [ "$used_pct" -lt 50 ]; then

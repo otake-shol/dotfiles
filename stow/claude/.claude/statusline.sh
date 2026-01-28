@@ -56,6 +56,36 @@ if git rev-parse --is-inside-work-tree &>/dev/null; then
     branch=$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
 fi
 
+# CPU使用率（macOS）
+cpu_usage=$(ps -A -o %cpu | awk '{s+=$1} END {printf "%.0f", s}')
+
+# メモリ使用率（macOS）
+mem_info=$(vm_stat 2>/dev/null)
+if [ -n "$mem_info" ]; then
+    pages_active=$(echo "$mem_info" | awk '/Pages active/ {print $3}' | tr -d '.')
+    pages_wired=$(echo "$mem_info" | awk '/Pages wired/ {print $4}' | tr -d '.')
+    pages_compressed=$(echo "$mem_info" | awk '/Pages occupied by compressor/ {print $5}' | tr -d '.')
+    pages_free=$(echo "$mem_info" | awk '/Pages free/ {print $3}' | tr -d '.')
+    total_used=$((pages_active + pages_wired + pages_compressed))
+    total=$((total_used + pages_free))
+    if [ "$total" -gt 0 ]; then
+        mem_usage=$((total_used * 100 / total))
+    else
+        mem_usage=0
+    fi
+else
+    mem_usage=0
+fi
+
+# ネットワーク状態（高速チェック）
+if nc -z -w 1 1.1.1.1 53 2>/dev/null; then
+    net_status="on"
+    NET_COLOR=$GREEN
+else
+    net_status="off"
+    NET_COLOR=$RED
+fi
+
 # カラー定義
 RESET='\033[0m'
 DIM='\033[2m'
@@ -81,6 +111,9 @@ ICON_BRAIN=$(printf '\xef\x97\x9c')
 ICON_DIFF=$(printf '\xef\x81\x80')
 ICON_CLOCK=$(printf '\xef\x80\x97')
 ICON_MONEY=$(printf '\xef\x85\x95')
+ICON_CPU=$(printf '\xef\x85\xb4')      # U+F174 (chip)
+ICON_MEM=$(printf '\xef\x94\xb8')      # U+F538 (memory)
+ICON_NET=$(printf '\xef\x87\xbe')      # U+F1FE (wifi)
 
 # コンテキスト使用率に応じた色
 if [ "$used_pct" -lt 50 ]; then
@@ -118,4 +151,9 @@ if [ -n "$session_id" ]; then
     right+=" ${DIM}#${session_id}${RESET}"
 fi
 
-echo -e "${left} ${DIM}│${RESET} ${right}"
+# システム情報セクション
+sys="${DIM}${ICON_CPU}${RESET}${cpu_usage}%"
+sys+=" ${DIM}${ICON_MEM}${RESET}${mem_usage}%"
+sys+=" ${NET_COLOR}${ICON_NET}${net_status}${RESET}"
+
+echo -e "${left} ${DIM}│${RESET} ${right} ${DIM}│${RESET} ${sys}"

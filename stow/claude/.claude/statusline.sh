@@ -153,8 +153,9 @@ for ((i=0; i<empty; i++)); do bar+="▱"; done
 # コストフォーマット
 cost_fmt=$(printf "%.2f" "$cost")
 
-# 左セクション: アイコン + ディレクトリ + ブランチ
-left="${CYAN}${BOLD}${ICON_FOLDER} ${dir}${RESET}"
+# 左セクション: 時刻 + アイコン + ディレクトリ + ブランチ
+left="${DIM}${ICON_TIME}${current_time}${RESET}"
+left+=" ${CYAN}${BOLD}${ICON_FOLDER} ${dir}${RESET}"
 if [ -n "$branch" ]; then
     left+=" ${MAGENTA}${ICON_BRANCH} ${branch}${RESET}"
 fi
@@ -176,6 +177,5 @@ sys+=" ${NET_COLOR}${ICON_NET}${net_status}${RESET}"
 if [ -n "$vpn_status" ]; then
     sys+=" ${VPN_COLOR}${ICON_VPN}${vpn_status}${RESET}"
 fi
-sys+=" ${DIM}${ICON_TIME}${current_time}${RESET}"
 
 echo -e "${left} ${DIM}│${RESET} ${right} ${DIM}│${RESET} ${sys}"

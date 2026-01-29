@@ -190,20 +190,21 @@ Claudeとしてのおすすめ案を明示し、その理由を説明する。
 
 ## MCPサーバー設定
 
-## 有効なMCPサーバー（5個）
+### 有効なMCPサーバー（5個）
 
-### 認証不要（すぐ使える）
-| サーバー | 用途 |
-|---------|------|
-| Context7 | リアルタイムドキュメント参照 |
-| Serena | シンボリックコード解析（LSP統合） |
-| Playwright | ブラウザ自動化・E2Eテスト |
-| Atlassian | Jira/Confluence操作 |
+| サーバー | 用途 | 認証 |
+|---------|------|------|
+| Context7 | リアルタイムドキュメント参照 | 不要 |
+| Serena | シンボリックコード解析（LSP統合） | 不要 |
+| Playwright | ブラウザ自動化・E2Eテスト | 不要 |
+| Atlassian | Jira/Confluence操作 | 環境変数 |
+| Figma | デザイン→コード変換 | OAuth |
 
-### OAuth認証が必要（初回接続時に認証）
-| サーバー | 用途 |
-|---------|------|
-| Figma | デザイン→コード変換 |
+### 新規マシンでのMCPセットアップ
+```bash
+~/.claude/setup.sh
+```
+→ MCPサーバーとプラグインを一括設定
 
 ---
 
@@ -216,12 +217,13 @@ Claudeとしてのおすすめ案を明示し、その理由を説明する。
 | superpowers | obra/superpowers-marketplace | 開発ワークフロー強化（TDD、コードレビュー、デバッグ等） |
 
 ### 新規マシンでのセットアップ
-
 ```bash
-# 1. マーケットプレイスを追加
-claude /plugin marketplace add obra/superpowers-marketplace
+~/.claude/setup.sh  # MCPサーバーとプラグインを一括設定
+```
 
-# 2. プラグインをインストール
+または手動で:
+```bash
+claude /plugin marketplace add obra/superpowers-marketplace
 claude /plugin install superpowers@superpowers-marketplace
 ```
 

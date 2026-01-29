@@ -3,5 +3,62 @@
     "type": "command",
     "command": "~/.claude/statusline.sh",
     "padding": 0
+  },
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(yarn *)",
+      "Bash(pnpm *)",
+      "Bash(npx prettier *)",
+      "Bash(npx eslint *)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git branch*)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git stash*)",
+      "Bash(make *)",
+      "Bash(brew *)"
+    ],
+    "deny": [
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(**/credentials*)",
+      "Read(**/*secret*)",
+      "Bash(rm -rf /)",
+      "Bash(rm -rf ~)",
+      "Bash(curl * | sh)",
+      "Bash(curl * | bash)"
+    ],
+    "ask": [
+      "Bash(git push *)",
+      "Bash(git reset --hard*)",
+      "Bash(git checkout .)",
+      "Bash(git clean *)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/auto-format.sh"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/notify.sh"
+          }
+        ]
+      }
+    ]
   }
 }

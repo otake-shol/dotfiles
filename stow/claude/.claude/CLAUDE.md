@@ -142,6 +142,43 @@ Claudeとしてのおすすめ案を明示し、その理由を説明する。
 
 ---
 
+## Hooks設定
+
+### 有効なHooks（3個）
+
+| Hook | イベント | 用途 |
+|------|---------|------|
+| update-brewfile.sh | (手動) | Brewfile自動更新 |
+| auto-format.sh | PostToolUse | ファイル編集後に自動フォーマット |
+| notify.sh | Notification | macOS通知でタスク完了を通知 |
+
+### auto-format.sh の対応形式
+- **Prettier**: js, jsx, ts, tsx, json, md, css, scss, html, yaml, yml
+- **shfmt**: sh, bash
+
+---
+
+## パーミッション設定
+
+### 自動許可（allow）
+- `npm run *`, `yarn *`, `pnpm *`
+- `npx prettier *`, `npx eslint *`
+- `git status/diff/log/branch/add/commit/stash`
+- `make *`, `brew *`
+
+### 自動拒否（deny）
+- `.env*`, `credentials*`, `*secret*` の読み取り
+- `rm -rf /`, `rm -rf ~`
+- `curl * | sh/bash`
+
+### 確認が必要（ask）
+- `git push *`
+- `git reset --hard*`
+- `git checkout .`
+- `git clean *`
+
+---
+
 ## エディタ設定
 
 ## ファイルをエディタで開く場合

@@ -33,10 +33,24 @@ case "$model" in
         ;;
 esac
 
-# Git ブランチ取得
+# Git ブランチ・ステータス取得
 branch=""
+git_uncommitted=""
+git_unpushed=""
 if git rev-parse --is-inside-work-tree &>/dev/null; then
     branch=$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
+
+    # 未コミットファイル数（変更+追加+削除）
+    uncommitted_count=$(git status --porcelain 2>/dev/null | wc -l | tr -d ' ')
+    if [ "$uncommitted_count" -gt 0 ]; then
+        git_uncommitted="●${uncommitted_count}"
+    fi
+
+    # 未プッシュコミット数
+    ahead=$(git rev-list --count '@{upstream}..HEAD' 2>/dev/null || echo "0")
+    if [ "$ahead" -gt 0 ]; then
+        git_unpushed="↑${ahead}"
+    fi
 fi
 
 # 現在時刻
@@ -100,6 +114,13 @@ output+="${COLOR_2}${ICON_FOLDER} ${dir}${RESET}"
 if [ -n "$branch" ]; then
     output+="  "
     output+="${COLOR_3}${ICON_BRANCH} ${branch}${RESET}"
+    # Git状態インジケータ（●N = 未コミットN件、↑N = 未プッシュN件）
+    if [ -n "$git_uncommitted" ]; then
+        output+=" ${YELLOW}${git_uncommitted}${RESET}"
+    fi
+    if [ -n "$git_unpushed" ]; then
+        output+=" ${YELLOW}${git_unpushed}${RESET}"
+    fi
 fi
 
 # セパレータ

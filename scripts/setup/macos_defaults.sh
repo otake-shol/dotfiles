@@ -25,6 +25,8 @@ macos-defaults.sh - macOS開発者向け設定を適用
     - Dock: 自動非表示、高速アニメーション
     - Finder: 隠しファイル表示、パスバー
     - キーボード: 高速キーリピート、自動変換無効化
+    - マウス・トラックパッド: ポインタ高速化、タップでクリック
+    - UI/UX: スクロールバー常時表示、ダブルクリックで最大化
     - セキュリティ: スクリーンセーバーパスワード
     - プライバシー: 広告トラッキング制限
     - DS_Store: ネットワーク/USBで作成しない
@@ -71,8 +73,8 @@ echo -e "${GREEN}✓ Finder: 隠しファイル表示、パスバー、ステー
 # ========================================
 # キーボード
 # ========================================
-# キーリピート速度を高速化（vim操作に最適）
-defaults write NSGlobalDomain KeyRepeat -int 2
+# キーリピート速度を高速化（vim操作に最適、1=最速）
+defaults write NSGlobalDomain KeyRepeat -int 1
 # キーリピート開始までの時間を短縮
 defaults write NSGlobalDomain InitialKeyRepeat -int 15
 # 自動大文字変換を無効化
@@ -86,6 +88,25 @@ defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 # スペルチェック自動修正を無効化
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 echo -e "${GREEN}✓ キーボード: 高速キーリピート、自動変換無効化${NC}"
+
+# ========================================
+# マウス・トラックパッド
+# ========================================
+# ポインタ速度を高速化（デフォルト: 3、最大: 5程度）
+defaults write -g com.apple.mouse.scaling -float 5.0
+# タップでクリック（好みで有効化、不要なら削除可）
+defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+echo -e "${GREEN}✓ マウス・トラックパッド: ポインタ高速化、タップでクリック${NC}"
+
+# ========================================
+# UI/UX
+# ========================================
+# スクロールバーを常に表示
+defaults write -g AppleShowScrollBars -string "Always"
+# タイトルバーダブルクリックで最大化
+defaults write -g AppleActionOnDoubleClick -string "Maximize"
+echo -e "${GREEN}✓ UI/UX: スクロールバー常時表示、ダブルクリックで最大化${NC}"
 
 # ========================================
 # セキュリティ

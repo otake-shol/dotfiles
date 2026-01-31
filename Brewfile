@@ -107,9 +107,7 @@ brew "btop"
 #   選定理由: top/htop代替。美しいUI・マウス操作・GPU監視
 #   代替候補: htop（機能少ない）、bottom（TUI操作性劣る）
 
-brew "procs"
-#   選定理由: ps代替。カラー表示・ツリー表示・検索機能
-#   代替候補: ps（出力が見づらい）
+# brew "procs"  # 削除: btop + fkill関数で代替可能
 
 brew "glow"
 #   選定理由: Markdownターミナル表示。READMEをCLIで確認
@@ -151,9 +149,7 @@ brew "hyperfine"
 #   選定理由: コマンドベンチマーク。統計情報・ウォームアップ対応
 #   代替候補: time（統計なし）
 
-brew "watchexec"
-#   選定理由: ファイル監視・自動実行。テスト自動実行に便利
-#   代替候補: fswatch（出力のみ）、entr（機能少ない）
+# brew "watchexec"  # 削除: 使用頻度低い
 
 brew "lefthook"
 #   選定理由: Git hooks管理。並列実行・YAML設定・高速

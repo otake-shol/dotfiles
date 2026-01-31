@@ -31,7 +31,7 @@ alias brewdeps="brew deps --tree"  # 依存関係ツリー表示
 # ========================================
 alias http="https"                     # httpie（HTTPS優先）
 alias bench="hyperfine"                # コマンドベンチマーク
-alias watch="watchexec"                # ファイル監視・自動実行
+# alias watch="watchexec"             # 削除: 使用頻度低い
 
 # ========================================
 # サーバー・HTTP

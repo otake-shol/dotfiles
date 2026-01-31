@@ -65,7 +65,7 @@ alias his="history"
 alias df="duf"                       # モダンなディスク空き容量表示
 alias du="dust"                      # モダンなディスク使用量表示
 alias top="btop"                     # モダンなシステムモニター
-alias ps="procs"                     # モダンなプロセス一覧
+# alias ps="procs"                  # 削除: btop + fkill関数で代替
 alias help="tldr"                    # コマンドヘルプ簡易版
 alias md="glow"                      # Markdownターミナル表示
 

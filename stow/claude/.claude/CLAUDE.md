@@ -262,6 +262,23 @@ claude /plugin install superpowers@superpowers-marketplace
 
 ---
 
+## キーバインド設定
+
+### 概要
+`~/.claude/keybindings.json`でショートカットをカスタマイズ。
+
+### 設定済みキーバインド
+
+| キー | コマンド | 説明 |
+|------|---------|------|
+| Ctrl+L | clear | 画面クリア |
+| Ctrl+O | open_in_editor | エディタで開く |
+| Ctrl+R | retry | 最後のリクエストを再試行 |
+| Ctrl+Shift+C | copy_last_response | 最後の応答をコピー |
+| Ctrl+Shift+S | copy_last_command | 最後のコマンドをコピー |
+
+---
+
 ## dotfiles 開発ガイドライン
 
 ## ディレクトリ構造

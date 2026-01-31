@@ -19,10 +19,12 @@ export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-ran
 export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
 
 # --- zoxide ---
+# --cmd cd: cdコマンドをzoxideに置き換え（公式推奨オプション）
+# 使い方: cd foo（スマートジャンプ）, cdi foo（fzf選択）, builtin cd（純粋なcd）
 if command -v zoxide &>/dev/null; then
-  _zoxide_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zoxide-init.zsh"
+  _zoxide_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zoxide-init-cd.zsh"
   if ! _cache_valid "$_zoxide_cache"; then
-    _cache_update "$_zoxide_cache" "zoxide init zsh"
+    _cache_update "$_zoxide_cache" "zoxide init zsh --cmd cd"
   fi
   source "$_zoxide_cache"
   unset _zoxide_cache

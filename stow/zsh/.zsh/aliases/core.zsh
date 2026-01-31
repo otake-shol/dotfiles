@@ -62,8 +62,12 @@ alias zshtime="time zsh -i -c exit"  # zsh起動時間計測
 alias zshbench="bash $DOTFILES_SCRIPTS/utils/zsh_benchmark.sh"  # 詳細ベンチマーク
 alias path='echo -e ${PATH//:/\\n}'
 alias his="history"
-alias df="df -h"
+alias df="duf"                       # モダンなディスク空き容量表示
+alias du="dust"                      # モダンなディスク使用量表示
 alias top="btop"                     # モダンなシステムモニター
+alias ps="procs"                     # モダンなプロセス一覧
+alias help="tldr"                    # コマンドヘルプ簡易版
+alias md="glow"                      # Markdownターミナル表示
 
 # ネットワーク
 alias myip="curl -s ifconfig.me"
@@ -71,6 +75,11 @@ alias localip="ipconfig getifaddr en0"
 alias ips="echo 'Local:' && ipconfig getifaddr en0 && echo 'Global:' && curl -s ifconfig.me"
 alias ports="lsof -i -P | grep LISTEN"
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+
+# 天気（wttr.in）
+alias wttr="curl -s 'wttr.in/Tokyo?lang=ja'"           # 現在の天気
+alias wttr3="curl -s 'wttr.in/Tokyo?lang=ja&format=v2'" # 3日間予報
+alias wttr1="curl -s 'wttr.in/Tokyo?format=1'"          # 1行表示
 
 # ========================================
 # zoxide（高速ディレクトリジャンプ）
@@ -114,8 +123,49 @@ alias fp="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}
 # 開発ツール
 # ========================================
 
+# エディタ（nvim統一）
+alias vim="nvim"
+alias vi="nvim"
+alias v="nvim"
+
+# diff（deltaでカラー表示）
+alias diff="delta"
+
 # コード統計
 alias loc="tokei"                      # Lines of Code
+
+# ========================================
+# 即戦力系
+# ========================================
+alias please='sudo $(fc -ln -1)'       # 直前コマンドをsudoで再実行
+alias cl="clear && ls"                 # クリア後にls
+alias now="date '+%Y-%m-%d %H:%M:%S'"  # 現在時刻
+alias week="date +%V"                  # 今週の週番号
+alias o="open ."                       # Finderで開く
+alias oo="open"                        # 指定ファイル/URLを開く
+
+# ========================================
+# クリップボード操作
+# ========================================
+alias cpy="pbcopy"                     # コピー
+alias pst="pbpaste"                    # ペースト
+alias cpwd='pwd | tr -d "\n" | pbcopy && echo "Copied: $(pwd)"'  # 現在パスをコピー
+cpfile() { cat "$1" | pbcopy && echo "Copied: $1"; }             # ファイル内容をコピー
+
+# ========================================
+# ファイル操作
+# ========================================
+alias take="mkcd"                      # mkdir + cd（mkcdのエイリアス）
+alias rd="rmdir"                       # ディレクトリ削除
+alias md="mkdir -p"                    # ディレクトリ作成（親も作成）
+sizeof() { du -sh "${1:-.}" | cut -f1; }  # サイズ確認
+
+# ========================================
+# ネットワーク強化
+# ========================================
+alias ping5="ping -c 5"                # 5回だけping
+alias flushdns="sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder && echo 'DNS cache flushed'"
+alias speedtest="curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python3 -"
 
 # ========================================
 # エイリアス管理

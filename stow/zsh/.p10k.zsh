@@ -96,15 +96,16 @@
     # disk_usage            # disk usage
     # ram                   # free RAM
     # swap                  # used swap
-    todo                    # todo items (https://github.com/todotxt/todo.txt-cli)
-    timewarrior             # timewarrior tracking status (https://timewarrior.net/)
-    taskwarrior             # taskwarrior task count (https://taskwarrior.org/)
+    # todo                    # todo items (https://github.com/todotxt/todo.txt-cli)
+    # timewarrior             # timewarrior tracking status (https://timewarrior.net/)
+    # taskwarrior             # taskwarrior task count (https://taskwarrior.org/)
     # cpu_arch              # CPU architecture
     time                    # current time
+    # weather                 # current weather (custom segment)
     # ip                    # ip address and bandwidth usage for a specified network interface
     # public_ip             # public IP address
     # proxy                 # system-wide http/https/ftp proxy
-    # battery               # internal battery
+    battery               # internal battery
     # wifi                  # wifi speed
     # example               # example user-defined segment (see prompt_example function below)
   )
@@ -129,7 +130,7 @@
   typeset -g POWERLEVEL9K_ICON_BEFORE_CONTENT=
 
   # Add an empty line before each prompt.
-  typeset -g POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
+  typeset -g POWERLEVEL9K_PROMPT_ADD_NEWLINE=false
 
   # Connect left prompt lines with these symbols. You'll probably want to use the same color
   # as POWERLEVEL9K_MULTILINE_FIRST_PROMPT_GAP_FOREGROUND below.
@@ -1715,6 +1716,49 @@
   typeset -g POWERLEVEL9K_EXAMPLE_FOREGROUND=3
   typeset -g POWERLEVEL9K_EXAMPLE_BACKGROUND=1
   # typeset -g POWERLEVEL9K_EXAMPLE_VISUAL_IDENTIFIER_EXPANSION='⭐'
+
+  #################################[ weather: current weather ]#################################
+  # キャッシュファイル（30分有効）
+  typeset -g _WEATHER_CACHE_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/p10k-weather"
+  typeset -g _WEATHER_CACHE_TTL=1800  # 30分
+
+  # 天気を取得してキャッシュに保存（バックグラウンド実行用）
+  function _update_weather_cache() {
+    local weather
+    weather=$(curl -s --max-time 2 'wttr.in/Tokyo?format=%c%t' 2>/dev/null | tr -d '+')
+    [[ -n "$weather" ]] && echo "$weather" > "$_WEATHER_CACHE_FILE"
+  }
+
+  # 天気セグメント
+  function prompt_weather() {
+    local weather=""
+
+    # キャッシュが存在し、TTL内なら使用
+    if [[ -f "$_WEATHER_CACHE_FILE" ]]; then
+      local cache_age=$(( $(date +%s) - $(stat -f %m "$_WEATHER_CACHE_FILE" 2>/dev/null || echo 0) ))
+      if (( cache_age < _WEATHER_CACHE_TTL )); then
+        weather=$(<"$_WEATHER_CACHE_FILE")
+      else
+        # キャッシュ期限切れ：バックグラウンドで更新
+        ( _update_weather_cache & ) 2>/dev/null
+        weather=$(<"$_WEATHER_CACHE_FILE")  # 古いキャッシュを表示
+      fi
+    else
+      # キャッシュなし：バックグラウンドで取得開始
+      ( _update_weather_cache & ) 2>/dev/null
+    fi
+
+    [[ -n "$weather" ]] && p10k segment -t "$weather"
+  }
+
+  # instant prompt用（キャッシュがあれば表示）
+  function instant_prompt_weather() {
+    [[ -f "$_WEATHER_CACHE_FILE" ]] && prompt_weather
+  }
+
+  # 天気セグメントのスタイル
+  typeset -g POWERLEVEL9K_WEATHER_FOREGROUND=7  # 白
+  typeset -g POWERLEVEL9K_WEATHER_BACKGROUND=4  # 青
 
   # Transient prompt works similarly to the builtin transient_rprompt option. It trims down prompt
   # when accepting a command line. Supported values:

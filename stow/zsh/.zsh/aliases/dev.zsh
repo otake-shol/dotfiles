@@ -27,6 +27,22 @@ alias brews="brew search"
 alias brewdeps="brew deps --tree"  # 依存関係ツリー表示
 
 # ========================================
+# HTTP / ベンチマーク
+# ========================================
+alias http="https"                     # httpie（HTTPS優先）
+alias bench="hyperfine"                # コマンドベンチマーク
+alias watch="watchexec"                # ファイル監視・自動実行
+
+# ========================================
+# サーバー・HTTP
+# ========================================
+alias serve="python3 -m http.server 8000"  # ローカルHTTPサーバ
+alias json="jq ."                          # JSON整形
+alias headers="curl -I"                    # HTTPヘッダ確認
+alias GET="curl -X GET"                    # GET リクエスト
+alias POST="curl -X POST"                  # POST リクエスト
+
+# ========================================
 # 便利関数
 # ========================================
 # mkcd, touchedit, port, jsonf, tmpcd, b64e, b64d, urle, urld, pathfind

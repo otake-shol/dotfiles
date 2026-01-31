@@ -111,3 +111,38 @@ pathfind() {
   local pattern="$1"
   echo "$PATH" | tr ':' '\n' | xargs -I {} find {} -name "*$pattern*" 2>/dev/null
 }
+
+# ========================================
+# 圧縮・展開
+# ========================================
+# 圧縮ファイルを自動判定して展開
+extract() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: extract <file>"
+    return 1
+  fi
+
+  if [[ ! -f "$1" ]]; then
+    echo "Error: '$1' is not a valid file"
+    return 1
+  fi
+
+  case "$1" in
+    *.tar.bz2) tar xjf "$1" ;;
+    *.tar.gz)  tar xzf "$1" ;;
+    *.tar.xz)  tar xJf "$1" ;;
+    *.tar.zst) tar --zstd -xf "$1" ;;
+    *.bz2)     bunzip2 "$1" ;;
+    *.gz)      gunzip "$1" ;;
+    *.tar)     tar xf "$1" ;;
+    *.tbz2)    tar xjf "$1" ;;
+    *.tgz)     tar xzf "$1" ;;
+    *.zip)     unzip "$1" ;;
+    *.Z)       uncompress "$1" ;;
+    *.7z)      7z x "$1" ;;
+    *.rar)     unrar x "$1" ;;
+    *.xz)      xz -d "$1" ;;
+    *.zst)     zstd -d "$1" ;;
+    *)         echo "Error: Unknown archive format '$1'" ; return 1 ;;
+  esac
+}

@@ -35,6 +35,21 @@ alias ghil="gh issue list"             # Issue一覧
 alias ghiv="gh issue view --web"       # Issueをブラウザで開く
 alias ghr="gh run list"                # Workflow実行一覧
 alias ghrw="gh run watch"              # Workflow実行を監視
+alias ghd="gh dash"                    # PRダッシュボード
+
+# ========================================
+# lazygit（Git TUI）
+# ========================================
+alias lg="lazygit"                     # Git TUI起動
+
+# ========================================
+# 便利なGit操作
+# ========================================
+alias gwip='git add -A && git commit -m "WIP: work in progress"'  # WIPコミット
+alias gunwip='git log -1 --format="%s" | grep -q "^WIP:" && git reset HEAD~1'  # WIP取消
+alias gclean='git branch --merged | grep -v "\*\|main\|master" | xargs -n 1 git branch -d'  # マージ済みブランチ削除
+alias gamend='git commit --amend --no-edit'  # 直前コミットに追加
+alias gpf='git push --force-with-lease'      # 安全なforce push
 
 # ========================================
 # 便利なGit関数

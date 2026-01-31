@@ -5,6 +5,14 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 export GIT_EDITOR="nvim"
 
+# --- manページをbatでカラー表示 ---
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export MANROFFOPT="-c"
+
+# --- 実行時間の自動表示 ---
+# 指定秒数以上かかったコマンドの実行時間を自動表示
+REPORTTIME=5
+
 # History settings
 HISTSIZE=50000
 SAVEHIST=50000
@@ -38,6 +46,35 @@ function fancy-ctrl-z () {
 }
 zle -N fancy-ctrl-z
 bindkey '^Z' fancy-ctrl-z
+
+# ========================================
+# 補完強化
+# ========================================
+# 大文字小文字を無視（cd doc → Documents にマッチ）
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+
+# 補完候補をメニュー表示（Tab連打で選択可能）
+zstyle ':completion:*' menu select
+
+# 補完候補に色付け（ls --colorと同じ色）
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+
+# 補完候補をグループ化して説明表示
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
+zstyle ':completion:*:messages' format '%F{purple}-- %d --%f'
+zstyle ':completion:*:warnings' format '%F{red}-- no matches --%f'
+
+# 補完候補のキャッシュ（大規模補完の高速化）
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache"
+
+# killコマンドでプロセス名を補完
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+
+# cdで親ディレクトリも補完候補に
+zstyle ':completion:*' special-dirs true
 
 # Load aliases from external file
 [[ -f ~/.aliases ]] && source ~/.aliases

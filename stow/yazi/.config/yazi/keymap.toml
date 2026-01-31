@@ -114,6 +114,26 @@ keymap = [
   { on = ["g", "."], run = "cd ~/dotfiles", desc = "Go to dotfiles" },
   { on = ["g", "c"], run = "cd ~/.config", desc = "Go to .config" },
 
+  # zoxide連携（学習済みディレクトリにジャンプ）
+  { on = ["z"], run = "plugin zoxide", desc = "Jump with zoxide" },
+  { on = ["Z"], run = "plugin fzf", desc = "Jump with fzf" },
+
+  # ========================================
+  # シェル連携
+  # ========================================
+  # nvimで編集
+  { on = ["e"], run = 'shell --block "nvim $@"', desc = "Edit in Neovim" },
+  # batでプレビュー（ページャー付き）
+  { on = ["b"], run = 'shell --block "bat --paging=always $@"', desc = "View with bat" },
+  # Finderで表示
+  { on = ["F"], run = 'shell "open -R $@"', desc = "Reveal in Finder" },
+  # Antigravityで開く
+  { on = ["E"], run = 'shell "open -a Antigravity $@"', desc = "Edit in Antigravity" },
+  # ターミナルで現在のディレクトリを開く
+  { on = ["T"], run = 'shell "open -a Ghostty $PWD"', desc = "Open terminal here" },
+  # パスをクリップボードにコピー
+  { on = ["Y"], run = 'shell --confirm "echo -n $@ | pbcopy"', desc = "Copy path to clipboard" },
+
   # ========================================
   # その他
   # ========================================

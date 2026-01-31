@@ -35,6 +35,10 @@ brew "difftastic"
 #   選定理由: AST比較でリファクタリング時の本質的な変更を検出
 #   用途: 大規模リファクタリング、PRレビュー時に使い分け
 
+brew "lazygit"
+#   選定理由: Git TUI。ステージング・コミット・ブランチ操作が直感的
+#   代替候補: tig（機能少ない）、gitui（Rust製、同等機能）
+
 # --- バージョン管理 ---
 brew "asdf"
 #   選定理由: Node/Python/Terraform等を統一管理。.tool-versionsでプロジェクト別バージョン固定
@@ -103,6 +107,26 @@ brew "btop"
 #   選定理由: top/htop代替。美しいUI・マウス操作・GPU監視
 #   代替候補: htop（機能少ない）、bottom（TUI操作性劣る）
 
+brew "procs"
+#   選定理由: ps代替。カラー表示・ツリー表示・検索機能
+#   代替候補: ps（出力が見づらい）
+
+brew "glow"
+#   選定理由: Markdownターミナル表示。READMEをCLIで確認
+#   代替候補: mdcat（機能少ない）
+
+brew "tldr"
+#   選定理由: manページ簡易版。実用的な例を表示
+#   代替候補: cheat（同等）、tealdeer（Rust版、高速）
+
+brew "dust"
+#   選定理由: du代替。ディスク使用量をビジュアル表示・直感的
+#   代替候補: ncdu（TUI操作）、du（出力が見づらい）
+
+brew "duf"
+#   選定理由: df代替。ディスク空き容量を見やすく表示
+#   代替候補: df（出力が見づらい）
+
 brew "trash"
 #   選定理由: rm代替。ゴミ箱へ移動で復元可能
 #   代替候補: rmtrash（メンテ停滞）
@@ -118,6 +142,18 @@ brew "jq"
 brew "tokei"
 #   選定理由: コード統計。高速・多言語対応
 #   代替候補: cloc（Perl製で遅い）、scc（同等だが知名度低）
+
+brew "httpie"
+#   選定理由: curl代替。直感的な構文・JSON対応・カラー出力
+#   代替候補: curl（構文が複雑）、xh（Rust版httpie）
+
+brew "hyperfine"
+#   選定理由: コマンドベンチマーク。統計情報・ウォームアップ対応
+#   代替候補: time（統計なし）
+
+brew "watchexec"
+#   選定理由: ファイル監視・自動実行。テスト自動実行に便利
+#   代替候補: fswatch（出力のみ）、entr（機能少ない）
 
 brew "lefthook"
 #   選定理由: Git hooks管理。並列実行・YAML設定・高速

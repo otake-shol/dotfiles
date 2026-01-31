@@ -1,7 +1,7 @@
 # tools.zsh - ツール設定（fzf, zoxide, yazi, bun）
 
 # --- fzf ---
-# 注: Ctrl+Rはatuinがオーバーライドするためfzfのキーバインドは無効
+# TokyoNightテーマ + プレビュー設定
 export FZF_DEFAULT_OPTS="
   --height 60%
   --layout=reverse
@@ -10,13 +10,31 @@ export FZF_DEFAULT_OPTS="
   --preview 'bat --color=always --style=numbers --line-range=:200 {} 2>/dev/null || cat {}'
   --preview-window=right:60%:wrap
   --bind 'ctrl-/:toggle-preview'
+  --bind 'ctrl-y:execute-silent(echo -n {} | pbcopy)+abort'
   --color=fg:#c0caf5,bg:#1a1b26,hl:#bb9af7
   --color=fg+:#c0caf5,bg+:#292e42,hl+:#7dcfff
   --color=info:#7aa2f7,prompt:#7dcfff,pointer:#7dcfff
   --color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a
 "
-export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:200 {}'"
-export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
+
+# Ctrl+T: ファイル検索（fdで高速化）
+export FZF_CTRL_T_COMMAND="fd --type f --hidden --exclude .git"
+export FZF_CTRL_T_OPTS="
+  --preview 'bat --color=always --style=numbers --line-range=:200 {}'
+  --bind 'ctrl-e:execute(nvim {})+abort'
+"
+
+# Alt+C: ディレクトリ移動（fdで高速化）
+export FZF_ALT_C_COMMAND="fd --type d --hidden --exclude .git"
+export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always --level=2 {} | head -200'"
+
+# fzfキーバインド有効化
+# Ctrl+T: ファイル検索してコマンドラインに挿入
+# Alt+C: ディレクトリ検索してcd
+# 注: Ctrl+Rはatuinが担当
+if [[ -f "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/fzf/shell/key-bindings.zsh" ]]; then
+  source "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/fzf/shell/key-bindings.zsh"
+fi
 
 # --- zoxide ---
 # --cmd cd: cdコマンドをzoxideに置き換え（公式推奨オプション）

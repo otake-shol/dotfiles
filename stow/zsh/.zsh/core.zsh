@@ -10,21 +10,24 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export MANROFFOPT="-c"
 
 # --- 実行時間の自動表示（カラー対応） ---
+# p10k instant prompt対応: 初期化中は出力しない
+_zsh_initialized=false
+
 # preexec: コマンド実行前に時刻を記録
 _cmd_start_time=""
-preexec() {
-  _cmd_start_time=$EPOCHSECONDS
-}
-
-# precmd: コマンド実行後に経過時間を表示 + エラー提案
 _last_cmd=""
 preexec() {
+  _zsh_initialized=true
   _cmd_start_time=$EPOCHSECONDS
   _last_cmd="$1"
 }
 
+# precmd: コマンド実行後に経過時間を表示 + エラー提案
 precmd() {
   local exit_code=$?
+
+  # 初期化完了前は何も出力しない（instant prompt対応）
+  [[ "$_zsh_initialized" != true ]] && return
 
   # 実行時間表示 + 通知音
   if [[ -n "$_cmd_start_time" ]]; then

@@ -55,6 +55,9 @@ alias gpf='git push --force-with-lease'      # 安全なforce push
 # 便利なGit関数
 # ========================================
 
+# oh-my-zshプラグインとの競合を回避
+unalias gpr gbr 2>/dev/null
+
 # PRクイック作成（現在ブランチからPR）
 gpr() {
   local title="$*"

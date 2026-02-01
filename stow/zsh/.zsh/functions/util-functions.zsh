@@ -492,3 +492,208 @@ clip() {
       ;;
   esac
 }
+
+# ========================================
+# 作業ログ
+# ========================================
+WORKLOG_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/worklog"
+
+# 作業ログ記録: wlog "やったこと"
+wlog() {
+  mkdir -p "$WORKLOG_DIR"
+  local today=$(date +"%Y-%m-%d")
+  local now=$(date +"%H:%M")
+  local file="$WORKLOG_DIR/${today}.md"
+
+  # ファイルがなければヘッダー作成
+  if [[ ! -f "$file" ]]; then
+    echo "# 作業ログ ${today}" > "$file"
+    echo "" >> "$file"
+  fi
+
+  if [[ -n "$1" ]]; then
+    echo "- ${now} $*" >> "$file"
+    echo "📝 記録: $*"
+  else
+    # 引数なしならエディタで開く
+    nvim "$file"
+  fi
+}
+
+# 今日の作業ログ表示
+wtoday() {
+  local today=$(date +"%Y-%m-%d")
+  local file="$WORKLOG_DIR/${today}.md"
+
+  if [[ -f "$file" ]]; then
+    echo "📋 今日の作業ログ (${today})"
+    echo "─────────────────────────────"
+    cat "$file" | tail -n +3  # ヘッダーをスキップ
+  else
+    echo "今日の作業ログはまだありません"
+    echo "💡 wlog \"内容\" で記録を開始"
+  fi
+}
+
+# 作業ログ検索
+wfind() {
+  local query="$1"
+  if [[ -z "$query" ]]; then
+    # fzfで日付選択
+    local selected
+    selected=$(ls -1 "$WORKLOG_DIR"/*.md 2>/dev/null | \
+      xargs -I {} basename {} .md | sort -r | \
+      fzf --preview "cat $WORKLOG_DIR/{}.md" --header "作業ログを選択")
+    [[ -n "$selected" ]] && cat "$WORKLOG_DIR/${selected}.md"
+  else
+    # grepで検索
+    echo "🔍 検索: ${query}"
+    echo "─────────────────────────────"
+    grep -r "$query" "$WORKLOG_DIR"/*.md 2>/dev/null | \
+      sed "s|$WORKLOG_DIR/||g" | \
+      sed 's/.md:/  /' | \
+      sort -r
+  fi
+}
+
+# 今週の作業サマリー
+wweek() {
+  echo "📊 今週の作業サマリー"
+  echo "─────────────────────────────"
+
+  local count=0
+  for i in {0..6}; do
+    local date=$(date -v-${i}d +"%Y-%m-%d")
+    local file="$WORKLOG_DIR/${date}.md"
+    if [[ -f "$file" ]]; then
+      local items=$(grep -c "^- " "$file" 2>/dev/null || echo 0)
+      local dow=$(date -v-${i}d +"%a")
+      printf "%s (%s): %d件\n" "$date" "$dow" "$items"
+      ((count += items))
+    fi
+  done
+
+  echo "─────────────────────────────"
+  echo "合計: ${count}件"
+}
+
+# ========================================
+# バックアップ
+# ========================================
+BACKUP_DIR="${HOME}/Backups"
+
+# dotfilesバックアップ
+backup-dotfiles() {
+  local timestamp=$(date +"%Y%m%d_%H%M%S")
+  local backup_path="$BACKUP_DIR/dotfiles_${timestamp}.tar.gz"
+
+  mkdir -p "$BACKUP_DIR"
+
+  echo "📦 dotfilesをバックアップ中..."
+  tar -czf "$backup_path" \
+    -C "$HOME" \
+    dotfiles \
+    .zsh_history \
+    .gitconfig \
+    2>/dev/null
+
+  if [[ -f "$backup_path" ]]; then
+    local size=$(du -h "$backup_path" | cut -f1)
+    echo "✓ バックアップ完了: $backup_path ($size)"
+  else
+    echo "❌ バックアップ失敗"
+    return 1
+  fi
+}
+
+# 重要ファイルのバックアップ
+backup-important() {
+  local timestamp=$(date +"%Y%m%d_%H%M%S")
+  local backup_path="$BACKUP_DIR/important_${timestamp}.tar.gz"
+
+  mkdir -p "$BACKUP_DIR"
+
+  echo "📦 重要ファイルをバックアップ中..."
+
+  # バックアップ対象を一時ファイルに書き出し
+  local tmpfile=$(mktemp)
+  cat > "$tmpfile" << 'BACKUP_LIST'
+.ssh/config
+.ssh/known_hosts
+.gnupg
+.aws/config
+.kube/config
+.local/share/zsh
+.local/share/worklog
+.local/share/atuin
+BACKUP_LIST
+
+  # 存在するファイルのみバックアップ
+  local files_to_backup=""
+  while IFS= read -r file; do
+    [[ -e "$HOME/$file" ]] && files_to_backup+="$file "
+  done < "$tmpfile"
+  rm "$tmpfile"
+
+  if [[ -n "$files_to_backup" ]]; then
+    tar -czf "$backup_path" \
+      -C "$HOME" \
+      $files_to_backup \
+      2>/dev/null
+
+    local size=$(du -h "$backup_path" | cut -f1)
+    echo "✓ バックアップ完了: $backup_path ($size)"
+  else
+    echo "バックアップ対象が見つかりません"
+  fi
+}
+
+# バックアップ一覧
+backup-list() {
+  echo "📚 バックアップ一覧"
+  echo "─────────────────────────────"
+
+  if [[ -d "$BACKUP_DIR" ]]; then
+    ls -lh "$BACKUP_DIR"/*.tar.gz 2>/dev/null | \
+      awk '{printf "%s  %s  %s\n", $5, $6" "$7, $NF}' | \
+      sed "s|$BACKUP_DIR/||g"
+
+    echo ""
+    local total=$(du -sh "$BACKUP_DIR" 2>/dev/null | cut -f1)
+    echo "合計: $total"
+  else
+    echo "バックアップはまだありません"
+  fi
+}
+
+# 古いバックアップ削除（30日以上前）
+backup-clean() {
+  local days="${1:-30}"
+  echo "🧹 ${days}日以上前のバックアップを削除..."
+
+  local old_files
+  old_files=$(find "$BACKUP_DIR" -name "*.tar.gz" -mtime +"$days" 2>/dev/null)
+
+  if [[ -z "$old_files" ]]; then
+    echo "削除対象はありません"
+    return 0
+  fi
+
+  echo "$old_files" | while read -r f; do
+    echo "  削除: $(basename "$f")"
+    rm -f "$f"
+  done
+
+  echo "✓ 完了"
+}
+
+# フルバックアップ（dotfiles + 重要ファイル）
+backup() {
+  echo "🔄 フルバックアップ開始"
+  echo ""
+  backup-dotfiles
+  echo ""
+  backup-important
+  echo ""
+  echo "✅ フルバックアップ完了"
+}

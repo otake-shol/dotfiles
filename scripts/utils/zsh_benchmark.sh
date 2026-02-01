@@ -40,7 +40,7 @@ echo -e "${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━
 echo ""
 
 # 起動時間の計測
-echo -e "${YELLOW}▸ 起動時間計測（$ITERATIONS回）${NC}"
+echo -e "${YELLOW}▸ 起動時間計測（${ITERATIONS}回）${NC}"
 total=0
 for i in $(seq 1 "$ITERATIONS"); do
     time=$( { time zsh -i -c exit; } 2>&1 | grep real | awk '{print $2}' | sed 's/[^0-9.]//g' )

@@ -53,8 +53,18 @@ if git rev-parse --is-inside-work-tree &>/dev/null; then
     fi
 fi
 
-# 現在時刻
+# 現在日時
+day_of_week=$(date +"%a")  # Mon, Tue, ...
+current_date=$(date +"%m/%d")
 current_time=$(date +"%H:%M")
+
+# 曜日カラー（平日=白、土=青、日=赤）
+day_num=$(date +"%u")  # 1=Mon, 7=Sun
+case "$day_num" in
+    6) DAY_COLOR='\033[94m' ;;   # 土曜: 青
+    7) DAY_COLOR='\033[91m' ;;   # 日曜: 赤
+    *) DAY_COLOR='\033[97m' ;;   # 平日: 白
+esac
 
 # カラー定義（グラデーション用）
 RESET='\033[0m'
@@ -107,8 +117,8 @@ cost_fmt=$(printf "%.2f" "$cost")
 # 出力構築（グラデーション効果）
 output=""
 
-# 左セクション（時刻は目立たせる→鮮やか）
-output+="${BOLD}\033[97m${ICON_TIME} ${current_time}${RESET}"
+# 左セクション（曜日+日付+時刻）
+output+="${DAY_COLOR}${BOLD}${day_of_week}${RESET} ${ICON_TIME} ${current_date} ${BOLD}\033[97m${current_time}${RESET}"
 output+="  "
 output+="${COLOR_2}${ICON_FOLDER} ${dir}${RESET}"
 if [ -n "$branch" ]; then

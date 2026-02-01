@@ -4,17 +4,6 @@
 # このファイルは必要な時にのみ読み込まれる（lazy.zshで遅延読み込み）
 # 使用方法: source ~/.zsh/functions/fzf-functions.zsh
 
-# fbr - ブランチをfzfで選択してチェックアウト
-fbr() {
-  local branches branch target
-  branches=$(git branch -a --color=always | grep -v HEAD) || return 1
-  branch=$(echo "$branches" |
-    fzf --ansi --preview 'git log --oneline --graph --color=always $(echo {} | sed "s/.* //" | sed "s#remotes/origin/##") -- | head -50' \
-        --preview-window=right:50%) || return 0
-  target=$(echo "$branch" | sed "s/.* //" | sed "s#remotes/origin/##")
-  git checkout "$target"
-}
-
 # fshow - コミット履歴をfzfで閲覧・詳細表示
 fshow() {
   git log --graph --color=always \

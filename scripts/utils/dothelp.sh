@@ -123,7 +123,7 @@ show_dev_aliases() {
 show_fzf_functions() {
     print_section "fzf統合関数"
     print_function "fvim" "ファイル選択→nvimで開く"
-    print_function "fbr" "ブランチ選択→checkout"
+    print_function "gbr" "ブランチ選択→checkout（git.zsh）"
     print_function "fshow" "コミット履歴閲覧"
     print_function "fcd" "ディレクトリ選択→移動"
     print_function "fkill" "プロセス選択→kill"

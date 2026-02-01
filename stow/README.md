@@ -17,6 +17,9 @@ GNU Stowで管理するdotfilesパッケージの一覧です。
 | claude | `~/.claude/` | Claude Code設定 |
 | gh | `~/.config/gh/` | GitHub CLI設定 |
 | yazi | `~/.config/yazi/` | ファイルマネージャー設定 |
+| ripgrep | `~/.ripgreprc` | ripgrep設定 |
+| lazygit | `~/.config/lazygit/` | Git TUI設定 |
+| ai-prompts | `~/.ai-prompts/` | AIプロンプトテンプレート |
 
 ## 非Stow（bootstrap.shで個別処理）
 

@@ -24,7 +24,10 @@
       "Bash(* | sort *)",
       "Bash(* | uniq *)",
       "Bash(* | xargs *)",
-      "Bash(* | while *)"
+      "Bash(* | while *)",
+      "Bash(echo *)",
+      "Bash(printf *)",
+      "Bash(for *)"
     ],
     "deny": [
       "Read(.env)",

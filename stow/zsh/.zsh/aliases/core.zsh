@@ -51,7 +51,7 @@ alias c="claude"                          # 基本起動
 alias co="claude --model opus"            # Opusモデル
 alias cs="claude --model sonnet"          # Sonnetモデル
 alias ch="claude --model haiku"           # Haikuモデル
-alias cp="claude --print"                 # 非対話モード（パイプ用）
+alias clp="claude --print"                # 非対話モード（パイプ用）
 # セッション管理関数: cls(一覧), csa(全検索), csd(削除), cc(続行), cm(モデル指定)
 
 # ========================================
@@ -72,7 +72,7 @@ alias du="dust"                      # モダンなディスク使用量表示
 alias top="btop"                     # モダンなシステムモニター
 # alias ps="procs"                  # 削除: btop + fkill関数で代替
 alias help="tldr"                    # コマンドヘルプ簡易版
-alias md="glow"                      # Markdownターミナル表示
+alias mdv="glow"                     # Markdownターミナル表示 (markdown view)
 
 # ネットワーク
 alias myip="curl -s ifconfig.me"

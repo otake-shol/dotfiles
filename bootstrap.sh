@@ -469,7 +469,7 @@ stow_package() {
 
 # Stow パッケージのインストール
 # 注: sshはテンプレート方式のため別処理
-STOW_PACKAGES=(zsh git nvim ghostty bat atuin claude gh yazi ai-prompts zellij ripgrep lazygit)
+STOW_PACKAGES=(zsh git nvim ghostty bat atuin claude gh yazi ai-prompts ripgrep lazygit)
 
 for pkg in "${STOW_PACKAGES[@]}"; do
     stow_package "$pkg"

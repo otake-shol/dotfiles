@@ -13,7 +13,7 @@ STOW_FLAGS := -v --target=$(HOME) --dir=$(STOW_DIR) --restow
 
 # Stowパッケージ一覧
 # 以下はStow管理対象：ホームディレクトリまたは~/.config/配下に展開
-PACKAGES := zsh git nvim ghostty bat atuin claude gh yazi ai-prompts zellij ripgrep lazygit
+PACKAGES := zsh git nvim ghostty bat atuin claude gh yazi ai-prompts ripgrep lazygit
 
 # ========================================
 # Stow対象外パッケージ（bootstrap.shで個別処理）

@@ -6,7 +6,7 @@ macOS向けの個人開発環境設定ファイル
 
 - **Claude Code完全統合** - セッション管理・MCPサーバー4個・カスタムコマンド
 - **モダンCLI** - bat, eza, fd, ripgrep, zoxide, yazi等のモダンツール
-- **Vim風操作統一** - yazi, lazygit, zellij全てでhjkl移動
+- **Vim風操作統一** - yazi, lazygit等でhjkl移動
 - **テーマ統一** - 全ツールでTokyoNightテーマ
 - **高速起動** - 遅延読み込みによるzsh起動時間最適化
 
@@ -47,7 +47,6 @@ dotfiles/
 │   ├── claude/            # Claude Code設定
 │   ├── nvim/, ghostty/    # エディタ・ターミナル
 │   ├── yazi/, lazygit/    # ファイラー・Git TUI
-│   ├── zellij/            # ターミナルマルチプレクサ
 │   ├── bat/, atuin/       # ユーティリティ
 │   ├── ripgrep/           # ripgrep設定
 │   └── ssh/               # SSH設定テンプレート
@@ -91,20 +90,6 @@ y                    # yaziを起動（終了時にcdも反映）
 ```bash
 dotssh               # SSH鍵セットアップ（対話式）
 dotsshlist           # SSH鍵一覧表示
-```
-
-### zellij（ターミナルマルチプレクサ）
-
-tmux風キーバインド（プレフィックス: `Ctrl+a`）
-
-```bash
-Ctrl+a |             # 縦分割
-Ctrl+a -             # 横分割
-Ctrl+a h/j/k/l       # ペイン移動
-Ctrl+a c             # 新規タブ
-Ctrl+a 1-5           # タブ直接移動
-Ctrl+a d             # デタッチ
-Ctrl+a [             # スクロールモード
 ```
 
 ## モダンCLI対応表

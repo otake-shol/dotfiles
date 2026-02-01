@@ -76,7 +76,7 @@ _load_fzf_functions() {
 }
 
 # fzf関数のスタブ（初回呼び出しで本体を読み込み、evalを避けて直接定義）
-fbr() { _load_fzf_functions && fbr "$@"; }
+# fbr は削除済み（gbrに統合）
 fshow() { _load_fzf_functions && fshow "$@"; }
 fvim() { _load_fzf_functions && fvim "$@"; }
 fkill() { _load_fzf_functions && fkill "$@"; }

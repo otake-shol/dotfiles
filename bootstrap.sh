@@ -7,6 +7,8 @@
 #   -h, --help       ヘルプを表示
 #   -v, --verbose    詳細出力
 #   --skip-apps      アプリケーションインストールをスキップ
+#   --skip-claude    Claude Code セットアップをスキップ
+#   --claude-only    Claude Code セットアップのみ実行
 
 set -e  # エラーで停止
 
@@ -16,6 +18,8 @@ set -e  # エラーで停止
 DRY_RUN=false
 VERBOSE=false
 SKIP_APPS=false
+SKIP_CLAUDE=false
+CLAUDE_ONLY=false
 ASSUME_YES=false
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CURRENT_STEP=""  # エラー時のステップ特定用
@@ -53,6 +57,8 @@ show_help() {
   -y, --yes        対話プロンプトをすべてYesで自動応答（完全自動化）
   -v, --verbose    詳細な出力を表示
   --skip-apps      アプリケーションインストールをスキップ
+  --skip-claude    Claude Code セットアップをスキップ
+  --claude-only    Claude Code セットアップのみ実行
   -h, --help       このヘルプを表示
 
 例:
@@ -84,6 +90,12 @@ while [[ "$#" -gt 0 ]]; do
         --skip-apps)
             SKIP_APPS=true
             ;;
+        --skip-claude)
+            SKIP_CLAUDE=true
+            ;;
+        --claude-only)
+            CLAUDE_ONLY=true
+            ;;
         *)
             echo -e "${RED}不明なオプション: $1${NC}"
             show_help
@@ -91,6 +103,28 @@ while [[ "$#" -gt 0 ]]; do
     esac
     shift
 done
+
+# --claude-only: Claude セットアップのみ実行して終了
+if [ "$CLAUDE_ONLY" = true ]; then
+    echo -e "\n${GREEN}========================================${NC}"
+    echo -e "${GREEN}  Claude Code セットアップのみ実行${NC}"
+    echo -e "${GREEN}========================================${NC}"
+    if [ -x "$HOME/.claude/setup.sh" ]; then
+        if command -v claude &>/dev/null; then
+            "$HOME/.claude/setup.sh"
+        else
+            echo -e "${RED}Claude Code がインストールされていません${NC}"
+            echo -e "  → ${CYAN}npm install -g @anthropic-ai/claude-code${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${RED}~/.claude/setup.sh が見つかりません${NC}"
+        echo -e "  → 先に ${CYAN}make install-claude${NC} を実行してください"
+        exit 1
+    fi
+    echo -e "\n${GREEN}完了！${NC}"
+    exit 0
+fi
 
 # ========================================
 # ユーティリティ関数
@@ -612,6 +646,22 @@ if command -v lefthook &> /dev/null && [ -f ~/dotfiles/lefthook.yml ]; then
     echo -e "${GREEN}✓ lefthook Git hooksをインストールしました${NC}"
 fi
 
+# Claude Code セットアップ（MCP + プラグイン）
+if [ "$SKIP_CLAUDE" = false ] && [ -x "$HOME/.claude/setup.sh" ]; then
+    echo -e "\n${YELLOW}Claude Code セットアップ...${NC}"
+    if command -v claude &>/dev/null; then
+        if [ "$DRY_RUN" = true ]; then
+            echo -e "${CYAN}[DRY RUN] Would run: ~/.claude/setup.sh${NC}"
+        else
+            "$HOME/.claude/setup.sh"
+        fi
+    else
+        echo -e "${YELLOW}⚠ Claude Code 未インストール。後で以下を実行:${NC}"
+        echo -e "  ${CYAN}npm install -g @anthropic-ai/claude-code${NC}"
+        echo -e "  ${CYAN}~/.claude/setup.sh${NC}"
+    fi
+fi
+
 # ローカル設定ファイルのセットアップ
 echo -e "\n${YELLOW}ローカル設定ファイルのセットアップ...${NC}"
 
@@ -668,7 +718,4 @@ echo -e "  2. ターミナルのフォントを Nerd Font に変更"
 echo -e "     Ghostty: font-family = \"Hack Nerd Font\""
 echo -e "\n${YELLOW}オプション:${NC}"
 echo -e "  - Powerlevel10kカスタマイズ: ${CYAN}p10k configure${NC}"
-echo -e "  - Claude Codeプラグイン:"
-echo -e "      ${CYAN}claude /plugin marketplace add obra/superpowers-marketplace${NC}"
-echo -e "      ${CYAN}claude /plugin install superpowers@superpowers-marketplace${NC}"
 echo -e "\n${BLUE}追加のアプリケーションは docs/setup/APPS.md を参照してください${NC}"

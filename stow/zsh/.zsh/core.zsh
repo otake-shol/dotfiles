@@ -16,8 +16,17 @@ preexec() {
   _cmd_start_time=$EPOCHSECONDS
 }
 
-# precmd: コマンド実行後に経過時間を表示
+# precmd: コマンド実行後に経過時間を表示 + エラー提案
+_last_cmd=""
+preexec() {
+  _cmd_start_time=$EPOCHSECONDS
+  _last_cmd="$1"
+}
+
 precmd() {
+  local exit_code=$?
+
+  # 実行時間表示 + 通知音
   if [[ -n "$_cmd_start_time" ]]; then
     local elapsed=$((EPOCHSECONDS - _cmd_start_time))
     if [[ $elapsed -ge 5 ]]; then
@@ -31,8 +40,77 @@ precmd() {
       fi
       echo -e "${color}⏱ ${elapsed}s${NC}"
     fi
+    # 長時間コマンド完了時の通知音
+    _notify_sound "$elapsed" "$exit_code"
   fi
+
+  # コマンド失敗時の提案
+  if [[ $exit_code -ne 0 && -n "$_last_cmd" ]]; then
+    _suggest_fix "$_last_cmd" "$exit_code"
+  fi
+
   _cmd_start_time=""
+  _last_cmd=""
+}
+
+# エラー時の修正提案
+_suggest_fix() {
+  local cmd="$1"
+  local code="$2"
+  local suggestion=""
+
+  case "$cmd" in
+    git\ push*)
+      [[ $code -eq 128 ]] && suggestion="git pull --rebase してから再度 push"
+      ;;
+    git\ checkout*)
+      suggestion="変更を stash するか commit してください: git stash"
+      ;;
+    npm\ *)
+      suggestion="node_modules を削除して再インストール: rm -rf node_modules && npm install"
+      ;;
+    pip\ install*)
+      suggestion="仮想環境を確認: source .venv/bin/activate"
+      ;;
+    sudo\ *)
+      [[ $code -eq 1 ]] && suggestion="パスワードを確認、または権限が必要な操作か確認"
+      ;;
+    ssh\ *)
+      suggestion="SSH鍵を確認: ssh-add -l または dotsshlist"
+      ;;
+    *)
+      # command not found
+      if [[ $code -eq 127 ]]; then
+        local first_word="${cmd%% *}"
+        # brewでインストール可能か確認
+        if brew search --formula "^${first_word}$" &>/dev/null 2>&1; then
+          suggestion="brew install ${first_word}"
+        fi
+      fi
+      ;;
+  esac
+
+  if [[ -n "$suggestion" ]]; then
+    echo -e "\033[93m💡 ヒント: ${suggestion}${NC}"
+  fi
+}
+
+# 長時間コマンド完了時の通知音（10秒以上かかった場合）
+_notify_sound() {
+  local elapsed="$1"
+  local exit_code="$2"
+
+  # 10秒以上かかったコマンドのみ
+  [[ $elapsed -lt 10 ]] && return
+
+  # バックグラウンドで音を鳴らす
+  if [[ $exit_code -eq 0 ]]; then
+    # 成功: 軽快な音
+    afplay /System/Library/Sounds/Glass.aiff &>/dev/null &
+  else
+    # 失敗: 警告音
+    afplay /System/Library/Sounds/Basso.aiff &>/dev/null &
+  fi
 }
 NC='\033[0m'
 

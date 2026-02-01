@@ -321,3 +321,174 @@ cel() {
 $(cat)
 \`\`\`"
 }
+
+# ========================================
+# 統計・分析
+# ========================================
+# コマンド使用統計（トップ20）
+cmdstats() {
+  local num="${1:-20}"
+  echo "📊 よく使うコマンド Top ${num}"
+  echo "─────────────────────────────"
+  fc -l 1 | awk '{CMD[$2]++} END {for (a in CMD) print CMD[a], a}' | \
+    sort -rn | head -n "$num" | \
+    awk '{printf "%4d  %s\n", $1, $2}'
+  echo ""
+  echo "💡 ヒント: 頻繁に使うコマンドはエイリアス化を検討"
+}
+
+# エイリアス使用統計
+aliasstats() {
+  local num="${1:-15}"
+  echo "📊 エイリアス使用統計 Top ${num}"
+  echo "─────────────────────────────"
+
+  # 定義済みエイリアスを取得
+  local aliases
+  aliases=$(alias | cut -d'=' -f1)
+
+  # 履歴からエイリアス使用をカウント
+  fc -l 1 | awk '{print $2}' | while read -r cmd; do
+    echo "$aliases" | grep -qw "$cmd" && echo "$cmd"
+  done | sort | uniq -c | sort -rn | head -n "$num" | \
+    awk '{printf "%4d  %s\n", $1, $2}'
+
+  echo ""
+  echo "💡 使っていないエイリアスは削除を検討"
+}
+
+# ========================================
+# ファイル操作強化
+# ========================================
+# 最近編集したファイルをfzfで選択して開く
+recent() {
+  local days="${1:-7}"
+  local file
+  file=$(fd --type f --hidden --exclude .git --changed-within "${days}d" 2>/dev/null | \
+    fzf --preview 'bat --color=always --style=numbers --line-range=:100 {}' \
+        --header "最近${days}日間に編集されたファイル")
+  [[ -n "$file" ]] && nvim "$file"
+}
+
+# 最近編集したファイル一覧（開かない）
+recentls() {
+  local days="${1:-7}"
+  fd --type f --hidden --exclude .git --changed-within "${days}d" 2>/dev/null | \
+    head -20 | while read -r f; do
+      local mtime
+      mtime=$(stat -f "%Sm" -t "%m/%d %H:%M" "$f" 2>/dev/null)
+      printf "%s  %s\n" "$mtime" "$f"
+    done | sort -r
+}
+
+# ========================================
+# ディレクトリブックマーク
+# ========================================
+BOOKMARKS_FILE="${XDG_DATA_HOME:-$HOME/.local/share}/zsh/bookmarks"
+
+# ブックマーク追加: mark [name]
+mark() {
+  mkdir -p "$(dirname "$BOOKMARKS_FILE")"
+  local name="${1:-$(basename "$PWD")}"
+  # 既存のブックマークを削除して追加
+  grep -v "^${name}|" "$BOOKMARKS_FILE" 2>/dev/null > "${BOOKMARKS_FILE}.tmp" || true
+  echo "${name}|${PWD}" >> "${BOOKMARKS_FILE}.tmp"
+  mv "${BOOKMARKS_FILE}.tmp" "$BOOKMARKS_FILE"
+  echo "📌 ブックマーク追加: ${name} → ${PWD}"
+}
+
+# ブックマークへジャンプ: jump [name] または fzf選択
+jump() {
+  [[ ! -f "$BOOKMARKS_FILE" ]] && echo "ブックマークがありません" && return 1
+
+  local name="$1"
+  if [[ -z "$name" ]]; then
+    # fzfで選択
+    local selected
+    selected=$(cat "$BOOKMARKS_FILE" | \
+      awk -F'|' '{printf "%-15s %s\n", $1, $2}' | \
+      fzf --header "ブックマーク選択" | \
+      awk '{print $2}')
+    [[ -n "$selected" ]] && cd "$selected"
+  else
+    # 名前で直接ジャンプ
+    local path
+    path=$(grep "^${name}|" "$BOOKMARKS_FILE" | cut -d'|' -f2)
+    if [[ -n "$path" ]]; then
+      cd "$path"
+    else
+      echo "ブックマーク '${name}' が見つかりません"
+      return 1
+    fi
+  fi
+}
+
+# ブックマーク一覧
+marks() {
+  [[ ! -f "$BOOKMARKS_FILE" ]] && echo "ブックマークがありません" && return 1
+  echo "📚 ブックマーク一覧"
+  echo "─────────────────────────────"
+  cat "$BOOKMARKS_FILE" | awk -F'|' '{printf "  %-15s → %s\n", $1, $2}'
+}
+
+# ブックマーク削除
+unmark() {
+  local name="$1"
+  [[ -z "$name" ]] && echo "Usage: unmark <name>" && return 1
+  grep -v "^${name}|" "$BOOKMARKS_FILE" > "${BOOKMARKS_FILE}.tmp"
+  mv "${BOOKMARKS_FILE}.tmp" "$BOOKMARKS_FILE"
+  echo "🗑️  ブックマーク削除: ${name}"
+}
+
+# ========================================
+# クリップボード拡張
+# ========================================
+CLIPBOARD_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/zsh/clipboard"
+
+# 名前付きクリップボードに保存: clip save <name>
+# クリップボードから取得: clip get <name>
+# 一覧表示: clip list
+clip() {
+  mkdir -p "$CLIPBOARD_DIR"
+
+  case "$1" in
+    save|s)
+      local name="${2:-default}"
+      pbpaste > "$CLIPBOARD_DIR/$name"
+      echo "📋 保存: $name ($(wc -c < "$CLIPBOARD_DIR/$name" | tr -d ' ') bytes)"
+      ;;
+    get|g)
+      local name="${2:-default}"
+      if [[ -f "$CLIPBOARD_DIR/$name" ]]; then
+        cat "$CLIPBOARD_DIR/$name" | pbcopy
+        echo "📋 復元: $name → クリップボード"
+      else
+        echo "❌ '$name' が見つかりません"
+        return 1
+      fi
+      ;;
+    list|ls|l)
+      echo "📋 保存済みクリップボード"
+      echo "─────────────────────────────"
+      for f in "$CLIPBOARD_DIR"/*; do
+        [[ -f "$f" ]] || continue
+        local name=$(basename "$f")
+        local size=$(wc -c < "$f" | tr -d ' ')
+        local preview=$(head -c 50 "$f" | tr '\n' ' ')
+        printf "  %-12s %5s bytes  %s...\n" "$name" "$size" "$preview"
+      done
+      ;;
+    delete|del|d)
+      local name="${2:-default}"
+      rm -f "$CLIPBOARD_DIR/$name"
+      echo "🗑️  削除: $name"
+      ;;
+    *)
+      echo "Usage: clip <save|get|list|delete> [name]"
+      echo "  save <name>   - クリップボードを名前付きで保存"
+      echo "  get <name>    - 保存した内容をクリップボードに復元"
+      echo "  list          - 保存済み一覧"
+      echo "  delete <name> - 削除"
+      ;;
+  esac
+}

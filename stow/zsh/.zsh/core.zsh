@@ -9,9 +9,35 @@ export GIT_EDITOR="nvim"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export MANROFFOPT="-c"
 
-# --- 実行時間の自動表示 ---
-# 指定秒数以上かかったコマンドの実行時間を自動表示
-REPORTTIME=5
+# --- 実行時間の自動表示（カラー対応） ---
+# preexec: コマンド実行前に時刻を記録
+_cmd_start_time=""
+preexec() {
+  _cmd_start_time=$EPOCHSECONDS
+}
+
+# precmd: コマンド実行後に経過時間を表示
+precmd() {
+  if [[ -n "$_cmd_start_time" ]]; then
+    local elapsed=$((EPOCHSECONDS - _cmd_start_time))
+    if [[ $elapsed -ge 5 ]]; then
+      local color
+      if [[ $elapsed -ge 30 ]]; then
+        color='\033[91m'  # 赤: 30秒以上
+      elif [[ $elapsed -ge 10 ]]; then
+        color='\033[93m'  # 黄: 10秒以上
+      else
+        color='\033[92m'  # 緑: 5秒以上
+      fi
+      echo -e "${color}⏱ ${elapsed}s${NC}"
+    fi
+  fi
+  _cmd_start_time=""
+}
+NC='\033[0m'
+
+# REPORTTIME は無効化（カスタム表示を使用）
+# REPORTTIME=5
 
 # History settings
 HISTSIZE=50000

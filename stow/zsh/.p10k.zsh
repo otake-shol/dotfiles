@@ -327,11 +327,12 @@
   # typeset -g POWERLEVEL9K_DIR_PREFIX='in '
 
   #####################################[ vcs: git status ]######################################
-  # Version control background colors.
-  typeset -g POWERLEVEL9K_VCS_CLEAN_BACKGROUND=2
-  typeset -g POWERLEVEL9K_VCS_MODIFIED_BACKGROUND=3
-  typeset -g POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND=2
-  typeset -g POWERLEVEL9K_VCS_CONFLICTED_BACKGROUND=3
+  # Git状態別の背景色（視認性重視）
+  # クリーン=緑、変更あり=オレンジ、未追跡=黄、コンフリクト=赤
+  typeset -g POWERLEVEL9K_VCS_CLEAN_BACKGROUND=2        # 緑: クリーン
+  typeset -g POWERLEVEL9K_VCS_MODIFIED_BACKGROUND=208   # オレンジ: 変更あり（要コミット）
+  typeset -g POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND=3    # 黄: 未追跡ファイルあり
+  typeset -g POWERLEVEL9K_VCS_CONFLICTED_BACKGROUND=1   # 赤: コンフリクト
   typeset -g POWERLEVEL9K_VCS_LOADING_BACKGROUND=8
 
   # Branch icon. Set this parameter to '\UE0A0 ' for the popular Powerline branch icon.

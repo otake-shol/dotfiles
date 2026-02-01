@@ -94,13 +94,21 @@ ICON_TIME=$(printf '\xef\x80\x97')         # U+F017
 # セパレータ
 SEP='┃'
 
-# コンテキスト使用率に応じた色
+# コンテキスト使用率に応じた色と強調
+BLINK='\033[5m'
 if [ "$used_pct" -lt 50 ]; then
     PCT_COLOR=$GREEN
+    PCT_STYLE=""
 elif [ "$used_pct" -lt 75 ]; then
     PCT_COLOR=$YELLOW
-else
+    PCT_STYLE=""
+elif [ "$used_pct" -lt 90 ]; then
     PCT_COLOR=$RED
+    PCT_STYLE="${BOLD}"
+else
+    # 90%以上: 点滅+太字で警告
+    PCT_COLOR=$RED
+    PCT_STYLE="${BLINK}${BOLD}"
 fi
 
 # プログレスバー生成（5ブロック）
@@ -139,7 +147,7 @@ output+=" ${DIM}${SEP}${RESET} "
 # 右セクション（重要情報 - 鮮やか）
 output+="${MODEL_COLOR}${BOLD}${ICON_MODEL} ${short_model}${RESET}"
 output+="  "
-output+="${PCT_COLOR}${ICON_BRAIN} ${bar} ${used_pct}%${RESET}"
+output+="${PCT_STYLE}${PCT_COLOR}${ICON_BRAIN} ${bar} ${used_pct}%${RESET}"
 output+="  "
 output+="${COLOR_4}${ICON_DIFF}${RESET} ${GREEN}+${lines_added}${RESET}${RED}-${lines_removed}${RESET}"
 output+="  "

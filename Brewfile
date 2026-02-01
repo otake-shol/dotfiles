@@ -157,6 +157,45 @@ brew "shellcheck"
 brew "yamllint"
 #   選定理由: YAML linter。lefthook pre-commitで使用
 
+brew "wget"
+#   選定理由: ファイルダウンロード。curlより再帰取得が得意
+
+brew "yq"
+#   選定理由: YAML/JSON/XML処理。jqのYAML版
+#   代替候補: jq（JSON専用）
+
+brew "tree"
+#   選定理由: ディレクトリツリー表示。シンプルで軽量
+
+brew "sd"
+#   選定理由: sed代替。直感的な構文で置換
+#   代替候補: sed（構文が複雑）
+
+brew "uv"
+#   選定理由: 高速Pythonパッケージ管理。pip/venv代替
+#   代替候補: pip（遅い）、poetry（重い）
+
+brew "mkcert"
+#   選定理由: ローカルSSL証明書生成。HTTPS開発環境構築
+
+brew "mas"
+#   選定理由: Mac App Store CLI。自動化・スクリプト連携
+
+brew "markdownlint-cli"
+#   選定理由: Markdown linter。ドキュメント品質維持
+
+brew "git-absorb"
+#   選定理由: 自動fixupコミット生成。リベース効率化
+
+brew "git-cliff"
+#   選定理由: 変更履歴（CHANGELOG）自動生成
+
+brew "terraform-docs"
+#   選定理由: Terraformモジュールドキュメント自動生成
+
+brew "tflint"
+#   選定理由: Terraform linter。ベストプラクティス検証
+
 # --- クラウド/AWS ---
 brew "awscli"
 #   選定理由: AWS公式CLI

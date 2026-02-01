@@ -45,9 +45,14 @@ alias mv="mv -i"
 # rm関数は functions/util-functions.zsh に定義
 
 # ========================================
-# Claude
+# Claude Code
 # ========================================
-alias c="claude"
+alias c="claude"                          # 基本起動
+alias co="claude --model opus"            # Opusモデル
+alias cs="claude --model sonnet"          # Sonnetモデル
+alias ch="claude --model haiku"           # Haikuモデル
+alias cp="claude --print"                 # 非対話モード（パイプ用）
+# セッション管理関数: cls(一覧), csa(全検索), csd(削除), cc(続行), cm(モデル指定)
 
 # ========================================
 # システム・ネットワーク

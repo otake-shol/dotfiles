@@ -16,7 +16,15 @@
       "Bash(npx eslint *)",
       "Bash(git *)",
       "Bash(make *)",
-      "Bash(brew *)"
+      "Bash(brew *)",
+      "Bash(* | grep *)",
+      "Bash(* | head *)",
+      "Bash(* | tail *)",
+      "Bash(* | wc *)",
+      "Bash(* | sort *)",
+      "Bash(* | uniq *)",
+      "Bash(* | xargs *)",
+      "Bash(* | while *)"
     ],
     "deny": [
       "Read(.env)",

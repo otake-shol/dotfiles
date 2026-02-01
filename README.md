@@ -4,9 +4,9 @@ macOS向けの個人開発環境設定ファイル
 
 ## 特徴
 
-- **Claude Code統合** - MCPサーバー5個・カスタムコマンド設定済み
-- **モダンCLI** - bat, eza, fzf, ripgrep, zoxide等のモダンツール
-- **自動セットアップ** - bootstrap.shで一発構築
+- **Claude Code完全統合** - セッション管理・MCPサーバー4個・カスタムコマンド
+- **モダンCLI** - bat, eza, fd, ripgrep, zoxide, yazi等のモダンツール
+- **Vim風操作統一** - yazi, lazygit, zellij全てでhjkl移動
 - **テーマ統一** - 全ツールでTokyoNightテーマ
 - **高速起動** - 遅延読み込みによるzsh起動時間最適化
 
@@ -46,9 +46,11 @@ dotfiles/
 │   ├── git/, gh/          # Git/GitHub CLI設定
 │   ├── claude/            # Claude Code設定
 │   ├── nvim/, ghostty/    # エディタ・ターミナル
+│   ├── yazi/, lazygit/    # ファイラー・Git TUI
+│   ├── zellij/            # ターミナルマルチプレクサ
 │   ├── bat/, atuin/       # ユーティリティ
-│   ├── ssh/               # SSH設定テンプレート
-│   └── antigravity/       # Antigravity拡張機能
+│   ├── ripgrep/           # ripgrep設定
+│   └── ssh/               # SSH設定テンプレート
 ├── scripts/               # ユーティリティスクリプト
 ├── docs/                  # 詳細ドキュメント
 ├── Brewfile               # Homebrewパッケージ一覧
@@ -72,10 +74,16 @@ brewsync             # Brewfile同期チェック
 ### fzf連携
 
 ```bash
-fvim                 # ファイル選択 → nvimで開く
-fbr                  # ブランチ選択 → checkout
-fshow                # コミット履歴ブラウズ
-fkill                # プロセス選択 → kill
+Ctrl+T               # ファイル検索 → コマンドラインに挿入
+Alt+C                # ディレクトリ検索 → cd
+Ctrl+R               # 履歴検索（atuin）
+```
+
+### ファイル操作（yazi）
+
+```bash
+y                    # yaziを起動（終了時にcdも反映）
+# yazi内: z=zoxide, Z=fzf, e=nvim, b=bat, Y=パスコピー
 ```
 
 ### SSH鍵管理
@@ -83,6 +91,20 @@ fkill                # プロセス選択 → kill
 ```bash
 dotssh               # SSH鍵セットアップ（対話式）
 dotsshlist           # SSH鍵一覧表示
+```
+
+### zellij（ターミナルマルチプレクサ）
+
+tmux風キーバインド（プレフィックス: `Ctrl+a`）
+
+```bash
+Ctrl+a |             # 縦分割
+Ctrl+a -             # 横分割
+Ctrl+a h/j/k/l       # ペイン移動
+Ctrl+a c             # 新規タブ
+Ctrl+a 1-5           # タブ直接移動
+Ctrl+a d             # デタッチ
+Ctrl+a [             # スクロールモード
 ```
 
 ## モダンCLI対応表
@@ -126,21 +148,43 @@ Node.js等のランタイムは[asdf](https://asdf-vm.com/)で管理。遅延読
 
 > 外出先からの操作は [docs/remote-access.md](docs/remote-access.md) を参照
 
-**カスタムコマンド:**
-- `/commit-push` - コミット＆プッシュ
-- `/test` - テスト生成
-- `/review` - コードレビュー
-- `/spec` - 仕様レビュー
-- `/organize-downloads` - ダウンロードフォルダ整理
-- `/pc-checkup` - PC健康診断
+### シェルコマンド
 
-**特化型エージェント:**
-- code-reviewer, test-engineer
-- frontend-engineer, architecture-reviewer, spec-analyst
+```bash
+# 基本
+c                    # claude起動
+cc                   # 最新セッション続行
+co / cs / ch         # Opus / Sonnet / Haiku指定
 
-**MCPサーバー（5個）:**
-- Context7, Serena, Playwright, Atlassian
-- Figma (OAuth認証)
+# セッション管理
+cls                  # セッション一覧（fzf選択で再開）
+csa                  # 全プロジェクトから検索
+csd [日数]           # 古いセッション削除
+
+# ユーティリティ
+cq "質問"            # クイック質問（パイプ対応）
+cgd                  # git diffをレビュー依頼
+```
+
+### キーバインド（Claude Code内）
+
+| キー | 機能 |
+|------|------|
+| Ctrl+L | 画面クリア |
+| Ctrl+R | 最後のリクエスト再試行 |
+| Ctrl+Shift+C | 最後の応答をコピー |
+
+### カスタムコマンド
+
+`/commit-push` `/test` `/review` `/spec` `/organize-downloads` `/pc-checkup`
+
+### 特化型エージェント
+
+code-reviewer, test-engineer, frontend-engineer, architecture-reviewer, spec-analyst
+
+### MCPサーバー（4個）
+
+Context7, Serena, Playwright, Figma
 
 ## トラブルシューティング
 

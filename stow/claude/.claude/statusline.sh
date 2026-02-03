@@ -58,6 +58,10 @@ day_of_week=$(date +"%a")  # Mon, Tue, ...
 current_date=$(date +"%m/%d")
 current_time=$(date +"%H:%M")
 
+# バッテリー残量（Mac専用）
+battery_pct=$(pmset -g batt 2>/dev/null | grep -o '[0-9]*%' | tr -d '%')
+battery_charging=$(pmset -g batt 2>/dev/null | grep -q 'AC Power' && echo "1" || echo "0")
+
 # 曜日カラー（平日=白、土=青、日=赤）
 day_num=$(date +"%u")  # 1=Mon, 7=Sun
 case "$day_num" in
@@ -90,6 +94,8 @@ ICON_BRAIN=$(printf '\xef\x97\x9c')        # U+F5DC
 ICON_DIFF=$(printf '\xef\x81\x80')         # U+F040
 ICON_MONEY=$(printf '\xef\x85\x95')        # U+F155
 ICON_TIME=$(printf '\xef\x80\x97')         # U+F017
+ICON_BATTERY=$(printf '\xef\x89\x80')      # U+F240 (battery full)
+ICON_CHARGING=$(printf '\xef\x83\xa7')     # U+F0E7 (lightning bolt)
 
 # セパレータ
 SEP='┃'
@@ -152,6 +158,23 @@ output+="  "
 output+="${COLOR_4}${ICON_DIFF}${RESET} ${GREEN}+${lines_added}${RESET}${RED}-${lines_removed}${RESET}"
 output+="  "
 output+="${COLOR_5}${BOLD}${ICON_MONEY}\$${cost_fmt}${RESET}"
+
+# バッテリー表示
+if [ -n "$battery_pct" ]; then
+    if [ "$battery_pct" -gt 50 ]; then
+        BATT_COLOR=$GREEN
+    elif [ "$battery_pct" -gt 20 ]; then
+        BATT_COLOR=$YELLOW
+    else
+        BATT_COLOR=$RED
+    fi
+    output+="  "
+    if [ "$battery_charging" = "1" ]; then
+        output+="${BATT_COLOR}${ICON_CHARGING}${battery_pct}%${RESET}"
+    else
+        output+="${BATT_COLOR}${ICON_BATTERY}${battery_pct}%${RESET}"
+    fi
+fi
 
 # セッションID（あれば - 控えめ）
 if [ -n "$session_id" ]; then

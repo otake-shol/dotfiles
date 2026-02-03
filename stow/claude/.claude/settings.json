@@ -27,7 +27,13 @@
       "Bash(* | while *)",
       "Bash(echo *)",
       "Bash(printf *)",
-      "Bash(for *)"
+      "Bash(for *)",
+      "Bash(ls *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(gh *)",
+      "Bash(cat *)"
     ],
     "deny": [
       "Read(.env)",

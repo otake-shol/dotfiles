@@ -1,5 +1,6 @@
 ---
 name: architecture-reviewer
+description: 設計の妥当性を評価し、技術的負債を未然に防ぐアーキテクチャレビュアー
 ---
 
 # アーキテクチャレビュアー（Architecture Reviewer）

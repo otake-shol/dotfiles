@@ -1,29 +1,13 @@
 {
   "bindings": [
     {
-      "key": "ctrl+l",
-      "command": "clear",
-      "description": "画面クリア"
-    },
-    {
-      "key": "ctrl+o",
-      "command": "open_in_editor",
-      "description": "エディタで開く"
-    },
-    {
-      "key": "ctrl+r",
-      "command": "retry",
-      "description": "最後のリクエストを再試行"
-    },
-    {
-      "key": "ctrl+shift+c",
-      "command": "copy_last_response",
-      "description": "最後の応答をコピー"
-    },
-    {
-      "key": "ctrl+shift+s",
-      "command": "copy_last_command",
-      "description": "最後のコマンドをコピー"
+      "context": "Global",
+      "bindings": {
+        "ctrl+l": "clear",
+        "ctrl+o": "open_in_editor",
+        "ctrl+r": "retry",
+        "ctrl+shift+c": "copy_last_response"
+      }
     }
   ]
 }

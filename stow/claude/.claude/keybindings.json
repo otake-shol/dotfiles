@@ -6,7 +6,8 @@
         "ctrl+l": "clear",
         "ctrl+o": "open_in_editor",
         "ctrl+r": "retry",
-        "ctrl+shift+c": "copy_last_response"
+        "ctrl+shift+c": "copy_last_response",
+        "ctrl+shift+s": "copy_last_command"
       }
     }
   ]

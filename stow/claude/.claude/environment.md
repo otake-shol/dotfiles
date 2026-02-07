@@ -64,21 +64,26 @@ CLAUDE.md から分離した技術スタック、ツール設定、開発環境�
 ## パーミッション設定
 
 ### 自動許可（allow）
-- `npm run *`, `yarn *`, `pnpm *`
-- `npx prettier *`, `npx eslint *`
-- `git status/diff/log/branch/add/commit/stash`
-- `make *`, `brew *`
+- ファイル操作: `Read`, `Edit`, `Write`, `Glob`, `Grep`
+- スキル/タスク: `Skill(*)`, `Task(*)`
+- パッケージ: `npm *`, `yarn *`, `pnpm *`, `npx *`, `node *`
+- Git: `git *`（push/reset/checkout/clean/rebase除く）
+- ビルド: `make *`, `brew *`, `gh *`
+- ファイル: `ls`, `mkdir`, `cp`, `mv`, `rm`, `touch`, `ln`, `chmod`
+- ユーティリティ: `cat`, `head`, `tail`, `diff`, `which`, `type`, `command`, `echo`, `printf`, `pwd`, `date`, `wc`, `jq`, `open`, `tar`, `unzip`, `curl`, `wget`
 
 ### 自動拒否（deny）
 - `.env*`, `credentials*`, `*secret*` の読み取り
-- `rm -rf /`, `rm -rf ~`
-- `curl * | sh/bash`
+- `rm -rf /`, `rm -rf ~`, `rm -rf /*`, `rm -rf ~/*`
+- `curl/wget * | sh/bash`
 
 ### 確認が必要（ask）
 - `git push *`
 - `git reset --hard*`
 - `git checkout .`
 - `git clean *`
+- `git rebase *`
+- `npm publish *`
 
 ---
 

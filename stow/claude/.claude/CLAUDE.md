@@ -95,3 +95,26 @@
 技術スタック、MCP、Hooks、パーミッション等は別ファイルを参照:
 
 @~/.claude/environment.md
+
+---
+
+## 間違いログ
+
+過去の問題と対策。同じ間違いを繰り返さない。
+
+| 日付 | 問題 | 対策 |
+|------|------|------|
+| - | - | - |
+
+---
+
+## 参考リンク
+
+この設定はBoris Cherny（Claude Code作者）のベストプラクティスに基づく。
+
+| ソース | 主要な学び |
+|--------|-----------|
+| [Boris Threads](https://www.threads.com/@boris_cherny/post/DUMZr4VElyb) | CLAUDE.md更新、検証ループ、worktree |
+| [Boris Substack](https://karozieminski.substack.com/p/boris-cherny-claude-code-workflow) | Fleet Management、Hooks、パーミッション |
+| [HumanLayer Blog](https://www.humanlayer.dev/blog/writing-a-good-claude-md) | CLAUDE.md構造、300行未満 |
+| [Builder.io Guide](https://www.builder.io/blog/claude-md-guide) | @imports、モジュール化 |

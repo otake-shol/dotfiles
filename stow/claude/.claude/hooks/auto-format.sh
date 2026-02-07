@@ -48,6 +48,14 @@ case "$ext" in
             # グローバルPrettierを使用
             prettier --write "$file_path" 2>/dev/null || true
         fi
+        # ESLint --fix（Prettier適用後、JS/TS系のみ）
+        case "$ext" in
+            js|jsx|ts|tsx)
+                if [ -n "$project_root" ] && [ -f "$project_root/node_modules/.bin/eslint" ]; then
+                    "$project_root/node_modules/.bin/eslint" --fix "$file_path" 2>/dev/null || true
+                fi
+                ;;
+        esac
         ;;
     sh|bash)
         # シェルスクリプトはshfmtでフォーマット（あれば）

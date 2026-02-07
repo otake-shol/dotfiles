@@ -62,7 +62,9 @@
       "Bash(git push *)",
       "Bash(git reset --hard*)",
       "Bash(git checkout .)",
-      "Bash(git clean *)"
+      "Bash(git clean *)",
+      "Bash(git rebase *)",
+      "Bash(npm publish *)"
     ]
   },
   "hooks": {
@@ -93,5 +95,9 @@
     "command": "~/.claude/statusline.sh",
     "padding": 0
   },
-  "language": "日本語"
+  "language": "日本語",
+  "enabledPlugins": {
+    "claude-mem@thedotmack": true,
+    "superpowers@superpowers-marketplace": true
+  }
 }

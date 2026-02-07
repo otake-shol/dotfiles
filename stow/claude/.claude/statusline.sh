@@ -8,6 +8,14 @@ dir_full=$(echo "$input" | jq -r '.workspace.current_dir // "~"')
 dir=$(echo "$dir_full" | sed "s|^$HOME|~|")
 model=$(echo "$input" | jq -r '.model.display_name // "Claude"')
 used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // 0' | cut -d. -f1)
+ctx_size=$(echo "$input" | jq -r '.context_window.context_window_size // 200000')
+
+# コンテキストウィンドウサイズを人間が読める形式に変換（200000→200K, 1000000→1M）
+if [ "$ctx_size" -ge 1000000 ]; then
+    ctx_label="$((ctx_size / 1000000))M"
+else
+    ctx_label="$((ctx_size / 1000))K"
+fi
 cost=$(echo "$input" | jq -r '.cost.total_cost_usd // 0')
 session_id=$(echo "$input" | jq -r '.session_id // ""' | cut -c1-8)
 lines_added=$(echo "$input" | jq -r '.cost.total_lines_added // 0')
@@ -153,7 +161,7 @@ output+=" ${DIM}${SEP}${RESET} "
 # 右セクション（重要情報 - 鮮やか）
 output+="${MODEL_COLOR}${BOLD}${ICON_MODEL} ${short_model}${RESET}"
 output+="  "
-output+="${PCT_STYLE}${PCT_COLOR}${ICON_BRAIN} ${bar} ${used_pct}%${RESET}"
+output+="${PCT_STYLE}${PCT_COLOR}${ICON_BRAIN} ${bar} ${used_pct}%${RESET}${DIM}(${ctx_label})${RESET}"
 output+="  "
 output+="${COLOR_4}${ICON_DIFF}${RESET} ${GREEN}+${lines_added}${RESET}${RED}-${lines_removed}${RESET}"
 output+="  "

@@ -158,10 +158,11 @@ cgd                  # git diffをレビュー依頼
 | Ctrl+L | 画面クリア |
 | Ctrl+R | 最後のリクエスト再試行 |
 | Ctrl+Shift+C | 最後の応答をコピー |
+| Ctrl+Shift+S | 最後のコマンドをコピー |
 
 ### カスタムコマンド
 
-`/commit-push` `/test` `/review` `/spec` `/organize-downloads` `/pc-checkup`
+`/commit-push` `/test` `/review` `/spec` `/verify` `/worktree` `/learn` `/organize-downloads` `/pc-checkup`
 
 ### 特化型エージェント
 

@@ -1,0 +1,71 @@
+name: Claude Learning
+
+on:
+  pull_request:
+    types: [labeled]
+
+jobs:
+  update-claude-md:
+    if: github.event.label.name == 'claude-learning'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get PR info
+        id: pr
+        run: |
+          echo "number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+          echo "title=${{ github.event.pull_request.title }}" >> $GITHUB_OUTPUT
+
+      - name: Extract learning from PR body
+        id: extract
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          # PRの説明から「## 学び」セクションを抽出
+          LEARNING=$(echo "$PR_BODY" | sed -n '/^## 学び/,/^## /p' | head -n -1 | tail -n +2 | sed '/^$/d' | tr '\n' ' ' | sed 's/  */ /g' | xargs)
+          echo "learning=$LEARNING" >> $GITHUB_OUTPUT
+
+      - name: Check if learning exists
+        id: check
+        run: |
+          if [ -z "${{ steps.extract.outputs.learning }}" ]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "::warning::「## 学び」セクションが空です。PRの説明に学びを記載してください。"
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Update CLAUDE.md
+        if: steps.check.outputs.skip != 'true'
+        run: |
+          DATE=$(date +%Y-%m-%d)
+          LEARNING="${{ steps.extract.outputs.learning }}"
+          PR_NUM="${{ steps.pr.outputs.number }}"
+          PR_TITLE="${{ steps.pr.outputs.title }}"
+
+          # 間違いログテーブルに追記（最初の「| - |」行を置換）
+          sed -i "s/| - | - | - |/| $DATE | PR #$PR_NUM: $PR_TITLE | $LEARNING |\n| - | - | - |/" stow/claude/.claude/CLAUDE.md
+
+      - name: Create Pull Request
+        if: steps.check.outputs.skip != 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "docs: CLAUDE.md間違いログ更新 (#${{ steps.pr.outputs.number }})"
+          title: "docs: CLAUDE.md間違いログ更新"
+          body: |
+            PR #${{ steps.pr.outputs.number }} からの学びを記録。
+
+            ## 追記内容
+            ${{ steps.extract.outputs.learning }}
+
+            ---
+            元PR: #${{ steps.pr.outputs.number }}
+          branch: claude-learning-${{ steps.pr.outputs.number }}
+          delete-branch: true
+          labels: documentation

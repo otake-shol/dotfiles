@@ -35,6 +35,10 @@ brew "difftastic"
 #   選定理由: AST比較でリファクタリング時の本質的な変更を検出
 #   用途: 大規模リファクタリング、PRレビュー時に使い分け
 
+brew "gnupg"
+#   選定理由: GPGコミット署名・ファイル暗号化。セットアップはdocs/setup/GPG_SIGNING.md参照
+#   代替候補: なし（デファクト標準）
+
 brew "lazygit"
 #   選定理由: Git TUI。ステージング・コミット・ブランチ操作が直感的
 #   代替候補: tig（機能少ない）、gitui（Rust製、同等機能）

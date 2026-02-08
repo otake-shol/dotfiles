@@ -11,7 +11,9 @@
       "Grep(*)",
       "Skill(*)",
       "Task(*)",
-      "Bash(*)"
+      "Bash(*)",
+      "WebFetch(*)",
+      "WebSearch(*)"
     ],
     "deny": [
       "Read(**/.env)",

@@ -1,0 +1,47 @@
+# direnvrc - カスタム関数定義
+# プロジェクトの.envrcから呼び出す共通関数
+
+# asdf統合
+use_asdf() {
+  source_env "$(asdf direnv envrc 2>/dev/null)"
+}
+
+# Node.jsバージョン指定
+use_node() {
+  local version="${1:-}"
+  if [ -z "$version" ]; then
+    if [ -f .node-version ]; then
+      version=$(cat .node-version)
+    elif [ -f .nvmrc ]; then
+      version=$(cat .nvmrc)
+    fi
+  fi
+  if [ -n "$version" ]; then
+    layout node
+  fi
+}
+
+# Python仮想環境の自動作成・有効化
+layout_python() {
+  local python="${1:-python3}"
+  local venv_path=".venv"
+
+  if [ ! -d "$venv_path" ]; then
+    log_status "Creating virtualenv: $venv_path"
+    "$python" -m venv "$venv_path"
+  fi
+
+  source "$venv_path/bin/activate"
+  export VIRTUAL_ENV="$PWD/$venv_path"
+}
+
+# 環境変数ファイル読み込み（.env.local優先）
+dotenv_if_exists() {
+  local env_file="${1:-.env}"
+  if [ -f "$env_file" ]; then
+    dotenv "$env_file"
+  fi
+  if [ -f "${env_file}.local" ]; then
+    dotenv "${env_file}.local"
+  fi
+}

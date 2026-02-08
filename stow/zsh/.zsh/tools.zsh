@@ -58,6 +58,17 @@ function y() {
   rm -f -- "$tmp"
 }
 
+# --- direnv ---
+# プロジェクトごとの環境変数自動切替
+if command -v direnv &>/dev/null; then
+  _direnv_cache="${XDG_CACHE_HOME:-$HOME/.cache}/direnv-hook.zsh"
+  if ! _cache_valid "$_direnv_cache"; then
+    _cache_update "$_direnv_cache" "direnv hook zsh"
+  fi
+  source "$_direnv_cache"
+  unset _direnv_cache
+fi
+
 # --- bun ---
 export BUN_INSTALL="$HOME/.bun"
 [ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"

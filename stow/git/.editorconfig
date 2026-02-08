@@ -1,0 +1,50 @@
+# EditorConfig
+# https://editorconfig.org
+# チームでエディタ設定を統一
+
+root = true
+
+# デフォルト設定（全ファイル）
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# Makefile（タブ必須）
+[Makefile]
+indent_style = tab
+
+# シェルスクリプト
+[*.sh]
+indent_size = 2
+
+# Python
+[*.py]
+indent_size = 4
+
+# Go（タブが標準）
+[*.go]
+indent_style = tab
+
+# Markdown（末尾スペースに意味あり）
+[*.md]
+trim_trailing_whitespace = false
+
+# YAML
+[*.{yml,yaml}]
+indent_size = 2
+
+# JSON
+[*.json]
+indent_size = 2
+
+# TypeScript/JavaScript
+[*.{ts,tsx,js,jsx}]
+indent_size = 2
+
+# Java
+[*.java]
+indent_size = 4

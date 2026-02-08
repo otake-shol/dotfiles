@@ -1,0 +1,25 @@
+# direnv設定
+# プロジェクトごとの環境変数自動切替
+
+[global]
+# .envファイルの自動読み込みを有効化
+load_dotenv = true
+
+# 警告表示を簡潔に
+warn_timeout = "5s"
+
+# ログをシンプルに
+hide_env_diff = true
+
+[whitelist]
+# 信頼するディレクトリ（自動allow）
+prefix = [
+    "~/dev",
+    "~/projects",
+    "~/work",
+]
+
+# 信頼する設定ファイル
+exact = [
+    "~/dotfiles/.envrc",
+]

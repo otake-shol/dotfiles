@@ -9,6 +9,7 @@ Brewfile.lock.json
 # Note: *.local.template files are tracked (templates for users)
 .gitconfig.local
 .zshrc.local
+settings.local.json
 
 # Claude Code project-local settings (auto-generated at repo root)
 # Note: stow/claude/.claude/ is user config (tracked), this is project-specific (ignored)

@@ -42,7 +42,17 @@
       "Bash(tar *)",
       "Bash(unzip *)",
       "Bash(curl *)",
-      "Bash(wget *)"
+      "Bash(wget *)",
+      "Bash(docker ps*)",
+      "Bash(docker images*)",
+      "Bash(docker logs*)",
+      "Bash(docker inspect*)",
+      "Bash(docker build*)",
+      "Bash(docker compose*)",
+      "Bash(kubectl get*)",
+      "Bash(kubectl describe*)",
+      "Bash(kubectl logs*)",
+      "Bash(kubectl apply*)"
     ],
     "deny": [
       "Read(**/.env)",
@@ -60,6 +70,8 @@
     ],
     "ask": [
       "Bash(git push *)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
       "Bash(git reset --hard*)",
       "Bash(git checkout .)",
       "Bash(git clean *)",

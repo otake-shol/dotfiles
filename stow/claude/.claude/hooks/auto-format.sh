@@ -63,6 +63,27 @@ case "$ext" in
             shfmt -w "$file_path" 2>/dev/null || true
         fi
         ;;
+    py)
+        # Python: black + isort（あれば）
+        if command -v black &>/dev/null; then
+            black "$file_path" 2>/dev/null || true
+        fi
+        if command -v isort &>/dev/null; then
+            isort "$file_path" 2>/dev/null || true
+        fi
+        ;;
+    rs)
+        # Rust: rustfmt（あれば）
+        if command -v rustfmt &>/dev/null; then
+            rustfmt "$file_path" 2>/dev/null || true
+        fi
+        ;;
+    go)
+        # Go: gofmt（あれば）
+        if command -v gofmt &>/dev/null; then
+            gofmt -w "$file_path" 2>/dev/null || true
+        fi
+        ;;
 esac
 
 exit 0

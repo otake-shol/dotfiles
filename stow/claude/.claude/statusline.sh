@@ -21,18 +21,20 @@ session_id=$(echo "$input" | jq -r '.session_id // ""' | cut -c1-8)
 lines_added=$(echo "$input" | jq -r '.cost.total_lines_added // 0')
 lines_removed=$(echo "$input" | jq -r '.cost.total_lines_removed // 0')
 
-# モデル名とカラー設定
+# モデル名とカラー設定（バージョン番号付き）
+# display_name例: "Opus 4.6", "Sonnet 4.5", "Haiku 4.5" など
+version=$(echo "$model" | grep -oE '[0-9]+\.[0-9]+' | head -1)
 case "$model" in
     *Opus*)
-        short_model="Opus"
+        short_model="Opus${version:+ $version}"
         MODEL_COLOR='\033[38;5;208m'   # オレンジ（プレミアム感）
         ;;
     *Sonnet*)
-        short_model="Sonnet"
+        short_model="Sonnet${version:+ $version}"
         MODEL_COLOR='\033[94m'   # 明るい青
         ;;
     *Haiku*)
-        short_model="Haiku"
+        short_model="Haiku${version:+ $version}"
         MODEL_COLOR='\033[92m'   # 明るい緑
         ;;
     *)

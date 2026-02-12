@@ -68,9 +68,9 @@
     "command": "~/.claude/statusline.sh",
     "padding": 0
   },
-  "language": "日本語",
   "enabledPlugins": {
     "claude-mem@thedotmack": true,
     "superpowers@superpowers-marketplace": true
-  }
+  },
+  "language": "日本語"
 }

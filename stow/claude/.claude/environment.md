@@ -105,6 +105,9 @@ CLAUDE.md から分離した技術スタック、ツール設定、開発環境�
 | Atlassian | Jira/Confluence操作 | 不要 |
 | Figma | デザイン→コード変換 | OAuth |
 
+### 利用ルール
+- **Context7**: 確認不要。ドキュメント参照が必要な場面で自動的に利用する
+
 ### セットアップ
 ```bash
 ~/.claude/setup.sh

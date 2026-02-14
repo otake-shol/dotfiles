@@ -15,9 +15,13 @@ input=$(cat)
 message=$(echo "$input" | jq -r '.message // "Claude Code notification"')
 title=$(echo "$input" | jq -r '.title // "Claude Code"')
 
-# macOS通知を送信
+# macOS通知を送信（特殊文字をエスケープして安全に渡す）
 if command -v osascript &>/dev/null; then
-    osascript -e "display notification \"$message\" with title \"$title\" sound name \"Glass\""
+    escaped_message="${message//\\/\\\\}"
+    escaped_message="${escaped_message//\"/\\\"}"
+    escaped_title="${title//\\/\\\\}"
+    escaped_title="${escaped_title//\"/\\\"}"
+    osascript -e "display notification \"$escaped_message\" with title \"$escaped_title\" sound name \"Glass\""
 fi
 
 exit 0

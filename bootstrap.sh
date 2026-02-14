@@ -10,7 +10,7 @@
 #   --skip-claude    Claude Code セットアップをスキップ
 #   --claude-only    Claude Code セットアップのみ実行
 
-set -e  # エラーで停止
+set -euo pipefail  # エラー・未定義変数・パイプ失敗で停止
 
 # ========================================
 # 設定
@@ -160,17 +160,18 @@ install_brewfile_packages() {
     local brews=()
     local casks=()
 
+    # Brewfile の各行を解析し、tap/brew/cask を分類
+    # 正規表現: ^type\s+"(name)" でダブルクォート内のパッケージ名をキャプチャ
     while IFS= read -r line; do
-        # コメントと空行をスキップ
-        [[ "$line" =~ ^[[:space:]]*# ]] && continue
-        [[ -z "${line// }" ]] && continue
+        [[ "$line" =~ ^[[:space:]]*# ]] && continue  # コメント行
+        [[ -z "${line// }" ]] && continue              # 空行（空白のみ含む）
 
         if [[ "$line" =~ ^tap[[:space:]]+\"([^\"]+)\" ]]; then
-            taps+=("${BASH_REMATCH[1]}")
+            taps+=("${BASH_REMATCH[1]}")   # e.g. tap "homebrew/cask" → homebrew/cask
         elif [[ "$line" =~ ^brew[[:space:]]+\"([^\"]+)\" ]]; then
-            brews+=("${BASH_REMATCH[1]}")
+            brews+=("${BASH_REMATCH[1]}")  # e.g. brew "git" → git
         elif [[ "$line" =~ ^cask[[:space:]]+\"([^\"]+)\" ]]; then
-            casks+=("${BASH_REMATCH[1]}")
+            casks+=("${BASH_REMATCH[1]}")  # e.g. cask "firefox" → firefox
         fi
     done < "$brewfile"
 
@@ -495,7 +496,12 @@ stow_package() {
         echo -e "${CYAN}[DRY RUN] Would stow: $pkg${NC}"
         stow --simulate -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg" 2>&1 || true
     else
-        # 既存のシンボリックリンクを削除してから再作成（--adoptで既存ファイルを取り込み）
+        # --adopt: ターゲット側の既存ファイルを stow パッケージに取り込む。
+        # 既存ファイルがある場合、その内容で stow パッケージ側が上書きされる点に注意。
+        # git diff で差分を確認し、不要な変更は git checkout で戻すこと。
+        if [ "$VERBOSE" = true ]; then
+            echo -e "${YELLOW}  ⚠ --adopt: 既存ファイルがある場合、stow パッケージ側に取り込まれます${NC}"
+        fi
         stow -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow --adopt "$pkg" 2>/dev/null || \
         stow -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg"
     fi
@@ -551,7 +557,7 @@ fi
 show_step 4 7 "Oh My Zshのセットアップ"
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
     # CI環境またはドライランモードではスキップ
-    if [ "$DRY_RUN" = true ] || [ "$CI" = "true" ]; then
+    if [ "$DRY_RUN" = true ] || [ "${CI:-}" = "true" ]; then
         echo -e "${CYAN}[DRY RUN/CI] Oh My Zshのインストールをスキップします${NC}"
         answer="n"
     elif [ "$ASSUME_YES" = true ]; then

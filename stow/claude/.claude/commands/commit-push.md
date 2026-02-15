@@ -1,3 +1,8 @@
+---
+description: 現在の変更をコミットしてプッシュ
+allowed-tools: Bash(git *)
+---
+
 # /commit-push - コミットしてプッシュ
 
 現在の変更をコミットしてリモートにプッシュします。

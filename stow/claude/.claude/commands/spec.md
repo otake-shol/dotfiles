@@ -1,3 +1,8 @@
+---
+description: 仕様レビュー・作成
+allowed-tools: Read, Write, Edit, Grep, Glob
+---
+
 # /spec - 仕様レビュー・作成
 
 指定された仕様ファイルをレビューするか、新しい仕様を作成します。

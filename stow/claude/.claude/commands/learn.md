@@ -1,3 +1,8 @@
+---
+description: 学びを間違いログに記録
+allowed-tools: Read, Edit
+---
+
 # /learn - 学びの記録
 
 PRレビューやデバッグから得た学びを「間違いログ」に記録します。

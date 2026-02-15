@@ -1,3 +1,8 @@
+---
+description: ダウンロードフォルダ整理
+allowed-tools: Bash(mv *), Bash(mkdir *), Bash(ls *), Read, Glob
+---
+
 # /organize-downloads - ダウンロードフォルダ整理
 
 iCloud Contents内の `01_ダウンロード` 配下のファイルを適切なフォルダに振り分けて空にします。

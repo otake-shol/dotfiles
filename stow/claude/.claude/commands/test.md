@@ -1,3 +1,8 @@
+---
+description: テストコード生成・レビュー
+allowed-tools: Read, Write, Edit, Bash(npm test *), Bash(npx vitest *)
+---
+
 # /test - テストコード生成・レビュー
 
 ## テスト生成モード

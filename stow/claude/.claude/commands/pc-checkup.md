@@ -1,3 +1,8 @@
+---
+description: PC健康診断
+allowed-tools: Bash(*)
+---
+
 # /pc-checkup - PC健康診断
 
 PCの動作が重い時に原因を特定し、対応案を提示します。

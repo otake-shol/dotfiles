@@ -1,8 +1,10 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
   "permissions": {
+    "defaultMode": "plan",
     "allow": [
       "Read(*)",
       "Edit(*)",
@@ -11,9 +13,54 @@
       "Grep(*)",
       "Skill(*)",
       "Task(*)",
-      "Bash(*)",
       "WebFetch(*)",
-      "WebSearch(*)"
+      "WebSearch(*)",
+      "mcp__playwright__*",
+      "mcp__context7__*",
+      "mcp__serena__*",
+
+      "Bash(npm *)",
+      "Bash(yarn *)",
+      "Bash(pnpm *)",
+      "Bash(npx *)",
+      "Bash(node *)",
+
+      "Bash(git *)",
+
+      "Bash(make *)",
+      "Bash(brew *)",
+      "Bash(gh *)",
+
+      "Bash(ls *)",
+      "Bash(ls)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(rm *)",
+      "Bash(touch *)",
+      "Bash(ln *)",
+      "Bash(chmod *)",
+
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(diff *)",
+      "Bash(which *)",
+      "Bash(type *)",
+      "Bash(command *)",
+      "Bash(echo *)",
+      "Bash(printf *)",
+      "Bash(pwd)",
+      "Bash(pwd *)",
+      "Bash(date *)",
+      "Bash(date)",
+      "Bash(wc *)",
+      "Bash(jq *)",
+      "Bash(open *)",
+      "Bash(tar *)",
+      "Bash(unzip *)",
+      "Bash(curl *)",
+      "Bash(wget *)"
     ],
     "deny": [
       "Read(**/.env)",
@@ -27,7 +74,8 @@
       "Bash(curl * | sh)",
       "Bash(curl * | bash)",
       "Bash(wget * | sh)",
-      "Bash(wget * | bash)"
+      "Bash(wget * | bash)",
+      "Bash(sudo *)"
     ],
     "ask": [
       "Bash(git push *)",
@@ -41,6 +89,17 @@
     ]
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Check if this file write is safe. Verify: 1) No writes to system paths (/etc, /usr, /bin), 2) No credential/secret content being written, 3) No path traversal attempts. If unsafe, return {\"decision\": \"block\", \"reason\": \"explanation\"}. If safe, return {\"decision\": \"approve\"}."
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Edit|Write",
@@ -58,6 +117,26 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/notify.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Before stopping, verify: 1) Were all requested changes made? 2) Are there any obvious errors in the changes? 3) Should tests be run? Return a brief summary of verification status."
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Context is about to be compacted. Summarize the key decisions, progress, and any important context that should be preserved. Focus on: current task status, files modified, decisions made, and next steps."
           }
         ]
       }

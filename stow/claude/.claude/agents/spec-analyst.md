@@ -2,6 +2,7 @@
 name: spec-analyst
 description: 仕様ドキュメントの品質を向上させ、実装前に問題を発見する仕様アナリスト
 model: sonnet
+tools: Read, Write, Edit, Grep, Glob
 ---
 
 # 仕様アナリスト（Spec Analyst）

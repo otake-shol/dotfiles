@@ -1,3 +1,8 @@
+---
+description: コードレビュー
+allowed-tools: Read, Grep, Glob, Bash(git diff *)
+---
+
 # /review - コードレビュー
 
 指定されたコードまたは変更差分をレビューします。

@@ -1,3 +1,8 @@
+---
+description: Git ワークツリー管理
+allowed-tools: Bash(git worktree *), Bash(git branch *)
+---
+
 # /worktree - ワークツリー管理
 
 並行開発のためのgit worktree操作を支援します。

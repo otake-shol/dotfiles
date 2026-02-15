@@ -1,3 +1,9 @@
+---
+description: 検証ループ（型チェック→Lint→テスト）
+argument-hint: "[project_path]"
+allowed-tools: Bash(npm run *), Bash(npx *), Bash(tsc *)
+---
+
 # /verify - 検証ループ
 
 Boris Cherny推奨の「品質2-3倍向上」検証ループを実行します。

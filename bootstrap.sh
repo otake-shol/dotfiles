@@ -40,8 +40,12 @@ else
     safe_link() { ln -sf "$1" "$2"; }
 fi
 
-# ログファイル
-LOG_FILE="$HOME/.dotfiles-setup.log"
+# ログファイル（タイムスタンプ付き、30日超の古いログを自動削除）
+LOG_DIR="$HOME/.local/share/dotfiles/logs"
+mkdir -p "$LOG_DIR"
+LOG_FILE="$LOG_DIR/bootstrap-$(date '+%Y%m%d-%H%M%S').log"
+ln -sf "$LOG_FILE" "$LOG_DIR/bootstrap-latest.log"
+find "$LOG_DIR" -name 'bootstrap-*.log' -mtime +30 -delete 2>/dev/null || true
 
 # ========================================
 # ヘルプ
@@ -568,27 +572,34 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
     fi
     if [ "$answer" = "y" ]; then
         sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-
-        # Powerlevel10k
-        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \
-            "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/themes/powerlevel10k
-
-        # zsh-autosuggestions
-        git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions \
-            "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-autosuggestions
-
-        # zsh-syntax-highlighting
-        git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting \
-            "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-syntax-highlighting
-
-        # zsh-completions
-        git clone --depth=1 https://github.com/zsh-users/zsh-completions \
-            "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-completions
-
-        echo -e "${GREEN}✓ Oh My Zshのセットアップが完了しました${NC}"
+        echo -e "${GREEN}✓ Oh My Zshをインストールしました${NC}"
     fi
 else
     echo -e "${GREEN}✓ Oh My Zshはインストール済みです${NC}"
+fi
+
+# Oh My Zshプラグインの冪等インストール（Oh My Zshが存在する場合のみ）
+if [ -d "$HOME/.oh-my-zsh" ] && [ "$DRY_RUN" != true ] && [ "${CI:-}" != "true" ]; then
+    ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+    echo -e "${YELLOW}Oh My Zshプラグインを確認中...${NC}"
+
+    ensure_zsh_plugin "powerlevel10k" \
+        "https://github.com/romkatv/powerlevel10k.git" \
+        "$ZSH_CUSTOM/themes/powerlevel10k"
+
+    ensure_zsh_plugin "zsh-autosuggestions" \
+        "https://github.com/zsh-users/zsh-autosuggestions" \
+        "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
+
+    ensure_zsh_plugin "zsh-syntax-highlighting" \
+        "https://github.com/zsh-users/zsh-syntax-highlighting" \
+        "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
+
+    ensure_zsh_plugin "zsh-completions" \
+        "https://github.com/zsh-users/zsh-completions" \
+        "$ZSH_CUSTOM/plugins/zsh-completions"
+
+    echo -e "${GREEN}✓ Oh My Zshプラグインのセットアップが完了しました${NC}"
 fi
 
 # ========================================
@@ -711,9 +722,6 @@ show_step 6 7 "macOS固有設定は適用済みです"
 # 7. 完了
 # ========================================
 log "=== Setup completed successfully ==="
-
-# 成功時はログファイルを削除（失敗時のみ残す）
-rm -f "$LOG_FILE"
 
 echo -e "\n${GREEN}========================================${NC}"
 echo -e "${GREEN}  セットアップが完了しました！${NC}"

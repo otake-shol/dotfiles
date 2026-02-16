@@ -49,11 +49,15 @@ CLAUDE.md から分離した技術スタック、ツール設定、開発環境�
 
 ## Hooks設定
 
-| Hook | イベント | 用途 |
-|------|---------|------|
-| update-brewfile.sh | (手動) | Brewfile自動更新 |
-| auto-format.sh | PostToolUse | ファイル編集後に自動フォーマット |
-| notify.sh | Notification | macOS通知でタスク完了を通知 |
+| Hook | イベント | タイプ | 用途 |
+|------|---------|--------|------|
+| 安全性チェック | PreToolUse (Write\|Edit) | prompt | システムパス・機密情報の書き込み防止 |
+| auto-format.sh | PostToolUse (Edit\|Write) | command | ファイル編集後に自動フォーマット |
+| notify.sh | Notification | command | macOS通知でタスク完了を通知 |
+| 完了検証 | Stop | prompt | 変更の完全性を停止前に検証 |
+| コンテキスト保存 | PreCompact | prompt | コンパクション前に重要情報を要約 |
+| verify.sh | (手動) | command | 型チェック + Lint + テスト一括実行 |
+| update-brewfile.sh | (手動) | command | Brewfile自動更新 |
 
 ### auto-format.sh の対応形式
 - **Prettier**: js, jsx, ts, tsx, json, md, css, scss, html, yaml, yml
@@ -70,11 +74,14 @@ CLAUDE.md から分離した技術スタック、ツール設定、開発環境�
 - Git: `git *`（push/reset/checkout/clean/rebase除く）
 - ビルド: `make *`, `brew *`, `gh *`
 - ファイル: `ls`, `mkdir`, `cp`, `mv`, `rm`, `touch`, `ln`, `chmod`
-- ユーティリティ: `cat`, `head`, `tail`, `diff`, `which`, `type`, `command`, `echo`, `printf`, `pwd`, `date`, `wc`, `jq`, `open`, `tar`, `unzip`, `curl`, `wget`
+- ユーティリティ: `cat`, `head`, `tail`, `diff`, `which`, `type`, `command`, `echo`, `printf`, `pwd`, `date`, `wc`, `jq`, `open`, `tar`, `unzip`
 
 ### 自動拒否（deny）
 - `.env*`, `credentials*`, `*secret*` の読み取り
-- `rm -rf /`, `rm -rf ~`, `rm -rf /*`, `rm -rf ~/*`
+- `~/.ssh/**`, `~/.gnupg/**`, `~/.aws/**`, `~/.kube/**`, `~/.npmrc` の読み取り
+- `~/.bashrc`, `~/.zshrc`, `~/.zprofile` の編集
+- `rm -rf *`, `rm -r *`（再帰削除は一律ブロック）
+- `sudo *`
 - `curl/wget * | sh/bash`
 
 ### 確認が必要（ask）
@@ -84,6 +91,14 @@ CLAUDE.md から分離した技術スタック、ツール設定、開発環境�
 - `git clean *`
 - `git rebase *`
 - `npm publish *`
+- `curl *`, `wget *`（ダウンロード都度確認）
+
+### サンドボックス
+- **有効**: macOS Seatbelt による OS レベル隔離
+- `autoAllowBashIfSandboxed: true` - sandbox 内は Bash 自動許可
+- `allowAllUnixSockets: true` - MCP サーバー通信用
+- 許可ドメイン: GitHub, npm, yarn, Anthropic のみ
+- `disableBypassPermissionsMode: "disable"` - bypass モード無効化
 
 ---
 

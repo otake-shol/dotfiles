@@ -5,6 +5,7 @@
   },
   "permissions": {
     "defaultMode": "plan",
+    "disableBypassPermissionsMode": "disable",
     "allow": [
       "Read(*)",
       "Edit(*)",
@@ -58,33 +59,36 @@
       "Bash(jq *)",
       "Bash(open *)",
       "Bash(tar *)",
-      "Bash(unzip *)",
-      "Bash(curl *)",
-      "Bash(wget *)"
+      "Bash(unzip *)"
     ],
     "deny": [
       "Read(**/.env)",
       "Read(**/.env.*)",
       "Read(**/credentials*)",
       "Read(**/*secret*)",
-      "Bash(rm -rf /)",
-      "Bash(rm -rf ~)",
-      "Bash(rm -rf /*)",
-      "Bash(rm -rf ~/*)",
+      "Bash(rm -rf *)",
+      "Bash(rm -r *)",
       "Bash(curl * | sh)",
       "Bash(curl * | bash)",
       "Bash(wget * | sh)",
       "Bash(wget * | bash)",
-      "Bash(sudo *)"
+      "Bash(sudo *)",
+
+      "Read(~/.ssh/**)",
+      "Read(~/.gnupg/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.kube/**)",
+      "Read(~/.npmrc)",
+      "Edit(~/.bashrc)",
+      "Edit(~/.zshrc)",
+      "Edit(~/.zprofile)"
     ],
     "ask": [
       "Bash(git push *)",
       "Bash(git push --force*)",
       "Bash(git push -f*)",
       "Bash(git reset --hard*)",
-      "Bash(git checkout .)",
       "Bash(git clean *)",
-      "Bash(git rebase *)",
       "Bash(npm publish *)"
     ]
   },
@@ -151,5 +155,25 @@
     "claude-mem@thedotmack": true,
     "superpowers@superpowers-marketplace": true
   },
-  "language": "日本語"
+  "language": "日本語",
+  "alwaysThinkingEnabled": true,
+  "cleanupPeriodDays": 90,
+  "enableAllProjectMcpServers": false,
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true,
+    "network": {
+      "allowAllUnixSockets": true,
+      "allowedDomains": [
+        "github.com",
+        "*.github.com",
+        "*.githubusercontent.com",
+        "registry.npmjs.org",
+        "*.npmjs.org",
+        "registry.yarnpkg.com",
+        "*.anthropic.com",
+        "*.claude.ai"
+      ]
+    }
+  }
 }

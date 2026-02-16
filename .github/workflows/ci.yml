@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y stow shellcheck zsh
+          pip install yamllint
+
+      - name: ShellCheck
+        run: |
+          shellcheck -S warning bootstrap.sh
+          find scripts -name '*.sh' -exec shellcheck -S warning {} +
+
+      - name: Stow conflict detection (dry run)
+        run: |
+          for pkg in zsh git nvim ghostty bat atuin claude gh yazi ai-prompts ripgrep lazygit gpg direnv; do
+            echo "=== $pkg ==="
+            stow --simulate -v --target="$HOME" --dir=stow --restow "$pkg" 2>&1 || {
+              echo "::error::Stow conflict detected in package: $pkg"
+              exit 1
+            }
+          done
+
+      - name: YAML lint
+        run: yamllint -d relaxed .github/workflows/*.yml lefthook.yml
+
+      - name: Zsh syntax check
+        run: |
+          find stow/zsh -name '*.zsh' -exec zsh -n {} +
+
+      - name: Protected variables check
+        run: |
+          protected="ZSH_CONFIG_DIR|DOTFILES_DIR|HOME|PATH|SHELL"
+          violations=0
+          while IFS= read -r f; do
+            if grep -qE "unset.+($protected)" "$f"; then
+              echo "::error file=$f::Protected variable unset detected"
+              grep -nE "unset.+($protected)" "$f"
+              violations=1
+            fi
+          done < <(find . -name '*.sh' -o -name '*.zsh' | grep -v '.git/')
+          exit $violations

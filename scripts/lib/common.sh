@@ -128,6 +128,38 @@ dotfiles_update_zsh_plugin() {
 update_zsh_plugin() { dotfiles_update_zsh_plugin "$@"; }
 
 # ========================================
+# Zshプラグイン冪等インストール（bootstrap.shで使用）
+# ========================================
+# 引数: プラグイン名, リポジトリURL, インストール先パス
+dotfiles_ensure_zsh_plugin() {
+    local name="$1"
+    local repo_url="$2"
+    local dest="$3"
+
+    if [ -d "$dest/.git" ]; then
+        # 既存のgitリポジトリ → 最新化
+        cd "$dest" || return 1
+        if git pull --quiet 2>/dev/null; then
+            echo -e "  ${GREEN}✓${NC} $name (updated)"
+        else
+            echo -e "  ${YELLOW}⚠${NC} $name (pull failed, keeping existing)"
+        fi
+    elif [ -d "$dest" ]; then
+        # ディレクトリはあるが.gitがない → 削除して再clone
+        rm -rf "$dest"
+        git clone --depth=1 "$repo_url" "$dest" 2>/dev/null
+        echo -e "  ${GREEN}✓${NC} $name (re-cloned)"
+    else
+        # 新規インストール
+        git clone --depth=1 "$repo_url" "$dest" 2>/dev/null
+        echo -e "  ${GREEN}✓${NC} $name (installed)"
+    fi
+}
+
+# 短縮エイリアス（bootstrap.shで使用）
+ensure_zsh_plugin() { dotfiles_ensure_zsh_plugin "$@"; }
+
+# ========================================
 # ファイルリンク関数
 # ========================================
 # 安全にシンボリックリンクを作成（既存ファイルのバックアップ付き）

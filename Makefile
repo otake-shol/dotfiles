@@ -102,7 +102,8 @@ bootstrap:
 .PHONY: lint
 lint:
 	@echo "Running shellcheck..."
-	@shellcheck -S warning bootstrap.sh scripts/**/*.sh
+	@shellcheck -S warning bootstrap.sh
+	@find scripts -name '*.sh' -exec shellcheck -S warning {} +
 
 # クリーン（バックアップファイル削除）
 .PHONY: clean

@@ -10,7 +10,7 @@ dotfiles/
 ├── Makefile               # Stow操作インターフェース
 ├── Brewfile               # パッケージ定義
 │
-├── stow/                  # GNU Stowパッケージ群
+├── stow/                  # GNU Stowパッケージ群（16パッケージ）
 │   ├── zsh/               # シェル設定（メイン）
 │   ├── git/               # Git設定
 │   ├── nvim/              # Neovim設定
@@ -20,6 +20,11 @@ dotfiles/
 │   ├── yazi/              # ファイルマネージャー設定
 │   ├── claude/            # Claude Code設定
 │   ├── gh/                # GitHub CLI設定
+│   ├── ai-prompts/        # AIプロンプトテンプレート
+│   ├── ripgrep/           # ripgrep設定
+│   ├── lazygit/           # Git TUI設定
+│   ├── gpg/               # GPG設定（コミット署名）
+│   ├── direnv/            # direnv設定（環境変数自動化）
 │   ├── ssh/               # SSH設定（テンプレート）
 │   └── antigravity/       # エディタ設定（非Stow）
 │
@@ -144,6 +149,11 @@ flowchart LR
 | yazi | Stow | XDG準拠（~/.config/yazi） |
 | claude | Stow | ~/.claude/ ディレクトリ |
 | gh | Stow | XDG準拠（~/.config/gh） |
+| ai-prompts | Stow | XDG準拠（~/.config/ai-prompts） |
+| ripgrep | Stow | XDG準拠（~/.config/ripgrep） |
+| lazygit | Stow | XDG準拠（~/.config/lazygit） |
+| gpg | Stow | ~/.gnupg/ ディレクトリ（コミット署名用） |
+| direnv | Stow | XDG準拠（~/.config/direnv） |
 | ssh | **テンプレート** | 機密情報を含む可能性があるため |
 | antigravity | **手動リンク** | macOS固有パス（~/Library/Application Support/） |
 
@@ -200,3 +210,31 @@ flowchart LR
     P1 --> |"AWS/GitHub/OpenAI<br>キーパターン検出"| L2
     P2 --> |"機密情報チェック"| P1
 ```
+
+## 判断変更ログ
+
+パッケージやツールの追加・削除に関する判断の時系列記録。個別ツールの採用理由は Brewfile のコメントを参照。
+
+| 日付 | 対象 | 変更 | 理由 |
+|------|------|------|------|
+| 2026-02 | gpg | Stow追加 | コミット署名ワークフロー用（docs/setup/GPG_SIGNING.md参照） |
+| 2026-02 | direnv | Stow追加 | プロジェクト別環境変数の自動化 |
+| 2026-02 | editorconfig | git内に追加 | チーム開発でのコードスタイル一貫性 |
+| 2026-02 | ai-prompts | Stow追加 | マルチプラットフォームAIプロンプトテンプレート管理 |
+| 2026-02 | ripgrep | Stow追加 | .ripgreprc による検索設定の統一 |
+| 2026-02 | lazygit | Stow追加 | Git TUI の設定管理 |
+| 2025-xx | procs | Brewfile削除 | btop + fkill関数で代替可能 |
+
+## 非採択ツール
+
+意図的に導入しなかったツールとその理由。
+
+| ツール | カテゴリ | 理由 |
+|--------|---------|------|
+| tmux | ターミナル多重化 | Ghosttyのタブ・画面分割機能で十分 |
+| bash設定 | シェル | zsh専用環境。bashはデフォルトのまま運用 |
+| chezmoi | dotfiles管理 | テンプレート機能が過剰。GNU Stowのシンプルさを優先 |
+| nvm/pyenv | バージョン管理 | asdfで統一管理。ツールごとの管理は複雑化の原因 |
+| starship | プロンプト | Powerlevel10kで十分。instant prompt機能が高速 |
+| fisher/zinit | Zshプラグイン管理 | Oh My Zshエコシステムで統一。移行コストに見合う利点なし |
+| Docker Desktop | コンテナ | OrbStackに移行済み。メモリ使用量が大幅に少ない |

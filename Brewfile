@@ -188,6 +188,10 @@ brew "mas"
 brew "markdownlint-cli"
 #   選定理由: Markdown linter。ドキュメント品質維持
 
+brew "marp-cli"
+#   選定理由: Markdownからスライド（PDF/HTML/PPTX）生成。CLI完結でCI統合可能
+#   代替候補: slidev（Web専用）、reveal.js（設定複雑）、Google Slides API（認証必要）
+
 brew "git-absorb"
 #   選定理由: 自動fixupコミット生成。リベース効率化
 

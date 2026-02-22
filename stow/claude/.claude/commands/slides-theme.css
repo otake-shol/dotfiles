@@ -1,0 +1,152 @@
+/* @theme tokyonight */
+
+@import 'default';
+
+:root {
+  --bg: #24283b;
+  --bg-dark: #1a1b26;
+  --bg-highlight: #292e42;
+  --fg: #c0caf5;
+  --fg-dark: #a9b1d6;
+  --fg-gutter: #3b4261;
+  --accent: #7aa2f7;
+  --accent2: #bb9af7;
+  --green: #9ece6a;
+  --red: #f7768e;
+  --yellow: #e0af68;
+  --cyan: #7dcfff;
+  --orange: #ff9e64;
+}
+
+section {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: 'Inter', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 28px;
+  padding: 40px 60px;
+}
+
+h1 {
+  color: var(--accent);
+  font-size: 1.8em;
+  border-bottom: 2px solid var(--fg-gutter);
+  padding-bottom: 0.3em;
+}
+
+h2 {
+  color: var(--accent2);
+  font-size: 1.4em;
+}
+
+h3 {
+  color: var(--cyan);
+  font-size: 1.1em;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+strong {
+  color: var(--yellow);
+}
+
+em {
+  color: var(--fg-dark);
+}
+
+code {
+  background-color: var(--bg-highlight);
+  color: var(--green);
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+pre {
+  background-color: var(--bg-dark);
+  border: 1px solid var(--fg-gutter);
+  border-radius: 8px;
+  padding: 1em;
+}
+
+pre code {
+  background-color: transparent;
+  color: var(--fg);
+  padding: 0;
+}
+
+blockquote {
+  border-left: 4px solid var(--accent);
+  background-color: var(--bg-highlight);
+  padding: 0.5em 1em;
+  color: var(--fg-dark);
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table th {
+  background-color: var(--bg-highlight);
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent);
+  padding: 0.5em 1em;
+  text-align: left;
+}
+
+table td {
+  border-bottom: 1px solid var(--fg-gutter);
+  padding: 0.5em 1em;
+}
+
+table tr:nth-child(even) {
+  background-color: var(--bg-highlight);
+}
+
+ul, ol {
+  line-height: 1.8;
+}
+
+li::marker {
+  color: var(--accent);
+}
+
+/* セクション区切り（中央揃え） */
+section.lead {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+section.lead h1 {
+  border-bottom: none;
+  font-size: 2.2em;
+}
+
+section.lead h2 {
+  color: var(--fg-dark);
+  font-weight: normal;
+}
+
+/* タイトルスライド */
+section.lead h1 + h2 {
+  margin-top: -0.5em;
+  font-size: 1.2em;
+}
+
+/* フッター */
+footer {
+  color: var(--fg-gutter);
+  font-size: 0.6em;
+}
+
+/* ページ番号 */
+section::after {
+  color: var(--fg-gutter);
+  font-size: 0.6em;
+}

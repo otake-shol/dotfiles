@@ -20,46 +20,7 @@
       "mcp__context7__*",
       "mcp__serena__*",
 
-      "Bash(npm *)",
-      "Bash(yarn *)",
-      "Bash(pnpm *)",
-      "Bash(npx *)",
-      "Bash(node *)",
-
-      "Bash(git *)",
-
-      "Bash(make *)",
-      "Bash(brew *)",
-      "Bash(gh *)",
-
-      "Bash(ls *)",
-      "Bash(ls)",
-      "Bash(mkdir *)",
-      "Bash(cp *)",
-      "Bash(mv *)",
-      "Bash(rm *)",
-      "Bash(touch *)",
-      "Bash(ln *)",
-      "Bash(chmod *)",
-
-      "Bash(cat *)",
-      "Bash(head *)",
-      "Bash(tail *)",
-      "Bash(diff *)",
-      "Bash(which *)",
-      "Bash(type *)",
-      "Bash(command *)",
-      "Bash(echo *)",
-      "Bash(printf *)",
-      "Bash(pwd)",
-      "Bash(pwd *)",
-      "Bash(date *)",
-      "Bash(date)",
-      "Bash(wc *)",
-      "Bash(jq *)",
-      "Bash(open *)",
-      "Bash(tar *)",
-      "Bash(unzip *)"
+      "Bash(*)"
     ],
     "deny": [
       "Read(**/.env)",

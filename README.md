@@ -162,15 +162,15 @@ cgd                  # git diffをレビュー依頼
 
 ### カスタムコマンド
 
-`/commit-push` `/test` `/review` `/spec` `/verify` `/worktree` `/learn` `/organize-downloads` `/pc-checkup`
+`/commit-push` `/test` `/review` `/spec` `/verify` `/slides` `/worktree` `/learn` `/organize-downloads` `/pc-checkup`
 
 ### 特化型エージェント
 
 code-reviewer, test-engineer, frontend-engineer, architecture-reviewer, spec-analyst
 
-### MCPサーバー（4個）
+### MCPサーバー（5個）
 
-Context7, Serena, Playwright, Figma
+Context7, Serena, Playwright, Atlassian, Figma
 
 ## トラブルシューティング
 

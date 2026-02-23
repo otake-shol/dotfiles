@@ -4,7 +4,7 @@ macOS向けの個人開発環境設定ファイル
 
 ## 特徴
 
-- **Claude Code完全統合** - セッション管理・MCPサーバー4個・カスタムコマンド
+- **Claude Code完全統合** - セッション管理・MCPサーバー5個・カスタムコマンド
 - **モダンCLI** - bat, eza, fd, ripgrep, zoxide, yazi等のモダンツール
 - **Vim風操作統一** - yazi, lazygit等でhjkl移動
 - **テーマ統一** - 全ツールでTokyoNightテーマ
@@ -22,7 +22,7 @@ cd ~/dotfiles && bash bootstrap.sh
 ```bash
 bash bootstrap.sh --help        # ヘルプ表示
 bash bootstrap.sh --dry-run     # 変更プレビュー（実行しない）
-bash bootstrap.sh --skip-apps   # アプリインストールをスキップ
+# 他のオプションは --help で確認
 ```
 
 ### セットアップ確認
@@ -30,12 +30,6 @@ bash bootstrap.sh --skip-apps   # アプリインストールをスキップ
 ```bash
 dotverify                       # 自動検証（推奨）
 ```
-
-手動確認：
-- [ ] `brew --version` が動作する
-- [ ] `ls ~/.oh-my-zsh` でディレクトリが存在する
-- [ ] `git config --list` で設定が反映されている
-- [ ] `gh auth status` でログイン済み
 
 ## ディレクトリ構成
 
@@ -49,9 +43,13 @@ dotfiles/
 │   ├── yazi/, lazygit/    # ファイラー・Git TUI
 │   ├── bat/, atuin/       # ユーティリティ
 │   ├── ripgrep/           # ripgrep設定
+│   ├── ai-prompts/        # AI用プロンプトテンプレート
+│   ├── direnv/            # direnv設定
+│   ├── gpg/               # GPG設定
+│   ├── antigravity/       # Antigravityエディタ設定
 │   └── ssh/               # SSH設定テンプレート
 ├── scripts/               # ユーティリティスクリプト
-├── docs/                  # 詳細ドキュメント
+├── docs/                  # 詳細ドキュメント（ARCHITECTURE.md, GPG_SIGNING.md等）
 ├── Brewfile               # Homebrewパッケージ一覧
 ├── Makefile               # Stow操作・開発コマンド
 └── bootstrap.sh           # 自動セットアップスクリプト
@@ -109,9 +107,10 @@ dotsshlist           # SSH鍵一覧表示
 
 ```bash
 make install         # 全Stowパッケージをインストール
-make uninstall       # 全Stowパッケージをアンインストール
 make lint            # ShellCheck実行
+make health          # 環境ヘルスチェック（lint + check）
 make bench           # zsh起動時間ベンチマーク
+# 全ターゲットは make help で確認
 ```
 
 ### Git Hooks (lefthook)
@@ -129,89 +128,37 @@ Node.js等のランタイムは[asdf](https://asdf-vm.com/)で管理。遅延読
 
 ## Claude Code統合
 
-設定ファイル: `stow/claude/.claude/`
-
-> 外出先からの操作は [docs/remote-access.md](docs/remote-access.md) を参照
+設定ファイル: `stow/claude/.claude/` | リモート操作: [docs/remote-access.md](docs/remote-access.md)
 
 ### シェルコマンド
 
 ```bash
-# 基本
 c                    # claude起動
 cc                   # 最新セッション続行
 co / cs / ch         # Opus / Sonnet / Haiku指定
-
-# セッション管理
 cls                  # セッション一覧（fzf選択で再開）
-csa                  # 全プロジェクトから検索
-csd [日数]           # 古いセッション削除
-
-# ユーティリティ
 cq "質問"            # クイック質問（パイプ対応）
-cgd                  # git diffをレビュー依頼
 ```
-
-### キーバインド（Claude Code内）
-
-| キー | 機能 |
-|------|------|
-| Ctrl+L | 画面クリア |
-| Ctrl+R | 最後のリクエスト再試行 |
-| Ctrl+Shift+C | 最後の応答をコピー |
-| Ctrl+Shift+S | 最後のコマンドをコピー |
 
 ### カスタムコマンド
 
 `/commit-push` `/test` `/review` `/spec` `/verify` `/slides` `/worktree` `/learn` `/organize-downloads` `/pc-checkup`
 
-### スライド生成（`/slides`）
-
-Marp CLIでMarkdownからプレゼンスライド（HTML/PDF/PPTX）を生成。Catppuccin Latteベースのカスタムテーマ付き。
-
-- **テンプレート**: チーム計画（半期）、LT（5分/10分）、フリー
-- **レイアウトクラス**: `lead` `invert` `columns` `org-chart` `timeline` `metric`
-
-```bash
-# Claude Code内で
-/slides              # 対話モードでスライド作成
-
-# 直接生成
-marp --no-stdin slide.md -o slide.html --theme ~/.claude/commands/slides-theme.css
-```
-
-### 特化型エージェント
-
-code-reviewer, test-engineer, frontend-engineer, architecture-reviewer, spec-analyst
-
-### MCPサーバー（5個）
+### MCPサーバー
 
 Context7, Serena, Playwright, Atlassian, Figma
 
+## ドキュメント
+
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — アーキテクチャ概要
+- [docs/setup/GPG_SIGNING.md](docs/setup/GPG_SIGNING.md) — GPG署名セットアップ
+- [docs/setup/APPS.md](docs/setup/APPS.md) — アプリケーション説明
+- [docs/remote-access.md](docs/remote-access.md) — リモートアクセス設定
+- [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) — トラブルシューティング
+
 ## トラブルシューティング
 
-> 詳細な診断手順は [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) を参照
-
-### Homebrewのパスが通らない
-
-```bash
-# Apple Silicon Mac
-eval "$(/opt/homebrew/bin/brew shellenv)"
-
-# Intel Mac
-eval "$(/usr/local/bin/brew shellenv)"
-```
-
-### Oh My Zshのテーマが表示されない
-
-1. Nerd Fontがインストールされているか確認: `brew list --cask | grep nerd-font`
-2. ターミナルのフォント設定を確認（Ghostty: `font-family`）
-
-### シンボリックリンクエラー
-
-```bash
-mv ~/.zshrc ~/.zshrc.backup  # バックアップ
-cd ~/dotfiles && make install-zsh
-```
+[docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) を参照。
 
 ## 動作環境
 
@@ -221,5 +168,3 @@ cd ~/dotfiles && make install-zsh
 
 - [GitHub does dotfiles](https://dotfiles.github.io/) - dotfiles管理のベストプラクティス
 - [Modern Unix](https://github.com/ibraheemdev/modern-unix) - モダンCLIツール一覧
-
-> 詳細なアプリケーション説明は [docs/setup/APPS.md](docs/setup/APPS.md) を参照

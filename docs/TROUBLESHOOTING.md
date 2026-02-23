@@ -2,8 +2,6 @@
 
 zsh設定で問題が発生した場合の診断・解決ガイド。
 
-> 一般的な問題（Homebrew、Oh My Zsh、フォント）は [README.md](../README.md#トラブルシューティング) を参照
-
 ## よくある問題
 
 ### 1. コマンドが見つからない（command not found）

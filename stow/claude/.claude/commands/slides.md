@@ -42,12 +42,12 @@ Marp CLIを使ってMarkdownからスライド（PDF/HTML/PPTX）を生成する
 | ブロック | 説明 | 推奨クラス |
 |---------|------|-----------|
 | ビジョン・目標 | 半期の方向性 | lead |
-| 振り返り・KPI | 前期の実績と数値 | columns |
+| 振り返り・KPI | 前期の実績と数値 | metric |
 | 重点テーマ | 今期の注力領域 | 通常 |
 | ロードマップ | 四半期別タイムライン | columns |
 | 体制・リソース | チーム構成と役割 | columns |
 | リスク・課題 | 想定リスクと対策 | 通常 |
-| マイルストーン | 主要マイルストーン一覧 | 通常 |
+| マイルストーン | 主要マイルストーン一覧 | timeline |
 | OKR/戦略 | Objectives & Key Results | 通常 |
 
 追加質問: **どのブロックを含めますか？**（複数選択）
@@ -127,6 +127,8 @@ marp --no-stdin slide.md -o slide.pptx
 | `quote` | 引用・名言 | `<!-- _class: quote -->` |
 | `columns` | 2カラム比較・並列情報 | `<!-- _class: columns -->` |
 | `org-chart` | 組織図・体制図 | `<!-- _class: org-chart -->` |
+| `timeline` | マイルストーン・ステップ表現 | `<!-- _class: timeline -->` |
+| `metric` | KPIダッシュボード・数値カード | `<!-- _class: metric -->` |
 
 ### 背景画像
 

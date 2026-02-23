@@ -238,6 +238,85 @@ section.org-chart .connector {
   margin: 0 auto;
 }
 
+/* タイムライン */
+section.timeline .steps {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5em;
+  margin-top: 1em;
+}
+
+section.timeline .step {
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+
+section.timeline .step .date {
+  background-color: var(--accent);
+  color: var(--bg);
+  padding: 0.3em 0.8em;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.8em;
+  display: inline-block;
+  margin-bottom: 0.5em;
+}
+
+section.timeline .step .label {
+  font-weight: bold;
+  font-size: 0.9em;
+  margin-bottom: 0.3em;
+}
+
+section.timeline .step .detail {
+  font-size: 0.75em;
+  color: var(--fg-dark);
+}
+
+section.timeline .line {
+  height: 3px;
+  background: linear-gradient(to right, var(--accent), var(--accent2));
+  margin: 0 2em 1em 2em;
+  border-radius: 2px;
+}
+
+/* メトリクス */
+section.metric .cards {
+  display: flex;
+  justify-content: center;
+  gap: 1.2em;
+  margin-top: 1em;
+}
+
+section.metric .card {
+  background-color: var(--bg-highlight);
+  border-radius: 12px;
+  padding: 0.8em 1.2em;
+  text-align: center;
+  min-width: 8em;
+  border-top: 4px solid var(--accent);
+}
+
+section.metric .card .value {
+  font-size: 2em;
+  font-weight: bold;
+  color: var(--accent);
+}
+
+section.metric .card .label {
+  font-size: 0.7em;
+  color: var(--fg-dark);
+  margin-top: 0.2em;
+}
+
+section.metric .card .change {
+  font-size: 0.75em;
+  color: var(--green);
+  margin-top: 0.2em;
+}
+
 /* フッター */
 footer {
   color: var(--fg-gutter);

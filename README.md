@@ -164,6 +164,21 @@ cgd                  # git diffをレビュー依頼
 
 `/commit-push` `/test` `/review` `/spec` `/verify` `/slides` `/worktree` `/learn` `/organize-downloads` `/pc-checkup`
 
+### スライド生成（`/slides`）
+
+Marp CLIでMarkdownからプレゼンスライド（HTML/PDF/PPTX）を生成。Catppuccin Latteベースのカスタムテーマ付き。
+
+- **テンプレート**: チーム計画（半期）、LT（5分/10分）、フリー
+- **レイアウトクラス**: `lead` `invert` `columns` `org-chart` `timeline` `metric`
+
+```bash
+# Claude Code内で
+/slides              # 対話モードでスライド作成
+
+# 直接生成
+marp --no-stdin slide.md -o slide.html --theme ~/.claude/commands/slides-theme.css
+```
+
 ### 特化型エージェント
 
 code-reviewer, test-engineer, frontend-engineer, architecture-reviewer, spec-analyst

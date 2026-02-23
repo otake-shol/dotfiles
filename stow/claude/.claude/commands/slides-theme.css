@@ -202,6 +202,42 @@ section.columns h3 {
   grid-column: 1 / -1;
 }
 
+/* 組織図 */
+section.org-chart .tree {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+}
+
+section.org-chart .level {
+  display: flex;
+  justify-content: center;
+  gap: 1.5em;
+}
+
+section.org-chart .node {
+  background-color: var(--bg-highlight);
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  padding: 0.4em 1.2em;
+  font-weight: bold;
+  text-align: center;
+  min-width: 6em;
+}
+
+section.org-chart .node.head {
+  background-color: var(--accent);
+  color: var(--bg);
+}
+
+section.org-chart .connector {
+  width: 2px;
+  height: 1.2em;
+  background-color: var(--fg-gutter);
+  margin: 0 auto;
+}
+
 /* フッター */
 footer {
   color: var(--fg-gutter);

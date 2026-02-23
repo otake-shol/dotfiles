@@ -126,6 +126,7 @@ marp --no-stdin slide.md -o slide.pptx
 | `invert` | キーメッセージ・強調 | `<!-- _class: invert -->` |
 | `quote` | 引用・名言 | `<!-- _class: quote -->` |
 | `columns` | 2カラム比較・並列情報 | `<!-- _class: columns -->` |
+| `org-chart` | 組織図・体制図 | `<!-- _class: org-chart -->` |
 
 ### 背景画像
 

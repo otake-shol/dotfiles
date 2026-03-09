@@ -91,6 +91,16 @@ else
     warn "  → Atlassian をスキップ（uvx未インストール）"
 fi
 
+# Google Workspace CLI - Gmail/Drive/Calendar/Sheets/Docs操作
+if command -v gws &>/dev/null; then
+    info "  → Google Workspace (gws)"
+    claude mcp add gws --scope user -- gws mcp -s all 2>/dev/null || warn "gws の追加をスキップ（既存の可能性）"
+else
+    warn "  → Google Workspace (gws) をスキップ（未インストール）"
+    echo "    インストール: npm install -g @googleworkspace/cli"
+    echo "    認証設定:    gws auth setup"
+fi
+
 success "MCPサーバー設定完了"
 echo ""
 
@@ -123,6 +133,7 @@ echo "  - Playwright  : ブラウザ自動化・E2Eテスト"
 echo "  - Figma       : デザイン→コード変換（OAuth認証必要）"
 echo "  - Serena      : シンボリックコード解析"
 echo "  - Atlassian   : Jira/Confluence操作（環境変数必要）"
+echo "  - gws         : Gmail/Drive/Calendar/Sheets/Docs操作（要 gws auth setup）"
 echo ""
 echo "インストールされたプラグイン:"
 echo "  - superpowers : 開発ワークフロー強化"

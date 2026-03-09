@@ -19,6 +19,7 @@
       "mcp__playwright__*",
       "mcp__context7__*",
       "mcp__serena__*",
+      "mcp__gws__*",
 
       "Bash(*)"
     ],

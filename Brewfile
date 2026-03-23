@@ -179,6 +179,10 @@ brew "uv"
 #   選定理由: 高速Pythonパッケージ管理。pip/venv代替
 #   代替候補: pip（遅い）、poetry（重い）
 
+brew "uvicorn"
+#   選定理由: 高速ASGIサーバー。FastAPI/Starlette開発用
+#   代替候補: gunicorn（WSGI/同期寄り）
+
 brew "mkcert"
 #   選定理由: ローカルSSL証明書生成。HTTPS開発環境構築
 

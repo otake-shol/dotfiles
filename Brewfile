@@ -174,14 +174,6 @@ brew "sd"
 #   選定理由: sed代替。直感的な構文で置換
 #   代替候補: sed（構文が複雑）
 
-brew "uv"
-#   選定理由: 高速Pythonパッケージ管理。pip/venv代替
-#   代替候補: pip（遅い）、poetry（重い）
-
-brew "uvicorn"
-#   選定理由: 高速ASGIサーバー。FastAPI/Starlette開発用
-#   代替候補: gunicorn（WSGI/同期寄り）
-
 brew "mkcert"
 #   選定理由: ローカルSSL証明書生成。HTTPS開発環境構築
 
@@ -200,12 +192,6 @@ brew "git-absorb"
 
 brew "git-cliff"
 #   選定理由: 変更履歴（CHANGELOG）自動生成
-
-brew "terraform-docs"
-#   選定理由: Terraformモジュールドキュメント自動生成
-
-brew "tflint"
-#   選定理由: Terraform linter。ベストプラクティス検証
 
 # --- クラウド/AWS ---
 brew "awscli"

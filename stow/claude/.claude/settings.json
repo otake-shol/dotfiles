@@ -47,8 +47,14 @@
       "Bash(git push --force*)",
       "Bash(git push -f*)",
       "Bash(git reset --hard*)",
+      "Bash(git checkout .)",
+      "Bash(git checkout -- *)",
+      "Bash(git rebase *)",
       "Bash(git clean *)",
-      "Bash(npm publish *)"
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(npm publish *)",
+      "Bash(npm unpublish *)"
     ],
     "defaultMode": "plan",
     "disableBypassPermissionsMode": "disable"

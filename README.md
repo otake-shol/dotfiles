@@ -155,6 +155,7 @@ Context7, Serena, Playwright, Atlassian, Figma
 - [docs/setup/APPS.md](docs/setup/APPS.md) — アプリケーション説明
 - [docs/remote-access.md](docs/remote-access.md) — リモートアクセス設定
 - [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) — トラブルシューティング
+- [docs/GITHUB_PROJECT_MANAGEMENT.md](docs/GITHUB_PROJECT_MANAGEMENT.md) — GitHub プロジェクト管理ガイド
 
 ## トラブルシューティング
 

@@ -303,6 +303,9 @@ cask "orbstack"
 #   選定理由: Docker Desktop代替。軽量・高速・Rosetta統合
 #   代替候補: Docker Desktop（リソース消費大）、colima（CLI専用）
 
+cask "android-studio"
+#   選定理由: Androidエミュレータ・SDK管理。Google Playスクリーンショット撮影用
+
 # --- フォント ---
 cask "font-hack-nerd-font"
 #   選定理由: プログラミング向け等幅フォント+アイコン

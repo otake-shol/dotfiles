@@ -1,11 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "cleanupPeriodDays": 90,
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
   "permissions": {
-    "defaultMode": "plan",
-    "disableBypassPermissionsMode": "disable",
     "allow": [
       "Read(*)",
       "Edit(*)",
@@ -20,7 +19,6 @@
       "mcp__context7__*",
       "mcp__serena__*",
       "mcp__gws__*",
-
       "Bash(*)"
     ],
     "deny": [
@@ -35,7 +33,6 @@
       "Bash(wget * | sh)",
       "Bash(wget * | bash)",
       "Bash(sudo *)",
-
       "Read(~/.ssh/**)",
       "Read(~/.gnupg/**)",
       "Read(~/.aws/**)",
@@ -52,8 +49,12 @@
       "Bash(git reset --hard*)",
       "Bash(git clean *)",
       "Bash(npm publish *)"
-    ]
+    ],
+    "defaultMode": "plan",
+    "disableBypassPermissionsMode": "disable"
   },
+  "model": "opus[1m]",
+  "enableAllProjectMcpServers": false,
   "hooks": {
     "PreToolUse": [
       {
@@ -118,24 +119,5 @@
     "superpowers@superpowers-marketplace": true
   },
   "language": "日本語",
-  "alwaysThinkingEnabled": true,
-  "cleanupPeriodDays": 90,
-  "enableAllProjectMcpServers": false,
-  "sandbox": {
-    "enabled": true,
-    "autoAllowBashIfSandboxed": true,
-    "network": {
-      "allowAllUnixSockets": true,
-      "allowedDomains": [
-        "github.com",
-        "*.github.com",
-        "*.githubusercontent.com",
-        "registry.npmjs.org",
-        "*.npmjs.org",
-        "registry.yarnpkg.com",
-        "*.anthropic.com",
-        "*.claude.ai"
-      ]
-    }
-  }
+  "alwaysThinkingEnabled": true
 }

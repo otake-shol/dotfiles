@@ -99,6 +99,26 @@ lazy.zsh が正しく読み込まれていない。
 
 ---
 
+### 5. macOS アップデート後に Apple Watch / Touch ID の sudo 認証が効かない
+
+#### 原因
+macOS のアップデートで `/etc/pam.d/sudo` が初期化される場合がある。
+`/etc/pam.d/sudo_local` は通常保持されるが、メジャーアップデートでは消える可能性がある。
+
+#### 対処
+
+```bash
+# 1. sudo_local の状態を確認
+cat /etc/pam.d/sudo_local
+
+# 2. 設定が消えていたら再セットアップ
+bash ~/dotfiles/scripts/setup/pam-watchid.sh
+
+# 3. pam_watchid.so 自体が消えている場合もスクリプトが再ビルドする
+```
+
+---
+
 ## 診断コマンド一覧
 
 ```bash

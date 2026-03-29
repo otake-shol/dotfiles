@@ -657,6 +657,23 @@ else
     echo -e "${GREEN}✓ bat TokyoNightテーマはインストール済みです${NC}"
 fi
 
+# Apple Watch sudo 認証（pam-watchid）
+if [ "$DRY_RUN" != true ]; then
+    if [ "$ASSUME_YES" = true ]; then
+        answer="y"
+    else
+        echo -e "${YELLOW}Apple Watch で sudo 認証を有効にしますか? (y/n)${NC}"
+        read -r answer
+    fi
+    if [ "$answer" = "y" ]; then
+        if [ -f ~/dotfiles/scripts/setup/pam-watchid.sh ]; then
+            bash ~/dotfiles/scripts/setup/pam-watchid.sh
+        fi
+    fi
+else
+    echo -e "${CYAN}[DRY RUN] Would setup pam-watchid${NC}"
+fi
+
 # lefthookのセットアップ
 if command -v lefthook &> /dev/null && [ -f ~/dotfiles/lefthook.yml ]; then
     cd ~/dotfiles && lefthook install 2>/dev/null || true

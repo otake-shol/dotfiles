@@ -28,6 +28,7 @@ python3() { _asdf_init; unset -f python3; command python3 "$@"; }
 pip3() { _asdf_init; unset -f pip3; command pip3 "$@"; }
 ruby() { _asdf_init; unset -f ruby; command ruby "$@"; }
 gem() { _asdf_init; unset -f gem; command gem "$@"; }
+gws() { _asdf_init; unset -f gws; command gws "$@"; }
 
 # --- direnv ---
 if command -v direnv &>/dev/null; then

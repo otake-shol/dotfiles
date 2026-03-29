@@ -540,21 +540,6 @@ else
     echo -e "${CYAN}[DRY RUN] Would setup SSH config${NC}"
 fi
 
-# antigravity (macOS only)
-if is_macos; then
-    ANTIGRAVITY_USER_DIR="$HOME/Library/Application Support/Antigravity/User"
-    if [ -d "$HOME/Library/Application Support/Antigravity" ]; then
-        mkdir -p "$ANTIGRAVITY_USER_DIR"
-        safe_link ~/dotfiles/stow/antigravity/settings.json "$ANTIGRAVITY_USER_DIR/settings.json"
-        if [ -f ~/dotfiles/stow/antigravity/keybindings.json ]; then
-            safe_link ~/dotfiles/stow/antigravity/keybindings.json "$ANTIGRAVITY_USER_DIR/keybindings.json"
-        fi
-        echo -e "${GREEN}✓ Antigravity設定をリンクしました${NC}"
-    else
-        echo -e "${YELLOW}⚠ Antigravityがインストールされていません。スキップします${NC}"
-    fi
-fi
-
 # ========================================
 # 4. Oh My Zshのセットアップ
 # ========================================

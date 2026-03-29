@@ -52,7 +52,6 @@ brew "asdf"
 brew "neovim"
 #   選定理由: 軽微な編集用。Lua設定でモダン。ターミナル内で完結
 #   代替候補: vim（Lua非対応）、helix（キーバインドが独自）
-#   メインエディタ: Antigravity（別途caskでインストール不可）
 
 # --- シェル・ターミナル ---
 brew "atuin"

@@ -46,7 +46,6 @@ dotfiles/
 │   ├── ai-prompts/        # AI用プロンプトテンプレート
 │   ├── direnv/            # direnv設定
 │   ├── gpg/               # GPG設定
-│   ├── antigravity/       # Antigravityエディタ設定
 │   └── ssh/               # SSH設定テンプレート
 ├── scripts/               # ユーティリティスクリプト
 ├── docs/                  # 詳細ドキュメント（ARCHITECTURE.md, GPG_SIGNING.md等）
@@ -55,7 +54,7 @@ dotfiles/
 └── bootstrap.sh           # 自動セットアップスクリプト
 ```
 
-> **Note**: `stow/ssh/`と`stow/antigravity/`はテンプレート方式のため、`bootstrap.sh`で個別処理しています。
+> **Note**: `stow/ssh/`はテンプレート方式のため、`bootstrap.sh`で個別処理しています。
 
 ## 便利なコマンド
 

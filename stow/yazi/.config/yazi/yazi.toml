@@ -37,7 +37,6 @@ cache_dir = ""
 # ファイルを開くアプリケーション
 edit = [
   { run = 'nvim "$@"', block = true, desc = "Edit with Neovim" },
-  { run = 'open -a "Antigravity" "$@"', desc = "Edit with Antigravity" },
 ]
 open = [
   { run = 'open "$@"', desc = "Open with default app" },

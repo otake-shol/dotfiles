@@ -18,10 +18,6 @@ PACKAGES := zsh git nvim ghostty bat atuin claude gh yazi ai-prompts ripgrep laz
 # ========================================
 # Stow対象外パッケージ（bootstrap.shで個別処理）
 # ========================================
-# antigravity:
-#   - 理由: macOS固有パス（~/Library/Application Support/Antigravity/）
-#   - 対応: bootstrap.shでsafe_link関数を使用して手動リンク
-#
 # ssh:
 #   - 理由: セキュリティ上、テンプレート方式を採用
 #   - 対応: config.templateをコピーし、ユーザーが手動で編集

@@ -28,7 +28,6 @@ GNU Stowで管理するdotfilesパッケージの一覧です。
 | パッケージ | 理由 | 処理方法 |
 |-----------|------|---------|
 | **ssh** | セキュリティ上、テンプレート方式を採用 | `config.template` を `~/.ssh/config` にコピー |
-| **antigravity** | macOS固有パス（`~/Library/Application Support/`） | `safe_link` で手動リンク |
 
 ## コマンド
 

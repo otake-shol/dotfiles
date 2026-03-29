@@ -26,7 +26,6 @@ dotfiles/
 │   ├── gpg/               # GPG設定（コミット署名）
 │   ├── direnv/            # direnv設定（環境変数自動化）
 │   ├── ssh/               # SSH設定（テンプレート）
-│   └── antigravity/       # エディタ設定（非Stow）
 │
 ├── scripts/               # ユーティリティスクリプト
 │   ├── lib/               # 共通ライブラリ
@@ -155,7 +154,6 @@ flowchart LR
 | gpg | Stow | ~/.gnupg/ ディレクトリ（コミット署名用） |
 | direnv | Stow | XDG準拠（~/.config/direnv） |
 | ssh | **テンプレート** | 機密情報を含む可能性があるため |
-| antigravity | **手動リンク** | macOS固有パス（~/Library/Application Support/） |
 
 ## テーマ統一（TokyoNight）
 

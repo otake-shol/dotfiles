@@ -92,6 +92,11 @@ if [ -f ~/.claude/settings.json ]; then
     else
         warn "superpowers プラグイン無効（推奨）"
     fi
+    if jq -e '.enabledPlugins["claude-mem@thedotmack"]' ~/.claude/settings.json &>/dev/null; then
+        ok "claude-mem プラグイン有効"
+    else
+        warn "claude-mem プラグイン無効（推奨）"
+    fi
 fi
 
 # 結果サマリー

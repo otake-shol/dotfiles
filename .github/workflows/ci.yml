@@ -38,7 +38,7 @@ jobs:
 
       - name: Zsh syntax check
         run: |
-          find stow/zsh -name '*.zsh' -exec zsh -n {} +
+          find stow/zsh -type f -name '*.zsh' -exec zsh -n {} +
 
       - name: Protected variables check
         run: |

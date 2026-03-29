@@ -77,9 +77,6 @@ export BUN_INSTALL="$HOME/.bun"
 # bun
 [[ -d "$BUN_INSTALL/bin" ]] && export PATH="$BUN_INSTALL/bin:$PATH"
 
-# Antigravity
-[[ -d "$HOME/.antigravity/antigravity/bin" ]] && export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
-
 # trash command (safe delete)
 _trash_path="${HOMEBREW_PREFIX:-/usr/local}/opt/trash/bin"
 [[ -d "$_trash_path" ]] && export PATH="$_trash_path:$PATH"

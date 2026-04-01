@@ -212,6 +212,9 @@ brew "oven-sh/bun/bun"
 cask "ghostty"
 #   選定理由: Zig製高速ターミナル。GPU描画・TokyoNightテーマ・ネイティブタブ
 #   代替候補: kitty（設定複雑）、alacritty（タブなし）、wezterm（Lua設定）、iTerm2（重い）
+cask "cmux"
+#   選定理由: Ghosttyベース。AIエージェント通知・縦タブ・組み込みブラウザ
+#   前提: ghostty（設定ファイル共有）
 
 # --- ユーティリティ ---
 cask "1password"

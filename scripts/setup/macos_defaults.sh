@@ -29,6 +29,7 @@ macos-defaults.sh - macOS開発者向け設定を適用
     - UI/UX: スクロールバー常時表示、ダブルクリックで最大化
     - セキュリティ: スクリーンセーバーパスワード
     - プライバシー: 広告トラッキング制限
+    - cmux: TokyoNight統一サイドバー
     - DS_Store: ネットワーク/USBで作成しない
 EOF
 }
@@ -122,6 +123,17 @@ echo -e "${GREEN}✓ セキュリティ: スクリーンセーバー解除時に
 # ターゲティング広告を制限
 defaults write com.apple.AdLib forceLimitAdTracking -bool true
 echo -e "${GREEN}✓ プライバシー: ターゲティング広告制限${NC}"
+
+# ========================================
+# cmux（Ghostty TokyoNightテーマに合わせた設定）
+# ========================================
+defaults write com.cmuxterm.app sidebarMaterial -string "hudWindow"
+defaults write com.cmuxterm.app sidebarBlendMode -string "behindWindow"
+defaults write com.cmuxterm.app sidebarBlurOpacity -float 0.80
+defaults write com.cmuxterm.app sidebarTintHex -string "#1a1b26"
+defaults write com.cmuxterm.app sidebarTintOpacity -string "0.35"
+defaults write com.cmuxterm.app appearanceMode -string "dark"
+echo -e "${GREEN}✓ cmux: TokyoNight統一サイドバー${NC}"
 
 # ========================================
 # その他

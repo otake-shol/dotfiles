@@ -70,7 +70,6 @@ cask "1password"                   # パスワードマネージャー(SSH鍵管
 cask "1password-cli"               # 1Passwordシークレット取得
 cask "tailscale"                   # VPNメッシュネットワーク
 cask "alt-tab"                     # Windows風Cmd+Tab(ウィンドウプレビュー)
-cask "appcleaner"                  # アプリ完全削除
 cask "cleanshot"                   # スクリーンショット+録画+注釈
 cask "homerow"                     # キーボードUI操作(Vimium風)
 cask "jordanbaird-ice"             # メニューバーアイコン整理
@@ -85,9 +84,6 @@ cask "slack"                       # チームコミュニケーション
 # --- デザイン・開発 ---
 cask "figma"                       # デザイン+プロトタイピング
 cask "claude"                      # Claude Code CLI
-cask "dbeaver-community"           # データベースGUI(多DB対応)
-cask "bruno"                       # APIクライアント(Git管理可能)
-cask "orbstack"                    # Docker Desktop代替(軽量+高速)
 
 # --- フォント ---
 cask "font-jetbrains-mono-nerd-font"  # メインフォント(リガチャ+Nerd Font)

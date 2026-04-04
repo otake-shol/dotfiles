@@ -194,7 +194,7 @@ safe_link() { dotfiles_safe_link "$@"; }
 # ========================================
 # os-detect.shが存在すれば読み込む
 _SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-if [[ -f "${_SCRIPT_DIR}/os_detect.sh" ]]; then
-    # shellcheck source=./os_detect.sh
-    source "${_SCRIPT_DIR}/os_detect.sh"
+if [[ -f "${_SCRIPT_DIR}/os-detect.sh" ]]; then
+    # shellcheck source=./os-detect.sh
+    source "${_SCRIPT_DIR}/os-detect.sh"
 fi

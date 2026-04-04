@@ -1,21 +1,21 @@
 #!/bin/bash
-# update_all.sh - 開発環境の一括更新スクリプト（実行）
-# 使用方法: bash scripts/maintenance/update_all.sh
+# update-all.sh - 開発環境の一括更新スクリプト（実行）
+# 使用方法: bash scripts/maintenance/update-all.sh
 # エイリアス: dotupdate
 #
 # 役割分担:
-#   check_updates.sh (dotup)   - 更新があるか確認するのみ（変更なし）
-#   update_all.sh (dotupdate)  - 実際に更新を実行する
+#   check-updates.sh (dotup)   - 更新があるか確認するのみ（変更なし）
+#   update-all.sh (dotupdate)  - 実際に更新を実行する
 
 set -euo pipefail
 
 # ヘルプ表示
 show_help() {
     cat << 'EOF'
-update_all.sh - 開発環境の一括更新スクリプト
+update-all.sh - 開発環境の一括更新スクリプト
 
 使用方法:
-    bash scripts/maintenance/update_all.sh
+    bash scripts/maintenance/update-all.sh
     dotupdate  # エイリアス
 
 オプション:
@@ -29,7 +29,7 @@ update_all.sh - 開発環境の一括更新スクリプト
 
 説明:
     このスクリプトは実際に更新を実行します。
-    更新の確認のみを行うには check_updates.sh (dotup) を使用してください。
+    更新の確認のみを行うには check-updates.sh (dotup) を使用してください。
 EOF
 }
 

@@ -1,6 +1,6 @@
 #!/bin/bash
-# os_detect.sh - OS/アーキテクチャ検出ライブラリ
-# 使用方法: source scripts/lib/os_detect.sh
+# os-detect.sh - OS/アーキテクチャ検出ライブラリ
+# 使用方法: source scripts/lib/os-detect.sh
 
 # OS検出
 detect_os() {

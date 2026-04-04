@@ -1,8 +1,8 @@
 #!/bin/bash
 # ========================================
-# setup_ssh.sh - SSH鍵生成・管理ヘルパー
+# setup-ssh.sh - SSH鍵生成・管理ヘルパー
 # ========================================
-# 使用方法: bash scripts/utils/setup_ssh.sh [オプション]
+# 使用方法: bash scripts/utils/setup-ssh.sh [オプション]
 # オプション:
 #   -e, --email EMAIL    SSH鍵に使用するメールアドレス
 #   -t, --type TYPE      鍵の種類 (ed25519, rsa) デフォルト: ed25519

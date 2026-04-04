@@ -20,12 +20,11 @@ dotfiles/
 │   ├── yazi/              # ファイルマネージャー設定
 │   ├── claude/            # Claude Code設定
 │   ├── gh/                # GitHub CLI設定
-│   ├── ai-prompts/        # AIプロンプトテンプレート
 │   ├── ripgrep/           # ripgrep設定
 │   ├── lazygit/           # Git TUI設定
 │   ├── gpg/               # GPG設定（コミット署名）
 │   ├── direnv/            # direnv設定（環境変数自動化）
-│   ├── ssh/               # SSH設定（テンプレート）
+│   ├── cmux/              # cmuxターミナル設定
 │
 ├── scripts/               # ユーティリティスクリプト
 │   ├── lib/               # 共通ライブラリ
@@ -103,22 +102,22 @@ flowchart TD
 flowchart LR
     subgraph "共通ライブラリ"
         L1["common.sh"]
-        L2["os_detect.sh"]
+        L2["os-detect.sh"]
         L1 --> L2
     end
 
     subgraph "セットアップ"
         S1["bootstrap.sh"]
-        S2["macos_defaults.sh"]
+        S2["macos-defaults.sh"]
         S1 --> L1
         S1 --> S2
     end
 
     subgraph "メンテナンス"
-        M1["verify_setup.sh"]
-        M2["update_all.sh"]
-        M3["check_updates.sh"]
-        M4["sync_brewfile.sh"]
+        M1["verify-setup.sh"]
+        M2["update-all.sh"]
+        M3["check-updates.sh"]
+        M4["sync-brewfile.sh"]
         M1 --> L1
         M2 --> L1
         M3 --> L1
@@ -127,8 +126,8 @@ flowchart LR
 
     subgraph "ユーティリティ"
         U1["dothelp.sh"]
-        U2["zsh_benchmark.sh"]
-        U3["setup_ssh.sh"]
+        U2["zsh-benchmark.sh"]
+        U3["setup-ssh.sh"]
         U1 --> L1
         U2 --> L1
         U3 --> L1
@@ -148,12 +147,12 @@ flowchart LR
 | yazi | Stow | XDG準拠（~/.config/yazi） |
 | claude | Stow | ~/.claude/ ディレクトリ |
 | gh | Stow | XDG準拠（~/.config/gh） |
-| ai-prompts | Stow | XDG準拠（~/.config/ai-prompts） |
 | ripgrep | Stow | XDG準拠（~/.config/ripgrep） |
 | lazygit | Stow | XDG準拠（~/.config/lazygit） |
 | gpg | Stow | ~/.gnupg/ ディレクトリ（コミット署名用） |
 | direnv | Stow | XDG準拠（~/.config/direnv） |
-| ssh | **テンプレート** | 機密情報を含む可能性があるため |
+| cmux | Stow | XDG準拠（~/.config/cmux） |
+| ssh | **テンプレート** | scripts/setup/ssh-config.template → ~/.ssh/config |
 
 ## テーマ統一（TokyoNight）
 
@@ -218,7 +217,7 @@ flowchart LR
 | 2026-02 | gpg | Stow追加 | コミット署名ワークフロー用（docs/setup/GPG_SIGNING.md参照） |
 | 2026-02 | direnv | Stow追加 | プロジェクト別環境変数の自動化 |
 | 2026-02 | editorconfig | git内に追加 | チーム開発でのコードスタイル一貫性 |
-| 2026-02 | ai-prompts | Stow追加 | マルチプラットフォームAIプロンプトテンプレート管理 |
+| 2026-02 | ai-prompts | Stow追加→2026-04削除 | 実用頻度低のため削除 |
 | 2026-02 | ripgrep | Stow追加 | .ripgreprc による検索設定の統一 |
 | 2026-02 | lazygit | Stow追加 | Git TUI の設定管理 |
 | 2025-xx | procs | Brewfile削除 | btop + fkill関数で代替可能 |

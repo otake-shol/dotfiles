@@ -19,28 +19,21 @@ GNU Stowで管理するdotfilesパッケージの一覧です。
 | yazi | `~/.config/yazi/` | ファイルマネージャー設定 |
 | ripgrep | `~/.ripgreprc` | ripgrep設定 |
 | lazygit | `~/.config/lazygit/` | Git TUI設定 |
-| ai-prompts | `~/.ai-prompts/` | AIプロンプトテンプレート |
+| gpg | `~/.gnupg/` | GPG署名設定 |
+| direnv | `~/.config/direnv/` | 環境変数管理 |
+| cmux | `~/.config/cmux/` | ターミナルマルチプレクサー設定 |
 
 ## 非Stow（bootstrap.shで個別処理）
 
-以下はStow管理ではなく、`bootstrap.sh` で特別な処理を行います。
-
-| パッケージ | 理由 | 処理方法 |
-|-----------|------|---------|
-| **ssh** | セキュリティ上、テンプレート方式を採用 | `config.template` を `~/.ssh/config` にコピー |
+| 対象 | 理由 | 処理方法 |
+|------|------|---------|
+| SSH | セキュリティ上テンプレート方式 | `scripts/setup/ssh-config.template` → `~/.ssh/config` |
 
 ## コマンド
 
 ```bash
-# 全パッケージをインストール
-make install
-
-# 個別パッケージをインストール
-make install-zsh
-
-# ドライラン（変更確認のみ）
-make check
-
-# アンインストール
-make uninstall
+make install          # 全パッケージをインストール
+make install-zsh      # 個別パッケージをインストール
+make check            # ドライラン（変更確認のみ）
+make uninstall        # アンインストール
 ```

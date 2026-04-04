@@ -1,16 +1,16 @@
 #!/bin/bash
-# sync_brewfile.sh - Brewfileとインストール済みパッケージの差分を検出
-# 使用方法: bash scripts/maintenance/sync_brewfile.sh
+# sync-brewfile.sh - Brewfileとインストール済みパッケージの差分を検出
+# 使用方法: bash scripts/maintenance/sync-brewfile.sh
 
 set -euo pipefail
 
 # ヘルプ表示
 show_help() {
     cat << 'EOF'
-sync_brewfile.sh - Brewfileとインストール済みパッケージの差分を検出
+sync-brewfile.sh - Brewfileとインストール済みパッケージの差分を検出
 
 使用方法:
-    bash scripts/maintenance/sync_brewfile.sh
+    bash scripts/maintenance/sync-brewfile.sh
     brewsync  # エイリアス
 
 オプション:

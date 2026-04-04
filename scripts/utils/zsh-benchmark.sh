@@ -1,8 +1,8 @@
 #!/bin/bash
 # ========================================
-# zsh_benchmark.sh - zsh起動時間計測
+# zsh-benchmark.sh - zsh起動時間計測
 # ========================================
-# 使用方法: bash scripts/utils/zsh_benchmark.sh [回数]
+# 使用方法: bash scripts/utils/zsh-benchmark.sh [回数]
 #
 # ■ パフォーマンス目標値
 #   - 理想:   < 0.1s (100ms) ... 体感でほぼ即時

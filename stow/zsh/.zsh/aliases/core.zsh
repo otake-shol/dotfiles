@@ -64,11 +64,11 @@ alias zshconfig="vim ~/.zshrc"
 alias aliasconfig="vim ~/.aliases"
 alias ohmyzsh="vim ~/.oh-my-zsh"
 alias zshtime="time zsh -i -c exit"  # zsh起動時間計測
-alias zshbench="bash $DOTFILES_SCRIPTS/utils/zsh_benchmark.sh"  # 詳細ベンチマーク
+alias zshbench="bash $DOTFILES_SCRIPTS/utils/zsh-benchmark.sh"  # 詳細ベンチマーク
 alias path='echo -e ${PATH//:/\\n}'
 alias his="history"
-alias df="duf"                       # モダンなディスク空き容量表示
-alias du="dust"                      # モダンなディスク使用量表示
+alias df="df -h"                     # ディスク空き容量(human-readable)
+alias du="du -sh"                    # ディスク使用量(summary)
 alias top="btop"                     # モダンなシステムモニター
 # alias ps="procs"                  # 削除: btop + fkill関数で代替
 alias help="tldr"                    # コマンドヘルプ簡易版
@@ -95,14 +95,14 @@ alias ji="zi"                         # インタラクティブ選択
 # ========================================
 # dotfiles管理
 # ========================================
-alias dotup="bash $DOTFILES_SCRIPTS/maintenance/check_updates.sh"       # 更新チェック
-alias dotupdate="bash $DOTFILES_SCRIPTS/maintenance/update_all.sh"      # 一括更新
-alias brewsync="bash $DOTFILES_SCRIPTS/maintenance/sync_brewfile.sh"    # Brewfile同期チェック
-alias dotsysinfo="bash $DOTFILES_SCRIPTS/lib/os_detect.sh"              # システム情報表示
-alias dothelp="bash $DOTFILES_SCRIPTS/utils/dothelp.sh"                 # エイリアスヘルプ
-alias dotverify="bash $DOTFILES_SCRIPTS/maintenance/verify_setup.sh"   # セットアップ検証
-alias dotssh="bash $DOTFILES_SCRIPTS/utils/setup_ssh.sh"                # SSH鍵管理
-alias dotsshlist="bash $DOTFILES_SCRIPTS/utils/setup_ssh.sh --list"     # SSH鍵一覧
+alias dotup="bash $DOTFILES_SCRIPTS/maintenance/check-updates.sh"      # 更新チェック
+alias dotupdate="bash $DOTFILES_SCRIPTS/maintenance/update-all.sh"     # 一括更新
+alias brewsync="bash $DOTFILES_SCRIPTS/maintenance/sync-brewfile.sh"   # Brewfile同期チェック
+alias dotsysinfo="bash $DOTFILES_SCRIPTS/lib/os-detect.sh"             # システム情報表示
+alias dothelp="bash $DOTFILES_SCRIPTS/utils/dothelp.sh"                # エイリアスヘルプ
+alias dotverify="bash $DOTFILES_SCRIPTS/maintenance/verify-setup.sh"   # セットアップ検証
+alias dotssh="bash $DOTFILES_SCRIPTS/utils/setup-ssh.sh"               # SSH鍵管理
+alias dotsshlist="bash $DOTFILES_SCRIPTS/utils/setup-ssh.sh --list"    # SSH鍵一覧
 
 # ========================================
 # クイックアクセス

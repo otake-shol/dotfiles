@@ -43,10 +43,9 @@ dotfiles/
 │   ├── yazi/, lazygit/    # ファイラー・Git TUI
 │   ├── bat/, atuin/       # ユーティリティ
 │   ├── ripgrep/           # ripgrep設定
-│   ├── ai-prompts/        # AI用プロンプトテンプレート
 │   ├── direnv/            # direnv設定
 │   ├── gpg/               # GPG設定
-│   └── ssh/               # SSH設定テンプレート
+│   └── cmux/              # cmuxターミナル設定
 ├── scripts/               # ユーティリティスクリプト
 ├── docs/                  # 詳細ドキュメント（ARCHITECTURE.md, GPG_SIGNING.md等）
 ├── Brewfile               # Homebrewパッケージ一覧
@@ -54,7 +53,7 @@ dotfiles/
 └── bootstrap.sh           # 自動セットアップスクリプト
 ```
 
-> **Note**: `stow/ssh/`はテンプレート方式のため、`bootstrap.sh`で個別処理しています。
+> **Note**: SSH設定はテンプレート方式（`scripts/setup/ssh-config.template`）のため、`bootstrap.sh`で個別処理しています。
 
 ## 便利なコマンド
 

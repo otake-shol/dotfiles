@@ -13,7 +13,7 @@ STOW_FLAGS := -v --target=$(HOME) --dir=$(STOW_DIR) --restow
 
 # Stowパッケージ一覧
 # 以下はStow管理対象：ホームディレクトリまたは~/.config/配下に展開
-PACKAGES := zsh git nvim ghostty bat atuin claude gh yazi ai-prompts ripgrep lazygit gpg direnv cmux
+PACKAGES := zsh git nvim ghostty bat atuin claude gh yazi ripgrep lazygit gpg direnv cmux
 
 # ========================================
 # Stow対象外パッケージ（bootstrap.shで個別処理）
@@ -112,14 +112,14 @@ clean:
 .PHONY: bench
 bench:
 	@echo "=== Zsh起動速度ベンチマーク ==="
-	@bash scripts/utils/zsh_benchmark.sh
+	@bash scripts/utils/zsh-benchmark.sh
 
 # 全体ヘルスチェック
 .PHONY: health
 health: lint check
 	@echo ""
 	@echo "=== セットアップ検証 ==="
-	@bash scripts/maintenance/verify_setup.sh
+	@bash scripts/maintenance/verify-setup.sh
 
 # Homebrew依存ツリー表示
 .PHONY: deps
@@ -130,4 +130,4 @@ deps:
 # Brewfile同期チェック
 .PHONY: brewsync
 brewsync:
-	@bash scripts/maintenance/sync_brewfile.sh
+	@bash scripts/maintenance/sync-brewfile.sh

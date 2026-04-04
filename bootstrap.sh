@@ -513,7 +513,7 @@ stow_package() {
 
 # Stow パッケージのインストール
 # 注: sshはテンプレート方式のため別処理
-STOW_PACKAGES=(zsh git nvim ghostty bat atuin claude gh yazi ai-prompts ripgrep lazygit)
+STOW_PACKAGES=(zsh git nvim ghostty bat atuin claude gh yazi ripgrep lazygit)
 
 for pkg in "${STOW_PACKAGES[@]}"; do
     stow_package "$pkg"
@@ -530,7 +530,7 @@ if [ "$DRY_RUN" != true ]; then
         echo -e "${YELLOW}⚠ 壊れたSSH configリンクを削除しました${NC}"
     fi
     if [ ! -f ~/.ssh/config ]; then
-        cp "$SCRIPT_DIR/stow/ssh/.ssh/config.template" ~/.ssh/config
+        cp "$SCRIPT_DIR/scripts/setup/ssh-config.template" ~/.ssh/config
         chmod 600 ~/.ssh/config
         echo -e "${GREEN}✓ SSH configを作成しました${NC}"
     else
@@ -593,8 +593,8 @@ fi
 show_step 5 7 "追加設定"
 
 # macOS固有設定
-if [ -f ~/dotfiles/scripts/setup/macos_defaults.sh ]; then
-    bash ~/dotfiles/scripts/setup/macos_defaults.sh
+if [ -f ~/dotfiles/scripts/setup/macos-defaults.sh ]; then
+    bash ~/dotfiles/scripts/setup/macos-defaults.sh
 fi
 
 # git-secrets設定

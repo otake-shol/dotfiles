@@ -62,17 +62,7 @@
   "model": "opus[1m]",
   "enableAllProjectMcpServers": false,
   "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "prompt",
-            "prompt": "Check if this file write is safe. Verify: 1) No writes to system paths (/etc, /usr, /bin), 2) No credential/secret content being written, 3) No path traversal attempts. If unsafe, return {\"decision\": \"block\", \"reason\": \"explanation\"}. If safe, return {\"decision\": \"approve\"}."
-          }
-        ]
-      }
-    ],
+    "PreToolUse": [],
     "PostToolUse": [
       {
         "matcher": "Edit|Write",

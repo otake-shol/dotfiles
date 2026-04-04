@@ -1,5 +1,5 @@
 #!/bin/bash
-# Notification Hook: タスク完了をmacOS通知で知らせる
+# Notification Hook: タスク完了をcmux/macOS通知で知らせる
 #
 # 入力JSON例:
 # {
@@ -14,6 +14,11 @@ input=$(cat)
 # 通知メッセージを取得
 message=$(echo "$input" | jq -r '.message // "Claude Code notification"')
 title=$(echo "$input" | jq -r '.title // "Claude Code"')
+
+# cmux通知（ペイン枠の通知リングが光る）
+if [ -S /tmp/cmux.sock ] && command -v cmux &>/dev/null; then
+    cmux notify --title "$title" --body "$message" 2>/dev/null || true
+fi
 
 # macOS通知を送信（特殊文字をエスケープして安全に渡す）
 if command -v osascript &>/dev/null; then

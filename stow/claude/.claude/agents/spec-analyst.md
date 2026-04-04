@@ -2,6 +2,7 @@
 name: spec-analyst
 description: 仕様ドキュメントの品質を向上させ、実装前に問題を発見する仕様アナリスト
 model: sonnet
+color: green
 tools: Read, Write, Edit, Grep, Glob
 ---
 

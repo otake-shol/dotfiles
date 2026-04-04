@@ -1,0 +1,61 @@
+{
+  "commands": [
+    {
+      "name": "Claude Dev",
+      "description": "Claude Code + ブラウザプレビューの開発ワークスペース",
+      "keywords": ["claude", "dev", "ai"],
+      "restart": "confirm",
+      "workspace": {
+        "name": "Claude Dev",
+        "cwd": ".",
+        "color": "#7c3aed",
+        "layout": {
+          "direction": "horizontal",
+          "split": 0.6,
+          "children": [
+            {
+              "pane": {
+                "surfaces": [
+                  {
+                    "type": "terminal",
+                    "name": "Claude",
+                    "command": "claude",
+                    "focus": true
+                  }
+                ]
+              }
+            },
+            {
+              "pane": {
+                "surfaces": [
+                  {
+                    "type": "browser",
+                    "name": "Preview",
+                    "url": "http://localhost:3000"
+                  },
+                  {
+                    "type": "terminal",
+                    "name": "Shell"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Claude Teams",
+      "description": "Claude Code チームモード起動",
+      "keywords": ["teams", "agent", "parallel"],
+      "command": "cmux claude-teams",
+      "confirm": true
+    },
+    {
+      "name": "Verify",
+      "description": "型チェック + Lint + テスト一括実行",
+      "keywords": ["test", "lint", "check", "verify"],
+      "command": "~/.claude/hooks/verify.sh"
+    }
+  ]
+}

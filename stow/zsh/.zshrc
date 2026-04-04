@@ -24,6 +24,8 @@ fi
 # 環境変数（モジュール読み込み前に設定）
 # ========================================
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+export ANDROID_HOME="${HOME}/Library/Android/sdk"
+export PATH="/Applications/cmux.app/Contents/Resources/bin:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/emulator:${PATH}"
 
 # ========================================
 # モジュール読み込み

@@ -89,7 +89,7 @@
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "Before stopping, verify: 1) Were all requested changes made? 2) Are there any obvious errors in the changes? 3) Should tests be run? Return a brief summary of verification status."
+            "prompt": "Before stopping, verify: 1) Were all requested changes made? 2) Are there any obvious errors in the changes? 3) Should tests be run? 4) Did you make any mistake or discover a non-obvious pattern during this session that should become a rule in CLAUDE.md? If yes, suggest a one-line addition to the 間違いログ table. Return a brief summary of verification status."
           }
         ]
       }

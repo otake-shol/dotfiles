@@ -299,7 +299,8 @@ stow_package() {
     fi
 }
 
-STOW_PACKAGES=(zsh git nvim ghostty bat atuin claude yazi direnv cmux)
+# パッケージリストはMakefileから取得（一元管理）
+read -r -a STOW_PACKAGES <<< "$(make -C "$SCRIPT_DIR" -s packages)"
 for pkg in "${STOW_PACKAGES[@]}"; do
     stow_package "$pkg"
 done

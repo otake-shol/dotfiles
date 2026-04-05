@@ -5,7 +5,7 @@ STOW_DIR := stow
 STOW_FLAGS := -v --target=$(HOME) --dir=$(STOW_DIR) --restow
 PACKAGES := zsh git nvim ghostty bat atuin claude yazi direnv cmux
 
-.PHONY: help install uninstall check bootstrap lint clean install-% uninstall-%
+.PHONY: help install uninstall check bootstrap lint clean install-% uninstall-% packages
 
 help:
 	@echo "Usage:"
@@ -51,3 +51,6 @@ clean:
 	@find . -name "*.backup.*" -delete
 	@find . -name "*~" -delete
 	@echo "✓ クリーンアップ完了"
+
+packages:
+	@echo $(PACKAGES)

@@ -98,11 +98,9 @@ verify_optional_tools() {
 
     local tools=(
         "delta:Git diff"
-        "tokei:コード統計"
         "atuin:シェル履歴"
         "gh:GitHub CLI"
         "direnv:環境変数管理"
-        "lefthook:Git hooks"
     )
 
     for tool_pair in "${tools[@]}"; do

@@ -8,7 +8,7 @@
 # --- Git ---
 brew "git"                         # Homebrew版で最新機能
 brew "gh"                          # GitHub公式CLI
-brew "git-secrets"                 # APIキー誤コミット防止(lefthook連携)
+brew "git-secrets"                 # APIキー誤コミット防止(グローバルhook)
 brew "git-delta"                   # diff表示: side-by-side+シンタックスハイライト
 
 # --- バージョン管理・エディタ ---
@@ -38,9 +38,7 @@ brew "sd"                          # sed代替: 直感的な構文
 brew "tree"                        # ディレクトリツリー表示
 
 # --- 開発ツール ---
-brew "lefthook"                    # Git hooks管理(並列実行+YAML設定)
-brew "shellcheck"                  # シェルスクリプトlinter(lefthook連携)
-brew "yamllint"                    # YAML linter(lefthook連携)
+brew "shellcheck"                  # シェルスクリプトlinter(make lint)
 brew "marp-cli"                    # Markdownスライド生成
 
 # ========================================

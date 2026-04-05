@@ -34,7 +34,7 @@ jobs:
           done
 
       - name: YAML lint
-        run: yamllint -d relaxed .github/workflows/*.yml lefthook.yml
+        run: yamllint -d relaxed .github/workflows/*.yml
 
       - name: Zsh syntax check
         run: |

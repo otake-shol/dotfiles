@@ -110,15 +110,6 @@ make bench           # zsh起動時間ベンチマーク
 # 全ターゲットは make help で確認
 ```
 
-### Git Hooks (lefthook)
-
-pre-commit時にShellCheck、yamllint、zsh構文チェックを自動実行。
-コミットメッセージはConventional Commits形式を強制。
-
-```bash
-lefthook install     # 初回セットアップ（bootstrap.shで自動実行）
-```
-
 ### バージョン管理 (asdf)
 
 Node.js等のランタイムは[asdf](https://asdf-vm.com/)で管理。遅延読み込みにより初回実行時に自動初期化。

@@ -191,7 +191,6 @@ flowchart LR
 
     subgraph "保護機構"
         P1["git-secrets<br>（コミット前スキャン）"]
-        P2["lefthook<br>（pre-commit hooks）"]
     end
 
     T1 -.-> L1

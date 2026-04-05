@@ -377,12 +377,6 @@ if [ "$DRY_RUN" != true ]; then
     fi
 fi
 
-# lefthook
-if command -v lefthook &>/dev/null && [ -f ~/dotfiles/lefthook.yml ]; then
-    cd ~/dotfiles && lefthook install 2>/dev/null || true
-    echo -e "${GREEN}✓ lefthook${NC}"
-fi
-
 # Claude Code
 if [ "$SKIP_CLAUDE" = false ] && [ -x "$HOME/.claude/setup.sh" ]; then
     if command -v claude &>/dev/null; then

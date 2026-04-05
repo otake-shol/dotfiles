@@ -1,25 +1,12 @@
 # ========================================
-# Git
+# Git（Oh My Zsh gitプラグインの補完）
 # ========================================
-alias gs="git status"
-alias ga="git add"
-alias gc="git commit"
-alias gcm="git commit -m"
-alias gp="git push"
-alias gpl="git pull"
-alias gd="git diff"
-alias gl="git log"
-alias glg="git log --graph --oneline --decorate --all"
-alias gco="git checkout"
-alias gcb="git checkout -b"
-alias gb="git branch"
-alias gba="git branch -a"
-alias gf="git fetch"
-alias gm="git merge"
-alias grb="git rebase"
-alias gst="git stash"
-alias gsta="git stash apply"
-alias gundo="git reset --soft HEAD^"
+# 基本エイリアス(ga,gc,gp,gd,gl,gco,gb等)はOMZが提供
+# ここではOMZにないものだけ定義
+
+alias gs="git status"                    # OMZのgstと区別（短い方が好み）
+alias glg="git log --graph --oneline --decorate --all"  # OMZのglgとは出力形式が異なる
+alias gundo="git reset --soft HEAD^"     # OMZにない
 
 # ========================================
 # GitHub CLI (gh)
@@ -38,11 +25,8 @@ alias ghrw="gh run watch"              # Workflow実行を監視
 alias ghd="gh dash"                    # PRダッシュボード
 
 # ========================================
-# 便利なGit操作
+# 便利なGit操作（OMZにないもの）
 # ========================================
-alias gwip='git add -A && git commit -m "WIP: work in progress"'  # WIPコミット
-alias gunwip='git log -1 --format="%s" | grep -q "^WIP:" && git reset HEAD~1'  # WIP取消
-alias gclean='git branch --merged | grep -v "\*\|main\|master" | xargs -n 1 git branch -d'  # マージ済みブランチ削除
 alias gamend='git commit --amend --no-edit'  # 直前コミットに追加
 alias gpf='git push --force-with-lease'      # 安全なforce push
 

@@ -11,11 +11,10 @@
 
 set -uo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
+BLUE='\033[0;34m'; NC='\033[0m'
 
-# 共通ライブラリ読み込み
-# shellcheck source=../lib/common.sh
-source "${SCRIPT_DIR}/../lib/common.sh"
+is_macos() { [[ "$(uname -s)" == "Darwin" ]]; }
 
 PAM_MODULE="/usr/local/lib/pam/pam_watchid.so"
 PAM_SUDO_LOCAL="/etc/pam.d/sudo_local"

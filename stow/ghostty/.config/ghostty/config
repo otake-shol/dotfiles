@@ -23,7 +23,7 @@ font-feature = calt, liga, dlig
 # ダーク/ライトモードで自動切り替え
 theme = TokyoNight
 background-opacity = 0.80
-background-blur-radius = 0
+background-blur-radius = 20
 
 # ========================================
 # ウィンドウ設定

@@ -30,7 +30,7 @@ _cache_update() {
   local cache_file="$1"
   shift
   mkdir -p "$(dirname "$cache_file")"
-  eval "$@" > "$cache_file" 2>/dev/null
+  "$@" > "$cache_file" 2>/dev/null
 }
 
 # キャッシュファイルをタッチ（更新日時のみ更新）

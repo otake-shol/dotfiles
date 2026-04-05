@@ -486,7 +486,7 @@ if [ ! -f ~/.gitconfig.local ]; then
 fi
 
 if [ ! -f ~/.zshrc.local ]; then
-    cp "$SCRIPT_DIR/.zshrc.local.template" ~/.zshrc.local 2>/dev/null || true
+    cp "$SCRIPT_DIR/stow/zsh/.zshrc.local.template" ~/.zshrc.local 2>/dev/null || true
     echo -e "${GREEN}✓ ~/.zshrc.local${NC}"
 fi
 

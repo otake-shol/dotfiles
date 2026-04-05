@@ -337,7 +337,43 @@ fi
 show_step 6 6 "追加設定"
 
 # macOS defaults
-[ -f ~/dotfiles/scripts/macos-defaults.sh ] && bash ~/dotfiles/scripts/macos-defaults.sh
+defaults write com.apple.dock autohide -bool true
+defaults write com.apple.dock autohide-delay -float 0
+defaults write com.apple.dock autohide-time-modifier -float 0.3
+defaults write com.apple.dock tilesize -int 48
+defaults write com.apple.dock show-recents -bool false
+defaults write com.apple.finder AppleShowAllFiles -bool true
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+defaults write com.apple.finder ShowPathbar -bool true
+defaults write com.apple.finder ShowStatusBar -bool true
+defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+defaults write NSGlobalDomain KeyRepeat -int 1
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
+defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+defaults write -g com.apple.mouse.scaling -float 5.0
+defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+defaults write -g AppleShowScrollBars -string "Always"
+defaults write -g AppleActionOnDoubleClick -string "Maximize"
+defaults write com.apple.screensaver askForPassword -int 1
+defaults write com.apple.screensaver askForPasswordDelay -int 0
+defaults write com.apple.AdLib forceLimitAdTracking -bool true
+defaults write com.cmuxterm.app sidebarMaterial -string "hudWindow"
+defaults write com.cmuxterm.app sidebarBlendMode -string "behindWindow"
+defaults write com.cmuxterm.app sidebarBlurOpacity -float 0.80
+defaults write com.cmuxterm.app sidebarTintHex -string "#1a1b26"
+defaults write com.cmuxterm.app sidebarTintOpacity -string "0.35"
+defaults write com.cmuxterm.app appearanceMode -string "dark"
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+killall Dock 2>/dev/null || true; killall Finder 2>/dev/null || true
+echo -e "${GREEN}✓ macOS defaults${NC}"
 
 # git-secrets
 if command -v git-secrets &>/dev/null; then

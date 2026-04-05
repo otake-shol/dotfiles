@@ -29,15 +29,27 @@ ASSUME_YES=false
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CURRENT_STEP=""
 
-# 共通ライブラリ
-# shellcheck source=scripts/common.sh
-if [[ -f "${SCRIPT_DIR}/scripts/common.sh" ]]; then
-    source "${SCRIPT_DIR}/scripts/common.sh"
-else
-    RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
-    BLUE='\033[0;34m'; CYAN='\033[0;36m'; NC='\033[0m'
-    safe_link() { ln -sf "$1" "$2"; }
-fi
+# 色定義
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
+BLUE='\033[0;34m'; CYAN='\033[0;36m'; NC='\033[0m'
+
+# OS検出
+is_macos() { [[ "$(uname -s)" == "Darwin" ]]; }
+detect_homebrew_prefix() {
+    [[ "$(uname -m)" == "arm64" ]] && echo "/opt/homebrew" || echo "/usr/local"
+}
+
+# Zshプラグイン冪等インストール
+ensure_zsh_plugin() {
+    local name="$1" repo_url="$2" dest="$3"
+    if [ -d "$dest/.git" ]; then
+        cd "$dest" && git pull --quiet 2>/dev/null && echo -e "  ${GREEN}✓${NC} $name" || echo -e "  ${YELLOW}⚠${NC} $name"
+    else
+        [ -d "$dest" ] && rm -rf "$dest"
+        git clone --depth=1 "$repo_url" "$dest" 2>/dev/null
+        echo -e "  ${GREEN}✓${NC} $name"
+    fi
+}
 
 # ログ
 LOG_DIR="$HOME/.local/share/dotfiles/logs"

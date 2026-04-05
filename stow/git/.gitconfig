@@ -118,7 +118,7 @@
 	#   5. 以下の program と gpgsign のコメントを外す
 	# program = /opt/homebrew/bin/gpg
 [commit]
-	template = ~/dotfiles/stow/git/commit-template.txt
+	template = ~/commit-template.txt
 	# GPG署名を有効にする場合はコメントを外す
 	# gpgsign = true
 [tag]

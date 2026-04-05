@@ -1,0 +1,10 @@
+# GNU Stow デフォルト除外パターン（.stow-local-ignoreはデフォルトを上書きする）
+\.git
+\.gitignore
+\.cvsignore
+\.svn
+CVS
+RCS
+
+# テンプレートファイル（bootstrap.shが直接参照するためHOME展開不要）
+\.gitconfig\.local\.template

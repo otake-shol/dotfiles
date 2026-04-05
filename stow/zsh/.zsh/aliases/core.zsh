@@ -94,8 +94,6 @@ alias ji="zi"                         # インタラクティブ選択
 # ========================================
 # dotfiles管理
 # ========================================
-alias brewsync="bash $DOTFILES_SCRIPTS/maintenance/sync-brewfile.sh"   # Brewfile同期チェック
-alias dotsysinfo="bash $DOTFILES_SCRIPTS/lib/os-detect.sh"             # システム情報表示
 alias dotverify="bash $DOTFILES_SCRIPTS/maintenance/verify-setup.sh"   # セットアップ検証
 
 # ========================================

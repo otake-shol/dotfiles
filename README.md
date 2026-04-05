@@ -58,7 +58,6 @@ dotfiles/
 
 ```bash
 dotverify            # セットアップ状態の検証
-brewsync             # Brewfile同期チェック
 make lint            # ShellCheck実行
 ```
 

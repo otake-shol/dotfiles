@@ -88,9 +88,9 @@ _suggest_fix() {
       # command not found
       if [[ $code -eq 127 ]]; then
         local first_word="${cmd%% *}"
-        # brewでインストール可能か確認
-        if brew search --formula "^${first_word}$" &>/dev/null 2>&1; then
-          suggestion="brew install ${first_word}"
+        # ネットワークアクセスを避け、ヒントのみ表示
+        if command -v brew &>/dev/null; then
+          suggestion="brew install ${first_word} で入るかも（brew search ${first_word} で確認）"
         fi
       fi
       ;;

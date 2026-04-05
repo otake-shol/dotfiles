@@ -108,8 +108,7 @@ alias catl="bat -l"                  # 言語指定 (例: catl json file.txt)
 alias less="bat --paging=always"     # ページャーとして使用
 alias bathelp="bat --help"           # batのヘルプ
 
-# ファイルプレビュー (fzf + bat)
-alias fp="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
+# ファイルプレビュー: fp関数 (fzf-functions.zsh) を使用
 
 # ========================================
 # 開発ツール

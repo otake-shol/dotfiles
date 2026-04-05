@@ -20,7 +20,7 @@ jobs:
 
       - name: Stow conflict detection (dry run)
         run: |
-          for pkg in zsh git nvim ghostty bat atuin claude gh yazi ripgrep direnv cmux; do
+          for pkg in zsh git nvim ghostty bat atuin claude yazi direnv cmux; do
             echo "=== $pkg ==="
             stow --simulate -v --target="$HOME" --dir=stow --restow "$pkg" 2>&1 || {
               echo "::error::Stow conflict detected in package: $pkg"

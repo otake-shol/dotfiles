@@ -60,7 +60,6 @@ cask "1password-cli"               # 1Passwordシークレット取得
 cask "tailscale"                   # VPNメッシュネットワーク
 cask "alt-tab"                     # Windows風Cmd+Tab(ウィンドウプレビュー)
 cask "cleanshot"                   # スクリーンショット+録画+注釈
-cask "homerow"                     # キーボードUI操作(Vimium風)
 cask "jordanbaird-ice"             # メニューバーアイコン整理
 cask "raycast"                     # Spotlight代替(拡張+スニペット)
 

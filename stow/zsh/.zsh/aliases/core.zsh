@@ -47,6 +47,7 @@ alias co="claude --model opus"            # Opusモデル
 alias cs="claude --model sonnet"          # Sonnetモデル
 alias ch="claude --model haiku"           # Haikuモデル
 alias clp="claude --print"                # 非対話モード（パイプ用）
+alias claude-mem='node "$HOME/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
 # セッション管理関数: cls(一覧), csa(全検索), csd(削除), cc(続行), cm(モデル指定)
 
 # ========================================

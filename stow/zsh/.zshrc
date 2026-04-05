@@ -73,5 +73,3 @@ unset -f _zsh_startup_check
 
 # プロファイリング結果表示（デバッグ時のみ）
 # zprof
-
-alias claude-mem='node "$HOME/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'

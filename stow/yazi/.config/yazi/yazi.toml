@@ -30,9 +30,6 @@ image_filter = "triangle"
 image_quality = 75
 sixel_fraction = 15
 
-# キャッシュ
-cache_dir = ""
-
 [opener]
 # ファイルを開くアプリケーション
 edit = [

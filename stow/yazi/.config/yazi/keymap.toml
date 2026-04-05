@@ -132,8 +132,6 @@ keymap = [
   { on = ["b"], run = 'shell --block "bat --paging=always $@"', desc = "View with bat" },
   # Finderで表示
   { on = ["F"], run = 'shell "open -R $@"', desc = "Reveal in Finder" },
-  # Neovimで開く（フルスクリーン）
-  { on = ["E"], run = 'shell --block "nvim $@"', desc = "Edit in Neovim (fullscreen)" },
   # ターミナルで現在のディレクトリを開く
   { on = ["T"], run = 'shell "open -a Ghostty $PWD"', desc = "Open terminal here" },
   # パスをクリップボードにコピー

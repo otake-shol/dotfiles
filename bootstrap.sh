@@ -299,7 +299,7 @@ stow_package() {
     fi
 }
 
-STOW_PACKAGES=(zsh git nvim ghostty bat atuin claude gh yazi ripgrep direnv cmux)
+STOW_PACKAGES=(zsh git nvim ghostty bat atuin claude yazi direnv cmux)
 for pkg in "${STOW_PACKAGES[@]}"; do
     stow_package "$pkg"
 done

@@ -85,7 +85,7 @@ preloaders = []
 [input]
 # 入力設定
 cd_title = "Change directory:"
-create_title = "Create:"
+create_title = ["Create:", "Create (dir):"]
 rename_title = "Rename:"
 trash_title = "Move to trash (y/N):"
 delete_title = "Delete permanently (y/N):"

@@ -114,6 +114,9 @@ keymap = [
   { on = ["g", "."], run = "cd ~/dotfiles", desc = "Go to dotfiles" },
   { on = ["g", "c"], run = "cd ~/.config", desc = "Go to .config" },
 
+  # gitルートにジャンプ
+  { on = ["g", "r"], run = 'shell -- ya emit cd "$(git rev-parse --show-toplevel)"', desc = "Go to git root" },
+
   # zoxide連携（学習済みディレクトリにジャンプ）
   { on = ["z"], run = "plugin zoxide", desc = "Jump with zoxide" },
   { on = ["Z"], run = "plugin fzf", desc = "Jump with fzf" },
@@ -121,6 +124,8 @@ keymap = [
   # ========================================
   # シェル連携
   # ========================================
+  # カレントディレクトリでシェルを開く
+  { on = ["!"], run = 'shell "$SHELL" --block', desc = "Open shell here" },
   # nvimで編集
   { on = ["e"], run = 'shell --block "nvim $@"', desc = "Edit in Neovim" },
   # batでプレビュー（ページャー付き）
@@ -133,10 +138,13 @@ keymap = [
   { on = ["T"], run = 'shell "open -a Ghostty $PWD"', desc = "Open terminal here" },
   # パスをクリップボードにコピー
   { on = ["Y"], run = 'shell --confirm "echo -n $@ | pbcopy"', desc = "Copy path to clipboard" },
+  # パーミッション変更
+  { on = ["c", "m"], run = "plugin chmod", desc = "Chmod on selected files" },
 
   # ========================================
   # その他
   # ========================================
+  { on = ["<C-Space>"], run = "unyank", desc = "Cancel yank" },
   { on = ["<Esc>"], run = "escape", desc = "Cancel / Clear" },
   { on = ["q"], run = "quit", desc = "Quit" },
   { on = ["Q"], run = "quit --no-cwd-file", desc = "Quit without changing directory" },

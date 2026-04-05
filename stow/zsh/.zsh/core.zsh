@@ -185,5 +185,14 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 # cdで親ディレクトリも補完候補に
 zstyle ':completion:*' special-dirs true
 
-# Load aliases from external file
-[[ -f ~/.aliases ]] && source ~/.aliases
+# 関数ファイルの読み込み（fzf-functions以外、fzfはlazy.zshで遅延読み込み）
+for func_file in "$ZSH_CONFIG_DIR/functions"/{git,util}-functions.zsh; do
+    [[ -f "$func_file" ]] && source "$func_file"
+done
+
+# エイリアスファイルの読み込み
+for alias_file in "$ZSH_CONFIG_DIR/aliases"/*.zsh; do
+    [[ -f "$alias_file" ]] && source "$alias_file"
+done
+
+unset func_file alias_file

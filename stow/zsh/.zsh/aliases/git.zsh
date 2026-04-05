@@ -30,6 +30,5 @@ alias ghd="gh dash"                    # PRダッシュボード
 alias gamend='git commit --amend --no-edit'  # 直前コミットに追加
 alias gpf='git push --force-with-lease'      # 安全なforce push
 
-# oh-my-zshプラグインとの競合を回避
-unalias gpr gbr 2>/dev/null
 # Git関数は functions/git-functions.zsh に定義
+# OMZ alias競合の解除は core.zsh で関数読み込み前に実施済み

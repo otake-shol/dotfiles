@@ -185,6 +185,9 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 # cdで親ディレクトリも補完候補に
 zstyle ':completion:*' special-dirs true
 
+# OMZ gitプラグインのalias解除（関数定義と競合するため、先に実行）
+unalias gpr gbr 2>/dev/null
+
 # 関数ファイルの読み込み（fzf-functions以外、fzfはlazy.zshで遅延読み込み）
 for func_file in "$ZSH_CONFIG_DIR/functions"/{git,util}-functions.zsh; do
     [[ -f "$func_file" ]] && source "$func_file"

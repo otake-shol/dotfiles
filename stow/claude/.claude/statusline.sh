@@ -1,14 +1,31 @@
 #!/bin/bash
+# shellcheck disable=SC2154  # eval経由で代入される変数群
 # Claude Code statusline - グラデーション＋アクセントスタイル
 
 input=$(cat)
 
-# 値の取得
-dir_full=$(echo "$input" | jq -r '.workspace.current_dir // "~"')
+# 値の一括取得（jq 1回で全抽出）
+eval "$(echo "$input" | jq -r '
+  @sh "dir_full=\(.workspace.current_dir // "~")",
+  @sh "model=\(.model.display_name // "Claude")",
+  @sh "used_pct=\(.context_window.used_percentage // 0 | floor)",
+  @sh "ctx_size=\(.context_window.context_window_size // 200000)",
+  @sh "cost=\(.cost.total_cost_usd // 0)",
+  @sh "duration_ms=\(.cost.total_duration_ms // 0)",
+  @sh "api_duration_ms=\(.cost.total_api_duration_ms // 0)",
+  @sh "session_id=\(.session_id // "")",
+  @sh "session_name=\(.session_name // "")",
+  @sh "lines_added=\(.cost.total_lines_added // 0)",
+  @sh "lines_removed=\(.cost.total_lines_removed // 0)",
+  @sh "usage_5h=\(.rate_limits.five_hour.used_percentage // "")",
+  @sh "usage_7d=\(.rate_limits.seven_day.used_percentage // "")",
+  @sh "resets_5h=\(.rate_limits.five_hour.resets_at // "")",
+  @sh "resets_7d=\(.rate_limits.seven_day.resets_at // "")",
+  @sh "worktree_branch=\(.worktree.branch // "")",
+  @sh "worktree_name=\(.worktree.name // "")"
+')"
+
 dir=$(echo "$dir_full" | sed "s|^$HOME|~|")
-model=$(echo "$input" | jq -r '.model.display_name // "Claude"')
-used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // 0' | cut -d. -f1)
-ctx_size=$(echo "$input" | jq -r '.context_window.context_window_size // 200000')
 
 # コンテキストウィンドウサイズを人間が読める形式に変換（200000→200K, 1000000→1M）
 if [ "$ctx_size" -ge 1000000 ]; then
@@ -16,20 +33,8 @@ if [ "$ctx_size" -ge 1000000 ]; then
 else
     ctx_label="$((ctx_size / 1000))K"
 fi
-cost=$(echo "$input" | jq -r '.cost.total_cost_usd // 0')
-duration_ms=$(echo "$input" | jq -r '.cost.total_duration_ms // 0')
-session_id=$(echo "$input" | jq -r '.session_id // ""')
-lines_added=$(echo "$input" | jq -r '.cost.total_lines_added // 0')
-lines_removed=$(echo "$input" | jq -r '.cost.total_lines_removed // 0')
-
-# Usage（レートリミット）情報
-usage_5h=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty')
-usage_7d=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty')
-resets_5h=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // empty')
-resets_7d=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // empty')
 
 # モデル名とカラー設定（バージョン番号付き）
-# display_name例: "Opus 4.6", "Sonnet 4.5", "Haiku 4.5" など
 version=$(echo "$model" | grep -oE '[0-9]+\.[0-9]+' | head -1)
 case "$model" in
     *Opus*)
@@ -114,6 +119,7 @@ ICON_TIME=$(printf '\xef\x80\x97')         # U+F017
 ICON_BATTERY=$(printf '\xef\x89\x80')      # U+F240 (battery full)
 ICON_CHARGING=$(printf '\xef\x83\xa7')     # U+F0E7 (lightning bolt)
 ICON_GAUGE=$(printf '\xef\x83\xa4')        # U+F0E4 (dashboard)
+ICON_WORKTREE=$(printf '\xef\x84\xa6')     # U+F126 (code-fork)
 
 # セパレータ
 SEP='┃'
@@ -136,37 +142,20 @@ else
 fi
 
 # プログレスバー生成（5ブロック）
-bar_width=5
-filled=$((used_pct * bar_width / 100))
-empty=$((bar_width - filled))
-bar=""
-for ((i=0; i<filled; i++)); do bar+="▰"; done
-for ((i=0; i<empty; i++)); do bar+="▱"; done
+_bar() {
+    local pct=$1 width=5
+    local filled=$((pct * width / 100))
+    local empty=$((width - filled))
+    local b=""
+    for ((i=0; i<filled; i++)); do b+="▰"; done
+    for ((i=0; i<empty; i++)); do b+="▱"; done
+    echo -n "$b"
+}
+
+bar=$(_bar "$used_pct")
 
 # コストフォーマット
 cost_fmt=$(printf "%.2f" "$cost")
-
-# 出力構築（グラデーション効果）
-output=""
-
-# 左セクション（曜日+日付+時刻）
-output+="${ICON_TIME} ${DAY_COLOR}${BOLD}${day_of_week}${RESET} ${current_date} ${BOLD}\033[97m${current_time}${RESET}"
-output+="  "
-output+="${COLOR_2}${ICON_FOLDER} ${dir}${RESET}"
-if [ -n "$branch" ]; then
-    output+="  "
-    output+="${COLOR_3}${ICON_BRANCH} ${branch}${RESET}"
-    # Git状態インジケータ（●N = 未コミットN件、↑N = 未プッシュN件）
-    if [ -n "$git_uncommitted" ]; then
-        output+=" ${YELLOW}${git_uncommitted}${RESET}"
-    fi
-    if [ -n "$git_unpushed" ]; then
-        output+=" ${YELLOW}${git_unpushed}${RESET}"
-    fi
-fi
-
-# セパレータ
-output+=" ${DIM}${SEP}${RESET} "
 
 # ヘルパー関数（Usage表示用）
 _usage_color() {
@@ -181,24 +170,36 @@ _usage_color() {
 _format_reset_time() {
     local reset_ts=$1
     if [ -z "$reset_ts" ]; then return; fi
-    # リセット日時を「M/D H:MM迄」形式で表示
     date -r "$reset_ts" +"~%-m/%-d %H:%M"
 }
 
-_usage_bar() {
-    local pct=$1
-    local width=5
-    local filled=$((pct * width / 100))
-    local empty=$((width - filled))
-    local b=""
-    for ((i=0; i<filled; i++)); do b+="▰"; done
-    for ((i=0; i<empty; i++)); do b+="▱"; done
-    echo -n "$b"
-}
+# === 1行目: 日時・ディレクトリ・Git・モデル・バッテリー ===
+output=""
 
-# 右セクション（重要情報 - 鮮やか）
+output+="${ICON_TIME} ${DAY_COLOR}${BOLD}${day_of_week}${RESET} ${current_date} ${BOLD}\033[97m${current_time}${RESET}"
+output+="  "
+output+="${COLOR_2}${ICON_FOLDER} ${dir}${RESET}"
+if [ -n "$branch" ]; then
+    output+="  "
+    output+="${COLOR_3}${ICON_BRANCH} ${branch}${RESET}"
+    if [ -n "$git_uncommitted" ]; then
+        output+=" ${YELLOW}${git_uncommitted}${RESET}"
+    fi
+    if [ -n "$git_unpushed" ]; then
+        output+=" ${YELLOW}${git_unpushed}${RESET}"
+    fi
+fi
+
+# worktree表示
+if [ -n "$worktree_branch" ]; then
+    output+="  ${COLOR_3}${ICON_WORKTREE} ${worktree_branch}${RESET}"
+elif [ -n "$worktree_name" ]; then
+    output+="  ${COLOR_3}${ICON_WORKTREE} ${worktree_name}${RESET}"
+fi
+
+output+=" ${DIM}${SEP}${RESET} "
+
 output+="${MODEL_COLOR}${BOLD}${ICON_MODEL} ${short_model}${RESET}"
-
 
 # バッテリー表示
 if [ -n "$battery_pct" ]; then
@@ -217,11 +218,9 @@ if [ -n "$battery_pct" ]; then
     fi
 fi
 
-
-# 1行目出力
 echo -e "$output"
 
-# 2行目: Usage（レートリミット） + コンテキスト使用率
+# === 2行目: Usage（レートリミット） + コンテキスト使用率 ===
 line2=""
 
 if [ -n "$usage_5h" ] || [ -n "$usage_7d" ]; then
@@ -229,7 +228,7 @@ if [ -n "$usage_5h" ] || [ -n "$usage_7d" ]; then
     if [ -n "$usage_5h" ]; then
         pct_5h=$(printf '%.0f' "$usage_5h")
         u5_color=$(_usage_color "$pct_5h")
-        u5_bar=$(_usage_bar "$pct_5h")
+        u5_bar=$(_bar "$pct_5h")
         reset_label=""
         [ -n "$resets_5h" ] && reset_label=" $(_format_reset_time "$resets_5h")"
         line2+="${u5_color}5h ${u5_bar} ${pct_5h}%${RESET}${DIM}${reset_label}${RESET}"
@@ -240,7 +239,7 @@ if [ -n "$usage_5h" ] || [ -n "$usage_7d" ]; then
     if [ -n "$usage_7d" ]; then
         pct_7d=$(printf '%.0f' "$usage_7d")
         u7_color=$(_usage_color "$pct_7d")
-        u7_bar=$(_usage_bar "$pct_7d")
+        u7_bar=$(_bar "$pct_7d")
         reset_label=""
         [ -n "$resets_7d" ] && reset_label=" $(_format_reset_time "$resets_7d")"
         line2+="${u7_color}7d ${u7_bar} ${pct_7d}%${RESET}${DIM}${reset_label}${RESET}"
@@ -252,10 +251,11 @@ line2+="${PCT_STYLE}${PCT_COLOR}${ICON_BRAIN} ${bar} ${used_pct}%${RESET}${DIM}(
 
 echo -e "$line2"
 
-# 3行目: セッションコスト詳細（合計・時間単価・日単価）
+# === 3行目: コスト・diff・セッション（常に表示） ===
+line3="${COLOR_5}${ICON_MONEY}${RESET} "
+
 if [ "$duration_ms" -gt 0 ]; then
     duration_sec=$((duration_ms / 1000))
-    # 経過時間の表示（XhYm or Ym）
     dur_h=$((duration_sec / 3600))
     dur_m=$(( (duration_sec % 3600) / 60 ))
     if [ "$dur_h" -gt 0 ]; then
@@ -264,17 +264,29 @@ if [ "$duration_ms" -gt 0 ]; then
         dur_label="${dur_m}m"
     fi
 
-    # 時間あたり・日あたりコスト計算（awk で浮動小数点演算）
     cost_per_hour=$(awk "BEGIN { printf \"%.2f\", $cost / ($duration_sec / 3600) }")
     cost_per_day=$(awk "BEGIN { printf \"%.2f\", $cost / ($duration_sec / 3600) * 24 }")
 
-    line3="${COLOR_5}${ICON_MONEY}${RESET} "
     line3+="${BOLD}\$${cost_fmt}${RESET}${DIM}/${dur_label}${RESET}"
     line3+="  ${DIM}≈${RESET} \$${cost_per_hour}${DIM}/h${RESET}"
     line3+="  ${DIM}≈${RESET} \$${cost_per_day}${DIM}/day${RESET}"
-    line3+="  ${COLOR_4}${ICON_DIFF}${RESET} ${GREEN}+${lines_added}${RESET}${RED}-${lines_removed}${RESET}"
-    if [ -n "$session_id" ]; then
-        line3+="  ${DIM}#${session_id}${RESET}"
+
+    # API待ち時間の割合
+    if [ "$api_duration_ms" -gt 0 ]; then
+        api_pct=$((api_duration_ms * 100 / duration_ms))
+        line3+="  ${DIM}API:${api_pct}%${RESET}"
     fi
-    echo -e "$line3"
+else
+    line3+="${BOLD}\$${cost_fmt}${RESET}"
 fi
+
+line3+="  ${COLOR_4}${ICON_DIFF}${RESET} ${GREEN}+${lines_added}${RESET}${RED}-${lines_removed}${RESET}"
+
+# セッション名 or セッションID
+if [ -n "$session_name" ]; then
+    line3+="  ${DIM}${session_name}${RESET}"
+elif [ -n "$session_id" ]; then
+    line3+="  ${DIM}#${session_id}${RESET}"
+fi
+
+echo -e "$line3"

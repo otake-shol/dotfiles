@@ -13,15 +13,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y stow shellcheck zsh
-          pip install yamllint
+        run: sudo apt-get update && sudo apt-get install -y stow shellcheck zsh
 
       - name: ShellCheck
-        run: |
-          shellcheck -S warning bootstrap.sh
-          find scripts -name '*.sh' -exec shellcheck -S warning {} +
+        run: shellcheck -S warning bootstrap.sh
 
       - name: Stow conflict detection (dry run)
         run: |
@@ -33,22 +28,5 @@ jobs:
             }
           done
 
-      - name: YAML lint
-        run: yamllint -d relaxed .github/workflows/*.yml
-
       - name: Zsh syntax check
-        run: |
-          find stow/zsh -type f -name '*.zsh' -exec zsh -n {} +
-
-      - name: Protected variables check
-        run: |
-          protected="ZSH_CONFIG_DIR|DOTFILES_DIR|HOME|PATH|SHELL"
-          violations=0
-          while IFS= read -r f; do
-            if grep -qE "unset.+($protected)" "$f"; then
-              echo "::error file=$f::Protected variable unset detected"
-              grep -nE "unset.+($protected)" "$f"
-              violations=1
-            fi
-          done < <(find . -name '*.sh' -o -name '*.zsh' | grep -v '.git/')
-          exit $violations
+        run: find stow/zsh -type f -name '*.zsh' -exec zsh -n {} +

@@ -56,6 +56,194 @@
       "description": "型チェック + Lint + テスト一括実行",
       "keywords": ["test", "lint", "check", "verify"],
       "command": "~/.claude/hooks/verify.sh"
+    },
+    {
+      "name": "Code Review",
+      "description": "PRレビュー用ワークスペース（diff + ブラウザ + テスト）",
+      "keywords": ["review", "pr", "diff"],
+      "workspace": {
+        "name": "Code Review",
+        "cwd": ".",
+        "color": "#f59e0b",
+        "layout": {
+          "direction": "horizontal",
+          "split": 0.5,
+          "children": [
+            {
+              "pane": {
+                "surfaces": [
+                  {
+                    "type": "terminal",
+                    "name": "Review",
+                    "focus": true
+                  }
+                ]
+              }
+            },
+            {
+              "layout": {
+                "direction": "vertical",
+                "split": 0.5,
+                "children": [
+                  {
+                    "pane": {
+                      "surfaces": [
+                        {
+                          "type": "browser",
+                          "name": "GitHub PR",
+                          "url": "https://github.com"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "pane": {
+                      "surfaces": [
+                        {
+                          "type": "terminal",
+                          "name": "Test"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Fullstack Dev",
+      "description": "フルスタック開発（エディタ + devサーバー + ブラウザ）",
+      "keywords": ["fullstack", "web", "frontend"],
+      "workspace": {
+        "name": "Fullstack Dev",
+        "cwd": ".",
+        "color": "#10b981",
+        "layout": {
+          "direction": "horizontal",
+          "split": 0.55,
+          "children": [
+            {
+              "pane": {
+                "surfaces": [
+                  {
+                    "type": "terminal",
+                    "name": "Editor",
+                    "focus": true
+                  }
+                ]
+              }
+            },
+            {
+              "layout": {
+                "direction": "vertical",
+                "split": 0.4,
+                "children": [
+                  {
+                    "pane": {
+                      "surfaces": [
+                        {
+                          "type": "terminal",
+                          "name": "Dev Server",
+                          "command": "npm run dev"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "pane": {
+                      "surfaces": [
+                        {
+                          "type": "browser",
+                          "name": "localhost",
+                          "url": "http://localhost:3000"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Git Flow",
+      "description": "ブランチ作業用（メイン + git操作）",
+      "keywords": ["git", "branch", "flow"],
+      "workspace": {
+        "name": "Git Flow",
+        "cwd": ".",
+        "color": "#3b82f6",
+        "layout": {
+          "direction": "horizontal",
+          "split": 0.6,
+          "children": [
+            {
+              "pane": {
+                "surfaces": [
+                  {
+                    "type": "terminal",
+                    "name": "Main",
+                    "focus": true
+                  }
+                ]
+              }
+            },
+            {
+              "pane": {
+                "surfaces": [
+                  {
+                    "type": "terminal",
+                    "name": "Git"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Docs",
+      "description": "ドキュメント作業（エディタ + ブラウザ参照）",
+      "keywords": ["docs", "markdown", "writing"],
+      "workspace": {
+        "name": "Docs",
+        "cwd": ".",
+        "color": "#8b5cf6",
+        "layout": {
+          "direction": "horizontal",
+          "split": 0.5,
+          "children": [
+            {
+              "pane": {
+                "surfaces": [
+                  {
+                    "type": "terminal",
+                    "name": "Editor",
+                    "focus": true
+                  }
+                ]
+              }
+            },
+            {
+              "pane": {
+                "surfaces": [
+                  {
+                    "type": "browser",
+                    "name": "Reference",
+                    "url": "about:blank"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
     }
   ]
 }

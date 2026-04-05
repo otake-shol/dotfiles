@@ -7,7 +7,7 @@
 #   ~/.zsh/aliases/   - 純粋なエイリアス定義
 #     core.zsh        - 基本操作、システム、ネットワーク
 #     git.zsh         - Git、GitHub CLI
-#     node.zsh        - npm、yarn、pnpm、bun
+#     node.zsh        - npm、yarn、pnpm
 #     dev.zsh         - エディタ、Python
 #
 #   ~/.zsh/functions/ - 関数定義

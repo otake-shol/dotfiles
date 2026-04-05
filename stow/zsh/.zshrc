@@ -8,7 +8,7 @@
 #   plugins.zsh - Oh My Zsh プラグイン
 #   core.zsh    - 基本設定・オプション
 #   lazy.zsh    - 遅延読み込み（asdf, atuin, direnv）
-#   tools.zsh   - ツール設定（fzf, zoxide, yazi, bun）
+#   tools.zsh   - ツール設定（fzf, zoxide, yazi）
 #
 # プロファイリング有効化（デバッグ時のみ）
 # zmodload zsh/zprof
@@ -74,4 +74,4 @@ unset -f _zsh_startup_check
 # プロファイリング結果表示（デバッグ時のみ）
 # zprof
 
-alias claude-mem='bun "$HOME/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
+alias claude-mem='node "$HOME/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'

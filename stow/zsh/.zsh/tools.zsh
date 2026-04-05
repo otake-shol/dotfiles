@@ -1,4 +1,4 @@
-# tools.zsh - ツール設定（fzf, zoxide, yazi, bun）
+# tools.zsh - ツール設定（fzf, zoxide, yazi）
 
 # --- fzf ---
 # TokyoNightテーマ + プレビュー設定
@@ -69,13 +69,7 @@ if command -v direnv &>/dev/null; then
   unset _direnv_cache
 fi
 
-# --- bun ---
-export BUN_INSTALL="$HOME/.bun"
-[ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
-
 # --- PATH ---
-# bun
-[[ -d "$BUN_INSTALL/bin" ]] && export PATH="$BUN_INSTALL/bin:$PATH"
 
 # trash command (safe delete)
 _trash_path="${HOMEBREW_PREFIX:-/usr/local}/opt/trash/bin"

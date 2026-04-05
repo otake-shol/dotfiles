@@ -75,7 +75,6 @@ flowchart TD
         G --> G1["fzf オプション"]
         G --> G2["zoxide<br>（キャッシュ）"]
         G --> G3["yazi関数"]
-        G --> G4["bun"]
         G --> G5["PATH設定"]
         G --> G6["更新リマインダー"]
     end

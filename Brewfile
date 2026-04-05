@@ -2,7 +2,6 @@
 # 使用方法: brew bundle --file=Brewfile
 
 # Taps
-tap "oven-sh/bun"
 
 # ========================================
 # CLI Tools
@@ -53,9 +52,8 @@ brew "yq"                          # YAML/JSON/XML処理(jqのYAML版)
 brew "mas"                         # Mac App Store CLI
 brew "marp-cli"                    # Markdownスライド生成
 
-# --- クラウド・ランタイム ---
+# --- クラウド ---
 brew "awscli"                      # AWS公式CLI
-brew "oven-sh/bun/bun"             # 高速JS/TSランタイム+バンドラー
 
 # ========================================
 # GUI Applications

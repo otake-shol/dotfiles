@@ -1,8 +1,6 @@
 # Brewfile - Homebrewパッケージ管理
 # 使用方法: brew bundle --file=Brewfile
 
-# Taps
-
 # ========================================
 # CLI Tools
 # ========================================
@@ -44,7 +42,6 @@ brew "lefthook"                    # Git hooks管理(並列実行+YAML設定)
 brew "shellcheck"                  # シェルスクリプトlinter(lefthook連携)
 brew "yamllint"                    # YAML linter(lefthook連携)
 brew "marp-cli"                    # Markdownスライド生成
-
 
 # ========================================
 # GUI Applications

@@ -50,7 +50,7 @@ lint:
 	@find scripts -name '*.sh' -exec shellcheck -S warning {} +
 
 health: lint check
-	@bash scripts/maintenance/verify-setup.sh
+	@bash scripts/verify-setup.sh
 
 clean:
 	@find . -name "*.backup.*" -delete

@@ -1,12 +1,12 @@
 #!/bin/bash
 # verify-setup.sh - dotfilesセットアップ検証
-# Usage: bash scripts/maintenance/verify-setup.sh
+# Usage: bash scripts/verify-setup.sh
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# shellcheck source=../lib/common.sh
-source "${SCRIPT_DIR}/../lib/common.sh"
+# shellcheck source=common.sh
+source "${SCRIPT_DIR}/common.sh"
 
 # --- シンボリックリンク ---
 verify_symlinks() {

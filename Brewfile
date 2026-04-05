@@ -52,8 +52,6 @@ brew "yq"                          # YAML/JSON/XML処理(jqのYAML版)
 brew "mas"                         # Mac App Store CLI
 brew "marp-cli"                    # Markdownスライド生成
 
-# --- クラウド ---
-brew "awscli"                      # AWS公式CLI
 
 # ========================================
 # GUI Applications

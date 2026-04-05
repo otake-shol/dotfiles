@@ -32,9 +32,6 @@ style = "compact"
 # インライン表示の高さ
 inline_height = 20
 
-# タイムスタンプ表示
-show_preview = true
-
 # コマンドの最大長（0で無制限）
 max_preview_height = 4
 
@@ -59,5 +56,3 @@ history_filter = ["^cd ", "^ls", "^ll", "^la", "^exit$", "^clear$", "^pwd$"]
 # Enterで実行せずにコマンドラインに入力
 enter_accept = false
 
-# 更新チェック
-update_check = true

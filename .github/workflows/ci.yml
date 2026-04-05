@@ -16,7 +16,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y stow shellcheck zsh
 
       - name: ShellCheck
-        run: shellcheck -S warning bootstrap.sh
+        run: make lint
 
       - name: Stow conflict detection (dry run)
         run: |

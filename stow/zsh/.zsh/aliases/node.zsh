@@ -32,14 +32,3 @@ alias pnad="pnpm add -D"
 alias pnr="pnpm run"
 alias pnx="pnpm dlx"
 alias pnup="pnpm update --interactive" # インタラクティブ更新
-
-# ========================================
-# bun（高速JS/TSランタイム）
-# ========================================
-alias b="bun"
-alias bi="bun install"
-alias ba="bun add"
-alias bad="bun add -d"
-alias br="bun run"
-alias bt="bun test"
-alias bx="bunx"

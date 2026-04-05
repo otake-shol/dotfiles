@@ -99,10 +99,6 @@ show_node_aliases() {
     print_alias "pni" "pnpm install"
     print_alias "pnr" "pnpm run"
 
-    print_section "bun"
-    print_alias "b" "bun"
-    print_alias "bi" "bun install"
-    print_alias "br" "bun run"
 }
 
 show_dev_aliases() {
@@ -175,7 +171,7 @@ show_usage() {
     print_alias "all" "全てのエイリアス・関数"
     print_alias "core" "基本操作（ls, cd, 検索など）"
     print_alias "git" "Git & GitHub CLI"
-    print_alias "node" "npm / yarn / pnpm / bun"
+    print_alias "node" "npm / yarn / pnpm"
     print_alias "dev" "エディタ・開発ツール"
     print_alias "fzf" "fzf統合関数"
     print_alias "tools" "モダンCLIツール一覧"
@@ -200,7 +196,7 @@ case "${1:-}" in
         dothelp_header "Git & GitHub CLI"
         show_git_aliases
         ;;
-    node|npm|yarn|pnpm|bun)
+    node|npm|yarn|pnpm)
         dothelp_header "Node.js パッケージマネージャー"
         show_node_aliases
         ;;

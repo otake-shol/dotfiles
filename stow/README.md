@@ -18,8 +18,6 @@ GNU Stowで管理するdotfilesパッケージの一覧です。
 | gh | `~/.config/gh/` | GitHub CLI設定 |
 | yazi | `~/.config/yazi/` | ファイルマネージャー設定 |
 | ripgrep | `~/.ripgreprc` | ripgrep設定 |
-| lazygit | `~/.config/lazygit/` | Git TUI設定 |
-| gpg | `~/.gnupg/` | GPG署名設定 |
 | direnv | `~/.config/direnv/` | 環境変数管理 |
 | cmux | `~/.config/cmux/` | ターミナルマルチプレクサー設定 |
 

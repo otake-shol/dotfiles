@@ -12,8 +12,6 @@ brew "git"                         # Homebrew版で最新機能
 brew "gh"                          # GitHub公式CLI
 brew "git-secrets"                 # APIキー誤コミット防止(lefthook連携)
 brew "git-delta"                   # diff表示: side-by-side+シンタックスハイライト
-brew "gnupg"                       # GPGコミット署名・暗号化
-brew "lazygit"                     # Git TUI
 
 # --- バージョン管理・エディタ ---
 brew "asdf"                        # Node/Python/Terraform統一管理(.tool-versions)

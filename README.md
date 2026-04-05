@@ -40,11 +40,10 @@ dotfiles/
 │   ├── git/, gh/          # Git/GitHub CLI設定
 │   ├── claude/            # Claude Code設定
 │   ├── nvim/, ghostty/    # エディタ・ターミナル
-│   ├── yazi/, lazygit/    # ファイラー・Git TUI
+│   ├── yazi/              # ファイラー
 │   ├── bat/, atuin/       # ユーティリティ
 │   ├── ripgrep/           # ripgrep設定
 │   ├── direnv/            # direnv設定
-│   ├── gpg/               # GPG設定
 │   └── cmux/              # cmuxターミナル設定
 ├── scripts/               # ユーティリティスクリプト
 ├── docs/                  # 詳細ドキュメント（ARCHITECTURE.md, GPG_SIGNING.md等）

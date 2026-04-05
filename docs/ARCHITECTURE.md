@@ -21,8 +21,6 @@ dotfiles/
 │   ├── claude/            # Claude Code設定
 │   ├── gh/                # GitHub CLI設定
 │   ├── ripgrep/           # ripgrep設定
-│   ├── lazygit/           # Git TUI設定
-│   ├── gpg/               # GPG設定（コミット署名）
 │   ├── direnv/            # direnv設定（環境変数自動化）
 │   ├── cmux/              # cmuxターミナル設定
 │
@@ -147,8 +145,6 @@ flowchart LR
 | claude | Stow | ~/.claude/ ディレクトリ |
 | gh | Stow | XDG準拠（~/.config/gh） |
 | ripgrep | Stow | XDG準拠（~/.config/ripgrep） |
-| lazygit | Stow | XDG準拠（~/.config/lazygit） |
-| gpg | Stow | ~/.gnupg/ ディレクトリ（コミット署名用） |
 | direnv | Stow | XDG準拠（~/.config/direnv） |
 | cmux | Stow | XDG準拠（~/.config/cmux） |
 | ssh | **テンプレート** | scripts/setup/ssh-config.template → ~/.ssh/config |

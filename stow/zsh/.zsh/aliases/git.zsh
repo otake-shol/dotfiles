@@ -38,11 +38,6 @@ alias ghrw="gh run watch"              # Workflow実行を監視
 alias ghd="gh dash"                    # PRダッシュボード
 
 # ========================================
-# lazygit（Git TUI）
-# ========================================
-alias lg="lazygit"                     # Git TUI起動
-
-# ========================================
 # 便利なGit操作
 # ========================================
 alias gwip='git add -A && git commit -m "WIP: work in progress"'  # WIPコミット

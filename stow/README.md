@@ -21,12 +21,6 @@ GNU Stowで管理するdotfilesパッケージの一覧です。
 | direnv | `~/.config/direnv/` | 環境変数管理 |
 | cmux | `~/.config/cmux/` | ターミナルマルチプレクサー設定 |
 
-## 非Stow（bootstrap.shで個別処理）
-
-| 対象 | 理由 | 処理方法 |
-|------|------|---------|
-| SSH | セキュリティ上テンプレート方式 | `scripts/setup/ssh-config.template` → `~/.ssh/config` |
-
 ## コマンド
 
 ```bash

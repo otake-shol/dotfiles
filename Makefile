@@ -5,7 +5,7 @@ STOW_DIR := stow
 STOW_FLAGS := -v --target=$(HOME) --dir=$(STOW_DIR) --restow
 PACKAGES := zsh git nvim ghostty bat atuin claude gh yazi ripgrep direnv cmux
 
-.PHONY: help install uninstall check bootstrap lint clean bench health deps brewsync install-% uninstall-%
+.PHONY: help install uninstall check bootstrap lint health brewsync clean install-% uninstall-%
 
 help:
 	@echo "Usage:"
@@ -16,8 +16,6 @@ help:
 	@echo "  make bootstrap        完全セットアップ"
 	@echo "  make lint             ShellCheck"
 	@echo "  make health           lint + check + verify"
-	@echo "  make bench            Zsh起動速度ベンチマーク"
-	@echo "  make deps             Homebrew依存ツリー"
 	@echo "  make brewsync         Brewfile同期チェック"
 	@echo "  make clean            バックアップファイル削除"
 	@echo ""
@@ -54,12 +52,6 @@ lint:
 
 health: lint check
 	@bash scripts/maintenance/verify-setup.sh
-
-bench:
-	@bash scripts/utils/zsh-benchmark.sh
-
-deps:
-	@brew deps --tree stow bat eza fzf ripgrep zoxide 2>/dev/null || echo "Homebrewが必要です"
 
 brewsync:
 	@bash scripts/maintenance/sync-brewfile.sh

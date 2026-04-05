@@ -95,7 +95,7 @@ _dotfiles_update_reminder() {
     if [[ -n "$last_update" ]]; then
       local days_since=$(( ($(date +%s) - last_update) / 86400 ))
       if [[ $days_since -gt 30 ]]; then
-        echo "dotfilesが${days_since}日間更新されていません。'dotup'で確認してください。"
+        echo "dotfilesが${days_since}日間更新されていません。'cd ~/dotfiles && git pull'で更新してください。"
       fi
     fi
   fi

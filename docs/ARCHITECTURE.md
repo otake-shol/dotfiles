@@ -112,22 +112,13 @@ flowchart LR
 
     subgraph "メンテナンス"
         M1["verify-setup.sh"]
-        M2["update-all.sh"]
-        M3["check-updates.sh"]
         M4["sync-brewfile.sh"]
         M1 --> L1
-        M2 --> L1
-        M3 --> L1
         M4 --> L1
     end
 
     subgraph "ユーティリティ"
-        U1["dothelp.sh"]
-        U2["zsh-benchmark.sh"]
-        U3["setup-ssh.sh"]
-        U1 --> L1
-        U2 --> L1
-        U3 --> L1
+        U4["op-env.sh"]
     end
 ```
 
@@ -147,7 +138,6 @@ flowchart LR
 | ripgrep | Stow | XDG準拠（~/.config/ripgrep） |
 | direnv | Stow | XDG準拠（~/.config/direnv） |
 | cmux | Stow | XDG準拠（~/.config/cmux） |
-| ssh | **テンプレート** | scripts/setup/ssh-config.template → ~/.ssh/config |
 
 ## テーマ統一（TokyoNight）
 

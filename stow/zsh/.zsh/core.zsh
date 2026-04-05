@@ -79,7 +79,7 @@ _suggest_fix() {
       [[ $code -eq 1 ]] && suggestion="パスワードを確認、または権限が必要な操作か確認"
       ;;
     ssh\ *)
-      suggestion="SSH鍵を確認: ssh-add -l または dotsshlist"
+      suggestion="SSH鍵を確認: ssh-add -l"
       ;;
     *)
       # command not found

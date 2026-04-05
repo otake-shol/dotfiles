@@ -52,17 +52,14 @@ dotfiles/
 └── bootstrap.sh           # 自動セットアップスクリプト
 ```
 
-> **Note**: SSH設定はテンプレート方式（`scripts/setup/ssh-config.template`）のため、`bootstrap.sh`で個別処理しています。
-
 ## 便利なコマンド
 
-### ヘルプ・メンテナンス
+### メンテナンス
 
 ```bash
-dothelp              # エイリアス一覧・使い方
 dotverify            # セットアップ状態の検証
-dotupdate            # 全ツール一括更新
 brewsync             # Brewfile同期チェック
+make lint            # ShellCheck実行
 ```
 
 ### fzf連携
@@ -77,14 +74,6 @@ Ctrl+R               # 履歴検索（atuin）
 
 ```bash
 y                    # yaziを起動（終了時にcdも反映）
-# yazi内: z=zoxide, Z=fzf, e=nvim, b=bat, Y=パスコピー
-```
-
-### SSH鍵管理
-
-```bash
-dotssh               # SSH鍵セットアップ（対話式）
-dotsshlist           # SSH鍵一覧表示
 ```
 
 ## モダンCLI対応表

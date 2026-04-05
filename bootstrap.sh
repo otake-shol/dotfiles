@@ -293,17 +293,9 @@ for pkg in "${STOW_PACKAGES[@]}"; do
 done
 echo -e "${GREEN}✓ Stowパッケージ完了 (${STOW_PACKAGES[*]})${NC}"
 
-# SSH設定（テンプレート方式）
+# SSH基本セットアップ
 if [ "$DRY_RUN" != true ]; then
     mkdir -p ~/.ssh/sockets && chmod 700 ~/.ssh
-    [[ -L ~/.ssh/config && ! -e ~/.ssh/config ]] && rm ~/.ssh/config
-    if [ ! -f ~/.ssh/config ]; then
-        cp "$SCRIPT_DIR/scripts/setup/ssh-config.template" ~/.ssh/config
-        chmod 600 ~/.ssh/config
-        echo -e "${GREEN}✓ SSH config作成${NC}"
-    fi
-else
-    echo -e "${CYAN}[DRY RUN] SSH config${NC}"
 fi
 
 # --- 5. Oh My Zsh ---

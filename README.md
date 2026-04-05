@@ -57,8 +57,8 @@ dotfiles/
 ### メンテナンス
 
 ```bash
-dotverify            # セットアップ状態の検証
 make lint            # ShellCheck実行
+make check           # Stowドライラン
 ```
 
 ### fzf連携

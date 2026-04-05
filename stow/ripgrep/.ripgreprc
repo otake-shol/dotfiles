@@ -7,12 +7,7 @@
 # カラー出力を常に有効化
 --color=auto
 
-# 除外パターン
---glob=!.git/
---glob=!node_modules/
---glob=!vendor/
---glob=!.venv/
---glob=!__pycache__/
+# 除外パターン（.gitignoreで処理されないもののみ）
 --glob=!*.min.js
 --glob=!*.min.css
 --glob=!package-lock.json

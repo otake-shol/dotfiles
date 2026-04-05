@@ -1,5 +1,8 @@
 # core.zsh - 基本設定・オプション
 
+# --- カラーコード定数 ---
+NC='\033[0m'
+
 # --- エディタ ---
 export EDITOR="nvim"
 export VISUAL="nvim"
@@ -115,7 +118,6 @@ _notify_sound() {
     afplay /System/Library/Sounds/Basso.aiff &>/dev/null &
   fi
 }
-NC='\033[0m'
 
 # REPORTTIME は無効化（カスタム表示を使用）
 # REPORTTIME=5

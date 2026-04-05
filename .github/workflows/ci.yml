@@ -78,7 +78,7 @@ jobs:
       - name: Bootstrap dry-run
         run: bash bootstrap.sh --dry-run --yes
 
-      - name: Stow install (actual)
+      - name: Stow install (dry-run)
         run: |
           brew install stow
-          make install
+          make check

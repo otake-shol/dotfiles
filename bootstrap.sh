@@ -1,19 +1,24 @@
 #!/bin/bash
 # bootstrap.sh - 新しいMacの自動セットアップスクリプト
-# 使用方法: bash bootstrap.sh
-# オプション:
-#   -n, --dry-run    実際の変更を行わずシミュレーション
-#   -y, --yes        対話プロンプトをすべてYesで自動応答
-#   -h, --help       ヘルプを表示
-#   -v, --verbose    詳細出力
-#   --skip-apps      アプリケーションインストールをスキップ
-#   --skip-claude    Claude Code セットアップをスキップ
-#   --claude-only    Claude Code セットアップのみ実行
+#
+# Usage:
+#   bash bootstrap.sh           # 通常実行
+#   bash bootstrap.sh -n        # ドライラン
+#   bash bootstrap.sh -y        # 完全自動（対話なし）
+#   bash bootstrap.sh -n -v     # ドライラン + 詳細出力
+#
+# Options:
+#   -n, --dry-run      シミュレーション実行
+#   -y, --yes          対話プロンプトを自動応答
+#   -v, --verbose      詳細出力
+#   --skip-apps        アプリインストールをスキップ
+#   --skip-claude      Claude Codeセットアップをスキップ
+#   --claude-only      Claude Codeセットアップのみ
 
-set -euo pipefail  # エラー・未定義変数・パイプ失敗で停止
+set -euo pipefail
 
 # ========================================
-# 設定
+# 設定・初期化
 # ========================================
 DRY_RUN=false
 VERBOSE=false
@@ -22,25 +27,19 @@ SKIP_CLAUDE=false
 CLAUDE_ONLY=false
 ASSUME_YES=false
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CURRENT_STEP=""  # エラー時のステップ特定用
+CURRENT_STEP=""
 
-# 共通ライブラリ読み込み
+# 共通ライブラリ
 # shellcheck source=scripts/lib/common.sh
 if [[ -f "${SCRIPT_DIR}/scripts/lib/common.sh" ]]; then
     source "${SCRIPT_DIR}/scripts/lib/common.sh"
 else
-    # フォールバック: common.shが無い場合の最小限定義
-    RED='\033[0;31m'
-    GREEN='\033[0;32m'
-    YELLOW='\033[1;33m'
-    BLUE='\033[0;34m'
-    CYAN='\033[0;36m'
-    NC='\033[0m'
-    # safe_link関数の最小定義
+    RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
+    BLUE='\033[0;34m'; CYAN='\033[0;36m'; NC='\033[0m'
     safe_link() { ln -sf "$1" "$2"; }
 fi
 
-# ログファイル（タイムスタンプ付き、30日超の古いログを自動削除）
+# ログ
 LOG_DIR="$HOME/.local/share/dotfiles/logs"
 mkdir -p "$LOG_DIR"
 LOG_FILE="$LOG_DIR/bootstrap-$(date '+%Y%m%d-%H%M%S').log"
@@ -48,290 +47,132 @@ ln -sf "$LOG_FILE" "$LOG_DIR/bootstrap-latest.log"
 find "$LOG_DIR" -name 'bootstrap-*.log' -mtime +30 -delete 2>/dev/null || true
 
 # ========================================
-# ヘルプ
-# ========================================
-show_help() {
-    cat << EOF
-使用方法: bash bootstrap.sh [オプション]
-
-新しいMacの自動セットアップスクリプト
-
-オプション:
-  -n, --dry-run    実際の変更を行わずシミュレーション実行
-  -y, --yes        対話プロンプトをすべてYesで自動応答（完全自動化）
-  -v, --verbose    詳細な出力を表示
-  --skip-apps      アプリケーションインストールをスキップ
-  --skip-claude    Claude Code セットアップをスキップ
-  --claude-only    Claude Code セットアップのみ実行
-  -h, --help       このヘルプを表示
-
-例:
-  bash bootstrap.sh           # 通常実行
-  bash bootstrap.sh --dry-run # ドライラン（変更なし）
-  bash bootstrap.sh -n -v     # ドライラン + 詳細出力
-  bash bootstrap.sh -y        # 完全自動実行（対話なし）
-EOF
-    exit 0
-}
-
-# ========================================
 # 引数解析
 # ========================================
 while [[ "$#" -gt 0 ]]; do
     case $1 in
-        -n|--dry-run)
-            DRY_RUN=true
-            ;;
-        -y|--yes)
-            ASSUME_YES=true
-            ;;
-        -v|--verbose)
-            VERBOSE=true
-            ;;
+        -n|--dry-run)   DRY_RUN=true ;;
+        -y|--yes)       ASSUME_YES=true ;;
+        -v|--verbose)   VERBOSE=true ;;
+        --skip-apps)    SKIP_APPS=true ;;
+        --skip-claude)  SKIP_CLAUDE=true ;;
+        --claude-only)  CLAUDE_ONLY=true ;;
         -h|--help)
-            show_help
-            ;;
-        --skip-apps)
-            SKIP_APPS=true
-            ;;
-        --skip-claude)
-            SKIP_CLAUDE=true
-            ;;
-        --claude-only)
-            CLAUDE_ONLY=true
-            ;;
-        *)
-            echo -e "${RED}不明なオプション: $1${NC}"
-            show_help
-            ;;
+            sed -n '2,16p' "$0" | sed 's/^# \?//'
+            exit 0 ;;
+        *) echo -e "${RED}不明なオプション: $1${NC}"; exit 1 ;;
     esac
     shift
 done
 
-# --claude-only: Claude セットアップのみ実行して終了
-if [ "$CLAUDE_ONLY" = true ]; then
-    echo -e "\n${GREEN}========================================${NC}"
-    echo -e "${GREEN}  Claude Code セットアップのみ実行${NC}"
-    echo -e "${GREEN}========================================${NC}"
-    if [ -x "$HOME/.claude/setup.sh" ]; then
-        if command -v claude &>/dev/null; then
-            "$HOME/.claude/setup.sh"
-        else
-            echo -e "${RED}Claude Code がインストールされていません${NC}"
-            echo -e "  → ${CYAN}npm install -g @anthropic-ai/claude-code${NC}"
-            exit 1
-        fi
-    else
-        echo -e "${RED}~/.claude/setup.sh が見つかりません${NC}"
-        echo -e "  → 先に ${CYAN}make install-claude${NC} を実行してください"
-        exit 1
-    fi
-    echo -e "\n${GREEN}完了！${NC}"
-    exit 0
-fi
-
 # ========================================
 # ユーティリティ関数
 # ========================================
-
-# ステップ表示（番号付き）
 show_step() {
-    local step=$1
-    local total=$2
-    local title=$3
-    CURRENT_STEP="[$step/$total] $title"
+    CURRENT_STEP="[$1/$2] $3"
     echo -e "\n${YELLOW}${CURRENT_STEP}${NC}"
 }
 
-# ログ関数（bootstrap.sh固有：LOG_FILE, VERBOSE使用）
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
-    if [ "$VERBOSE" = true ]; then
-        echo -e "${CYAN}[LOG] $1${NC}"
-    fi
+    [[ "$VERBOSE" = true ]] && echo -e "${CYAN}[LOG] $1${NC}"
 }
 
-# Brewfileパッケージを個別インストール（状況表示付き）
+ask() {
+    [[ "$ASSUME_YES" = true ]] && return 0
+    echo -e "${YELLOW}$1 (y/n)${NC}"
+    read -r answer
+    [[ "$answer" = "y" ]]
+}
+
+# Brewfileパッケージを個別インストール
 install_brewfile_packages() {
     local brewfile="$1"
-    local success=0
-    local failed=0
-    local skipped=0
+    local success=0 failed=0 skipped=0 current=0
     local failed_packages=()
+    local taps=() brews=() casks=()
 
-    # Brewfileをパース
-    local taps=()
-    local brews=()
-    local casks=()
-
-    # Brewfile の各行を解析し、tap/brew/cask を分類
-    # 正規表現: ^type\s+"(name)" でダブルクォート内のパッケージ名をキャプチャ
     while IFS= read -r line; do
-        [[ "$line" =~ ^[[:space:]]*# ]] && continue  # コメント行
-        [[ -z "${line// }" ]] && continue              # 空行（空白のみ含む）
-
+        [[ "$line" =~ ^[[:space:]]*# ]] && continue
+        [[ -z "${line// }" ]] && continue
         if [[ "$line" =~ ^tap[[:space:]]+\"([^\"]+)\" ]]; then
-            taps+=("${BASH_REMATCH[1]}")   # e.g. tap "homebrew/cask" → homebrew/cask
+            taps+=("${BASH_REMATCH[1]}")
         elif [[ "$line" =~ ^brew[[:space:]]+\"([^\"]+)\" ]]; then
-            brews+=("${BASH_REMATCH[1]}")  # e.g. brew "git" → git
+            brews+=("${BASH_REMATCH[1]}")
         elif [[ "$line" =~ ^cask[[:space:]]+\"([^\"]+)\" ]]; then
-            casks+=("${BASH_REMATCH[1]}")  # e.g. cask "firefox" → firefox
+            casks+=("${BASH_REMATCH[1]}")
         fi
     done < "$brewfile"
 
     local total=$((${#taps[@]} + ${#brews[@]} + ${#casks[@]}))
-    local current=0
-
-    echo -e "${BLUE}╔════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${BLUE}║  📦 Brewfile パッケージインストール                    ║${NC}"
-    echo -e "${BLUE}╚════════════════════════════════════════════════════════╝${NC}"
-    echo -e "総パッケージ数: ${CYAN}$total${NC} (tap: ${#taps[@]}, brew: ${#brews[@]}, cask: ${#casks[@]})"
-    echo ""
+    echo -e "パッケージ: ${CYAN}$total${NC} (tap: ${#taps[@]}, brew: ${#brews[@]}, cask: ${#casks[@]})"
 
     # Taps
-    if [ ${#taps[@]} -gt 0 ]; then
-        echo -e "${CYAN}┌── 🔌 Taps ──────────────────────────────────────────────┐${NC}"
-        for tap in "${taps[@]}"; do
-            ((current++))
-
-            # インストール済みチェック
-            if brew tap | grep -q "^${tap}$" 2>/dev/null; then
-                printf "│ [%3d/%3d] %-42s ${GREEN}✓ 済${NC}\n" "$current" "$total" "$tap"
-                ((skipped++))
+    for tap in "${taps[@]}"; do
+        ((current++))
+        if brew tap | grep -q "^${tap}$" 2>/dev/null; then
+            printf "  [%d/%d] %-40s ${GREEN}✓${NC}\n" "$current" "$total" "$tap"
+            ((skipped++))
+        else
+            printf "  [%d/%d] %-40s " "$current" "$total" "$tap"
+            if brew tap "$tap" &>/dev/null; then
+                echo -e "${GREEN}✓${NC}"; ((success++))
             else
-                printf "│ [%3d/%3d] %-42s " "$current" "$total" "$tap"
-                if brew tap "$tap" &>/dev/null; then
-                    echo -e "${GREEN}✓ 追加${NC}"
-                    ((success++))
-                else
-                    echo -e "${RED}✗ 失敗${NC}"
-                    ((failed++))
-                    failed_packages+=("tap: $tap")
-                fi
+                echo -e "${RED}✗${NC}"; ((failed++)); failed_packages+=("tap: $tap")
             fi
-        done
-        echo -e "${CYAN}└──────────────────────────────────────────────────────────┘${NC}"
-        echo ""
-    fi
+        fi
+    done
 
-    # Brews (CLIツール)
-    if [ ${#brews[@]} -gt 0 ]; then
-        echo -e "${CYAN}┌── 🛠  CLI Tools (brew) ─────────────────────────────────┐${NC}"
-        for pkg in "${brews[@]}"; do
-            ((current++))
-
-            if brew list --formula "$pkg" &>/dev/null; then
-                printf "│ [%3d/%3d] %-42s ${GREEN}✓ 済${NC}\n" "$current" "$total" "$pkg"
-                ((skipped++))
+    # Brews
+    for pkg in "${brews[@]}"; do
+        ((current++))
+        if brew list --formula "$pkg" &>/dev/null; then
+            printf "  [%d/%d] %-40s ${GREEN}✓${NC}\n" "$current" "$total" "$pkg"
+            ((skipped++))
+        else
+            printf "  [%d/%d] %-40s " "$current" "$total" "$pkg"
+            if brew install "$pkg" &>/dev/null; then
+                echo -e "${GREEN}✓${NC}"; ((success++))
             else
-                printf "│ [%3d/%3d] %-42s " "$current" "$total" "$pkg"
-                if brew install "$pkg" &>/dev/null; then
-                    echo -e "${GREEN}✓ 完了${NC}"
-                    ((success++))
-                else
-                    echo -e "${RED}✗ 失敗${NC}"
-                    ((failed++))
-                    failed_packages+=("brew: $pkg")
-                fi
+                echo -e "${RED}✗${NC}"; ((failed++)); failed_packages+=("brew: $pkg")
             fi
+        fi
+    done
 
-            # 10パッケージごとに進捗表示
-            if (( current % 10 == 0 )); then
-                printf "│ 進捗: %d/%d\n" "$current" "$total"
-            fi
-        done
-        echo -e "${CYAN}└──────────────────────────────────────────────────────────┘${NC}"
-        echo ""
-    fi
-
-    # Casks (GUIアプリ)
-    if [ ${#casks[@]} -gt 0 ]; then
-        echo -e "${CYAN}┌── 🖥  GUI Apps (cask) ──────────────────────────────────┐${NC}"
-        for pkg in "${casks[@]}"; do
-            ((current++))
-
-            if brew list --cask "$pkg" &>/dev/null; then
-                printf "│ [%3d/%3d] %-42s ${GREEN}✓ 済${NC}\n" "$current" "$total" "$pkg"
-                ((skipped++))
+    # Casks
+    for pkg in "${casks[@]}"; do
+        ((current++))
+        if brew list --cask "$pkg" &>/dev/null; then
+            printf "  [%d/%d] %-40s ${GREEN}✓${NC}\n" "$current" "$total" "$pkg"
+            ((skipped++))
+        else
+            printf "  [%d/%d] %-40s " "$current" "$total" "$pkg"
+            if brew install --cask "$pkg" &>/dev/null; then
+                echo -e "${GREEN}✓${NC}"; ((success++))
             else
-                printf "│ [%3d/%3d] %-42s " "$current" "$total" "$pkg"
-                if brew install --cask "$pkg" &>/dev/null; then
-                    echo -e "${GREEN}✓ 完了${NC}"
-                    ((success++))
-                else
-                    echo -e "${RED}✗ 失敗${NC}"
-                    ((failed++))
-                    failed_packages+=("cask: $pkg")
-                fi
+                echo -e "${RED}✗${NC}"; ((failed++)); failed_packages+=("cask: $pkg")
             fi
-        done
-        echo -e "${CYAN}└──────────────────────────────────────────────────────────┘${NC}"
-        echo ""
-    fi
+        fi
+    done
 
-    # 完了メッセージ
-    echo -e "完了: ${GREEN}$total/$total${NC}\n"
-
-    # サマリー表示
-    echo -e "${BLUE}╔════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${BLUE}║  📊 インストール結果サマリー                          ║${NC}"
-    echo -e "${BLUE}╠════════════════════════════════════════════════════════╣${NC}"
-    printf "${BLUE}║${NC}  ${GREEN}✓ 新規インストール${NC}: %-34s${BLUE}║${NC}\n" "$success"
-    printf "${BLUE}║${NC}  ${CYAN}○ スキップ（済）${NC}  : %-34s${BLUE}║${NC}\n" "$skipped"
-    printf "${BLUE}║${NC}  ${RED}✗ 失敗${NC}            : %-34s${BLUE}║${NC}\n" "$failed"
-    echo -e "${BLUE}╚════════════════════════════════════════════════════════╝${NC}"
+    echo -e "\n結果: 新規=${GREEN}$success${NC} スキップ=${CYAN}$skipped${NC} 失敗=${RED}$failed${NC}"
 
     if [ $failed -gt 0 ]; then
-        echo -e "\n${YELLOW}⚠ 失敗したパッケージ:${NC}"
+        echo -e "${YELLOW}失敗:${NC}"
         for pkg in "${failed_packages[@]}"; do
-            echo -e "  ${RED}├─ $pkg${NC}"
+            echo -e "  ${RED}- $pkg${NC}"
         done
         log "Failed packages: ${failed_packages[*]}"
         return 1
     fi
-
-    return 0
 }
 
-# クリーンアップ処理
+# エラー時のクリーンアップ
 cleanup() {
     local exit_code=$?
     if [ $exit_code -ne 0 ]; then
-        echo ""
-        echo -e "${RED}╔════════════════════════════════════════════════════════╗${NC}"
-        echo -e "${RED}║  ❌ エラーが発生しました                               ║${NC}"
-        echo -e "${RED}╠════════════════════════════════════════════════════════╣${NC}"
-        echo -e "${RED}║${NC}  終了コード: $exit_code"
-        echo -e "${RED}║${NC}  失敗ステップ: ${CURRENT_STEP:-初期化中}"
-        echo -e "${RED}║${NC}  ログファイル: $LOG_FILE"
-        echo -e "${RED}╚════════════════════════════════════════════════════════╝${NC}"
-
-        # ログから失敗パッケージを抽出
-        if [ -f "$LOG_FILE" ]; then
-            local failed_pkgs
-            failed_pkgs=$(grep -i "failed packages" "$LOG_FILE" | tail -1)
-            if [ -n "$failed_pkgs" ]; then
-                echo ""
-                echo -e "${YELLOW}┌── 失敗したパッケージ ───────────────────────────────────┐${NC}"
-                echo -e "${YELLOW}│${NC} ${failed_pkgs#*: }"
-                echo -e "${YELLOW}└──────────────────────────────────────────────────────────┘${NC}"
-            fi
-
-            # 直近のログエントリを表示
-            echo ""
-            echo -e "${CYAN}┌── 直近のログ (最後の5件) ───────────────────────────────┐${NC}"
-            tail -5 "$LOG_FILE" | while IFS= read -r line; do
-                echo -e "${CYAN}│${NC} $line"
-            done
-            echo -e "${CYAN}└──────────────────────────────────────────────────────────┘${NC}"
-        fi
-
-        echo ""
-        echo -e "${YELLOW}💡 ヒント:${NC}"
-        echo -e "  • 失敗したパッケージは後で個別にインストールできます"
-        echo -e "  • brew install <パッケージ名> で再試行"
-        echo -e "  • 詳細ログ: cat $LOG_FILE"
-
+        echo -e "\n${RED}エラー発生${NC} (code: $exit_code, step: ${CURRENT_STEP:-初期化中})"
+        echo -e "ログ: $LOG_FILE"
         log "ERROR: Setup failed with exit code $exit_code"
     fi
 }
@@ -342,396 +183,238 @@ trap cleanup EXIT
 # ========================================
 check_dependencies() {
     local missing=()
-
-    # 必須コマンド
     command -v git &>/dev/null || missing+=("git")
     command -v curl &>/dev/null || missing+=("curl")
-
     if [ ${#missing[@]} -gt 0 ]; then
-        echo -e "${RED}エラー: 必要なコマンドがインストールされていません${NC}"
         echo -e "${RED}不足: ${missing[*]}${NC}"
-        echo -e "${YELLOW}Xcode Command Line Toolsをインストールしてください:${NC}"
         echo -e "  xcode-select --install"
         exit 1
     fi
-
     log "Dependencies check passed"
 }
 
-# OS/アーキテクチャ検出（os-detect.shの関数を使用）
 detect_system() {
-    OS="$(uname -s)"
-    ARCH="$(uname -m)"
-
-    # macOS専用
     if ! is_macos; then
-        echo -e "${RED}このスクリプトはmacOS専用です${NC}"
-        exit 1
+        echo -e "${RED}macOS専用です${NC}"; exit 1
     fi
-
-    # Homebrewプレフィックスを統一関数で取得
+    ARCH="$(uname -m)"
     HOMEBREW_PREFIX=$(detect_homebrew_prefix)
-
-    log "Detected: $OS ($ARCH), Homebrew prefix: $HOMEBREW_PREFIX"
+    log "Detected: $(uname -s) ($ARCH), Homebrew: $HOMEBREW_PREFIX"
 }
 
 # ========================================
-# 初期化
+# --claude-only: 早期リターン
+# ========================================
+if [ "$CLAUDE_ONLY" = true ]; then
+    echo -e "${GREEN}Claude Code セットアップのみ実行${NC}"
+    if [ -x "$HOME/.claude/setup.sh" ] && command -v claude &>/dev/null; then
+        "$HOME/.claude/setup.sh"
+    else
+        echo -e "${RED}Claude Code または ~/.claude/setup.sh が見つかりません${NC}"
+        exit 1
+    fi
+    exit 0
+fi
+
+# ========================================
+# メイン処理
 # ========================================
 check_dependencies
 detect_system
 
 log "=== Setup started ==="
+echo -e "${BLUE}dotfiles セットアップ${NC}"
+[[ "$DRY_RUN" = true ]] && echo -e "${CYAN}[ドライランモード]${NC}"
 
-echo -e "${BLUE}========================================${NC}"
-echo -e "${BLUE}  dotfiles セットアップスクリプト${NC}"
-echo -e "${BLUE}========================================${NC}"
-if [ "$DRY_RUN" = true ]; then
-    echo -e "${CYAN}  [ドライランモード - 実際の変更は行いません]${NC}"
-fi
-
-# ========================================
-# 0. Apple Silicon: Rosetta 2確認
-# ========================================
+# --- 1. Rosetta 2 (Apple Silicon) ---
 if [[ "$ARCH" == "arm64" ]]; then
-    show_step 0 7 "Rosetta 2の確認（オプション）"
+    show_step 1 6 "Rosetta 2の確認"
     if ! /usr/bin/pgrep -q oahd; then
-        if [ "$ASSUME_YES" = true ]; then
-            answer="y"
-        else
-            echo -e "${YELLOW}Rosetta 2をインストールしますか? (一部のx86アプリに必要) (y/n)${NC}"
-            read -r answer
-        fi
-        if [ "$answer" = "y" ]; then
+        if ask "Rosetta 2をインストールしますか?"; then
             softwareupdate --install-rosetta --agree-to-license
             echo -e "${GREEN}✓ Rosetta 2をインストールしました${NC}"
-            log "Installed Rosetta 2"
         fi
     else
-        echo -e "${GREEN}✓ Rosetta 2はインストール済みです${NC}"
+        echo -e "${GREEN}✓ Rosetta 2はインストール済み${NC}"
     fi
 fi
 
-# ========================================
-# 1. Homebrewのインストール確認
-# ========================================
-show_step 1 7 "Homebrewの確認"
-if ! command -v brew &> /dev/null; then
-    echo -e "${RED}Homebrewがインストールされていません。${NC}"
-    if [ "$ASSUME_YES" = true ]; then
-        answer="y"
-    else
-        echo -e "${YELLOW}Homebrewをインストールしますか? (y/n)${NC}"
-        read -r answer
-    fi
-    if [ "$answer" = "y" ]; then
+# --- 2. Homebrew ---
+show_step 2 6 "Homebrewの確認"
+if ! command -v brew &>/dev/null; then
+    if ask "Homebrewをインストールしますか?"; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        # Homebrew PATH設定（HOMEBREW_PREFIXを使用）
         eval "$("${HOMEBREW_PREFIX}/bin/brew" shellenv)"
-        echo -e "${GREEN}Homebrewのインストールが完了しました。${NC}"
+        echo -e "${GREEN}✓ Homebrewをインストールしました${NC}"
     else
-        echo -e "${RED}macOSではHomebrewが必要です。終了します。${NC}"
-        exit 1
+        echo -e "${RED}Homebrewが必要です${NC}"; exit 1
     fi
 else
-    echo -e "${GREEN}✓ Homebrewはインストール済みです${NC}"
-    # 既存のHomebrew PATH設定（HOMEBREW_PREFIXを使用）
+    echo -e "${GREEN}✓ Homebrewはインストール済み${NC}"
     eval "$("${HOMEBREW_PREFIX}/bin/brew" shellenv)" 2>/dev/null || true
 fi
 
-# ========================================
-# 2. アプリケーションのインストール
-# ========================================
-show_step 2 7 "アプリケーションのインストール"
-
+# --- 3. アプリケーション ---
+show_step 3 6 "アプリケーションのインストール"
 if [ "$SKIP_APPS" = true ]; then
-    echo -e "${CYAN}アプリケーションインストールをスキップします${NC}"
-elif command -v brew &>/dev/null; then
-    BREWFILE="Brewfile"
-    echo -e "${GREEN}Brewfileからツールをインストールします${NC}"
-
-    if [ -f "$BREWFILE" ]; then
-        if install_brewfile_packages "$BREWFILE"; then
-            echo -e "${GREEN}✓ アプリケーションのインストールが完了しました${NC}"
-        else
-            if [ "$ASSUME_YES" = true ]; then
-                answer="y"
-            else
-                echo -e "${YELLOW}続行しますか? (y/n)${NC}"
-                read -r answer
-            fi
-            if [ "$answer" != "y" ]; then
-                echo -e "${RED}セットアップを中断しました${NC}"
-                exit 1
-            fi
-        fi
-    else
-        echo -e "${RED}$BREWFILE が見つかりません${NC}"
-        exit 1
+    echo -e "${CYAN}スキップ${NC}"
+elif [ -f "Brewfile" ]; then
+    if ! install_brewfile_packages "Brewfile"; then
+        ask "失敗がありますが続行しますか?" || exit 1
     fi
 else
-    echo -e "${RED}Homebrewが見つかりません${NC}"
-    exit 1
+    echo -e "${RED}Brewfileが見つかりません${NC}"; exit 1
 fi
 
-# ========================================
-# 3. dotfilesのシンボリックリンク作成（GNU Stow使用）
-# ========================================
-show_step 3 7 "dotfilesのシンボリックリンク作成"
+# --- 4. dotfilesシンボリックリンク (GNU Stow) ---
+show_step 4 6 "dotfilesのシンボリックリンク作成"
 
-# GNU Stow がインストールされているか確認
 if ! command -v stow &>/dev/null; then
-    echo -e "${RED}GNU Stow がインストールされていません${NC}"
-    echo -e "${YELLOW}brew install stow でインストールしてください${NC}"
-    exit 1
+    echo -e "${RED}GNU Stowがインストールされていません${NC}"; exit 1
 fi
 
-# Stow でパッケージをインストールする関数
 stow_package() {
     local pkg="$1"
-    local pkg_dir="$SCRIPT_DIR/stow/$pkg"
-
-    if [ ! -d "$pkg_dir" ]; then
-        echo -e "${YELLOW}⚠ パッケージ $pkg が見つかりません${NC}"
-        return 1
+    if [ ! -d "$SCRIPT_DIR/stow/$pkg" ]; then
+        echo -e "${YELLOW}⚠ $pkg が見つかりません${NC}"; return 1
     fi
-
     if [ "$DRY_RUN" = true ]; then
-        echo -e "${CYAN}[DRY RUN] Would stow: $pkg${NC}"
+        echo -e "${CYAN}[DRY RUN] $pkg${NC}"
         stow --simulate -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg" 2>&1 || true
     else
-        # --adopt: ターゲット側の既存ファイルを stow パッケージに取り込む。
-        # 既存ファイルがある場合、その内容で stow パッケージ側が上書きされる点に注意。
-        # git diff で差分を確認し、不要な変更は git checkout で戻すこと。
-        if [ "$VERBOSE" = true ]; then
-            echo -e "${YELLOW}  ⚠ --adopt: 既存ファイルがある場合、stow パッケージ側に取り込まれます${NC}"
-        fi
         stow -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow --adopt "$pkg" 2>/dev/null || \
         stow -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg"
     fi
 }
 
-# Stow パッケージのインストール
-# 注: sshはテンプレート方式のため別処理
-STOW_PACKAGES=(zsh git nvim ghostty bat atuin claude gh yazi ripgrep)
-
+STOW_PACKAGES=(zsh git nvim ghostty bat atuin claude gh yazi ripgrep direnv cmux)
 for pkg in "${STOW_PACKAGES[@]}"; do
     stow_package "$pkg"
 done
-echo -e "${GREEN}✓ Stowパッケージをインストールしました (${STOW_PACKAGES[*]})${NC}"
+echo -e "${GREEN}✓ Stowパッケージ完了 (${STOW_PACKAGES[*]})${NC}"
 
-# SSH設定（テンプレートからコピー、既存ファイルは上書きしない）
+# SSH設定（テンプレート方式）
 if [ "$DRY_RUN" != true ]; then
-    mkdir -p ~/.ssh/sockets
-    chmod 700 ~/.ssh
-    # 壊れたシンボリックリンクも削除（-Lでリンク自体の存在をチェック）
-    if [[ -L ~/.ssh/config && ! -e ~/.ssh/config ]]; then
-        rm ~/.ssh/config
-        echo -e "${YELLOW}⚠ 壊れたSSH configリンクを削除しました${NC}"
-    fi
+    mkdir -p ~/.ssh/sockets && chmod 700 ~/.ssh
+    [[ -L ~/.ssh/config && ! -e ~/.ssh/config ]] && rm ~/.ssh/config
     if [ ! -f ~/.ssh/config ]; then
         cp "$SCRIPT_DIR/scripts/setup/ssh-config.template" ~/.ssh/config
         chmod 600 ~/.ssh/config
-        echo -e "${GREEN}✓ SSH configを作成しました${NC}"
-    else
-        echo -e "${GREEN}✓ SSH configは既存です（スキップ）${NC}"
+        echo -e "${GREEN}✓ SSH config作成${NC}"
     fi
 else
-    echo -e "${CYAN}[DRY RUN] Would setup SSH config${NC}"
+    echo -e "${CYAN}[DRY RUN] SSH config${NC}"
 fi
 
-# ========================================
-# 4. Oh My Zshのセットアップ
-# ========================================
-show_step 4 7 "Oh My Zshのセットアップ"
+# --- 5. Oh My Zsh ---
+show_step 5 6 "Oh My Zshのセットアップ"
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
-    # CI環境またはドライランモードではスキップ
     if [ "$DRY_RUN" = true ] || [ "${CI:-}" = "true" ]; then
-        echo -e "${CYAN}[DRY RUN/CI] Oh My Zshのインストールをスキップします${NC}"
-        answer="n"
-    elif [ "$ASSUME_YES" = true ]; then
-        answer="y"
-    else
-        echo -e "${YELLOW}Oh My Zshをインストールしますか? (y/n)${NC}"
-        read -r answer
-    fi
-    if [ "$answer" = "y" ]; then
+        echo -e "${CYAN}[DRY RUN/CI] スキップ${NC}"
+    elif ask "Oh My Zshをインストールしますか?"; then
         sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
         echo -e "${GREEN}✓ Oh My Zshをインストールしました${NC}"
     fi
 else
-    echo -e "${GREEN}✓ Oh My Zshはインストール済みです${NC}"
+    echo -e "${GREEN}✓ Oh My Zshはインストール済み${NC}"
 fi
 
-# Oh My Zshプラグインの冪等インストール（Oh My Zshが存在する場合のみ）
+# プラグイン
 if [ -d "$HOME/.oh-my-zsh" ] && [ "$DRY_RUN" != true ] && [ "${CI:-}" != "true" ]; then
     ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
-    echo -e "${YELLOW}Oh My Zshプラグインを確認中...${NC}"
-
-    ensure_zsh_plugin "powerlevel10k" \
-        "https://github.com/romkatv/powerlevel10k.git" \
-        "$ZSH_CUSTOM/themes/powerlevel10k"
-
-    ensure_zsh_plugin "zsh-autosuggestions" \
-        "https://github.com/zsh-users/zsh-autosuggestions" \
-        "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
-
-    ensure_zsh_plugin "zsh-syntax-highlighting" \
-        "https://github.com/zsh-users/zsh-syntax-highlighting" \
-        "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
-
-    ensure_zsh_plugin "zsh-completions" \
-        "https://github.com/zsh-users/zsh-completions" \
-        "$ZSH_CUSTOM/plugins/zsh-completions"
-
-    echo -e "${GREEN}✓ Oh My Zshプラグインのセットアップが完了しました${NC}"
+    ensure_zsh_plugin "powerlevel10k" "https://github.com/romkatv/powerlevel10k.git" "$ZSH_CUSTOM/themes/powerlevel10k"
+    ensure_zsh_plugin "zsh-autosuggestions" "https://github.com/zsh-users/zsh-autosuggestions" "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
+    ensure_zsh_plugin "zsh-syntax-highlighting" "https://github.com/zsh-users/zsh-syntax-highlighting" "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
+    ensure_zsh_plugin "zsh-completions" "https://github.com/zsh-users/zsh-completions" "$ZSH_CUSTOM/plugins/zsh-completions"
+    echo -e "${GREEN}✓ プラグイン完了${NC}"
 fi
 
-# ========================================
-# 5. 追加設定
-# ========================================
-show_step 5 7 "追加設定"
+# --- 6. 追加設定 ---
+show_step 6 6 "追加設定"
 
-# macOS固有設定
-if [ -f ~/dotfiles/scripts/setup/macos-defaults.sh ]; then
-    bash ~/dotfiles/scripts/setup/macos-defaults.sh
-fi
+# macOS defaults
+[ -f ~/dotfiles/scripts/setup/macos-defaults.sh ] && bash ~/dotfiles/scripts/setup/macos-defaults.sh
 
-# git-secrets設定
-if command -v git-secrets &> /dev/null; then
+# git-secrets
+if command -v git-secrets &>/dev/null; then
     git secrets --install ~/.git-templates/git-secrets 2>/dev/null || true
     git secrets --register-aws --global 2>/dev/null || true
-    echo -e "${GREEN}✓ git-secretsを設定しました${NC}"
+    echo -e "${GREEN}✓ git-secrets${NC}"
 fi
 
-# asdf プラグイン・バージョンインストール
-if command -v asdf &> /dev/null; then
-    echo -e "${YELLOW}asdfプラグインをセットアップ中...${NC}"
+# asdf
+if command -v asdf &>/dev/null; then
     asdf plugin add nodejs 2>/dev/null || true
     asdf plugin add python 2>/dev/null || true
     asdf plugin add terraform 2>/dev/null || true
-
-    if [ -f ~/.tool-versions ]; then
-        asdf install
-        echo -e "${GREEN}✓ asdfバージョンをインストールしました${NC}"
-    fi
+    [ -f ~/.tool-versions ] && asdf install
+    echo -e "${GREEN}✓ asdf${NC}"
 fi
 
-# Neovim TokyoNightテーマ
+# Neovim TokyoNight
 TOKYONIGHT_DIR="$HOME/.local/share/nvim/site/pack/colors/start/tokyonight.nvim"
 if [ ! -d "$TOKYONIGHT_DIR" ]; then
     mkdir -p "$(dirname "$TOKYONIGHT_DIR")"
     git clone --depth=1 https://github.com/folke/tokyonight.nvim "$TOKYONIGHT_DIR"
-    echo -e "${GREEN}✓ Neovim TokyoNightテーマをインストールしました${NC}"
-else
-    echo -e "${GREEN}✓ Neovim TokyoNightテーマはインストール済みです${NC}"
+    echo -e "${GREEN}✓ Neovim TokyoNight${NC}"
 fi
 
-# bat TokyoNightテーマ
+# bat TokyoNight
 BAT_THEMES_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/bat/themes"
 if [ ! -f "$BAT_THEMES_DIR/tokyonight_night.tmTheme" ]; then
     mkdir -p "$BAT_THEMES_DIR"
-    THEME_URL="https://raw.githubusercontent.com/folke/tokyonight.nvim/main/extras/sublime/tokyonight_night.tmTheme"
-    if curl -fsSL "$THEME_URL" -o "$BAT_THEMES_DIR/tokyonight_night.tmTheme" 2>/dev/null; then
+    if curl -fsSL "https://raw.githubusercontent.com/folke/tokyonight.nvim/main/extras/sublime/tokyonight_night.tmTheme" \
+        -o "$BAT_THEMES_DIR/tokyonight_night.tmTheme" 2>/dev/null; then
         bat cache --build 2>/dev/null || true
-        echo -e "${GREEN}✓ bat TokyoNightテーマをインストールしました${NC}"
-    else
-        echo -e "${YELLOW}⚠ batテーマのダウンロードに失敗しました（スキップ）${NC}"
+        echo -e "${GREEN}✓ bat TokyoNight${NC}"
     fi
-else
-    echo -e "${GREEN}✓ bat TokyoNightテーマはインストール済みです${NC}"
 fi
 
-# Apple Watch sudo 認証（pam-watchid）
+# pam-watchid
 if [ "$DRY_RUN" != true ]; then
-    if [ "$ASSUME_YES" = true ]; then
-        answer="y"
-    else
-        echo -e "${YELLOW}Apple Watch で sudo 認証を有効にしますか? (y/n)${NC}"
-        read -r answer
+    if ask "Apple Watchでsudo認証を有効にしますか?"; then
+        [ -f ~/dotfiles/scripts/setup/pam-watchid.sh ] && bash ~/dotfiles/scripts/setup/pam-watchid.sh
     fi
-    if [ "$answer" = "y" ]; then
-        if [ -f ~/dotfiles/scripts/setup/pam-watchid.sh ]; then
-            bash ~/dotfiles/scripts/setup/pam-watchid.sh
-        fi
-    fi
-else
-    echo -e "${CYAN}[DRY RUN] Would setup pam-watchid${NC}"
 fi
 
-# lefthookのセットアップ
-if command -v lefthook &> /dev/null && [ -f ~/dotfiles/lefthook.yml ]; then
+# lefthook
+if command -v lefthook &>/dev/null && [ -f ~/dotfiles/lefthook.yml ]; then
     cd ~/dotfiles && lefthook install 2>/dev/null || true
-    echo -e "${GREEN}✓ lefthook Git hooksをインストールしました${NC}"
+    echo -e "${GREEN}✓ lefthook${NC}"
 fi
 
-# Claude Code セットアップ（MCP + プラグイン）
+# Claude Code
 if [ "$SKIP_CLAUDE" = false ] && [ -x "$HOME/.claude/setup.sh" ]; then
-    echo -e "\n${YELLOW}Claude Code セットアップ...${NC}"
     if command -v claude &>/dev/null; then
-        if [ "$DRY_RUN" = true ]; then
-            echo -e "${CYAN}[DRY RUN] Would run: ~/.claude/setup.sh${NC}"
-        else
-            "$HOME/.claude/setup.sh"
-        fi
+        [ "$DRY_RUN" = true ] && echo -e "${CYAN}[DRY RUN] Claude Code${NC}" || "$HOME/.claude/setup.sh"
     else
-        echo -e "${YELLOW}⚠ Claude Code 未インストール。後で以下を実行:${NC}"
-        echo -e "  ${CYAN}npm install -g @anthropic-ai/claude-code${NC}"
-        echo -e "  ${CYAN}~/.claude/setup.sh${NC}"
+        echo -e "${YELLOW}⚠ Claude Code未インストール → npm install -g @anthropic-ai/claude-code${NC}"
     fi
 fi
 
-# ローカル設定ファイルのセットアップ
-echo -e "\n${YELLOW}ローカル設定ファイルのセットアップ...${NC}"
-
-# .gitconfig.local
+# ローカル設定
 if [ ! -f ~/.gitconfig.local ]; then
     if [ "$ASSUME_YES" = true ]; then
-        # 自動モード: テンプレートからコピー（後で編集を促す）
         cp ~/dotfiles/stow/git/.gitconfig.local.template ~/.gitconfig.local
-        echo -e "${GREEN}✓ ~/.gitconfig.local を作成しました（テンプレートからコピー）${NC}"
-        echo -e "${YELLOW}  ※ ~/.gitconfig.local を編集してGitユーザー情報を設定してください${NC}"
+        echo -e "${GREEN}✓ ~/.gitconfig.local（要編集）${NC}"
     else
         echo -e "${YELLOW}Git ユーザー情報を設定します${NC}"
-        read -rp "Git ユーザー名: " git_name
-        read -rp "Git メールアドレス: " git_email
-        cat > ~/.gitconfig.local << EOF
-[user]
-	name = $git_name
-	email = $git_email
-EOF
-        echo -e "${GREEN}✓ ~/.gitconfig.local を作成しました${NC}"
+        read -rp "ユーザー名: " git_name
+        read -rp "メールアドレス: " git_email
+        printf "[user]\n\tname = %s\n\temail = %s\n" "$git_name" "$git_email" > ~/.gitconfig.local
+        echo -e "${GREEN}✓ ~/.gitconfig.local${NC}"
     fi
-else
-    echo -e "${GREEN}✓ ~/.gitconfig.local は既存です${NC}"
 fi
 
-# .zshrc.local
 if [ ! -f ~/.zshrc.local ]; then
-    cp ~/dotfiles/.zshrc.local.template ~/.zshrc.local
-    echo -e "${GREEN}✓ ~/.zshrc.local を作成しました（テンプレートからコピー）${NC}"
-    echo -e "${YELLOW}  ※ 必要に応じて ~/.zshrc.local を編集してください${NC}"
-else
-    echo -e "${GREEN}✓ ~/.zshrc.local は既存です${NC}"
+    cp ~/dotfiles/.zshrc.local.template ~/.zshrc.local 2>/dev/null || true
+    echo -e "${GREEN}✓ ~/.zshrc.local${NC}"
 fi
 
 # ========================================
-# 6. 追加のmacOS設定
+# 完了
 # ========================================
-show_step 6 7 "macOS固有設定は適用済みです"
-
-# ========================================
-# 7. 完了
-# ========================================
-log "=== Setup completed successfully ==="
-
-echo -e "\n${GREEN}========================================${NC}"
-echo -e "${GREEN}  セットアップが完了しました！${NC}"
-echo -e "${GREEN}========================================${NC}"
-echo -e "\n${YELLOW}次のステップ:${NC}"
-echo -e "  1. ターミナルを再起動（または 'exec zsh'）"
-echo -e "  2. ターミナルのフォントを Nerd Font に変更"
-echo -e "     Ghostty: font-family = \"Hack Nerd Font\""
-echo -e "\n${YELLOW}オプション:${NC}"
-echo -e "  - Powerlevel10kカスタマイズ: ${CYAN}p10k configure${NC}"
-echo -e "\n${BLUE}追加のアプリケーションは docs/setup/APPS.md を参照してください${NC}"
+log "=== Setup completed ==="
+echo -e "\n${GREEN}セットアップ完了！${NC}"
+echo -e "  1. ターミナルを再起動（または ${CYAN}exec zsh${NC}）"
+echo -e "  2. Powerlevel10kカスタマイズ: ${CYAN}p10k configure${NC}"

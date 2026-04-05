@@ -1,6 +1,6 @@
 #!/bin/bash
 # common.sh - dotfiles共通ライブラリ
-# Usage: source scripts/lib/common.sh
+# Usage: source scripts/common.sh
 
 [[ -n "${_COMMON_SH_LOADED:-}" ]] && return 0
 _COMMON_SH_LOADED=1

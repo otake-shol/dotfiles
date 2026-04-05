@@ -1,6 +1,6 @@
 #!/bin/bash
 # macos-defaults.sh - macOS開発者向け設定
-# 使用方法: bash scripts/setup/macos-defaults.sh
+# 使用方法: bash scripts/macos-defaults.sh
 
 set -uo pipefail  # -e を外してエラー時も継続
 
@@ -16,7 +16,7 @@ show_help() {
 macos-defaults.sh - macOS開発者向け設定を適用
 
 使用方法:
-    bash scripts/setup/macos-defaults.sh
+    bash scripts/macos-defaults.sh
 
 オプション:
     -h, --help    このヘルプを表示

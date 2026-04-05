@@ -94,7 +94,7 @@ alias ji="zi"                         # インタラクティブ選択
 # ========================================
 # dotfiles管理
 # ========================================
-alias dotverify="bash $DOTFILES_SCRIPTS/maintenance/verify-setup.sh"   # セットアップ検証
+alias dotverify="bash $DOTFILES_SCRIPTS/verify-setup.sh"               # セットアップ検証
 
 # ========================================
 # クイックアクセス

@@ -1,6 +1,6 @@
 #!/bin/bash
 # pam-watchid.sh - Apple Watch で sudo 認証を可能にする PAM モジュールのセットアップ
-# 使用方法: bash scripts/setup/pam-watchid.sh
+# 使用方法: bash scripts/pam-watchid.sh
 #
 # 前提:
 #   - macOS 10.15 以降

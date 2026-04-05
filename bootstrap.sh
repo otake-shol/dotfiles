@@ -30,9 +30,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CURRENT_STEP=""
 
 # 共通ライブラリ
-# shellcheck source=scripts/lib/common.sh
-if [[ -f "${SCRIPT_DIR}/scripts/lib/common.sh" ]]; then
-    source "${SCRIPT_DIR}/scripts/lib/common.sh"
+# shellcheck source=scripts/common.sh
+if [[ -f "${SCRIPT_DIR}/scripts/common.sh" ]]; then
+    source "${SCRIPT_DIR}/scripts/common.sh"
 else
     RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
     BLUE='\033[0;34m'; CYAN='\033[0;36m'; NC='\033[0m'
@@ -325,7 +325,7 @@ fi
 show_step 6 6 "追加設定"
 
 # macOS defaults
-[ -f ~/dotfiles/scripts/setup/macos-defaults.sh ] && bash ~/dotfiles/scripts/setup/macos-defaults.sh
+[ -f ~/dotfiles/scripts/macos-defaults.sh ] && bash ~/dotfiles/scripts/macos-defaults.sh
 
 # git-secrets
 if command -v git-secrets &>/dev/null; then
@@ -365,7 +365,7 @@ fi
 # pam-watchid
 if [ "$DRY_RUN" != true ]; then
     if ask "Apple Watchでsudo認証を有効にしますか?"; then
-        [ -f ~/dotfiles/scripts/setup/pam-watchid.sh ] && bash ~/dotfiles/scripts/setup/pam-watchid.sh
+        [ -f ~/dotfiles/scripts/pam-watchid.sh ] && bash ~/dotfiles/scripts/pam-watchid.sh
     fi
 fi
 

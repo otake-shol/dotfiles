@@ -8,6 +8,7 @@ on:
 
 jobs:
   lint:
+    name: ShellCheck + Syntax
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,3 +31,54 @@ jobs:
 
       - name: Zsh syntax check
         run: find stow/zsh -type f -name '*.zsh' -exec zsh -n {} +
+
+  brewfile:
+    name: Brewfile validation
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify Brewfile syntax
+        run: brew bundle check --file=Brewfile --no-upgrade 2>&1 || true
+
+      - name: Check all packages are available
+        run: |
+          errors=0
+          while IFS= read -r line; do
+            # tap行はスキップ
+            [[ "$line" =~ ^[[:space:]]*# ]] && continue
+            [[ -z "$line" ]] && continue
+
+            if [[ "$line" =~ ^brew\ \"([^\"]+)\" ]]; then
+              pkg="${BASH_REMATCH[1]}"
+              if ! brew info "$pkg" &>/dev/null; then
+                echo "::error::Formula not found: $pkg"
+                errors=$((errors + 1))
+              fi
+            elif [[ "$line" =~ ^cask\ \"([^\"]+)\" ]]; then
+              pkg="${BASH_REMATCH[1]}"
+              if ! brew info --cask "$pkg" &>/dev/null; then
+                echo "::error::Cask not found: $pkg"
+                errors=$((errors + 1))
+              fi
+            fi
+          done < Brewfile
+          if [ "$errors" -gt 0 ]; then
+            echo "::error::$errors package(s) not found in Homebrew"
+            exit 1
+          fi
+          echo "✓ All Brewfile packages are available"
+
+  bootstrap:
+    name: Bootstrap dry-run
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bootstrap dry-run
+        run: bash bootstrap.sh --dry-run --yes
+
+      - name: Stow install (actual)
+        run: |
+          brew install stow
+          make install

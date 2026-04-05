@@ -40,14 +40,9 @@ brew "sd"                          # sed代替: 直感的な構文
 brew "tree"                        # ディレクトリツリー表示
 
 # --- 開発ツール ---
-brew "tokei"                       # コード統計(LOC)
-brew "hyperfine"                   # コマンドベンチマーク
 brew "lefthook"                    # Git hooks管理(並列実行+YAML設定)
 brew "shellcheck"                  # シェルスクリプトlinter(lefthook連携)
 brew "yamllint"                    # YAML linter(lefthook連携)
-brew "wget"                        # 再帰ダウンロード
-brew "yq"                          # YAML/JSON/XML処理(jqのYAML版)
-brew "mas"                         # Mac App Store CLI
 brew "marp-cli"                    # Markdownスライド生成
 
 

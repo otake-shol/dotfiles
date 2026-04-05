@@ -137,7 +137,6 @@ alias v="nvim"
 alias diff="delta"
 
 # コード統計
-alias loc="tokei"                      # Lines of Code
 
 # ========================================
 # 即戦力系

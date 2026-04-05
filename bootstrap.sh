@@ -43,7 +43,7 @@ detect_homebrew_prefix() {
 ensure_zsh_plugin() {
     local name="$1" repo_url="$2" dest="$3"
     if [ -d "$dest/.git" ]; then
-        cd "$dest" && git pull --quiet 2>/dev/null && echo -e "  ${GREEN}✓${NC} $name" || echo -e "  ${YELLOW}⚠${NC} $name"
+        git -C "$dest" pull --quiet 2>/dev/null && echo -e "  ${GREEN}✓${NC} $name" || echo -e "  ${YELLOW}⚠${NC} $name"
     else
         [ -d "$dest" ] && rm -rf "$dest"
         git clone --depth=1 "$repo_url" "$dest" 2>/dev/null
@@ -87,7 +87,7 @@ show_step() {
 
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
-    [[ "$VERBOSE" = true ]] && echo -e "${CYAN}[LOG] $1${NC}"
+    if [[ "$VERBOSE" = true ]]; then echo -e "${CYAN}[LOG] $1${NC}"; fi
 }
 
 ask() {
@@ -338,6 +338,9 @@ fi
 show_step 6 6 "追加設定"
 
 # macOS defaults
+if [ "$DRY_RUN" = true ]; then
+    echo -e "${CYAN}[DRY RUN] macOS defaults・追加設定をスキップ${NC}"
+else
 defaults write com.apple.dock autohide -bool true
 defaults write com.apple.dock autohide-delay -float 0
 defaults write com.apple.dock autohide-time-modifier -float 0.3
@@ -423,6 +426,7 @@ if command -v gh &>/dev/null; then
     gh alias set repo 'repo view --web' 2>/dev/null || true
     echo -e "${GREEN}✓ GitHub CLI aliases${NC}"
 fi
+fi # DRY_RUN guard for step 6
 
 # pam-watchid (Apple Watch sudo認証)
 if [ "$DRY_RUN" != true ]; then
@@ -470,7 +474,7 @@ fi
 # ローカル設定
 if [ ! -f ~/.gitconfig.local ]; then
     if [ "$ASSUME_YES" = true ]; then
-        cp ~/dotfiles/stow/git/.gitconfig.local.template ~/.gitconfig.local
+        cp "$SCRIPT_DIR/stow/git/.gitconfig.local.template" ~/.gitconfig.local
         echo -e "${GREEN}✓ ~/.gitconfig.local（要編集）${NC}"
     else
         echo -e "${YELLOW}Git ユーザー情報を設定します${NC}"
@@ -482,7 +486,7 @@ if [ ! -f ~/.gitconfig.local ]; then
 fi
 
 if [ ! -f ~/.zshrc.local ]; then
-    cp ~/dotfiles/.zshrc.local.template ~/.zshrc.local 2>/dev/null || true
+    cp "$SCRIPT_DIR/.zshrc.local.template" ~/.zshrc.local 2>/dev/null || true
     echo -e "${GREEN}✓ ~/.zshrc.local${NC}"
 fi
 

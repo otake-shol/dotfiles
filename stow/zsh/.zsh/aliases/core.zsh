@@ -25,8 +25,8 @@ alias fgrep="fgrep --color=auto"
 alias egrep="egrep --color=auto"
 alias h="history | grep"
 
-# ripgrep (高速grep)
-alias rg="rg --smart-case"        # 大文字小文字自動判定
+# ripgrep (高速grep) — .ripgreprc廃止、aliasで管理
+alias rg="rg --smart-case --glob='!*.min.js' --glob='!*.min.css' --glob='!*.lock' --glob='!package-lock.json' --glob='!yarn.lock' --glob='!pnpm-lock.yaml'"
 alias rgi="rg -i"                 # 常に大文字小文字無視
 alias rgf="rg --files"            # ファイル名のみ表示
 

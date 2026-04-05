@@ -13,15 +13,14 @@ cd ~/dotfiles && bash bootstrap.sh
 
 ```
 dotfiles/
-├── stow/              # GNU Stowパッケージ（12個）
+├── stow/              # GNU Stowパッケージ（10個）
 │   ├── zsh/           # シェル設定（モジュール分割）
-│   ├── git/, gh/      # Git/GitHub CLI
+│   ├── git/           # Git設定
 │   ├── claude/        # Claude Code
 │   ├── ghostty/, cmux/ # ターミナル
 │   ├── nvim/          # エディタ
 │   ├── bat/, atuin/   # ユーティリティ
 │   ├── yazi/          # ファイラー
-│   ├── ripgrep/       # 検索
 │   └── direnv/        # 環境変数
 ├── Brewfile           # Homebrewパッケージ
 ├── Makefile           # Stow操作

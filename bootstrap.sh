@@ -410,6 +410,19 @@ if [ ! -f "$BAT_THEMES_DIR/tokyonight_night.tmTheme" ]; then
     fi
 fi
 
+# GitHub CLI aliases
+if command -v gh &>/dev/null; then
+    gh alias set co 'pr checkout' 2>/dev/null || true
+    gh alias set prc 'pr create --fill' 2>/dev/null || true
+    gh alias set prv 'pr view --web' 2>/dev/null || true
+    gh alias set prm 'pr merge --auto --squash' 2>/dev/null || true
+    gh alias set prl 'pr list' 2>/dev/null || true
+    gh alias set iss 'issue list' 2>/dev/null || true
+    gh alias set issv 'issue view --web' 2>/dev/null || true
+    gh alias set repo 'repo view --web' 2>/dev/null || true
+    echo -e "${GREEN}✓ GitHub CLI aliases${NC}"
+fi
+
 # pam-watchid (Apple Watch sudo認証)
 if [ "$DRY_RUN" != true ]; then
     if ask "Apple Watchでsudo認証を有効にしますか?"; then

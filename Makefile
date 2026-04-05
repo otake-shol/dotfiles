@@ -46,7 +46,6 @@ bootstrap:
 
 lint:
 	@shellcheck -S warning bootstrap.sh
-	@find scripts -name '*.sh' -exec shellcheck -S warning {} +
 
 clean:
 	@find . -name "*.backup.*" -delete

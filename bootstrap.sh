@@ -410,10 +410,37 @@ if [ ! -f "$BAT_THEMES_DIR/tokyonight_night.tmTheme" ]; then
     fi
 fi
 
-# pam-watchid
+# pam-watchid (Apple Watch sudo認証)
 if [ "$DRY_RUN" != true ]; then
     if ask "Apple Watchでsudo認証を有効にしますか?"; then
-        [ -f ~/dotfiles/scripts/pam-watchid.sh ] && bash ~/dotfiles/scripts/pam-watchid.sh
+        if ! command -v swiftc &>/dev/null; then
+            echo -e "${YELLOW}⚠ swiftcが必要です → xcode-select --install${NC}"
+        else
+            local_pam="/usr/local/lib/pam/pam_watchid.so"
+            sudo_local="/etc/pam.d/sudo_local"
+            if [ ! -f "$local_pam" ]; then
+                build_dir="/tmp/pam-watchid-build"
+                rm -rf "$build_dir"
+                git clone --depth=1 https://github.com/biscuitehh/pam-watchid.git "$build_dir"
+                if make -C "$build_dir" 2>/dev/null; then
+                    sudo mkdir -p "$(dirname "$local_pam")"
+                    sudo cp "$build_dir/pam_watchid.so" "$local_pam"
+                    sudo chmod 444 "$local_pam"
+                    echo -e "${GREEN}✓ pam_watchid.so${NC}"
+                fi
+                rm -rf "$build_dir"
+            fi
+            if [ -f "$local_pam" ]; then
+                watchid='auth       sufficient     pam_watchid.so "reason=execute a command as root"'
+                touchid='auth       sufficient     pam_tid.so'
+                if [ -f "$sudo_local" ]; then
+                    grep -q "pam_watchid" "$sudo_local" || echo "$watchid" | sudo tee -a "$sudo_local" >/dev/null
+                else
+                    printf "# sudo_local\n%s\n%s\n" "$watchid" "$touchid" | sudo tee "$sudo_local" >/dev/null
+                fi
+                echo -e "${GREEN}✓ pam-watchid${NC}"
+            fi
+        fi
     fi
 fi
 

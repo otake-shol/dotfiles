@@ -84,6 +84,7 @@ cask "slack"                       # チームコミュニケーション
 # --- デザイン・開発 ---
 cask "figma"                       # デザイン+プロトタイピング
 cask "claude"                      # Claude Code CLI
+cask "orbstack"                    # Docker Desktop代替(軽量+高速)
 
 # --- フォント ---
 cask "font-jetbrains-mono-nerd-font"  # メインフォント(リガチャ+Nerd Font)

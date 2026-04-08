@@ -42,7 +42,7 @@ fi
 if command -v zoxide &>/dev/null; then
   _zoxide_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zoxide-init-cd.zsh"
   if ! _cache_valid "$_zoxide_cache"; then
-    _cache_update "$_zoxide_cache" "zoxide init zsh --cmd cd"
+    _cache_update "$_zoxide_cache" zoxide init zsh --cmd cd
   fi
   source "$_zoxide_cache"
   unset _zoxide_cache
@@ -63,7 +63,7 @@ function y() {
 if command -v direnv &>/dev/null; then
   _direnv_cache="${XDG_CACHE_HOME:-$HOME/.cache}/direnv-hook.zsh"
   if ! _cache_valid "$_direnv_cache"; then
-    _cache_update "$_direnv_cache" "direnv hook zsh"
+    _cache_update "$_direnv_cache" direnv hook zsh
   fi
   source "$_direnv_cache"
   unset _direnv_cache

@@ -5,7 +5,7 @@
 #
 # 使用例:
 #   if ! _cache_valid "$cache_file"; then
-#     _cache_update "$cache_file" "zoxide init zsh"
+#     _cache_update "$cache_file" zoxide init zsh
 #   fi
 #   source "$cache_file"
 
@@ -25,7 +25,7 @@ _cache_valid() {
 }
 
 # キャッシュを更新（コマンド出力を保存）
-# Usage: _cache_update "$cache_file" "command init zsh"
+# Usage: _cache_update "$cache_file" command init zsh
 _cache_update() {
   local cache_file="$1"
   shift

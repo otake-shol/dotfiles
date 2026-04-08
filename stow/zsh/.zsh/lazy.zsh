@@ -37,7 +37,7 @@ gws() { _asdf_init; unset -f gws; command gws "$@"; }
 if command -v atuin &>/dev/null; then
   _atuin_cache="${XDG_CACHE_HOME:-$HOME/.cache}/atuin-init.zsh"
   if ! _cache_valid "$_atuin_cache"; then
-    _cache_update "$_atuin_cache" "atuin init zsh"
+    _cache_update "$_atuin_cache" atuin init zsh
   fi
   source "$_atuin_cache"
   unset _atuin_cache

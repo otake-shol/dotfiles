@@ -64,32 +64,9 @@ claude mcp add context7 --scope user -- npx -y @upstash/context7-mcp@latest 2>/d
 info "  → Playwright"
 claude mcp add playwright --scope user -- npx -y @playwright/mcp@latest 2>/dev/null || warn "Playwright の追加をスキップ（既存の可能性）"
 
-# Figma - デザイン→コード変換（HTTP）
-info "  → Figma"
-claude mcp add figma --scope user --transport http https://mcp.figma.com/mcp 2>/dev/null || warn "Figma の追加をスキップ（既存の可能性）"
-
-# Serena - シンボリックコード解析（uvx必要）
-if command -v uvx &>/dev/null; then
-    info "  → Serena"
-    claude mcp add serena --scope user -- uvx --from "git+https://github.com/oraios/serena" serena start-mcp-server --context=claude-code --project-from-cwd 2>/dev/null || warn "Serena の追加をスキップ（既存の可能性）"
-else
-    warn "  → Serena をスキップ（uvx未インストール）"
-fi
-
-# Atlassian - Jira/Confluence（uvx必要、環境変数要設定）
-if command -v uvx &>/dev/null; then
-    info "  → Atlassian（環境変数の設定が必要）"
-    # 注意: 環境変数は別途設定が必要
-    # JIRA_URL, JIRA_USERNAME, JIRA_API_TOKEN
-    # CONFLUENCE_URL, CONFLUENCE_USERNAME, CONFLUENCE_API_TOKEN
-    claude mcp add atlassian --scope user -- uvx mcp-atlassian 2>/dev/null || warn "Atlassian の追加をスキップ（既存の可能性）"
-    warn "  Atlassianを使用するには環境変数の設定が必要です:"
-    echo "    export JIRA_URL=https://your-domain.atlassian.net"
-    echo "    export JIRA_USERNAME=your-email@example.com"
-    echo "    export JIRA_API_TOKEN=your-api-token"
-else
-    warn "  → Atlassian をスキップ（uvx未インストール）"
-fi
+# GitHub - Issue/PR操作（OAuth認証）
+info "  → GitHub"
+claude mcp add github --scope user --transport http https://api.githubcopilot.com/mcp/ 2>/dev/null || warn "GitHub の追加をスキップ（既存の可能性）"
 
 # Google Workspace CLI - Gmail/Drive/Calendar/Sheets/Docs操作
 if command -v gws &>/dev/null; then
@@ -102,6 +79,22 @@ else
 fi
 
 success "MCPサーバー設定完了"
+echo ""
+
+# ======================================
+# 日本特化MCPサーバー
+# ======================================
+info "日本特化MCPサーバーを設定中..."
+
+# hourei-mcp-server - e-Gov法令API（法令検索・条文取得・改正履歴）
+info "  → 法令検索（hourei）"
+claude mcp add hourei --scope user -- npx -y hourei-mcp-server 2>/dev/null || warn "hourei の追加をスキップ（既存の可能性）"
+
+# tax-law-mcp - 税法・通達・裁決事例
+info "  → 税法（tax-law）"
+claude mcp add tax-law --scope user -- npx -y tax-law-mcp 2>/dev/null || warn "tax-law の追加をスキップ（既存の可能性）"
+
+success "日本特化MCPサーバー設定完了"
 echo ""
 
 # ======================================
@@ -130,10 +123,10 @@ echo ""
 echo "設定されたMCPサーバー:"
 echo "  - Context7    : リアルタイムドキュメント参照"
 echo "  - Playwright  : ブラウザ自動化・E2Eテスト"
-echo "  - Figma       : デザイン→コード変換（OAuth認証必要）"
-echo "  - Serena      : シンボリックコード解析"
-echo "  - Atlassian   : Jira/Confluence操作（環境変数必要）"
+echo "  - GitHub      : Issue/PR操作（OAuth認証必要）"
 echo "  - gws         : Gmail/Drive/Calendar/Sheets/Docs操作（要 gws auth setup）"
+echo "  - hourei      : e-Gov法令検索・条文取得"
+echo "  - tax-law     : 税法・通達・裁決事例"
 echo ""
 echo "インストールされたプラグイン:"
 echo "  - superpowers : 開発ワークフロー強化"

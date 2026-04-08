@@ -17,8 +17,10 @@
       "WebSearch(*)",
       "mcp__playwright__*",
       "mcp__context7__*",
-      "mcp__serena__*",
+      "mcp__github__*",
       "mcp__gws__*",
+      "mcp__hourei__*",
+      "mcp__tax-law__*",
       "Bash(*)"
     ],
     "deny": [

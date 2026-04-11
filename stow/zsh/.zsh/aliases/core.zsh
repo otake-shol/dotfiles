@@ -6,9 +6,6 @@
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
-alias ~="cd ~"
-alias -- -="cd -"
-alias CD="cd"
 
 # ls関連 (eza)
 alias ls="eza"                    # モダンなls
@@ -21,9 +18,6 @@ alias lta="eza -Ta"               # ツリー（全ファイル）
 
 # 検索・grep
 alias grep="grep --color=auto"
-alias fgrep="fgrep --color=auto"
-alias egrep="egrep --color=auto"
-alias h="history | grep"
 
 # ripgrep (高速grep) — .ripgreprc廃止、aliasで管理
 alias rg="rg --smart-case --glob='!*.min.js' --glob='!*.min.css' --glob='!*.lock' --glob='!package-lock.json' --glob='!yarn.lock' --glob='!pnpm-lock.yaml'"
@@ -73,7 +67,6 @@ alias cat="bat"                      # catをbatに置き換え
 alias catp="bat -p"                  # プレーン表示（装飾なし）
 alias catl="bat -l"                  # 言語指定 (例: catl json file.txt)
 alias less="bat --paging=always"     # ページャーとして使用
-alias bathelp="bat --help"           # batのヘルプ
 
 # ファイルプレビュー: fp関数 (fzf-functions.zsh) を使用
 
@@ -81,28 +74,40 @@ alias bathelp="bat --help"           # batのヘルプ
 # 開発ツール
 # ========================================
 
-# エディタ（nvim統一）
+# エディタ・ビューア
 alias vim="nvim"
 alias vi="nvim"
 alias v="nvim"
+alias view="bat"                   # 軽量ファイル閲覧
 
-# diff（deltaでカラー表示）
+# コマンド置換
 alias diff="delta"
+alias python="python3"
+alias pip="pip3"
 
 # ========================================
-# 即戦力系
+# Git（OMZにないもの）
+# ========================================
+alias gs="git status"                    # OMZのgstより短い
+alias gpf='git push --force-with-lease'  # 安全なforce push
+
+# ========================================
+# システム・ネットワーク
+# ========================================
+alias reload="source ~/.zshrc"
+alias df="df -h"                     # ディスク空き容量(human-readable)
+alias du="du -sh"                    # ディスク使用量(summary)
+alias top="btop"                     # モダンなシステムモニター
+alias ports="lsof -i -P | grep LISTEN"
+alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+
+# ========================================
+# その他
 # ========================================
 alias please='sudo $(fc -ln -1)'       # 直前コマンドをsudoで再実行
-alias cl="clear && ls"                 # クリア後にls
 alias now="date '+%Y-%m-%d %H:%M:%S'"  # 現在時刻
-alias weeknum="date +%V"               # 今週の週番号（git weekとの混同回避）
 alias o="open ."                       # Finderで開く
-alias oo="open"                        # 指定ファイル/URLを開く
-
-# ========================================
-# ファイル操作
-# ========================================
-alias take="mkcd"                      # mkdir + cd（mkcdのエイリアス）
-alias rd="rmdir"                       # ディレクトリ削除
 alias md="mkdir -p"                    # ディレクトリ作成（親も作成）
+alias cpwd='pwd | tr -d "\n" | pbcopy && echo "Copied: $(pwd)"'  # 現在パスをコピー
+alias ag="alias | grep"                # エイリアス検索
 # sizeof, cpfile関数は functions/util-functions.zsh に定義

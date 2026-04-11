@@ -9,6 +9,37 @@ git clone https://github.com/otake-shol/dotfiles.git ~/dotfiles
 cd ~/dotfiles && bash bootstrap.sh
 ```
 
+### bootstrapオプション
+
+```bash
+bash bootstrap.sh              # 通常実行
+bash bootstrap.sh -n           # ドライラン（変更なし）
+bash bootstrap.sh -y           # 完全自動（対話なし）
+bash bootstrap.sh -n -v        # ドライラン + 詳細出力
+bash bootstrap.sh --skip-apps  # アプリインストールをスキップ
+bash bootstrap.sh --claude-only # Claude Codeセットアップのみ
+```
+
+## ディレクトリ構造
+
+```
+dotfiles/
+├── stow/                  # GNU Stowパッケージ（10個）
+│   ├── atuin/             #   SQLite履歴検索
+│   ├── bat/               #   cat代替
+│   ├── claude/            #   Claude Code設定・hooks・コマンド
+│   ├── cmux/              #   ワークスペース管理
+│   ├── direnv/            #   ディレクトリ別環境変数
+│   ├── ghostty/           #   GPUターミナル
+│   ├── git/               #   Git設定・secrets・テンプレート
+│   ├── nvim/              #   軽量エディタ
+│   ├── yazi/              #   TUIファイラー
+│   └── zsh/               #   シェル設定（モジュール分割）
+├── bootstrap.sh           # ワンコマンドセットアップ
+├── Brewfile               # Homebrewパッケージ定義
+└── Makefile               # Stow操作・lint・クリーンアップ
+```
+
 ## アーキテクチャ
 
 ```mermaid
@@ -49,8 +80,8 @@ graph TB
 
 | パッケージ | 説明 | 主要ファイル |
 |-----------|------|-------------|
-| **zsh** | シェル設定（モジュール分割・遅延読み込み・89エイリアス） | `.zshrc`, `.zsh/{core,plugins,lazy,tools}.zsh` |
-| **git** | Git設定（41エイリアス・delta・git-secrets 40+パターン） | `.gitconfig`, `.gitignore_global`, `.commit-template.txt` |
+| **zsh** | シェル設定（モジュール分割・遅延読み込み・55エイリアス） | `.zshrc`, `.zsh/{core,plugins,lazy,tools}.zsh` |
+| **git** | Git設定（28エイリアス・delta・git-secrets 40+パターン） | `.gitconfig`, `.gitignore_global`, `.commit-template.txt` |
 | **claude** | Claude Code（5 hooks・8コマンド・6 MCP・権限制御） | `.claude/settings.json`, `hooks/`, `commands/` |
 | **ghostty** | GPUターミナル（TokyoNight・透過80%・JetBrains Mono） | `.config/ghostty/config` |
 | **cmux** | ワークスペース管理（7プリセット・色分け） | `.config/cmux/cmux.json` |
@@ -62,17 +93,9 @@ graph TB
 
 ## シェル起動パフォーマンス
 
-```
-zprof 主要コスト（合計 ~325ms）:
-  _omz_source       70ms  (Oh My Zsh)
-  powerlevel10k      53ms  (プロンプト初期化)
-  compinit           54ms  (補完システム)
-  compaudit          44ms  (セキュリティ監査)
-  _cache_valid       65ms  (キャッシュTTL確認)
-  fzf_setup          23ms  (fzf初期化)
-```
+Powerlevel10kの**Instant Prompt**により、体感起動は瞬時。重いツール（asdf/atuin/direnv）は遅延読み込みで初回呼び出しまでコスト0。
 
-> Powerlevel10kの**Instant Prompt**により、体感起動は瞬時。asdf/atuin/direnvは遅延読み込みで初回呼び出しまでコスト0。
+計測: `zprof` で確認可能（`.zshrc` 先頭の `zmodload zsh/zprof` を有効化）。
 
 ## Brewfileパッケージ（43個）
 
@@ -84,24 +107,10 @@ zprof 主要コスト（合計 ~325ms）:
 | モダンCLI | 13 | bat, eza, fd, ripgrep, stow, btop, glow, tldr, trash, curl, jq, sd, tree |
 | 開発ツール | 2 | shellcheck, marp-cli |
 | GUI - ターミナル | 2 | ghostty, cmux |
-| GUI - ユーティリティ | 7 | 1password, tailscale, alt-tab, cleanshot, ice, raycast |
+| GUI - ユーティリティ | 7 | 1password, 1password-cli, tailscale, alt-tab, cleanshot, ice, raycast |
 | GUI - 生産性 | 4 | arc, spark, ticktick, slack |
 | GUI - 開発 | 3 | figma, claude, orbstack |
 | フォント | 1 | JetBrains Mono Nerd Font |
-
-## モダンCLI
-
-| 従来 | 代替 | 説明 |
-|------|------|------|
-| cat | bat | ハイライト付き表示 |
-| ls | eza | アイコン+Git状態 |
-| grep | ripgrep | 高速検索 |
-| find | fd | 高速ファイル検索 |
-| cd | zoxide | 学習型ジャンプ |
-| history | atuin | SQLite履歴 |
-| top | btop | GPU監視+マウス |
-| sed | sd | 直感的な構文 |
-| rm | trash | ゴミ箱へ移動 |
 
 ## コマンド
 
@@ -111,7 +120,7 @@ make install-zsh       # 個別インストール
 make uninstall         # 全パッケージをアンインストール
 make check             # Stowドライラン（競合検出）
 make lint              # ShellCheck
-make clean             # バックアップファイル削除
+make clean             # バックアップファイル・.DS_Store削除
 make packages          # パッケージ一覧表示
 ```
 

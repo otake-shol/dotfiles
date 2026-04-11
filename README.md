@@ -4,6 +4,11 @@
 
 macOS向けの個人開発環境設定ファイル。GNU Stowによるモジュール管理、ワンコマンドセットアップ、全ツールTokyoNight統一。
 
+## 前提条件
+
+- macOS（Apple Silicon / Intel）
+- Xcode Command Line Tools（`xcode-select --install`）
+
 ## クイックスタート
 
 ```bash
@@ -85,7 +90,7 @@ graph TB
 | パッケージ | 説明 | 主要ファイル |
 |-----------|------|-------------|
 | **zsh** | シェル設定（モジュール分割・遅延読み込み・56エイリアス・OMZ 6プラグイン固定） | `.zshrc`, `.zsh/{core,plugins,lazy,tools}.zsh` |
-| **git** | Git設定（28エイリアス・delta・git-secrets 40+パターン） | `.gitconfig`, `.gitignore_global`, `.commit-template.txt`, `.editorconfig` |
+| **git** | Git設定（26エイリアス・delta・git-secrets 8パターン） | `.gitconfig`, `.gitignore_global`, `.commit-template.txt`, `.editorconfig` |
 | **claude** | Claude Code（3 hookスクリプト・8コマンド・権限制御） | `.claude/settings.json`, `hooks/`, `commands/` |
 | **ghostty** | GPUターミナル（TokyoNight・透過80%・JetBrains Mono） | `.config/ghostty/config` |
 | **cmux** | ワークスペース管理（5プリセット・色分け） | `.config/cmux/cmux.json` |
@@ -114,6 +119,14 @@ make clean             # バックアップファイル・.DS_Store削除
 make packages          # パッケージ一覧表示
 ```
 
+## CI
+
+GitHub Actionsで以下を自動検証:
+- ShellCheck（bootstrap.sh + Claude hooks）
+- Stow競合検出（全パッケージのドライラン）
+- Zsh構文チェック
+- Brewfile構文検証
+
 ## キーバインド
 
 | キー | 機能 |
@@ -135,9 +148,9 @@ cls                    # セッション一覧
 
 ## セキュリティ
 
-- **git-secrets**: AWS/Slack/GitHub/OpenAI/Anthropic等 40+パターン検出
+- **git-secrets**: AWS/Slack/GitHub/OpenAI/Anthropic等 8パターン検出
 - **1Password CLI**: シークレット管理統合
-- **Claude Code権限**: deny（.env/SSH鍵/rm -rf）、ask（git push/curl）の三層制御
+- **Claude Code権限**: deny（.env/SSH鍵/rm -rf）、ask（git push/curl）の二層制御
 
 ## テーマ
 

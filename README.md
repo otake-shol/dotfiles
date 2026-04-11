@@ -1,5 +1,7 @@
 # dotfiles
 
+[![CI](https://github.com/otake-shol/dotfiles/actions/workflows/ci.yml/badge.svg)](https://github.com/otake-shol/dotfiles/actions/workflows/ci.yml)
+
 macOS向けの個人開発環境設定ファイル。GNU Stowによるモジュール管理、ワンコマンドセットアップ、全ツールTokyoNight統一。
 
 ## クイックスタート
@@ -24,17 +26,18 @@ bash bootstrap.sh --skip-apps  # アプリインストールをスキップ
 ```
 dotfiles/
 ├── stow/                  # GNU Stowパッケージ（11個）
-│   ├── asdf/              #   バージョン管理（Node/Python/Terraform）
-│   ├── atuin/             #   SQLite履歴検索
-│   ├── bat/               #   cat代替
-│   ├── claude/            #   Claude Code設定・hooks・コマンド
-│   ├── cmux/              #   ワークスペース管理
-│   ├── direnv/            #   ディレクトリ別環境変数
-│   ├── ghostty/           #   GPUターミナル
-│   ├── git/               #   Git設定・secrets・テンプレート
-│   ├── nvim/              #   軽量エディタ
-│   ├── yazi/              #   TUIファイラー
-│   └── zsh/               #   シェル設定（モジュール分割）
+│   ├── asdf/
+│   ├── atuin/
+│   ├── bat/
+│   ├── claude/
+│   ├── cmux/
+│   ├── direnv/
+│   ├── ghostty/
+│   ├── git/
+│   ├── nvim/
+│   ├── yazi/
+│   └── zsh/
+├── templates/             # ローカル設定テンプレート
 ├── bootstrap.sh           # ワンコマンドセットアップ
 ├── Brewfile               # Homebrewパッケージ定義
 └── Makefile               # Stow操作・lint・クリーンアップ
@@ -81,8 +84,8 @@ graph TB
 
 | パッケージ | 説明 | 主要ファイル |
 |-----------|------|-------------|
-| **zsh** | シェル設定（モジュール分割・遅延読み込み・55エイリアス） | `.zshrc`, `.zsh/{core,plugins,lazy,tools}.zsh` |
-| **git** | Git設定（28エイリアス・delta・git-secrets 40+パターン） | `.gitconfig`, `.gitignore_global`, `.commit-template.txt` |
+| **zsh** | シェル設定（モジュール分割・遅延読み込み・56エイリアス・OMZ 4プラグイン固定） | `.zshrc`, `.zsh/{core,plugins,lazy,tools}.zsh` |
+| **git** | Git設定（28エイリアス・delta・git-secrets 40+パターン） | `.gitconfig`, `.gitignore_global`, `.commit-template.txt`, `.editorconfig` |
 | **claude** | Claude Code（3 hooks・8コマンド・6 MCP・権限制御） | `.claude/settings.json`, `hooks/`, `commands/` |
 | **ghostty** | GPUターミナル（TokyoNight・透過80%・JetBrains Mono） | `.config/ghostty/config` |
 | **cmux** | ワークスペース管理（5プリセット・色分け） | `.config/cmux/cmux.json` |
@@ -148,6 +151,15 @@ cls                    # セッション一覧
 | yazi | `stow/yazi/.config/yazi/theme.toml` |
 | Neovim | `stow/nvim/.config/nvim/init.lua` |
 | git-delta | `stow/git/.gitconfig` |
+
+## カスタマイズ
+
+bootstrap.shが初回実行時に以下のローカル設定ファイルを`templates/`から生成する。Git管理外でマシン固有の設定を保持する。
+
+| ファイル | 用途 |
+|---------|------|
+| `~/.gitconfig.local` | Gitユーザー名・メール・GPG署名 |
+| `~/.zshrc.local` | APIキー・MCPトークン・組織固有設定 |
 
 ## トラブルシューティング
 

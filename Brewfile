@@ -27,7 +27,6 @@ brew "bat"                         # cat代替: ハイライト+行番号+Git統
 brew "eza"                         # ls代替: アイコン+Git状態+ツリー
 brew "fd"                          # find代替: 高速+.gitignore尊重
 brew "ripgrep"                     # grep代替: 高速+Unicode対応
-brew "stow"                        # dotfilesシンボリックリンク管理
 brew "btop"                        # top代替: GPU監視+マウス操作
 brew "glow"                        # Markdownレンダリング表示
 brew "tldr"                        # manページ簡易版
@@ -38,6 +37,7 @@ brew "sd"                          # sed代替: 直感的な構文
 brew "tree"                        # ディレクトリツリー表示
 
 # --- 開発ツール ---
+brew "stow"                        # dotfilesシンボリックリンク管理
 brew "shellcheck"                  # シェルスクリプトlinter(make lint)
 brew "marp-cli"                    # Markdownスライド生成
 

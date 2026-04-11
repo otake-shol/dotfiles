@@ -3,7 +3,7 @@
 STOW := stow
 STOW_DIR := stow
 STOW_FLAGS := -v --target=$(HOME) --dir=$(STOW_DIR) --restow
-PACKAGES := zsh git nvim ghostty bat atuin claude yazi direnv cmux
+PACKAGES := zsh git nvim ghostty bat atuin claude yazi direnv cmux asdf
 
 .PHONY: help install uninstall check bootstrap lint clean install-% uninstall-% packages
 

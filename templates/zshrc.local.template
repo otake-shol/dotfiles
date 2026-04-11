@@ -32,6 +32,12 @@
 # export PATH="$HOME/company-tools/bin:$PATH"
 
 # ========================================
+# Android SDK（Android開発時のみ有効化）
+# ========================================
+# export ANDROID_HOME="${HOME}/Library/Android/sdk"
+# export PATH="${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/emulator:${PATH}"
+
+# ========================================
 # SOPS/age 暗号化シークレット管理（オプション）
 # ========================================
 #

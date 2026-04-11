@@ -172,10 +172,14 @@ for pkg in "${STOW_PACKAGES[@]}"; do
         echo -e "${CYAN}[DRY RUN] $pkg${NC}"
         stow --simulate -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg" 2>&1 || true
     else
-        # --adopt: HOMEの既存ファイルをstow/に取り込んで競合解消（初回セットアップ用）
-        # 注意: 既存ファイルがstowディレクトリに移動されるため、git diffで差分を確認すること
-        stow -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow --adopt "$pkg" 2>/dev/null || \
-        stow -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg"
+        # --adopt: 初回のみ使用（HOMEの既存ファイルをstow/に取り込んで競合解消）
+        # 2回目以降は--restowのみ（意図しないファイル取り込みを防止）
+        if stow -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg" 2>/dev/null; then
+            :
+        elif ask "  $pkg で競合が発生。--adopt で既存ファイルを取り込みますか?"; then
+            stow -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow --adopt "$pkg"
+            echo -e "  ${YELLOW}⚠ git diff で取り込まれたファイルを確認してください${NC}"
+        fi
     fi
 done
 echo -e "${GREEN}✓ Stowパッケージ完了 (${STOW_PACKAGES[*]})${NC}"

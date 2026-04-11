@@ -19,14 +19,14 @@ _zsh_initialized=false
 # preexec: コマンド実行前に時刻を記録
 _cmd_start_time=""
 _last_cmd=""
-preexec() {
+_preexec_timer() {
   _zsh_initialized=true
   _cmd_start_time=$EPOCHSECONDS
   _last_cmd="$1"
 }
 
 # precmd: コマンド実行後に経過時間を表示 + エラー提案
-precmd() {
+_precmd_timer() {
   local exit_code=$?
 
   # 初期化完了前は何も出力しない（instant prompt対応）
@@ -58,6 +58,10 @@ precmd() {
   _cmd_start_time=""
   _last_cmd=""
 }
+
+autoload -Uz add-zsh-hook
+add-zsh-hook preexec _preexec_timer
+add-zsh-hook precmd _precmd_timer
 
 # エラー時の修正提案
 _suggest_fix() {

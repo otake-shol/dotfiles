@@ -35,14 +35,14 @@ fkill() {
   local pid
   pid=$(ps -ef | sed 1d | fzf --header='Select process to kill' \
     --preview 'echo {}' --preview-window=down:3:wrap | awk '{print $2}') || return 0
-  [[ -n "$pid" ]] && kill -9 "$pid" && echo "Killed process $pid"
+  [[ -n "$pid" ]] && kill "$pid" && echo "Killed process $pid (SIGTERM)"
 }
 
 # fcd - ディレクトリをfzfで選択して移動
 fcd() {
   local dir search_dir
   search_dir="${1:-.}"
-  dir=$(find "$search_dir" -type d 2>/dev/null | fzf --preview 'eza --tree --level=1 --color=always {}' \
+  dir=$(fd --type d --hidden --exclude .git . "$search_dir" 2>/dev/null | fzf --preview 'eza --tree --level=1 --color=always {}' \
         --preview-window=right:50%) || return 0
   cd "$dir" || return 1
 }

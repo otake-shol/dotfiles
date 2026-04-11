@@ -36,8 +36,9 @@ plugins=(
   # Git（必須）
   git
 
-  # fzf キーバインド
-  fzf
+  # ユーティリティ
+  extract                           # 圧縮ファイル自動判定展開
+  fzf                               # fzf キーバインド
 )
 
 # zsh-completions: 追加の補完定義を読み込み

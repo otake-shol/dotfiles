@@ -189,7 +189,7 @@ zstyle ':completion:*' special-dirs true
 unalias gpr gbr 2>/dev/null
 
 # 関数ファイルの読み込み（fzf-functions以外、fzfはlazy.zshで遅延読み込み）
-for func_file in "$ZSH_CONFIG_DIR/functions"/{git,util}-functions.zsh; do
+for func_file in "$ZSH_CONFIG_DIR/functions"/{git,util,claude}-functions.zsh; do
     [[ -f "$func_file" ]] && source "$func_file"
 done
 

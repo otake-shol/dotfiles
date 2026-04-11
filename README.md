@@ -89,8 +89,8 @@ graph TB
 
 | パッケージ | 説明 | 主要ファイル |
 |-----------|------|-------------|
-| **zsh** | シェル設定（モジュール分割・遅延読み込み・56エイリアス・OMZ 6プラグイン固定） | `.zshrc`, `.zsh/{core,plugins,lazy,tools}.zsh` |
-| **git** | Git設定（26エイリアス・delta・git-secrets 8パターン） | `.gitconfig`, `.gitignore_global`, `.commit-template.txt`, `.editorconfig` |
+| **zsh** | シェル設定（モジュール分割・遅延読み込み・56エイリアス・OMZ 6プラグイン） | `.zshrc`, `.zsh/{core,plugins,lazy,tools}.zsh` |
+| **git** | Git設定（28エイリアス・delta・git-secrets 8パターン） | `.gitconfig`, `.gitignore_global`, `.commit-template.txt`, `.editorconfig` |
 | **claude** | Claude Code（3 hookスクリプト・8コマンド・権限制御） | `.claude/settings.json`, `hooks/`, `commands/` |
 | **ghostty** | GPUターミナル（TokyoNight・透過80%・JetBrains Mono） | `.config/ghostty/config` |
 | **cmux** | ワークスペース管理（5プリセット・色分け） | `.config/cmux/cmux.json` |
@@ -148,9 +148,8 @@ cls                    # セッション一覧
 
 ## セキュリティ
 
-- **git-secrets**: AWS/Slack/GitHub/OpenAI/Anthropic等 8パターン検出
-- **1Password CLI**: シークレット管理統合
-- **Claude Code権限**: deny（.env/SSH鍵/rm -rf）、ask（git push/curl）の二層制御
+- **git-secrets**: AWS/Slack/GitHub/OpenAI/Anthropic等 8パターン検出（`.gitconfig`で定義、Stow管理）
+- **Claude Code権限**: Bash(*)全許可 + deny（.env/SSH鍵/rm -rf）、ask（git push/curl）でゲート
 
 ## テーマ
 

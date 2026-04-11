@@ -17,7 +17,6 @@ bash bootstrap.sh -n           # ドライラン（変更なし）
 bash bootstrap.sh -y           # 完全自動（対話なし）
 bash bootstrap.sh -n -v        # ドライラン + 詳細出力
 bash bootstrap.sh --skip-apps  # アプリインストールをスキップ
-bash bootstrap.sh --claude-only # Claude Codeセットアップのみ
 ```
 
 ## ディレクトリ構造
@@ -84,7 +83,7 @@ graph TB
 | **git** | Git設定（28エイリアス・delta・git-secrets 40+パターン） | `.gitconfig`, `.gitignore_global`, `.commit-template.txt` |
 | **claude** | Claude Code（5 hooks・8コマンド・6 MCP・権限制御） | `.claude/settings.json`, `hooks/`, `commands/` |
 | **ghostty** | GPUターミナル（TokyoNight・透過80%・JetBrains Mono） | `.config/ghostty/config` |
-| **cmux** | ワークスペース管理（7プリセット・色分け） | `.config/cmux/cmux.json` |
+| **cmux** | ワークスペース管理（5プリセット・色分け） | `.config/cmux/cmux.json` |
 | **nvim** | 軽量エディタ（プラグインなし・git commit用） | `.config/nvim/init.lua` |
 | **yazi** | TUIファイラー（Sixelプレビュー・4 Luaプラグイン） | `.config/yazi/yazi.toml` |
 | **bat** | cat代替（シンタックスハイライト・行番号） | `.config/bat/config` |
@@ -96,21 +95,6 @@ graph TB
 Powerlevel10kの**Instant Prompt**により、体感起動は瞬時。重いツール（asdf/atuin/direnv）は遅延読み込みで初回呼び出しまでコスト0。
 
 計測: `zprof` で確認可能（`.zshrc` 先頭の `zmodload zsh/zprof` を有効化）。
-
-## Brewfileパッケージ（43個）
-
-| カテゴリ | 数 | 内容 |
-|---------|:---:|------|
-| Git | 4 | git, gh, git-secrets, git-delta |
-| バージョン管理・エディタ | 2 | asdf, neovim |
-| シェル・ターミナル | 5 | atuin, fzf, zoxide, direnv, yazi |
-| モダンCLI | 13 | bat, eza, fd, ripgrep, stow, btop, glow, tldr, trash, curl, jq, sd, tree |
-| 開発ツール | 2 | shellcheck, marp-cli |
-| GUI - ターミナル | 2 | ghostty, cmux |
-| GUI - ユーティリティ | 7 | 1password, 1password-cli, tailscale, alt-tab, cleanshot, ice, raycast |
-| GUI - 生産性 | 4 | arc, spark, ticktick, slack |
-| GUI - 開発 | 3 | figma, claude, orbstack |
-| フォント | 1 | JetBrains Mono Nerd Font |
 
 ## コマンド
 
@@ -153,7 +137,15 @@ cls                    # セッション一覧
 ## テーマ
 
 全ツールで **TokyoNight Night** に統一:
-Ghostty / bat / fzf / yazi / Neovim / git-delta
+
+| ツール | 設定ファイル |
+|--------|-------------|
+| Ghostty | `stow/ghostty/.config/ghostty/config` |
+| bat | `stow/bat/.config/bat/config` |
+| fzf | `stow/zsh/.zsh/tools.zsh` |
+| yazi | `stow/yazi/.config/yazi/theme.toml` |
+| Neovim | `stow/nvim/.config/nvim/init.lua` |
+| git-delta | `stow/git/.gitconfig` |
 
 ## トラブルシューティング
 

@@ -43,7 +43,6 @@ alias ch="claude --model haiku"           # Haikuモデル
 alias clp="claude --print"                # 非対話モード（パイプ用）
 alias claude-mem='node "$HOME/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
 alias cc="claude --continue"              # 最新セッション再開
-alias cq="claude --print"                # クイック質問（=clp）
 # セッション管理関数: cls(一覧), csa(全検索) → functions/claude-functions.zsh
 
 # システム・ネットワーク・クリップボード等は aliases/system.zsh に分離
@@ -98,7 +97,7 @@ alias gpf='git push --force-with-lease'  # 安全なforce push
 # ========================================
 alias reload="source ~/.zshrc"
 alias df="df -h"                     # ディスク空き容量(human-readable)
-alias du="du -sh"                    # ディスク使用量(summary)
+alias du="du -sh"                    # ディスク使用量(summary) ※sizeof は意図的な別名
 alias top="btop"                     # モダンなシステムモニター
 alias ports="lsof -i -P | grep LISTEN"
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"

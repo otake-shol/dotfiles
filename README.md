@@ -23,7 +23,8 @@ bash bootstrap.sh --skip-apps  # アプリインストールをスキップ
 
 ```
 dotfiles/
-├── stow/                  # GNU Stowパッケージ（10個）
+├── stow/                  # GNU Stowパッケージ（11個）
+│   ├── asdf/              #   バージョン管理（Node/Python/Terraform）
 │   ├── atuin/             #   SQLite履歴検索
 │   ├── bat/               #   cat代替
 │   ├── claude/            #   Claude Code設定・hooks・コマンド
@@ -51,7 +52,7 @@ graph TB
         B5 --> B6[macOS設定 30+項目]
     end
 
-    subgraph stow["stow/ — 10パッケージ"]
+    subgraph stow["stow/ — 11パッケージ"]
         S1[zsh]
         S2[git]
         S3[claude]
@@ -62,6 +63,7 @@ graph TB
         S8[bat]
         S9[atuin]
         S10[direnv]
+        S11[asdf]
     end
 
     subgraph shell["zshモジュール読み込み順"]
@@ -89,6 +91,7 @@ graph TB
 | **bat** | cat代替（シンタックスハイライト・行番号） | `.config/bat/config` |
 | **atuin** | SQLite履歴検索（ファジー・シークレットフィルタ） | `.config/atuin/config.toml` |
 | **direnv** | ディレクトリ別環境変数（.env自動読み込み） | `.config/direnv/direnv.toml` |
+| **asdf** | バージョン管理（Node/Python/Terraform固定） | `.tool-versions` |
 
 ## シェル起動パフォーマンス
 

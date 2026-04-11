@@ -14,9 +14,8 @@ settings.local.json
 # Powerlevel10k（p10k configure で自動生成、新PCでは再生成）
 stow/zsh/.p10k.zsh
 
-# asdf (project-local version pinning - stow配下は除外しない)
+# asdf (ルートの.tool-versionsのみ除外、stow/asdf/配下はパスが異なるため影響なし)
 .tool-versions
-!stow/**/.tool-versions
 
 # Claude Code project-local settings (auto-generated at repo root)
 /.claude/

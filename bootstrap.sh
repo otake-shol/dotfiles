@@ -76,7 +76,12 @@ ask() {
 ensure_zsh_plugin() {
     local name="$1" repo_url="$2" dest="$3" tag="${4:-}"
     if [ -d "$dest/.git" ]; then
-        git -C "$dest" pull --quiet 2>/dev/null && echo -e "  ${GREEN}✓${NC} $name" || echo -e "  ${YELLOW}⚠${NC} $name"
+        # タグ指定時は固定バージョンを維持（pullしない）
+        if [ -n "$tag" ]; then
+            echo -e "  ${GREEN}✓${NC} $name (${tag})"
+        else
+            git -C "$dest" pull --quiet 2>/dev/null && echo -e "  ${GREEN}✓${NC} $name" || echo -e "  ${YELLOW}⚠${NC} $name"
+        fi
     else
         [ -d "$dest" ] && rm -rf "$dest"
         if [ -n "$tag" ]; then
@@ -167,6 +172,8 @@ for pkg in "${STOW_PACKAGES[@]}"; do
         echo -e "${CYAN}[DRY RUN] $pkg${NC}"
         stow --simulate -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg" 2>&1 || true
     else
+        # --adopt: HOMEの既存ファイルをstow/に取り込んで競合解消（初回セットアップ用）
+        # 注意: 既存ファイルがstowディレクトリに移動されるため、git diffで差分を確認すること
         stow -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow --adopt "$pkg" 2>/dev/null || \
         stow -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg"
     fi

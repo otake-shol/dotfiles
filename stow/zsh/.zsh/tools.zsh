@@ -76,9 +76,8 @@ _trash_path="${HOMEBREW_PREFIX:-/usr/local}/opt/trash/bin"
 [[ -d "$_trash_path" ]] && export PATH="$_trash_path:$PATH"
 unset _trash_path
 
-# Local environment
+# Local environment (uv installer)
 [[ -f "$HOME/.local/bin/env" ]] && . "$HOME/.local/bin/env"
-
 
 # --- dotfiles更新リマインダー（macOS専用） ---
 _dotfiles_update_reminder() {

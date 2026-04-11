@@ -10,6 +10,9 @@ _asdf_init() {
     local brew_prefix="${HOMEBREW_PREFIX:-$([[ $(uname -m) == "arm64" ]] && echo /opt/homebrew || echo /usr/local)}"
     local asdf_path="${brew_prefix}/opt/asdf/libexec/asdf.sh"
     [[ -f "$asdf_path" ]] && source "$asdf_path"
+    # JAVA_HOME をasdf管理のJavaに設定（maven/gradle用）
+    local java_home
+    java_home="$(asdf where java 2>/dev/null)" && export JAVA_HOME="$java_home"
   fi
 }
 
@@ -19,15 +22,17 @@ asdf() {
   command asdf "$@"
 }
 
-# node/python等使用時に自動初期化（evalを避けて直接定義）
+# asdf管理ランタイム使用時に自動初期化（evalを避けて直接定義）
 node() { _asdf_init; unset -f node; command node "$@"; }
 npm() { _asdf_init; unset -f npm; command npm "$@"; }
 npx() { _asdf_init; unset -f npx; command npx "$@"; }
 claude() { _asdf_init; unset -f claude; command claude "$@"; }
 python3() { _asdf_init; unset -f python3; command python3 "$@"; }
 pip3() { _asdf_init; unset -f pip3; command pip3 "$@"; }
-ruby() { _asdf_init; unset -f ruby; command ruby "$@"; }
-gem() { _asdf_init; unset -f gem; command gem "$@"; }
+java() { _asdf_init; unset -f java; command java "$@"; }
+javac() { _asdf_init; unset -f javac; command javac "$@"; }
+mvn() { _asdf_init; unset -f mvn; command mvn "$@"; }
+gradle() { _asdf_init; unset -f gradle; command gradle "$@"; }
 gws() { _asdf_init; unset -f gws; command gws "$@"; }
 
 # --- direnv ---

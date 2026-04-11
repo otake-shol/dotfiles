@@ -11,6 +11,9 @@ settings.local.json
 .env.*
 !.env.tpl
 
+# asdf (project-local version pinning)
+.tool-versions
+
 # Claude Code project-local settings (auto-generated at repo root)
 /.claude/
 

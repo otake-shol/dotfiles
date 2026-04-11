@@ -31,36 +31,12 @@ CURRENT_STEP=""
 
 # 色定義
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
-BLUE='\033[0;34m'; CYAN='\033[0;36m'; NC='\033[0m'
+CYAN='\033[0;36m'; NC='\033[0m'
 
-# OS検出
-is_macos() { [[ "$(uname -s)" == "Darwin" ]]; }
+# Homebrew prefix（Apple Silicon / Intel）
 detect_homebrew_prefix() {
     [[ "$(uname -m)" == "arm64" ]] && echo "/opt/homebrew" || echo "/usr/local"
 }
-
-# Zshプラグイン冪等インストール（タグ指定で再現性確保）
-ensure_zsh_plugin() {
-    local name="$1" repo_url="$2" dest="$3" tag="${4:-}"
-    if [ -d "$dest/.git" ]; then
-        git -C "$dest" pull --quiet 2>/dev/null && echo -e "  ${GREEN}✓${NC} $name" || echo -e "  ${YELLOW}⚠${NC} $name"
-    else
-        [ -d "$dest" ] && rm -rf "$dest"
-        if [ -n "$tag" ]; then
-            git clone --depth=1 --branch "$tag" "$repo_url" "$dest" 2>/dev/null
-        else
-            git clone --depth=1 "$repo_url" "$dest" 2>/dev/null
-        fi
-        echo -e "  ${GREEN}✓${NC} $name"
-    fi
-}
-
-# ログ
-LOG_DIR="$HOME/.local/share/dotfiles/logs"
-mkdir -p "$LOG_DIR"
-LOG_FILE="$LOG_DIR/bootstrap-$(date '+%Y%m%d-%H%M%S').log"
-ln -sf "$LOG_FILE" "$LOG_DIR/bootstrap-latest.log"
-find "$LOG_DIR" -name 'bootstrap-*.log' -mtime +30 -delete 2>/dev/null || true
 
 # ========================================
 # 引数解析
@@ -84,6 +60,12 @@ done
 # ========================================
 # ユーティリティ関数
 # ========================================
+LOG_DIR="$HOME/.local/share/dotfiles/logs"
+mkdir -p "$LOG_DIR"
+LOG_FILE="$LOG_DIR/bootstrap-$(date '+%Y%m%d-%H%M%S').log"
+ln -sf "$LOG_FILE" "$LOG_DIR/bootstrap-latest.log"
+find "$LOG_DIR" -name 'bootstrap-*.log' -mtime +30 -delete 2>/dev/null || true
+
 show_step() {
     CURRENT_STEP="[$1/$2] $3"
     echo -e "\n${YELLOW}${CURRENT_STEP}${NC}"
@@ -91,7 +73,7 @@ show_step() {
 
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
-    if [[ "$VERBOSE" = true ]]; then echo -e "${CYAN}[LOG] $1${NC}"; fi
+    [[ "$VERBOSE" = true ]] && echo -e "${CYAN}[LOG] $1${NC}"
 }
 
 ask() {
@@ -101,75 +83,83 @@ ask() {
     [[ "$answer" = "y" ]]
 }
 
+# Zshプラグイン冪等インストール（タグ指定で再現性確保）
+ensure_zsh_plugin() {
+    local name="$1" repo_url="$2" dest="$3" tag="${4:-}"
+    if [ -d "$dest/.git" ]; then
+        git -C "$dest" pull --quiet 2>/dev/null && echo -e "  ${GREEN}✓${NC} $name" || echo -e "  ${YELLOW}⚠${NC} $name"
+    else
+        [ -d "$dest" ] && rm -rf "$dest"
+        if [ -n "$tag" ]; then
+            git clone --depth=1 --branch "$tag" "$repo_url" "$dest" 2>/dev/null
+        else
+            git clone --depth=1 "$repo_url" "$dest" 2>/dev/null
+        fi
+        echo -e "  ${GREEN}✓${NC} $name"
+    fi
+}
+
 # Brewfileパッケージを個別インストール
+install_brew_item() {
+    local type="$1" name="$2" current="$3" total="$4"
+    local check_cmd install_cmd
+
+    case "$type" in
+        tap)
+            check_cmd="brew tap | grep -q ^${name}$"
+            install_cmd="brew tap $name" ;;
+        brew)
+            check_cmd="brew list --formula $name"
+            install_cmd="brew install $name" ;;
+        cask)
+            check_cmd="brew list --cask $name"
+            install_cmd="brew install --cask $name" ;;
+    esac
+
+    if eval "$check_cmd" &>/dev/null; then
+        printf "  [%d/%d] %-40s ${GREEN}✓${NC}\n" "$current" "$total" "$name"
+        return 0
+    fi
+
+    printf "  [%d/%d] %-40s " "$current" "$total" "$name"
+    if eval "$install_cmd" &>/dev/null; then
+        echo -e "${GREEN}✓${NC}"
+        return 0
+    else
+        echo -e "${RED}✗${NC}"
+        return 1
+    fi
+}
+
 install_brewfile_packages() {
     local brewfile="$1"
     local success=0 failed=0 skipped=0 current=0
     local failed_packages=()
-    local taps=() brews=() casks=()
+    local types=() names=()
 
     while IFS= read -r line; do
         [[ "$line" =~ ^[[:space:]]*# ]] && continue
         [[ -z "${line// }" ]] && continue
-        if [[ "$line" =~ ^tap[[:space:]]+\"([^\"]+)\" ]]; then
-            taps+=("${BASH_REMATCH[1]}")
-        elif [[ "$line" =~ ^brew[[:space:]]+\"([^\"]+)\" ]]; then
-            brews+=("${BASH_REMATCH[1]}")
-        elif [[ "$line" =~ ^cask[[:space:]]+\"([^\"]+)\" ]]; then
-            casks+=("${BASH_REMATCH[1]}")
+        if [[ "$line" =~ ^(tap|brew|cask)[[:space:]]+\"([^\"]+)\" ]]; then
+            types+=("${BASH_REMATCH[1]}")
+            names+=("${BASH_REMATCH[2]}")
         fi
     done < "$brewfile"
 
-    local total=$((${#taps[@]} + ${#brews[@]} + ${#casks[@]}))
-    echo -e "パッケージ: ${CYAN}$total${NC} (tap: ${#taps[@]}, brew: ${#brews[@]}, cask: ${#casks[@]})"
+    local total=${#names[@]}
+    echo -e "パッケージ: ${CYAN}$total${NC}"
 
-    # Taps
-    for tap in "${taps[@]}"; do
+    for i in "${!names[@]}"; do
         ((current++))
-        if brew tap | grep -q "^${tap}$" 2>/dev/null; then
-            printf "  [%d/%d] %-40s ${GREEN}✓${NC}\n" "$current" "$total" "$tap"
+        if install_brew_item "${types[$i]}" "${names[$i]}" "$current" "$total"; then
             ((skipped++))
         else
-            printf "  [%d/%d] %-40s " "$current" "$total" "$tap"
-            if brew tap "$tap" &>/dev/null; then
-                echo -e "${GREEN}✓${NC}"; ((success++))
-            else
-                echo -e "${RED}✗${NC}"; ((failed++)); failed_packages+=("tap: $tap")
-            fi
+            ((failed++))
+            failed_packages+=("${types[$i]}: ${names[$i]}")
         fi
     done
-
-    # Brews
-    for pkg in "${brews[@]}"; do
-        ((current++))
-        if brew list --formula "$pkg" &>/dev/null; then
-            printf "  [%d/%d] %-40s ${GREEN}✓${NC}\n" "$current" "$total" "$pkg"
-            ((skipped++))
-        else
-            printf "  [%d/%d] %-40s " "$current" "$total" "$pkg"
-            if brew install "$pkg" &>/dev/null; then
-                echo -e "${GREEN}✓${NC}"; ((success++))
-            else
-                echo -e "${RED}✗${NC}"; ((failed++)); failed_packages+=("brew: $pkg")
-            fi
-        fi
-    done
-
-    # Casks
-    for pkg in "${casks[@]}"; do
-        ((current++))
-        if brew list --cask "$pkg" &>/dev/null; then
-            printf "  [%d/%d] %-40s ${GREEN}✓${NC}\n" "$current" "$total" "$pkg"
-            ((skipped++))
-        else
-            printf "  [%d/%d] %-40s " "$current" "$total" "$pkg"
-            if brew install --cask "$pkg" &>/dev/null; then
-                echo -e "${GREEN}✓${NC}"; ((success++))
-            else
-                echo -e "${RED}✗${NC}"; ((failed++)); failed_packages+=("cask: $pkg")
-            fi
-        fi
-    done
+    # success = total - skipped - failed (新規インストール成功分)
+    success=$((total - skipped - failed))
 
     echo -e "\n結果: 新規=${GREEN}$success${NC} スキップ=${CYAN}$skipped${NC} 失敗=${RED}$failed${NC}"
 
@@ -195,30 +185,6 @@ cleanup() {
 trap cleanup EXIT
 
 # ========================================
-# 依存関係チェック
-# ========================================
-check_dependencies() {
-    local missing=()
-    command -v git &>/dev/null || missing+=("git")
-    command -v curl &>/dev/null || missing+=("curl")
-    if [ ${#missing[@]} -gt 0 ]; then
-        echo -e "${RED}不足: ${missing[*]}${NC}"
-        echo -e "  xcode-select --install"
-        exit 1
-    fi
-    log "Dependencies check passed"
-}
-
-detect_system() {
-    if ! is_macos; then
-        echo -e "${RED}macOS専用です${NC}"; exit 1
-    fi
-    ARCH="$(uname -m)"
-    HOMEBREW_PREFIX=$(detect_homebrew_prefix)
-    log "Detected: $(uname -s) ($ARCH), Homebrew: $HOMEBREW_PREFIX"
-}
-
-# ========================================
 # --claude-only: 早期リターン
 # ========================================
 if [ "$CLAUDE_ONLY" = true ]; then
@@ -233,30 +199,37 @@ if [ "$CLAUDE_ONLY" = true ]; then
 fi
 
 # ========================================
-# メイン処理
+# 前提チェック
 # ========================================
-check_dependencies
-detect_system
+if [[ "$(uname -s)" != "Darwin" ]]; then
+    echo -e "${RED}macOS専用です${NC}"; exit 1
+fi
 
-log "=== Setup started ==="
-echo -e "${BLUE}dotfiles セットアップ${NC}"
+for cmd in git curl; do
+    if ! command -v "$cmd" &>/dev/null; then
+        echo -e "${RED}${cmd} が見つかりません → xcode-select --install${NC}"; exit 1
+    fi
+done
+
+ARCH="$(uname -m)"
+HOMEBREW_PREFIX=$(detect_homebrew_prefix)
+log "=== Setup started === $(uname -s) ($ARCH), Homebrew: $HOMEBREW_PREFIX"
+
+echo -e "${CYAN}dotfiles セットアップ${NC}"
 [[ "$DRY_RUN" = true ]] && echo -e "${CYAN}[ドライランモード]${NC}"
 
-# --- 1. Rosetta 2 (Apple Silicon) ---
-if [[ "$ARCH" == "arm64" ]]; then
-    show_step 1 6 "Rosetta 2の確認"
-    if ! /usr/bin/pgrep -q oahd; then
-        if ask "Rosetta 2をインストールしますか?"; then
-            softwareupdate --install-rosetta --agree-to-license
-            echo -e "${GREEN}✓ Rosetta 2をインストールしました${NC}"
-        fi
-    else
-        echo -e "${GREEN}✓ Rosetta 2はインストール済み${NC}"
+# Rosetta 2（Apple Silicon のみ、ステップ外で処理）
+if [[ "$ARCH" == "arm64" ]] && ! /usr/bin/pgrep -q oahd; then
+    if ask "Rosetta 2をインストールしますか?"; then
+        softwareupdate --install-rosetta --agree-to-license
+        echo -e "${GREEN}✓ Rosetta 2${NC}"
     fi
 fi
 
-# --- 2. Homebrew ---
-show_step 2 6 "Homebrewの確認"
+# ========================================
+# 1. Homebrew
+# ========================================
+show_step 1 5 "Homebrewの確認"
 if ! command -v brew &>/dev/null; then
     if ask "Homebrewをインストールしますか?"; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -270,29 +243,33 @@ else
     eval "$("${HOMEBREW_PREFIX}/bin/brew" shellenv)" 2>/dev/null || true
 fi
 
-# --- 3. アプリケーション ---
-show_step 3 6 "アプリケーションのインストール"
+# ========================================
+# 2. アプリケーション
+# ========================================
+show_step 2 5 "アプリケーションのインストール"
 if [ "$SKIP_APPS" = true ]; then
     echo -e "${CYAN}スキップ${NC}"
-elif [ -f "Brewfile" ]; then
-    if ! install_brewfile_packages "Brewfile"; then
+elif [ -f "$SCRIPT_DIR/Brewfile" ]; then
+    if ! install_brewfile_packages "$SCRIPT_DIR/Brewfile"; then
         ask "失敗がありますが続行しますか?" || exit 1
     fi
 else
     echo -e "${RED}Brewfileが見つかりません${NC}"; exit 1
 fi
 
-# --- 4. dotfilesシンボリックリンク (GNU Stow) ---
-show_step 4 6 "dotfilesのシンボリックリンク作成"
+# ========================================
+# 3. dotfiles シンボリックリンク (GNU Stow)
+# ========================================
+show_step 3 5 "dotfilesのシンボリックリンク作成"
 
 if ! command -v stow &>/dev/null; then
     echo -e "${RED}GNU Stowがインストールされていません${NC}"; exit 1
 fi
 
-stow_package() {
-    local pkg="$1"
+read -r -a STOW_PACKAGES <<< "$(make -C "$SCRIPT_DIR" -s packages)"
+for pkg in "${STOW_PACKAGES[@]}"; do
     if [ ! -d "$SCRIPT_DIR/stow/$pkg" ]; then
-        echo -e "${YELLOW}⚠ $pkg が見つかりません${NC}"; return 1
+        echo -e "${YELLOW}⚠ $pkg が見つかりません${NC}"; continue
     fi
     if [ "$DRY_RUN" = true ]; then
         echo -e "${CYAN}[DRY RUN] $pkg${NC}"
@@ -301,34 +278,29 @@ stow_package() {
         stow -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow --adopt "$pkg" 2>/dev/null || \
         stow -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg"
     fi
-}
-
-# パッケージリストはMakefileから取得（一元管理）
-read -r -a STOW_PACKAGES <<< "$(make -C "$SCRIPT_DIR" -s packages)"
-for pkg in "${STOW_PACKAGES[@]}"; do
-    stow_package "$pkg"
 done
 echo -e "${GREEN}✓ Stowパッケージ完了 (${STOW_PACKAGES[*]})${NC}"
 
-# SSH基本セットアップ
+# SSH ディレクトリ
 if [ "$DRY_RUN" != true ]; then
     mkdir -p ~/.ssh/sockets && chmod 700 ~/.ssh
 fi
 
-# --- 5. Oh My Zsh ---
-show_step 5 6 "Oh My Zshのセットアップ"
+# ========================================
+# 4. Oh My Zsh + プラグイン
+# ========================================
+show_step 4 5 "Oh My Zshのセットアップ"
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
     if [ "$DRY_RUN" = true ] || [ "${CI:-}" = "true" ]; then
         echo -e "${CYAN}[DRY RUN/CI] スキップ${NC}"
     elif ask "Oh My Zshをインストールしますか?"; then
         sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-        echo -e "${GREEN}✓ Oh My Zshをインストールしました${NC}"
+        echo -e "${GREEN}✓ Oh My Zsh${NC}"
     fi
 else
     echo -e "${GREEN}✓ Oh My Zshはインストール済み${NC}"
 fi
 
-# プラグイン
 if [ -d "$HOME/.oh-my-zsh" ] && [ "$DRY_RUN" != true ] && [ "${CI:-}" != "true" ]; then
     ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
     # タグはリリースページで最新を確認して更新
@@ -339,135 +311,88 @@ if [ -d "$HOME/.oh-my-zsh" ] && [ "$DRY_RUN" != true ] && [ "${CI:-}" != "true" 
     echo -e "${GREEN}✓ プラグイン完了${NC}"
 fi
 
-# --- 6. 追加設定 ---
-show_step 6 6 "追加設定"
+# ========================================
+# 5. 追加設定
+# ========================================
+show_step 5 5 "追加設定"
 
-# macOS defaults
 if [ "$DRY_RUN" = true ]; then
     echo -e "${CYAN}[DRY RUN] macOS defaults・追加設定をスキップ${NC}"
 else
-defaults write com.apple.dock autohide -bool true
-defaults write com.apple.dock autohide-delay -float 0
-defaults write com.apple.dock autohide-time-modifier -float 0.3
-defaults write com.apple.dock tilesize -int 48
-defaults write com.apple.dock show-recents -bool false
-defaults write com.apple.finder AppleShowAllFiles -bool true
-defaults write NSGlobalDomain AppleShowAllExtensions -bool true
-defaults write com.apple.finder ShowPathbar -bool true
-defaults write com.apple.finder ShowStatusBar -bool true
-defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
-defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
-defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
-defaults write NSGlobalDomain KeyRepeat -int 1
-defaults write NSGlobalDomain InitialKeyRepeat -int 15
-defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
-defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
-defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
-defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
-defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
-defaults write -g com.apple.mouse.scaling -float 5.0
-defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
-defaults write -g AppleShowScrollBars -string "Always"
-defaults write -g AppleActionOnDoubleClick -string "Maximize"
-defaults write com.apple.screensaver askForPassword -int 1
-defaults write com.apple.screensaver askForPasswordDelay -int 0
-defaults write com.apple.AdLib forceLimitAdTracking -bool true
-defaults write com.cmuxterm.app sidebarMaterial -string "hudWindow"
-defaults write com.cmuxterm.app sidebarBlendMode -string "behindWindow"
-defaults write com.cmuxterm.app sidebarBlurOpacity -float 0.80
-defaults write com.cmuxterm.app sidebarTintHex -string "#1a1b26"
-defaults write com.cmuxterm.app sidebarTintOpacity -string "0.35"
-defaults write com.cmuxterm.app appearanceMode -string "dark"
-defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
-defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
-killall Dock 2>/dev/null || true; killall Finder 2>/dev/null || true
-echo -e "${GREEN}✓ macOS defaults${NC}"
+    # --- macOS defaults: Dock ---
+    defaults write com.apple.dock autohide -bool true
+    defaults write com.apple.dock autohide-delay -float 0
+    defaults write com.apple.dock autohide-time-modifier -float 0.3
+    defaults write com.apple.dock tilesize -int 48
+    defaults write com.apple.dock show-recents -bool false
 
-# git-secrets
-if command -v git-secrets &>/dev/null; then
-    git secrets --install ~/.git-templates/git-secrets 2>/dev/null || true
-    git secrets --register-aws --global 2>/dev/null || true
-    echo -e "${GREEN}✓ git-secrets${NC}"
-fi
+    # --- macOS defaults: Finder ---
+    defaults write com.apple.finder AppleShowAllFiles -bool true
+    defaults write com.apple.finder ShowPathbar -bool true
+    defaults write com.apple.finder ShowStatusBar -bool true
+    defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+    defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+    defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+    defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
-# asdf
-if command -v asdf &>/dev/null; then
-    asdf plugin add nodejs 2>/dev/null || true
-    asdf plugin add python 2>/dev/null || true
-    asdf plugin add terraform 2>/dev/null || true
-    [ -f ~/.tool-versions ] && asdf install
-    echo -e "${GREEN}✓ asdf${NC}"
-fi
+    # --- macOS defaults: キーボード・入力 ---
+    defaults write NSGlobalDomain KeyRepeat -int 1
+    defaults write NSGlobalDomain InitialKeyRepeat -int 15
+    defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
+    defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+    defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
+    defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+    defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
-# Neovim TokyoNight
-TOKYONIGHT_DIR="$HOME/.local/share/nvim/site/pack/colors/start/tokyonight.nvim"
-if [ ! -d "$TOKYONIGHT_DIR" ]; then
-    mkdir -p "$(dirname "$TOKYONIGHT_DIR")"
-    git clone --depth=1 https://github.com/folke/tokyonight.nvim "$TOKYONIGHT_DIR"
-    echo -e "${GREEN}✓ Neovim TokyoNight${NC}"
-fi
+    # --- macOS defaults: トラックパッド・マウス ---
+    defaults write -g com.apple.mouse.scaling -float 5.0
+    defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
+    defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 
-# bat TokyoNight
-BAT_THEMES_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/bat/themes"
-if [ ! -f "$BAT_THEMES_DIR/tokyonight_night.tmTheme" ]; then
-    mkdir -p "$BAT_THEMES_DIR"
-    if curl -fsSL "https://raw.githubusercontent.com/folke/tokyonight.nvim/main/extras/sublime/tokyonight_night.tmTheme" \
-        -o "$BAT_THEMES_DIR/tokyonight_night.tmTheme" 2>/dev/null; then
-        bat cache --build 2>/dev/null || true
-        echo -e "${GREEN}✓ bat TokyoNight${NC}"
+    # --- macOS defaults: UI ---
+    defaults write -g AppleShowScrollBars -string "Always"
+    defaults write -g AppleActionOnDoubleClick -string "Maximize"
+
+    # --- macOS defaults: セキュリティ・プライバシー ---
+    defaults write com.apple.screensaver askForPassword -int 1
+    defaults write com.apple.screensaver askForPasswordDelay -int 0
+    defaults write com.apple.AdLib forceLimitAdTracking -bool true
+    defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+    defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+
+    killall Dock 2>/dev/null || true
+    killall Finder 2>/dev/null || true
+    echo -e "${GREEN}✓ macOS defaults${NC}"
+
+    # --- git-secrets ---
+    if command -v git-secrets &>/dev/null; then
+        git secrets --install ~/.git-templates/git-secrets 2>/dev/null || true
+        git secrets --register-aws --global 2>/dev/null || true
+        echo -e "${GREEN}✓ git-secrets${NC}"
     fi
-fi
 
-# GitHub CLI aliases
-if command -v gh &>/dev/null; then
-    gh alias set co 'pr checkout' 2>/dev/null || true
-    gh alias set prc 'pr create --fill' 2>/dev/null || true
-    gh alias set prv 'pr view --web' 2>/dev/null || true
-    gh alias set prm 'pr merge --auto --squash' 2>/dev/null || true
-    gh alias set prl 'pr list' 2>/dev/null || true
-    gh alias set iss 'issue list' 2>/dev/null || true
-    gh alias set issv 'issue view --web' 2>/dev/null || true
-    gh alias set repo 'repo view --web' 2>/dev/null || true
-    echo -e "${GREEN}✓ GitHub CLI aliases${NC}"
-fi
-fi # DRY_RUN guard for step 6
-
-# pam-watchid (Apple Watch sudo認証)
-if [ "$DRY_RUN" != true ]; then
-    if ask "Apple Watchでsudo認証を有効にしますか?"; then
-        if ! command -v swiftc &>/dev/null; then
-            echo -e "${YELLOW}⚠ swiftcが必要です → xcode-select --install${NC}"
-        else
-            local_pam="/usr/local/lib/pam/pam_watchid.so"
-            sudo_local="/etc/pam.d/sudo_local"
-            if [ ! -f "$local_pam" ]; then
-                build_dir="/tmp/pam-watchid-build"
-                rm -rf "$build_dir"
-                git clone --depth=1 https://github.com/biscuitehh/pam-watchid.git "$build_dir"
-                if make -C "$build_dir" 2>/dev/null; then
-                    sudo mkdir -p "$(dirname "$local_pam")"
-                    sudo cp "$build_dir/pam_watchid.so" "$local_pam"
-                    sudo chmod 444 "$local_pam"
-                    echo -e "${GREEN}✓ pam_watchid.so${NC}"
-                fi
-                rm -rf "$build_dir"
-            fi
-            if [ -f "$local_pam" ]; then
-                watchid='auth       sufficient     pam_watchid.so "reason=execute a command as root"'
-                touchid='auth       sufficient     pam_tid.so'
-                if [ -f "$sudo_local" ]; then
-                    grep -q "pam_watchid" "$sudo_local" || echo "$watchid" | sudo tee -a "$sudo_local" >/dev/null
-                else
-                    printf "# sudo_local\n%s\n%s\n" "$watchid" "$touchid" | sudo tee "$sudo_local" >/dev/null
-                fi
-                echo -e "${GREEN}✓ pam-watchid${NC}"
-            fi
-        fi
+    # --- asdf ---
+    if command -v asdf &>/dev/null; then
+        asdf plugin add nodejs 2>/dev/null || true
+        asdf plugin add python 2>/dev/null || true
+        asdf plugin add terraform 2>/dev/null || true
+        [ -f ~/.tool-versions ] && asdf install
+        echo -e "${GREEN}✓ asdf${NC}"
     fi
+
+    # --- Neovim TokyoNight ---
+    TOKYONIGHT_DIR="$HOME/.local/share/nvim/site/pack/colors/start/tokyonight.nvim"
+    if [ ! -d "$TOKYONIGHT_DIR" ]; then
+        mkdir -p "$(dirname "$TOKYONIGHT_DIR")"
+        git clone --depth=1 https://github.com/folke/tokyonight.nvim "$TOKYONIGHT_DIR"
+        echo -e "${GREEN}✓ Neovim TokyoNight${NC}"
+    fi
+
+    # --- bat テーマキャッシュ構築（テーマ自体はStowで展開済み） ---
+    bat cache --build 2>/dev/null || true
 fi
 
-# Claude Code
+# --- Claude Code ---
 if [ "$SKIP_CLAUDE" = false ] && [ -x "$HOME/.claude/setup.sh" ]; then
     if command -v claude &>/dev/null; then
         [ "$DRY_RUN" = true ] && echo -e "${CYAN}[DRY RUN] Claude Code${NC}" || "$HOME/.claude/setup.sh"
@@ -476,7 +401,7 @@ if [ "$SKIP_CLAUDE" = false ] && [ -x "$HOME/.claude/setup.sh" ]; then
     fi
 fi
 
-# ローカル設定
+# --- ローカル設定ファイル ---
 if [ ! -f ~/.gitconfig.local ]; then
     if [ "$ASSUME_YES" = true ]; then
         cp "$SCRIPT_DIR/stow/git/.gitconfig.local.template" ~/.gitconfig.local

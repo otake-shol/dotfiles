@@ -52,7 +52,7 @@ graph TB
         B2 --> B3[Brewfile 43パッケージ]
         B3 --> B4[GNU Stow シンボリックリンク]
         B4 --> B5[Oh My Zsh + プラグイン]
-        B5 --> B6[macOS設定 30+項目]
+        B5 --> B6[macOS設定 29項目]
     end
 
     subgraph stow["stow/ — 11パッケージ"]
@@ -84,9 +84,9 @@ graph TB
 
 | パッケージ | 説明 | 主要ファイル |
 |-----------|------|-------------|
-| **zsh** | シェル設定（モジュール分割・遅延読み込み・56エイリアス・OMZ 4プラグイン固定） | `.zshrc`, `.zsh/{core,plugins,lazy,tools}.zsh` |
+| **zsh** | シェル設定（モジュール分割・遅延読み込み・56エイリアス・OMZ 6プラグイン固定） | `.zshrc`, `.zsh/{core,plugins,lazy,tools}.zsh` |
 | **git** | Git設定（28エイリアス・delta・git-secrets 40+パターン） | `.gitconfig`, `.gitignore_global`, `.commit-template.txt`, `.editorconfig` |
-| **claude** | Claude Code（3 hooks・8コマンド・6 MCP・権限制御） | `.claude/settings.json`, `hooks/`, `commands/` |
+| **claude** | Claude Code（3 hookスクリプト・8コマンド・権限制御） | `.claude/settings.json`, `hooks/`, `commands/` |
 | **ghostty** | GPUターミナル（TokyoNight・透過80%・JetBrains Mono） | `.config/ghostty/config` |
 | **cmux** | ワークスペース管理（5プリセット・色分け） | `.config/cmux/cmux.json` |
 | **nvim** | 軽量エディタ（プラグインなし・git commit用） | `.config/nvim/init.lua` |
@@ -94,7 +94,7 @@ graph TB
 | **bat** | cat代替（シンタックスハイライト・行番号） | `.config/bat/config` |
 | **atuin** | SQLite履歴検索（ファジー・シークレットフィルタ） | `.config/atuin/config.toml` |
 | **direnv** | ディレクトリ別環境変数（.env自動読み込み） | `.config/direnv/direnv.toml` |
-| **asdf** | バージョン管理（Node/Python/Terraform固定） | `.tool-versions` |
+| **asdf** | バージョン管理（Java/Node/Python/Terraform固定） | `.tool-versions` |
 
 ## シェル起動パフォーマンス
 

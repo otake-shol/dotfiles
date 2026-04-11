@@ -2,7 +2,7 @@
 # このファイルを ~/.zshrc.local にコピーして編集してください
 #
 # 使用方法:
-#   cp ~/dotfiles/stow/zsh/.zshrc.local.template ~/.zshrc.local
+#   cp ~/dotfiles/templates/zshrc.local.template ~/.zshrc.local
 #   vim ~/.zshrc.local
 #
 # 注意: このファイルはGit管理外です。機密情報を安全に保存できます。

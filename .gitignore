@@ -11,6 +11,9 @@ settings.local.json
 .env.*
 !.env.tpl
 
+# Powerlevel10k（p10k configure で自動生成、新PCでは再生成）
+stow/zsh/.p10k.zsh
+
 # asdf (project-local version pinning - stow配下は除外しない)
 .tool-versions
 !stow/**/.tool-versions

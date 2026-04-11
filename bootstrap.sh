@@ -39,14 +39,18 @@ detect_homebrew_prefix() {
     [[ "$(uname -m)" == "arm64" ]] && echo "/opt/homebrew" || echo "/usr/local"
 }
 
-# Zshプラグイン冪等インストール
+# Zshプラグイン冪等インストール（タグ指定で再現性確保）
 ensure_zsh_plugin() {
-    local name="$1" repo_url="$2" dest="$3"
+    local name="$1" repo_url="$2" dest="$3" tag="${4:-}"
     if [ -d "$dest/.git" ]; then
         git -C "$dest" pull --quiet 2>/dev/null && echo -e "  ${GREEN}✓${NC} $name" || echo -e "  ${YELLOW}⚠${NC} $name"
     else
         [ -d "$dest" ] && rm -rf "$dest"
-        git clone --depth=1 "$repo_url" "$dest" 2>/dev/null
+        if [ -n "$tag" ]; then
+            git clone --depth=1 --branch "$tag" "$repo_url" "$dest" 2>/dev/null
+        else
+            git clone --depth=1 "$repo_url" "$dest" 2>/dev/null
+        fi
         echo -e "  ${GREEN}✓${NC} $name"
     fi
 }
@@ -327,10 +331,11 @@ fi
 # プラグイン
 if [ -d "$HOME/.oh-my-zsh" ] && [ "$DRY_RUN" != true ] && [ "${CI:-}" != "true" ]; then
     ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
-    ensure_zsh_plugin "powerlevel10k" "https://github.com/romkatv/powerlevel10k.git" "$ZSH_CUSTOM/themes/powerlevel10k"
-    ensure_zsh_plugin "zsh-autosuggestions" "https://github.com/zsh-users/zsh-autosuggestions" "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
-    ensure_zsh_plugin "zsh-syntax-highlighting" "https://github.com/zsh-users/zsh-syntax-highlighting" "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
-    ensure_zsh_plugin "zsh-completions" "https://github.com/zsh-users/zsh-completions" "$ZSH_CUSTOM/plugins/zsh-completions"
+    # タグはリリースページで最新を確認して更新
+    ensure_zsh_plugin "powerlevel10k" "https://github.com/romkatv/powerlevel10k.git" "$ZSH_CUSTOM/themes/powerlevel10k" "v1.20.0"
+    ensure_zsh_plugin "zsh-autosuggestions" "https://github.com/zsh-users/zsh-autosuggestions" "$ZSH_CUSTOM/plugins/zsh-autosuggestions" "v0.7.1"
+    ensure_zsh_plugin "zsh-syntax-highlighting" "https://github.com/zsh-users/zsh-syntax-highlighting" "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" "0.8.0"
+    ensure_zsh_plugin "zsh-completions" "https://github.com/zsh-users/zsh-completions" "$ZSH_CUSTOM/plugins/zsh-completions" "0.35.0"
     echo -e "${GREEN}✓ プラグイン完了${NC}"
 fi
 

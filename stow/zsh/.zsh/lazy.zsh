@@ -70,7 +70,7 @@ fkill() { _load_fzf_functions && fkill "$@"; }
 fcd() { _load_fzf_functions && fcd "$@"; }
 fstash() { _load_fzf_functions && fstash "$@"; }
 fenv() { _load_fzf_functions && fenv "$@"; }
-fhistory() { _load_fzf_functions && fhistory "$@"; }
+# fhistory は削除済み（atuin Ctrl+R で代替）
 fman() { _load_fzf_functions && fman "$@"; }
 fdiff() { _load_fzf_functions && fdiff "$@"; }
 fgst() { _load_fzf_functions && fgst "$@"; }

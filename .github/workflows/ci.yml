@@ -39,7 +39,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Verify Brewfile syntax
-        run: brew bundle check --file=Brewfile --no-upgrade 2>&1 || true
+        run: |
+          if ! brew bundle check --file=Brewfile --no-upgrade 2>&1; then
+            echo "::warning::Brewfile syntax check failed (some packages may not be installed locally)"
+          fi
 
       - name: Check all packages are available
         run: |

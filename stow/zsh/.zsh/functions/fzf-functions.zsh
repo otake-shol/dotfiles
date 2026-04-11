@@ -64,12 +64,7 @@ fenv() {
   [[ -n "$var" ]] && echo "$var"
 }
 
-# fhistory - 履歴をfzfで検索して実行
-fhistory() {
-  local cmd
-  cmd=$(history | fzf --tac --preview 'echo {}' | sed 's/^ *[0-9]* *//') || return 0
-  [[ -n "$cmd" ]] && print -z "$cmd"
-}
+# fhistory は削除済み（atuin Ctrl+R で代替）
 
 # fman - manページをfzfで検索
 fman() {

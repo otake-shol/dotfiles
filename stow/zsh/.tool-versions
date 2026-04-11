@@ -3,13 +3,13 @@
 # 参照: https://asdf-vm.com/
 
 # Node.js LTS
-nodejs 22.22.2
+nodejs 22.13.0
 
 # Python 最新安定版
-python 3.14.4
+python 3.13.1
 
 # Terraform 最新安定版
-terraform 1.14.8
+terraform 1.10.3
 
 # Go 最新安定版（オプション）
 # golang 1.23.5

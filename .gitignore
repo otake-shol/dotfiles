@@ -11,8 +11,9 @@ settings.local.json
 .env.*
 !.env.tpl
 
-# asdf (project-local version pinning)
+# asdf (project-local version pinning - stow配下は除外しない)
 .tool-versions
+!stow/**/.tool-versions
 
 # Claude Code project-local settings (auto-generated at repo root)
 /.claude/

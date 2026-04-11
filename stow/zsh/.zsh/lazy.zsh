@@ -63,14 +63,13 @@ _load_fzf_functions() {
 }
 
 # fzf関数のスタブ（初回呼び出しで本体を読み込み、evalを避けて直接定義）
-# fbr は削除済み（gbrに統合）
+# 注: fbr→gbrに統合、fhistory→atuin Ctrl+Rで代替のため除外
 fshow() { _load_fzf_functions && fshow "$@"; }
 fvim() { _load_fzf_functions && fvim "$@"; }
 fkill() { _load_fzf_functions && fkill "$@"; }
 fcd() { _load_fzf_functions && fcd "$@"; }
 fstash() { _load_fzf_functions && fstash "$@"; }
 fenv() { _load_fzf_functions && fenv "$@"; }
-# fhistory は削除済み（atuin Ctrl+R で代替）
 fman() { _load_fzf_functions && fman "$@"; }
 fdiff() { _load_fzf_functions && fdiff "$@"; }
 fgst() { _load_fzf_functions && fgst "$@"; }

@@ -51,6 +51,7 @@ lint:
 clean:
 	@find . -name "*.backup.*" -delete
 	@find . -name "*~" -delete
+	@find . -name ".DS_Store" -delete
 	@echo "✓ クリーンアップ完了"
 
 packages:

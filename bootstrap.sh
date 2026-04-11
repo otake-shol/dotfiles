@@ -116,6 +116,7 @@ install_brew_item() {
             install_cmd="brew install --cask $name" ;;
     esac
 
+    # 戻り値: 0=スキップ（既存）, 1=新規成功, 2=失敗
     if eval "$check_cmd" &>/dev/null; then
         printf "  [%d/%d] %-40s ${GREEN}✓${NC}\n" "$current" "$total" "$name"
         return 0
@@ -124,10 +125,10 @@ install_brew_item() {
     printf "  [%d/%d] %-40s " "$current" "$total" "$name"
     if eval "$install_cmd" &>/dev/null; then
         echo -e "${GREEN}✓${NC}"
-        return 0
+        return 1
     else
         echo -e "${RED}✗${NC}"
-        return 1
+        return 2
     fi
 }
 
@@ -151,15 +152,14 @@ install_brewfile_packages() {
 
     for i in "${!names[@]}"; do
         ((current++))
-        if install_brew_item "${types[$i]}" "${names[$i]}" "$current" "$total"; then
-            ((skipped++))
-        else
-            ((failed++))
-            failed_packages+=("${types[$i]}: ${names[$i]}")
-        fi
+        local rc=0
+        install_brew_item "${types[$i]}" "${names[$i]}" "$current" "$total" || rc=$?
+        case $rc in
+            0) ((skipped++)) ;;
+            1) ((success++)) ;;
+            2) ((failed++)); failed_packages+=("${types[$i]}: ${names[$i]}") ;;
+        esac
     done
-    # success = total - skipped - failed (新規インストール成功分)
-    success=$((total - skipped - failed))
 
     echo -e "\n結果: 新規=${GREEN}$success${NC} スキップ=${CYAN}$skipped${NC} 失敗=${RED}$failed${NC}"
 
@@ -251,6 +251,7 @@ if [ "$SKIP_APPS" = true ]; then
     echo -e "${CYAN}スキップ${NC}"
 elif [ -f "$SCRIPT_DIR/Brewfile" ]; then
     if ! install_brewfile_packages "$SCRIPT_DIR/Brewfile"; then
+        echo -e "${YELLOW}⚠ 一部パッケージのインストールに失敗しました${NC}"
         ask "失敗がありますが続行しますか?" || exit 1
     fi
 else
@@ -397,7 +398,7 @@ if [ "$SKIP_CLAUDE" = false ] && [ -x "$HOME/.claude/setup.sh" ]; then
     if command -v claude &>/dev/null; then
         [ "$DRY_RUN" = true ] && echo -e "${CYAN}[DRY RUN] Claude Code${NC}" || "$HOME/.claude/setup.sh"
     else
-        echo -e "${YELLOW}⚠ Claude Code未インストール → npm install -g @anthropic-ai/claude-code${NC}"
+        echo -e "${YELLOW}⚠ Claude Code未インストール → Brewfileのcask \"claude\"で自動インストールされます${NC}"
     fi
 fi
 

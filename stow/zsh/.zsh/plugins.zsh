@@ -48,4 +48,4 @@ fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 export ZSH_COMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/zcompdump-${ZSH_VERSION}"
 
 # Oh My Zsh読み込み（内部でcompinitは呼ばれるがDISABLE_COMPFIXで高速化）
-source $ZSH/oh-my-zsh.sh
+source "$ZSH/oh-my-zsh.sh"

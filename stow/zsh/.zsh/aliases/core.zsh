@@ -45,8 +45,6 @@ alias claude-mem='node "$HOME/.claude/plugins/marketplaces/thedotmack/plugin/scr
 alias cc="claude --continue"              # 最新セッション再開
 # セッション管理関数: cls(一覧), csa(全検索) → functions/claude-functions.zsh
 
-# システム・ネットワーク・クリップボード等は aliases/system.zsh に分離
-
 # ========================================
 # zoxide（高速ディレクトリジャンプ）
 # ========================================
@@ -97,7 +95,7 @@ alias gpf='git push --force-with-lease'  # 安全なforce push
 # ========================================
 alias reload="source ~/.zshrc"
 alias df="df -h"                     # ディスク空き容量(human-readable)
-alias du="du -sh"                    # ディスク使用量(summary) ※sizeof は意図的な別名
+alias du="du -sh"                    # ディスク使用量(summary)
 alias top="btop"                     # モダンなシステムモニター
 alias ports="lsof -i -P | grep LISTEN"
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
@@ -111,5 +109,4 @@ alias o="open ."                       # Finderで開く
 alias md="mkdir -p"                    # ディレクトリ作成（親も作成）
 alias cpwd='pwd | tr -d "\n" | pbcopy && echo "Copied: $(pwd)"'  # 現在パスをコピー
 alias ag="alias | grep"                # エイリアス検索
-alias sizeof="du -sh"                    # ファイル/ディレクトリサイズ
 # port関数は functions/util-functions.zsh に定義（引数結合が必要なため）

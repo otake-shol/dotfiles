@@ -50,7 +50,7 @@ graph TB
 | パッケージ | 説明 | 主要ファイル |
 |-----------|------|-------------|
 | **zsh** | シェル設定（モジュール分割・遅延読み込み・89エイリアス） | `.zshrc`, `.zsh/{core,plugins,lazy,tools}.zsh` |
-| **git** | Git設定（41エイリアス・delta・git-secrets 40+パターン） | `.gitconfig`, `.gitignore_global`, `commit-template.txt` |
+| **git** | Git設定（41エイリアス・delta・git-secrets 40+パターン） | `.gitconfig`, `.gitignore_global`, `.commit-template.txt` |
 | **claude** | Claude Code（5 hooks・8コマンド・6 MCP・権限制御） | `.claude/settings.json`, `hooks/`, `commands/` |
 | **ghostty** | GPUターミナル（TokyoNight・透過80%・JetBrains Mono） | `.config/ghostty/config` |
 | **cmux** | ワークスペース管理（7プリセット・色分け） | `.config/cmux/cmux.json` |

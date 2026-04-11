@@ -106,7 +106,7 @@
 [rebase]
 	autoStash = true
 [commit]
-	template = ~/commit-template.txt
+	template = ~/.commit-template.txt
 [color "decorate"]
 	HEAD = bold cyan
 	branch = bold green

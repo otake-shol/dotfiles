@@ -7,6 +7,9 @@ Brewfile.lock.json
 .gitconfig.local
 .zshrc.local
 settings.local.json
+.env
+.env.*
+!.env.tpl
 
 # Claude Code project-local settings (auto-generated at repo root)
 /.claude/

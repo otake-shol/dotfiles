@@ -39,6 +39,7 @@ brew "tree"                        # ディレクトリツリー表示
 
 # --- 開発ツール ---
 brew "shellcheck"                  # シェルスクリプトlinter(make lint)
+brew "speedtest-cli"               # ネットワーク速度計測
 brew "marp-cli"                    # Markdownスライド生成
 
 # ========================================

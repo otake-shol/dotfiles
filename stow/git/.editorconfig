@@ -1,6 +1,6 @@
-# EditorConfig
+# グローバル EditorConfig（~/.editorconfig として展開）
 # https://editorconfig.org
-# チームでエディタ設定を統一
+# 全リポジトリに適用されるデフォルト設定
 
 root = true
 

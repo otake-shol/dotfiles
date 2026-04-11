@@ -112,7 +112,7 @@ echo -e "${CYAN}dotfiles セットアップ${NC}"
 # ========================================
 # 1. Homebrew
 # ========================================
-show_step 1 5 "Homebrewの確認"
+show_step 1 6 "Homebrewの確認"
 if ! command -v brew &>/dev/null; then
     if ask "Homebrewをインストールしますか?"; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -129,7 +129,7 @@ fi
 # ========================================
 # 2. アプリケーション
 # ========================================
-show_step 2 5 "アプリケーションのインストール"
+show_step 2 6 "アプリケーションのインストール"
 if [ "$SKIP_APPS" = true ]; then
     echo -e "${CYAN}スキップ${NC}"
 elif [ -f "$SCRIPT_DIR/Brewfile" ]; then
@@ -146,7 +146,7 @@ fi
 # ========================================
 # 3. dotfiles シンボリックリンク (GNU Stow)
 # ========================================
-show_step 3 5 "dotfilesのシンボリックリンク作成"
+show_step 3 6 "dotfilesのシンボリックリンク作成"
 
 if ! command -v stow &>/dev/null; then
     echo -e "${RED}GNU Stowがインストールされていません${NC}"; exit 1
@@ -175,7 +175,7 @@ fi
 # ========================================
 # 4. Oh My Zsh + プラグイン
 # ========================================
-show_step 4 5 "Oh My Zshのセットアップ"
+show_step 4 6 "Oh My Zshのセットアップ"
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
     if [ "$DRY_RUN" = true ] || [ "${CI:-}" = "true" ]; then
         echo -e "${CYAN}[DRY RUN/CI] スキップ${NC}"
@@ -200,7 +200,7 @@ fi
 # ========================================
 # 5. 追加設定
 # ========================================
-show_step 5 5 "追加設定"
+show_step 5 6 "追加設定"
 
 if [ "$DRY_RUN" = true ]; then
     echo -e "${CYAN}[DRY RUN] macOS defaults・追加設定をスキップ${NC}"
@@ -272,7 +272,7 @@ fi
 # --- ローカル設定ファイル ---
 if [ ! -f ~/.gitconfig.local ]; then
     if [ "$ASSUME_YES" = true ]; then
-        cp "$SCRIPT_DIR/stow/git/.gitconfig.local.template" ~/.gitconfig.local
+        cp "$SCRIPT_DIR/templates/gitconfig.local.template" ~/.gitconfig.local
         echo -e "${GREEN}✓ ~/.gitconfig.local（要編集）${NC}"
     else
         echo -e "${YELLOW}Git ユーザー情報を設定します${NC}"
@@ -284,8 +284,37 @@ if [ ! -f ~/.gitconfig.local ]; then
 fi
 
 if [ ! -f ~/.zshrc.local ]; then
-    cp "$SCRIPT_DIR/stow/zsh/.zshrc.local.template" ~/.zshrc.local 2>/dev/null || true
+    cp "$SCRIPT_DIR/templates/zshrc.local.template" ~/.zshrc.local 2>/dev/null || true
     echo -e "${GREEN}✓ ~/.zshrc.local${NC}"
+fi
+
+# ========================================
+# 6. Claude Code（オプション）
+# ========================================
+show_step 6 6 "Claude Codeのセットアップ"
+
+if command -v claude &>/dev/null; then
+    if [ "$DRY_RUN" = true ]; then
+        echo -e "${CYAN}[DRY RUN] MCPサーバー・プラグイン設定をスキップ${NC}"
+    elif ask "Claude Code MCPサーバーを設定しますか?"; then
+        # MCPサーバー
+        claude mcp add context7 --scope user -- npx -y @upstash/context7-mcp@latest 2>/dev/null || true
+        claude mcp add playwright --scope user -- npx -y @playwright/mcp@latest 2>/dev/null || true
+        claude mcp add github --scope user --transport http https://api.githubcopilot.com/mcp/ 2>/dev/null || true
+        claude mcp add hourei --scope user -- npx -y hourei-mcp-server 2>/dev/null || true
+        claude mcp add tax-law --scope user -- npx -y tax-law-mcp 2>/dev/null || true
+        if command -v gws &>/dev/null; then
+            claude mcp add gws --scope user -- gws mcp -s all 2>/dev/null || true
+        fi
+        echo -e "${GREEN}✓ MCPサーバー${NC}"
+
+        # プラグイン
+        claude /plugin marketplace add obra/superpowers-marketplace 2>/dev/null || true
+        claude /plugin install superpowers@superpowers-marketplace 2>/dev/null || true
+        echo -e "${GREEN}✓ プラグイン${NC}"
+    fi
+else
+    echo -e "${CYAN}スキップ（Claude Code未インストール）${NC}"
 fi
 
 # ========================================

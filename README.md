@@ -87,7 +87,7 @@ graph TB
 | **ghostty** | GPUターミナル（TokyoNight・透過80%・JetBrains Mono） | `.config/ghostty/config` |
 | **cmux** | ワークスペース管理（5プリセット・色分け） | `.config/cmux/cmux.json` |
 | **nvim** | 軽量エディタ（プラグインなし・git commit用） | `.config/nvim/init.lua` |
-| **yazi** | TUIファイラー（Sixelプレビュー・4 Luaプラグイン） | `.config/yazi/yazi.toml` |
+| **yazi** | TUIファイラー（Sixelプレビュー・3 Luaプラグイン） | `.config/yazi/yazi.toml` |
 | **bat** | cat代替（シンタックスハイライト・行番号） | `.config/bat/config` |
 | **atuin** | SQLite履歴検索（ファジー・シークレットフィルタ） | `.config/atuin/config.toml` |
 | **direnv** | ディレクトリ別環境変数（.env自動読み込み） | `.config/direnv/direnv.toml` |
@@ -134,7 +134,6 @@ cls                    # セッション一覧
 
 - **git-secrets**: AWS/Slack/GitHub/OpenAI/Anthropic等 40+パターン検出
 - **1Password CLI**: シークレット管理統合
-- **pam-watchid**: Apple Watch sudo認証
 - **Claude Code権限**: deny（.env/SSH鍵/rm -rf）、ask（git push/curl）の三層制御
 
 ## テーマ

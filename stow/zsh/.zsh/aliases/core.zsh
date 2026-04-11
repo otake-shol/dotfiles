@@ -31,7 +31,7 @@ alias fdi="fd -I"                      # gitignore無視して検索
 # 安全な削除・コピー
 alias cp="cp -i"
 alias mv="mv -i"
-# rm関数は functions/util-functions.zsh に定義
+# sizeof, port関数は aliases/core.zsh 下部に定義
 
 # ========================================
 # Claude Code
@@ -42,7 +42,9 @@ alias cs="claude --model sonnet"          # Sonnetモデル
 alias ch="claude --model haiku"           # Haikuモデル
 alias clp="claude --print"                # 非対話モード（パイプ用）
 alias claude-mem='node "$HOME/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
-# セッション管理関数: cls(一覧), csa(全検索), csd(削除), cc(続行), cm(モデル指定)
+alias cc="claude --continue"              # 最新セッション再開
+alias cq="claude --print"                # クイック質問（=clp）
+# セッション管理関数: cls(一覧), csa(全検索) → functions/claude-functions.zsh
 
 # システム・ネットワーク・クリップボード等は aliases/system.zsh に分離
 
@@ -110,4 +112,5 @@ alias o="open ."                       # Finderで開く
 alias md="mkdir -p"                    # ディレクトリ作成（親も作成）
 alias cpwd='pwd | tr -d "\n" | pbcopy && echo "Copied: $(pwd)"'  # 現在パスをコピー
 alias ag="alias | grep"                # エイリアス検索
-# sizeof, cpfile関数は functions/util-functions.zsh に定義
+alias sizeof="du -sh"                    # ファイル/ディレクトリサイズ
+# port関数は functions/util-functions.zsh に定義（引数結合が必要なため）

@@ -34,6 +34,8 @@ javac() { _asdf_init; unset -f javac; command javac "$@"; }
 mvn() { _asdf_init; unset -f mvn; command mvn "$@"; }
 gradle() { _asdf_init; unset -f gradle; command gradle "$@"; }
 gws() { _asdf_init; unset -f gws; command gws "$@"; }
+vercel() { _asdf_init; unset -f vercel; command vercel "$@"; }
+terraform() { _asdf_init; unset -f terraform; command terraform "$@"; }
 
 # --- direnv ---
 # hook登録は tools.zsh のキャッシュ版で一元管理（二重初期化を回避）

@@ -1,0 +1,41 @@
+# Cursor 拡張機能リスト
+# 1行1拡張ID。# 始まりはコメント。空行OK。
+# 同期: `make cursor-sync`（dotfilesルートで実行）
+
+# --- Core: TS/React/Next ---
+dbaeumer.vscode-eslint
+esbenp.prettier-vscode
+stylelint.vscode-stylelint
+bradlc.vscode-tailwindcss
+ecmel.vscode-html-css
+formulahendry.auto-rename-tag
+christian-kohler.npm-intellisense
+christian-kohler.path-intellisense
+
+# --- Git / PR ---
+eamodio.gitlens
+github.vscode-pull-request-github
+
+# --- UI / UX ---
+pkief.material-icon-theme
+github.github-vscode-theme
+aaron-bond.better-comments
+oderwat.indent-rainbow
+shardulm94.trailing-spaces
+gruntfuggly.todo-tree
+ms-ceintl.vscode-language-pack-ja
+
+# --- Markdown / ドキュメント ---
+yzhang.markdown-all-in-one
+davidanson.vscode-markdownlint
+bierner.markdown-mermaid
+bpruitt-goddard.mermaid-markdown-syntax-highlighting
+marp-team.marp-vscode
+hediet.vscode-drawio
+ics.japanese-proofreading
+
+# --- その他業務 ---
+ms-azuretools.vscode-docker
+mechatroner.rainbow-csv
+humao.rest-client
+ritwickdey.liveserver

@@ -8,13 +8,35 @@ esbenp.prettier-vscode
 stylelint.vscode-stylelint
 bradlc.vscode-tailwindcss
 ecmel.vscode-html-css
-formulahendry.auto-rename-tag
-christian-kohler.npm-intellisense
 christian-kohler.path-intellisense
+editorconfig.editorconfig
+usernamehw.errorlens
+yoavbls.pretty-ts-errors
+mikestead.dotenv
 
-# --- Git / PR ---
+# --- テスト ---
+vitest.explorer
+ms-playwright.playwright
+
+# --- Java (vscjava.vscode-java-pack が下記を束ねる) ---
+vscjava.vscode-java-pack
+redhat.java
+vscjava.vscode-java-debug
+vscjava.vscode-java-test
+vscjava.vscode-java-dependency
+vscjava.vscode-maven
+vscjava.vscode-gradle
+
+# --- データ/ORM ---
+prisma.prisma
+
+# --- Git / PR / GitHub ---
 eamodio.gitlens
 github.vscode-pull-request-github
+github.vscode-github-actions
+
+# --- 品質 ---
+streetsidesoftware.code-spell-checker
 
 # --- UI / UX ---
 pkief.material-icon-theme
@@ -36,6 +58,6 @@ ics.japanese-proofreading
 
 # --- その他業務 ---
 ms-azuretools.vscode-docker
+redhat.vscode-yaml
 mechatroner.rainbow-csv
 humao.rest-client
-ritwickdey.liveserver

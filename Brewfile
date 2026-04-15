@@ -62,6 +62,7 @@ cask "raycast"                     # Spotlight代替(拡張+スニペット)
 cask "arc"                         # モダンChromiumブラウザ
 cask "readdle-spark"               # メールクライアント
 cask "ticktick"                    # ToDoリスト+ポモドーロ
+cask "obsidian"                    # Markdownナレッジベース(Vault設定は別管理)
 cask "slack"                       # チームコミュニケーション
 
 # --- デザイン・開発 ---

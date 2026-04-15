@@ -196,3 +196,7 @@ cd ~/dotfiles && stow --restow --target=$HOME --dir=stow zsh
 cat /etc/pam.d/sudo_local   # 設定確認
 bash bootstrap.sh            # 再セットアップ
 ```
+
+## 関連リポジトリ
+
+- [otake-shol/obsidian](https://github.com/otake-shol/obsidian) — Obsidian Vault本体。dotfilesはアプリのインストール（Brewfile）のみ担当し、Vault内容と`.obsidian/`設定はそちらで管理。

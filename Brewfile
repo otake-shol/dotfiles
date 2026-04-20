@@ -39,7 +39,12 @@ brew "tree"                        # ディレクトリツリー表示
 # --- 開発ツール ---
 brew "stow"                        # dotfilesシンボリックリンク管理
 brew "shellcheck"                  # シェルスクリプトlinter(make lint)
+
+# --- ドキュメント生成 ---
 brew "marp-cli"                    # Markdownスライド生成
+brew "pandoc"                      # Markdown→PDF/HTML/Word 等の汎用変換
+brew "typst"                       # モダン組版エンジン(日本語PDF生成)
+brew "poppler"                     # PDFユーティリティ(pdfinfo/pdftotext 等)
 
 # ========================================
 # GUI Applications

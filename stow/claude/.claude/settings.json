@@ -21,7 +21,8 @@
       "mcp__gws__*",
       "mcp__hourei__*",
       "mcp__tax-law__*",
-      "Bash(*)"
+      "Bash(*)",
+      "Bash(git push *)"
     ],
     "deny": [
       "Read(**/.env)",
@@ -45,7 +46,6 @@
       "Edit(~/.zprofile)"
     ],
     "ask": [
-      "Bash(git push *)",
       "Bash(git push --force*)",
       "Bash(git push -f*)",
       "Bash(git reset --hard*)",
@@ -109,5 +109,6 @@
   },
   "language": "日本語",
   "alwaysThinkingEnabled": true,
-  "tui": "fullscreen"
+  "tui": "fullscreen",
+  "skipAutoPermissionPrompt": true
 }

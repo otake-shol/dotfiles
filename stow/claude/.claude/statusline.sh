@@ -182,6 +182,36 @@ _format_reset_time() {
     date -r "$reset_ts" +"~%-m/%-d %H:%M"
 }
 
+_format_relative_reset() {
+    local reset_ts=$1
+    [ -z "$reset_ts" ] && return
+    local now diff days hours mins
+    now=$(date +%s)
+    diff=$((reset_ts - now))
+    if [ "$diff" -le 0 ]; then
+        echo -n "now"
+        return
+    fi
+    days=$((diff / 86400))
+    hours=$(( (diff % 86400) / 3600 ))
+    mins=$(( (diff % 3600) / 60 ))
+    if [ "$days" -gt 0 ]; then
+        if [ "$hours" -gt 0 ]; then
+            echo -n "あと${days}d${hours}h"
+        else
+            echo -n "あと${days}d"
+        fi
+    elif [ "$hours" -gt 0 ]; then
+        if [ "$mins" -gt 0 ]; then
+            echo -n "あと${hours}h${mins}m"
+        else
+            echo -n "あと${hours}h"
+        fi
+    else
+        echo -n "あと${mins}m"
+    fi
+}
+
 # === 1行目: 日時・ディレクトリ・Git・モデル・バッテリー ===
 output=""
 
@@ -240,22 +270,24 @@ if [ -n "$usage_5h" ] || [ -n "$usage_7d" ]; then
     line2+="${DIM}${ICON_GAUGE}${RESET} "
     if [ -n "$usage_5h" ]; then
         pct_5h=$(printf '%.0f' "$usage_5h")
+        rem_5h=$((100 - pct_5h))
         u5_color=$(_usage_color "$pct_5h")
         _bar "$pct_5h" u5_bar
         reset_label=""
-        [ -n "$resets_5h" ] && reset_label=" $(_format_reset_time "$resets_5h")"
-        line2+="${u5_color}5h ${u5_bar} ${pct_5h}%${RESET}${DIM}${reset_label}${RESET}"
+        [ -n "$resets_5h" ] && reset_label="・$(_format_relative_reset "$resets_5h")"
+        line2+="${u5_color}5h ${u5_bar} ${pct_5h}%${RESET}${DIM}（残${rem_5h}%${reset_label}）${RESET}"
     fi
     if [ -n "$usage_5h" ] && [ -n "$usage_7d" ]; then
         line2+="  "
     fi
     if [ -n "$usage_7d" ]; then
         pct_7d=$(printf '%.0f' "$usage_7d")
+        rem_7d=$((100 - pct_7d))
         u7_color=$(_usage_color "$pct_7d")
         _bar "$pct_7d" u7_bar
         reset_label=""
-        [ -n "$resets_7d" ] && reset_label=" $(_format_reset_time "$resets_7d")"
-        line2+="${u7_color}7d ${u7_bar} ${pct_7d}%${RESET}${DIM}${reset_label}${RESET}"
+        [ -n "$resets_7d" ] && reset_label="・$(_format_relative_reset "$resets_7d")"
+        line2+="${u7_color}7d ${u7_bar} ${pct_7d}%${RESET}${DIM}（残${rem_7d}%${reset_label}）${RESET}"
     fi
     line2+="  "
 fi

@@ -78,6 +78,7 @@ cask "slack"                       # チームコミュニケーション
 # --- デザイン・開発 ---
 cask "figma"                       # デザイン+プロトタイピング
 cask "claude"                      # Claude Code CLI
+cask "codex"                       # OpenAI Codex CLI(ChatGPT Plus/Pro連携)
 cask "orbstack"                    # Docker Desktop代替(軽量+高速)
 
 # --- フォント ---

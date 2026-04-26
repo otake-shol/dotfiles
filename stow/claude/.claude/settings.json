@@ -108,5 +108,6 @@
     "superpowers@superpowers-marketplace": true
   },
   "language": "日本語",
-  "alwaysThinkingEnabled": true
+  "alwaysThinkingEnabled": true,
+  "tui": "fullscreen"
 }

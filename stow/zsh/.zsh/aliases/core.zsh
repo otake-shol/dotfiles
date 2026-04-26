@@ -46,6 +46,16 @@ alias cc="claude --continue"              # 最新セッション再開
 # セッション管理関数: cls(一覧), csa(全検索) → functions/claude-functions.zsh
 
 # ========================================
+# Codex CLI (OpenAI)
+# ========================================
+alias cx="codex"                          # 基本起動（c と対称）
+alias cxc="codex resume --last"           # 直前セッション即復帰（cc 相当）
+alias cxr="codex resume"                  # ピッカーから選択再開
+alias cxe="codex exec"                    # 非対話一発実行
+alias cxa="codex --full-auto"             # 自動承認＋workspace 書込
+alias cxy="codex --dangerously-bypass-approvals-and-sandbox"  # YOLO（要注意）
+
+# ========================================
 # zoxide（高速ディレクトリジャンプ）
 # ========================================
 alias j="z"                           # ディレクトリジャンプ

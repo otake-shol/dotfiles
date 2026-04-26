@@ -5,10 +5,11 @@ SHELL := /bin/bash
 STOW := stow
 STOW_DIR := stow
 STOW_FLAGS := -v --target=$(HOME) --dir=$(STOW_DIR) --restow
+STOW_SIMULATE_FLAGS := --target=$(HOME) --dir=$(STOW_DIR)
 PACKAGES := zsh git nvim ghostty bat atuin claude yazi direnv cmux asdf cursor
 CURSOR_EXT_LIST := stow/cursor/.config/cursor/extensions.txt
 
-.PHONY: help install uninstall check bootstrap lint clean install-% uninstall-% packages cursor-sync cursor-diff
+.PHONY: help install uninstall check bootstrap lint clean install-% uninstall-% packages cursor-sync cursor-diff doctor
 
 help:
 	@echo "Usage:"
@@ -16,6 +17,7 @@ help:
 	@echo "  make uninstall        全パッケージをアンインストール"
 	@echo "  make install-PKG      個別インストール (例: make install-zsh)"
 	@echo "  make check            Stowドライラン"
+	@echo "  make doctor           シンボリックリンク健全性チェック"
 	@echo "  make bootstrap        完全セットアップ"
 	@echo "  make lint             ShellCheck"
 	@echo "  make clean            バックアップファイル削除"
@@ -45,6 +47,42 @@ check:
 		echo "=== $$pkg ==="; \
 		$(STOW) --simulate $(STOW_FLAGS) $$pkg 2>&1 || true; \
 	done
+
+doctor:
+	@error=0; \
+	echo "▶ Stow 同期状態"; \
+	for pkg in $(PACKAGES); do \
+		if [ ! -d "$(STOW_DIR)/$$pkg" ]; then \
+			printf "  \033[31m✗\033[0m %s (パッケージディレクトリ無し)\n" "$$pkg"; error=1; continue; \
+		fi; \
+		diff=$$($(STOW) --simulate -v $(STOW_SIMULATE_FLAGS) $$pkg 2>&1 \
+			| grep -vE "^WARNING: in simulation|^$$" || true); \
+		if [ -z "$$diff" ]; then \
+			printf "  \033[32m✓\033[0m %s\n" "$$pkg"; \
+		else \
+			printf "  \033[33m⚠\033[0m %s 未同期 (修復: make install-%s)\n" "$$pkg" "$$pkg"; \
+			error=1; \
+		fi; \
+	done; \
+	echo ""; \
+	echo "▶ \$$HOME 配下の壊れたシンボリックリンク (dotfiles 由来のみ)"; \
+	broken=$$(for d in "$$HOME" "$$HOME/.config" "$$HOME/.claude"; do \
+		find "$$d" -maxdepth 4 -type l 2>/dev/null; \
+	done | sort -u | while read -r l; do \
+		[ -e "$$l" ] && continue; \
+		readlink "$$l" 2>/dev/null | grep -q dotfiles && echo "$$l"; \
+	done); \
+	if [ -z "$$broken" ]; then \
+		printf "  \033[32m✓\033[0m 壊れたリンクなし\n"; \
+	else \
+		echo "$$broken" | sed 's|^|  ✗ |'; error=1; \
+	fi; \
+	echo ""; \
+	if [ $$error -eq 0 ]; then \
+		printf "\033[32m✓ doctor pass\033[0m\n"; \
+	else \
+		printf "\033[31m✗ doctor fail\033[0m\n"; exit 1; \
+	fi
 
 bootstrap:
 	bash bootstrap.sh

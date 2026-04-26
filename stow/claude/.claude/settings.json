@@ -58,7 +58,7 @@
       "Bash(npm publish *)",
       "Bash(npm unpublish *)"
     ],
-    "defaultMode": "plan",
+    "defaultMode": "auto",
     "disableBypassPermissionsMode": "disable"
   },
   "model": "opus[1m]",

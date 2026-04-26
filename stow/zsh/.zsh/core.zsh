@@ -12,6 +12,9 @@ export GIT_EDITOR="nvim"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export MANROFFOPT="-c"
 
+# --- Claude Code: フリッカーフリーレンダリング（alt-screen + 仮想スクロールバック） ---
+export CLAUDE_CODE_NO_FLICKER=1
+
 # --- 実行時間の自動表示（カラー対応） ---
 # p10k instant prompt対応: 初期化中は出力しない
 _zsh_initialized=false

@@ -212,6 +212,56 @@ _format_relative_reset() {
     fi
 }
 
+# 使用率しきい値通知（80%/90%/95% で帯が上がった時のみ macOS 通知）
+# 状態は ~/.claude/cache/usage-notify-state.env に保存し、再リセットすれば再通知
+_notify_usage_threshold() {
+    local label=$1 pct=$2 reset_ts=$3
+    [ "$pct" -lt 80 ] && {
+        # 80%未満まで戻ったら状態リセット（次の80%超え時に通知再開）
+        _usage_state_set "$label" 0
+        return
+    }
+    local band=1
+    [ "$pct" -ge 90 ] && band=2
+    [ "$pct" -ge 95 ] && band=3
+    local prev
+    prev=$(_usage_state_get "$label")
+    [ "$band" -le "$prev" ] && return
+    _usage_state_set "$label" "$band"
+    command -v osascript &>/dev/null || return
+    local title body sound
+    case "$band" in
+        1) title="⚠ Claude Code 使用量警告"; sound="Glass" ;;
+        2) title="⚠⚠ Claude Code 使用量逼迫"; sound="Glass" ;;
+        3) title="🚨 Claude Code 使用量上限間近"; sound="Basso" ;;
+    esac
+    body="${label} 使用率 ${pct}%"
+    [ -n "$reset_ts" ] && body+=" ($(_format_relative_reset "$reset_ts")でリセット)"
+    osascript -e "display notification \"$body\" with title \"$title\" sound name \"$sound\"" &>/dev/null &
+}
+
+_usage_state_file() {
+    local f="$HOME/.claude/cache/usage-notify-state.env"
+    [ -d "$(dirname "$f")" ] || mkdir -p "$(dirname "$f")"
+    [ -f "$f" ] || : > "$f"
+    echo "$f"
+}
+
+_usage_state_get() {
+    local key=$1 f
+    f=$(_usage_state_file)
+    awk -F= -v k="$key" '$1==k { print $2; exit }' "$f"
+}
+
+_usage_state_set() {
+    local key=$1 val=$2 f tmp
+    f=$(_usage_state_file)
+    tmp="${f}.tmp.$$"
+    awk -F= -v k="$key" '$1!=k' "$f" > "$tmp" 2>/dev/null || true
+    echo "${key}=${val}" >> "$tmp"
+    mv "$tmp" "$f"
+}
+
 # === 1行目: 日時・ディレクトリ・Git・モデル・バッテリー ===
 output=""
 
@@ -276,6 +326,7 @@ if [ -n "$usage_5h" ] || [ -n "$usage_7d" ]; then
         reset_label=""
         [ -n "$resets_5h" ] && reset_label="・$(_format_relative_reset "$resets_5h")"
         line2+="${u5_color}5h ${u5_bar} ${pct_5h}%${RESET}${DIM}（残${rem_5h}%${reset_label}）${RESET}"
+        _notify_usage_threshold "5h" "$pct_5h" "$resets_5h"
     fi
     if [ -n "$usage_5h" ] && [ -n "$usage_7d" ]; then
         line2+="  "
@@ -288,6 +339,7 @@ if [ -n "$usage_5h" ] || [ -n "$usage_7d" ]; then
         reset_label=""
         [ -n "$resets_7d" ] && reset_label="・$(_format_relative_reset "$resets_7d")"
         line2+="${u7_color}7d ${u7_bar} ${pct_7d}%${RESET}${DIM}（残${rem_7d}%${reset_label}）${RESET}"
+        _notify_usage_threshold "7d" "$pct_7d" "$resets_7d"
     fi
     line2+="  "
 fi
@@ -299,7 +351,8 @@ if [ "$exceeds_200k" = "true" ]; then
     line2+="  ${BLINK}${BOLD}${RED}⚠ >200K${RESET}"
 fi
 
-# キャッシュヒット率
+# キャッシュヒット率＋節約額推定
+# モデル別 input price ($/MTok)。1Mコンテキストモードは2x。cache_read は 0.1x（90%割引）
 total_input=$((input_tokens + cache_read + cache_creation))
 if [ "$total_input" -gt 0 ]; then
     cache_pct=$((cache_read * 100 / total_input))
@@ -310,7 +363,21 @@ if [ "$total_input" -gt 0 ]; then
     else
         CACHE_COLOR=$RED
     fi
-    line2+="  ${CACHE_COLOR}${ICON_CACHE}${cache_pct}%${RESET}"
+    case "$model" in
+        *Opus*)   in_price=15 ;;
+        *Sonnet*) in_price=3 ;;
+        *Haiku*)  in_price=1 ;;
+        *)        in_price=15 ;;
+    esac
+    [ "$ctx_size" -ge 1000000 ] && in_price=$((in_price * 2))
+    # 累積キャッシュ節約推定: 累積入力 * cache_pct/100 * input_price * 0.9 / 1M
+    saved_label=""
+    if [ "$total_in_tok" -gt 0 ] && [ "$cache_pct" -gt 0 ]; then
+        saved_est=$(awk -v t="$total_in_tok" -v p="$cache_pct" -v ip="$in_price" \
+            'BEGIN { printf "%.2f", t * p / 100 * ip * 0.9 / 1000000 }')
+        saved_label=" ${DIM}≈\$${saved_est}節約${RESET}"
+    fi
+    line2+="  ${CACHE_COLOR}${ICON_CACHE}${cache_pct}%${RESET}${saved_label}"
 fi
 
 # 累積トークン

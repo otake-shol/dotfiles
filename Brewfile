@@ -46,6 +46,11 @@ brew "pandoc"                      # Markdown→PDF/HTML/Word 等の汎用変換
 brew "typst"                       # モダン組版エンジン(日本語PDF生成)
 brew "poppler"                     # PDFユーティリティ(pdfinfo/pdftotext 等)
 
+# --- メディア・文字起こし ---
+brew "ffmpeg"                      # 音声/動画変換(yt-dlpの依存)
+brew "yt-dlp"                      # YouTube等の動画/字幕/音声ダウンロード
+brew "whisper-cpp"                 # ローカル音声文字起こし(C++高速実装)
+
 # ========================================
 # GUI Applications
 # ========================================

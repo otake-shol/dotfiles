@@ -99,6 +99,7 @@ alias pip="pip3"
 # ========================================
 alias gs="git status"                    # OMZのgstより短い
 alias gpf='git push --force-with-lease'  # 安全なforce push
+alias gd='git checkout develop && git pull'  # developへ移動して最新化（OMZのgit diffを上書き）
 
 # ========================================
 # システム・ネットワーク

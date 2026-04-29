@@ -76,6 +76,16 @@
         ]
       }
     ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cmux claude-hook session-start"
+          }
+        ]
+      }
+    ],
     "Notification": [
       {
         "hooks": [
@@ -86,7 +96,16 @@
         ]
       }
     ],
-    "Stop": [],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cmux claude-hook stop"
+          }
+        ]
+      }
+    ],
     "PreCompact": [
       {
         "hooks": [

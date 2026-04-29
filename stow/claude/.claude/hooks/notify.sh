@@ -17,6 +17,9 @@ title=$(echo "$input" | jq -r '.title // "Claude Code"')
 
 # cmux通知（ペイン枠の通知リングが光る）
 if [ -S /tmp/cmux.sock ] && command -v cmux &>/dev/null; then
+    # session ID自動ルーティング（複数workspace並列でも正しいタブに通知）
+    echo "$input" | cmux claude-hook notification 2>/dev/null || true
+    # フォールバック: 汎用通知（リング点灯）
     cmux notify --title "$title" --body "$message" 2>/dev/null || true
 fi
 

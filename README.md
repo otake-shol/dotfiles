@@ -37,6 +37,7 @@ dotfiles/
 │   ├── claude/
 │   ├── codex/
 │   ├── cmux/
+│   ├── cursor/
 │   ├── direnv/
 │   ├── ghostty/
 │   ├── git/
@@ -54,11 +55,11 @@ dotfiles/
 ```mermaid
 graph TB
     subgraph bootstrap["bootstrap.sh（ワンコマンドセットアップ）"]
-        B1[Rosetta 2 検出] --> B2[Homebrew]
-        B2 --> B3[Brewfile 43パッケージ]
-        B3 --> B4[GNU Stow シンボリックリンク]
-        B4 --> B5[Oh My Zsh + プラグイン]
-        B5 --> B6[macOS設定 29項目]
+        B1[Homebrew]
+        B1 --> B2[Brewfile 51パッケージ]
+        B2 --> B3[GNU Stow シンボリックリンク]
+        B3 --> B4[Oh My Zsh + プラグイン]
+        B4 --> B5[macOS設定]
     end
 
     subgraph stow["stow/ — 13パッケージ"]
@@ -84,7 +85,7 @@ graph TB
         Z4 --> Z5["tools.zsh（fzf・zoxide・yazi）"]
     end
 
-    B4 --> stow
+    B3 --> stow
     S1 --> shell
 ```
 
@@ -104,6 +105,7 @@ graph TB
 | **atuin** | SQLite履歴検索（ファジー・シークレットフィルタ） | `.config/atuin/config.toml` |
 | **direnv** | ディレクトリ別環境変数（.env自動読み込み） | `.config/direnv/direnv.toml` |
 | **asdf** | バージョン管理（Java/Node/Python/Terraform固定） | `.tool-versions` |
+| **cursor** | Cursor拡張リスト管理 | `.config/cursor/extensions.txt` |
 
 ## シェル起動パフォーマンス
 
@@ -118,9 +120,13 @@ make install           # 全Stowパッケージをインストール
 make install-zsh       # 個別インストール
 make uninstall         # 全パッケージをアンインストール
 make check             # Stowドライラン（競合検出）
+make check-strict      # Stowドライラン（差分・競合で失敗）
+make doctor            # Stow同期・壊れたリンク検出
+make doctor-plan       # 修復候補を表示（変更なし）
 make lint              # ShellCheck
 make clean             # バックアップファイル・.DS_Store削除
 make packages          # パッケージ一覧表示
+make stats             # Stow/Brewfile件数を表示
 ```
 
 ## CI
@@ -167,7 +173,7 @@ codex-commit-push "feat: ..."  # deterministicなcommit+push
 ## セキュリティ
 
 - **git-secrets**: AWS/Slack/GitHub/OpenAI/Anthropic等 8パターン検出（`.gitconfig`で定義、Stow管理）
-- **Claude Code権限**: Bash(*)全許可 + deny（.env/SSH鍵/rm -rf）、ask（git push/curl）でゲート
+- **Claude Code権限**: 自動実行寄りの許可 + deny（.env/SSH鍵/rm -rf/sudo）、ask（force push/curl 等）でゲート
 - **Codex権限**: workspace-write + on-request。`.env`/credentials/SSH鍵/破壊的操作は `AGENTS.md` で明示的に禁止・確認。
 
 ## テーマ

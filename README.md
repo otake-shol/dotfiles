@@ -30,11 +30,12 @@ bash bootstrap.sh --skip-apps  # アプリインストールをスキップ
 
 ```
 dotfiles/
-├── stow/                  # GNU Stowパッケージ（11個）
+├── stow/                  # GNU Stowパッケージ（13個）
 │   ├── asdf/
 │   ├── atuin/
 │   ├── bat/
 │   ├── claude/
+│   ├── codex/
 │   ├── cmux/
 │   ├── direnv/
 │   ├── ghostty/
@@ -60,18 +61,20 @@ graph TB
         B5 --> B6[macOS設定 29項目]
     end
 
-    subgraph stow["stow/ — 11パッケージ"]
+    subgraph stow["stow/ — 13パッケージ"]
         S1[zsh]
         S2[git]
         S3[claude]
-        S4[ghostty]
-        S5[cmux]
-        S6[nvim]
-        S7[yazi]
-        S8[bat]
-        S9[atuin]
-        S10[direnv]
-        S11[asdf]
+        S4[codex]
+        S5[ghostty]
+        S6[cmux]
+        S7[nvim]
+        S8[yazi]
+        S9[bat]
+        S10[atuin]
+        S11[direnv]
+        S12[asdf]
+        S13[cursor]
     end
 
     subgraph shell["zshモジュール読み込み順"]
@@ -92,6 +95,7 @@ graph TB
 | **zsh** | シェル設定（モジュール分割・遅延読み込み・56エイリアス・OMZ 6プラグイン） | `.zshrc`, `.zsh/{core,plugins,lazy,tools}.zsh` |
 | **git** | Git設定（28エイリアス・delta・git-secrets 8パターン） | `.gitconfig`, `.gitignore_global`, `.commit-template.txt`, `.editorconfig` |
 | **claude** | Claude Code（3 hookスクリプト・8コマンド・権限制御） | `.claude/settings.json`, `hooks/`, `commands/` |
+| **codex** | Codex CLI（config・AGENTS・hook・MCP） | `.codex/config.toml`, `.codex/AGENTS.md`, `.codex/hooks/` |
 | **ghostty** | GPUターミナル（TokyoNight・透過80%・JetBrains Mono） | `.config/ghostty/config` |
 | **cmux** | ワークスペース管理（5プリセット・色分け） | `.config/cmux/cmux.json` |
 | **nvim** | 軽量エディタ（プラグインなし・git commit用） | `.config/nvim/init.lua` |
@@ -146,10 +150,23 @@ cls                    # セッション一覧
 
 カスタムコマンド: `/verify`, `/commit-push`, `/spec`, `/review`, `/test`, `/worktree`, `/slides`, `/pc-checkup`
 
+## Codex
+
+```bash
+codex                  # 対話セッション開始
+codex -p fast          # 軽量プロファイル
+codex -p deep          # 高推論プロファイル
+codex review           # 非対話コードレビュー
+~/.codex/hooks/verify.sh .  # 手動検証
+```
+
+設定: `stow/codex/.codex/config.toml`、グローバル指示: `stow/codex/.codex/AGENTS.md`
+
 ## セキュリティ
 
 - **git-secrets**: AWS/Slack/GitHub/OpenAI/Anthropic等 8パターン検出（`.gitconfig`で定義、Stow管理）
 - **Claude Code権限**: Bash(*)全許可 + deny（.env/SSH鍵/rm -rf）、ask（git push/curl）でゲート
+- **Codex権限**: workspace-write + on-request。`.env`/credentials/SSH鍵/破壊的操作は `AGENTS.md` で明示的に禁止・確認。
 
 ## テーマ
 

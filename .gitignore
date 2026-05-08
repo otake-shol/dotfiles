@@ -20,6 +20,18 @@ stow/zsh/.p10k.zsh
 # Claude Code project-local settings (auto-generated at repo root)
 /.claude/
 
+# Codex runtime state generated when validating the stow package
+stow/codex/.codex/installation_id
+stow/codex/.codex/cache/
+stow/codex/.codex/log/
+stow/codex/.codex/logs/
+stow/codex/.codex/memories/
+stow/codex/.codex/shell_snapshots/
+stow/codex/.codex/skills/
+stow/codex/.codex/state/
+stow/codex/.codex/tmp/
+stow/codex/.codex/*.sqlite*
+
 # MCP auto-generated
 .playwright-mcp/
 .serena/

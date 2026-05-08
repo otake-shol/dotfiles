@@ -6,7 +6,7 @@ STOW := stow
 STOW_DIR := stow
 STOW_FLAGS := -v --target=$(HOME) --dir=$(STOW_DIR) --restow
 STOW_SIMULATE_FLAGS := --target=$(HOME) --dir=$(STOW_DIR)
-PACKAGES := zsh git nvim ghostty bat atuin claude yazi direnv cmux asdf cursor
+PACKAGES := zsh git nvim ghostty bat atuin claude codex yazi direnv cmux asdf cursor
 CURSOR_EXT_LIST := stow/cursor/.config/cursor/extensions.txt
 
 .PHONY: help install uninstall check bootstrap lint clean install-% uninstall-% packages cursor-sync cursor-diff doctor
@@ -66,7 +66,7 @@ doctor:
 	done; \
 	echo ""; \
 	echo "▶ \$$HOME 配下の壊れたシンボリックリンク (dotfiles 由来のみ)"; \
-	broken=$$(for d in "$$HOME" "$$HOME/.config" "$$HOME/.claude"; do \
+	broken=$$(for d in "$$HOME" "$$HOME/.config" "$$HOME/.claude" "$$HOME/.codex"; do \
 		find "$$d" -maxdepth 4 -type l 2>/dev/null; \
 	done | sort -u | while read -r l; do \
 		[ -e "$$l" ] && continue; \
@@ -90,6 +90,7 @@ bootstrap:
 lint:
 	@shellcheck -S warning bootstrap.sh
 	@shellcheck -S warning stow/claude/.claude/hooks/*.sh
+	@shellcheck -S warning stow/codex/.codex/hooks/*.sh
 
 clean:
 	@find . -name "*.backup.*" -delete

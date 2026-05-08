@@ -9,7 +9,7 @@ STOW_SIMULATE_FLAGS := --target=$(HOME) --dir=$(STOW_DIR)
 PACKAGES := zsh git nvim ghostty bat atuin claude codex yazi direnv cmux asdf cursor
 CURSOR_EXT_LIST := stow/cursor/.config/cursor/extensions.txt
 
-.PHONY: help install uninstall check check-strict bootstrap lint clean install-% uninstall-% packages stats cursor-sync cursor-diff doctor doctor-plan
+.PHONY: help install uninstall check check-strict bootstrap lint clean install-% uninstall-% packages stats readme-check versions-audit cursor-sync cursor-diff doctor doctor-plan doctor-clean-broken
 
 help:
 	@echo "Usage:"
@@ -24,6 +24,8 @@ help:
 	@echo "  make lint             ShellCheck"
 	@echo "  make clean            バックアップファイル削除"
 	@echo "  make stats            パッケージ数を表示"
+	@echo "  make readme-check     README内の件数が実体と一致するか確認"
+	@echo "  make versions-audit   .tool-versions の固定バージョン確認"
 	@echo "  make cursor-sync      Cursor拡張を extensions.txt に同期"
 	@echo "  make cursor-diff      現状とリストの差分を表示（変更なし）"
 	@echo ""
@@ -122,6 +124,22 @@ doctor-plan:
 		printf "  %s -> %s\n" "$$l" "$$target"; \
 	done
 
+doctor-clean-broken:
+	@if [ "$${CONFIRM:-}" != "delete-broken-links" ]; then \
+		echo "壊れた dotfiles 由来リンクを削除するには CONFIRM=delete-broken-links を付けてください"; \
+		echo "例: make doctor-clean-broken CONFIRM=delete-broken-links"; \
+		exit 2; \
+	fi
+	@for d in "$$HOME" "$$HOME/.config" "$$HOME/.claude" "$$HOME/.codex" "$$HOME/.docker" "$$HOME/.gnupg" "$$HOME/Library/Application Support/com.mitchellh.ghostty" "$$HOME/Library/LaunchAgents"; do \
+		find "$$d" -maxdepth 4 -type l 2>/dev/null; \
+	done | sort -u | while read -r l; do \
+		[ -e "$$l" ] && continue; \
+		target=$$(readlink "$$l" 2>/dev/null || true); \
+		printf "%s" "$$target" | grep -q dotfiles || continue; \
+		printf "delete %s -> %s\n" "$$l" "$$target"; \
+		rm -- "$$l"; \
+	done
+
 bootstrap:
 	bash bootstrap.sh
 
@@ -148,6 +166,34 @@ stats:
 	printf "brew formulae: %s\n" "$$brew_count"; \
 	printf "brew casks: %s\n" "$$cask_count"; \
 	printf "brew total: %s\n" "$$((brew_count + cask_count))"
+
+readme-check:
+	@pkg_count=$$(printf "%s\n" $(PACKAGES) | wc -l | tr -d ' '); \
+	brew_count=$$(awk '/^[[:space:]]*brew /{count++} END{print count+0}' Brewfile); \
+	cask_count=$$(awk '/^[[:space:]]*cask /{count++} END{print count+0}' Brewfile); \
+	brew_total=$$((brew_count + cask_count)); \
+	error=0; \
+	grep -q "GNU Stowパッケージ（$${pkg_count}個）" README.md || { echo "READMEのStowパッケージ数が不一致: $$pkg_count"; error=1; }; \
+	grep -q "Brewfile $${brew_total}パッケージ" README.md || { echo "READMEのBrewfile件数が不一致: $$brew_total"; error=1; }; \
+	exit $$error
+
+versions-audit:
+	@tool_versions="stow/asdf/.tool-versions"; \
+	if [ ! -f "$$tool_versions" ]; then echo "$$tool_versions が見つかりません"; exit 1; fi; \
+	if ! command -v asdf >/dev/null 2>&1; then echo "asdf not found"; exit 1; fi; \
+	while read -r tool version _; do \
+		[ -z "$$tool" ] && continue; \
+		case "$$tool" in \#*) continue ;; esac; \
+		latest=$$(asdf latest "$$tool" 2>/dev/null || true); \
+		case "$$latest" in "No compatible versions available"*|"No versions available"*) latest="" ;; esac; \
+		if [ -n "$$latest" ] && [ "$$latest" != "$$version" ]; then \
+			printf "  ⚠ %s pinned=%s latest=%s\n" "$$tool" "$$version" "$$latest"; \
+		elif [ -z "$$latest" ]; then \
+			printf "  ? %s pinned=%s latest=unknown\n" "$$tool" "$$version"; \
+		else \
+			printf "  ✓ %s pinned=%s\n" "$$tool" "$$version"; \
+		fi; \
+	done < "$$tool_versions"
 
 cursor-diff:
 	@command -v cursor >/dev/null 2>&1 || { echo "❌ cursor CLI not found"; exit 1; }

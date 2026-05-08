@@ -26,6 +26,8 @@ bash bootstrap.sh -n -v        # ドライラン + 詳細出力
 bash bootstrap.sh --skip-apps  # アプリインストールをスキップ
 ```
 
+`bootstrap.sh` は Homebrew と Oh My Zsh の公式インストーラだけを明示例外として直接実行する。任意の remote script はパイプ実行しない。
+
 ## ディレクトリ構造
 
 ```
@@ -128,8 +130,17 @@ make clean             # バックアップファイル・.DS_Store削除
 make packages          # パッケージ一覧表示
 make stats             # Stow/Brewfile件数を表示
 make readme-check      # README内の件数が実体と一致するか確認
+make runtimes-install  # asdf plugin/runtime を .tool-versions から導入
 make versions-audit    # .tool-versions の固定バージョン確認
 ```
+
+`make runtimes-install` は `stow/asdf/.tool-versions` を読み、未追加の asdf plugin を追加してから `asdf install` を実行する。Java/Node/Python/Terraform は時間とネットワーク依存が大きいため、bootstrap では自動実行せず必要な時だけ実行する。
+
+## Brewfileの範囲
+
+`Brewfile` は新しいMacを普段使いできる状態に近づけるため、CLIだけでなくGUIアプリも含める。`Core CLI Tools` と `Core GUI Applications` は常用前提、`Optional CLI Tools` と `Optional GUI Applications` は作業内容に応じた追加ツールとして扱う。
+
+軽量セットアップにしたい場合は `bash bootstrap.sh --skip-apps` でアプリ導入を飛ばし、必要なStowリンクだけを `make install-PKG` で入れる。
 
 ## CI
 
@@ -178,8 +189,9 @@ codex-commit-push "fix: ..." README.md Makefile  # 指定ファイルだけcommi
 ## セキュリティ
 
 - **git-secrets**: AWS/Slack/GitHub/OpenAI/Anthropic等 8パターン検出（`.gitconfig`で定義、Stow管理）
-- **Claude Code権限**: 自動実行寄りの許可 + deny（.env/SSH鍵/rm -rf/sudo）、ask（force push/curl 等）でゲート
+- **Claude Code権限**: 自動実行寄りの許可 + deny（.env/SSH鍵/rm -rf/sudo/再帰的chmod・chown）、ask（force push/curl/brew uninstall/stow -D 等）でゲート
 - **Codex権限**: workspace-write + on-request。`.env`/credentials/SSH鍵/破壊的操作は `AGENTS.md` で明示的に禁止・確認。
+- **Remote script**: Homebrew と Oh My Zsh の公式インストーラだけを bootstrap の明示例外にする。それ以外の導入は手順確認後に実行する。
 
 ## テーマ
 

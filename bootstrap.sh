@@ -319,6 +319,7 @@ if command -v claude &>/dev/null; then
         claude mcp add github --scope user --transport http https://api.githubcopilot.com/mcp/ 2>/dev/null || true
         claude mcp add hourei --scope user -- npx -y hourei-mcp-server 2>/dev/null || true
         claude mcp add tax-law --scope user -- npx -y tax-law-mcp 2>/dev/null || true
+        claude mcp add mf-ca --scope user --transport http https://beta.mcp.developers.biz.moneyforward.com/mcp/ca/v3 2>/dev/null || true
         if command -v gws &>/dev/null; then
             claude mcp add gws --scope user -- gws mcp -s all 2>/dev/null || true
         fi

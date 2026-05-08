@@ -4,12 +4,15 @@ SHELL := /bin/bash
 
 STOW := stow
 STOW_DIR := stow
-STOW_FLAGS := -v --target=$(HOME) --dir=$(STOW_DIR) --restow
+STOW_COMMON_FLAGS := -v --target=$(HOME) --dir=$(STOW_DIR)
+STOW_INSTALL_FLAGS := $(STOW_COMMON_FLAGS) --restow
+STOW_DELETE_FLAGS := $(STOW_COMMON_FLAGS)
 STOW_SIMULATE_FLAGS := --target=$(HOME) --dir=$(STOW_DIR)
 PACKAGES := zsh git nvim ghostty bat atuin claude codex yazi direnv cmux asdf cursor
 CURSOR_EXT_LIST := stow/cursor/.config/cursor/extensions.txt
+TOOL_VERSIONS := stow/asdf/.tool-versions
 
-.PHONY: help install uninstall check check-strict bootstrap lint clean install-% uninstall-% packages stats readme-check versions-audit cursor-sync cursor-diff doctor doctor-plan doctor-clean-broken
+.PHONY: help install uninstall check check-strict bootstrap lint clean install-% uninstall-% packages stats readme-check runtimes-install versions-audit cursor-sync cursor-diff doctor doctor-plan doctor-clean-broken
 
 help:
 	@echo "Usage:"
@@ -25,6 +28,7 @@ help:
 	@echo "  make clean            バックアップファイル削除"
 	@echo "  make stats            パッケージ数を表示"
 	@echo "  make readme-check     README内の件数が実体と一致するか確認"
+	@echo "  make runtimes-install asdf plugin/runtime を .tool-versions から導入"
 	@echo "  make versions-audit   .tool-versions の固定バージョン確認"
 	@echo "  make cursor-sync      Cursor拡張を extensions.txt に同期"
 	@echo "  make cursor-diff      現状とリストの差分を表示（変更なし）"
@@ -39,18 +43,18 @@ uninstall: $(addprefix uninstall-,$(PACKAGES))
 
 install-%:
 	@if [ -d "$(STOW_DIR)/$*" ]; then \
-		$(STOW) $(STOW_FLAGS) $*; \
+		$(STOW) $(STOW_INSTALL_FLAGS) $*; \
 	else \
 		echo "⚠ $(STOW_DIR)/$* が見つかりません"; \
 	fi
 
 uninstall-%:
-	@[ -d "$(STOW_DIR)/$*" ] && $(STOW) -D $(STOW_FLAGS) $* || true
+	@[ -d "$(STOW_DIR)/$*" ] && $(STOW) -D $(STOW_DELETE_FLAGS) $* || true
 
 check:
 	@for pkg in $(PACKAGES); do \
 		echo "=== $$pkg ==="; \
-		$(STOW) --simulate $(STOW_FLAGS) $$pkg 2>&1 || true; \
+		$(STOW) --simulate $(STOW_INSTALL_FLAGS) $$pkg 2>&1 || true; \
 	done
 
 check-strict:
@@ -177,8 +181,22 @@ readme-check:
 	grep -q "Brewfile $${brew_total}パッケージ" README.md || { echo "READMEのBrewfile件数が不一致: $$brew_total"; error=1; }; \
 	exit $$error
 
+runtimes-install:
+	@if ! command -v asdf >/dev/null 2>&1; then echo "asdf not found"; exit 1; fi
+	@if [ ! -f "$(TOOL_VERSIONS)" ]; then echo "$(TOOL_VERSIONS) が見つかりません"; exit 1; fi
+	@while read -r tool version _; do \
+		[ -z "$$tool" ] && continue; \
+		case "$$tool" in \#*) continue ;; esac; \
+		if ! asdf plugin list 2>/dev/null | grep -qx "$$tool"; then \
+			printf "plugin add %s\n" "$$tool"; \
+			asdf plugin add "$$tool"; \
+		fi; \
+		printf "install %s %s\n" "$$tool" "$$version"; \
+		asdf install "$$tool" "$$version"; \
+	done < "$(TOOL_VERSIONS)"
+
 versions-audit:
-	@tool_versions="stow/asdf/.tool-versions"; \
+	@tool_versions="$(TOOL_VERSIONS)"; \
 	if [ ! -f "$$tool_versions" ]; then echo "$$tool_versions が見つかりません"; exit 1; fi; \
 	if ! command -v asdf >/dev/null 2>&1; then echo "asdf not found"; exit 1; fi; \
 	while read -r tool version _; do \

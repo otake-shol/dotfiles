@@ -136,6 +136,7 @@ if [ "$DRY_RUN" = true ]; then
     fi
 elif ! command -v brew &>/dev/null; then
     if ask "Homebrewをインストールしますか?"; then
+        # 公式インストーラのみ例外的に直接実行する。安全方針はREADMEの「セキュリティ」を参照。
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         eval "$("${HOMEBREW_PREFIX}/bin/brew" shellenv)"
         echo -e "${GREEN}✓ Homebrewをインストールしました${NC}"
@@ -216,6 +217,7 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
     if [ "$DRY_RUN" = true ] || [ "${CI:-}" = "true" ]; then
         echo -e "${CYAN}[DRY RUN/CI] スキップ${NC}"
     elif ask "Oh My Zshをインストールしますか?"; then
+        # 公式インストーラのみ例外的に直接実行する。安全方針はREADMEの「セキュリティ」を参照。
         sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
         echo -e "${GREEN}✓ Oh My Zsh${NC}"
     fi
@@ -365,3 +367,4 @@ fi
 echo -e "\n${GREEN}セットアップ完了！${NC}"
 echo -e "  1. ターミナルを再起動（または ${CYAN}exec zsh${NC}）"
 echo -e "  2. Powerlevel10kカスタマイズ: ${CYAN}p10k configure${NC}"
+echo -e "  3. asdfランタイム導入: ${CYAN}make runtimes-install${NC}（必要な場合のみ）"

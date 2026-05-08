@@ -4,7 +4,7 @@
 set -euo pipefail
 
 usage() {
-    echo "Usage: codex-commit-push <commit message>" >&2
+    echo "Usage: codex-commit-push <commit message> [file ...]" >&2
 }
 
 if [ "$#" -eq 0 ]; then
@@ -12,7 +12,9 @@ if [ "$#" -eq 0 ]; then
     exit 2
 fi
 
-message="$*"
+message="$1"
+shift
+files=("$@")
 
 git rev-parse --is-inside-work-tree >/dev/null
 root=$(git rev-parse --show-toplevel)
@@ -29,7 +31,17 @@ if [ -z "$(git status --porcelain)" ]; then
     exit 0
 fi
 
-if git status --porcelain | grep -E '(^.. |/)(\.env(\.|$)|.*credentials.*|.*\.key$)' >/dev/null; then
+has_secret_path() {
+    grep -E '(^|/)(\.env(\.|$)|.*credentials.*|.*\.key$)' >/dev/null
+}
+
+if [ "${#files[@]}" -gt 0 ]; then
+    if printf "%s\n" "${files[@]}" | has_secret_path; then
+        echo "Refusing to commit possible secret files." >&2
+        printf "%s\n" "${files[@]}" >&2
+        exit 1
+    fi
+elif git status --porcelain | awk '{print $2}' | has_secret_path; then
     echo "Refusing to commit possible secret files." >&2
     git status --porcelain
     exit 1
@@ -39,10 +51,36 @@ echo "Branch: $branch"
 echo ""
 git status --short
 echo ""
-git diff --stat
+if [ "${#files[@]}" -gt 0 ]; then
+    git diff --stat -- "${files[@]}"
+else
+    git diff --stat
+fi
 echo ""
 
-git add -A
+if [ "${#files[@]}" -gt 0 ]; then
+    git diff --check -- "${files[@]}"
+    git add -- "${files[@]}"
+else
+    git diff --check
+    git add -A
+fi
+
+if git diff --cached --quiet; then
+    echo "No staged changes to commit."
+    exit 0
+fi
+
+if git diff --cached --name-only | has_secret_path; then
+    echo "Refusing to commit possible secret files." >&2
+    git diff --cached --name-only >&2
+    exit 1
+fi
+
+echo "Staged changes:"
+git diff --cached --stat
+echo ""
+
 git commit -m "$message"
 
 if git rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 2>&1; then

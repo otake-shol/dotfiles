@@ -127,6 +127,8 @@ make lint              # ShellCheck
 make clean             # バックアップファイル・.DS_Store削除
 make packages          # パッケージ一覧表示
 make stats             # Stow/Brewfile件数を表示
+make readme-check      # README内の件数が実体と一致するか確認
+make versions-audit    # .tool-versions の固定バージョン確認
 ```
 
 ## CI
@@ -150,6 +152,8 @@ GitHub Actionsで以下を自動検証:
 
 ```bash
 c / co / cs / ch       # 起動（デフォルト/Opus/Sonnet/Haiku）
+cdef / cauto / cplan   # 権限モード切替（通常/自動/計画）
+cyolo                  # 権限確認スキップ（要注意）
 cc                     # 最新セッション続行
 cls                    # セッション一覧
 ```
@@ -165,6 +169,7 @@ codex -p deep          # 高推論プロファイル
 codex review           # 非対話コードレビュー
 cxcp                   # 変更確認→検証→commit→push をCodexに依頼
 codex-commit-push "feat: ..."  # deterministicなcommit+push
+codex-commit-push "fix: ..." README.md Makefile  # 指定ファイルだけcommit+push
 ~/.codex/hooks/verify.sh .  # 手動検証
 ```
 

@@ -72,6 +72,10 @@ ask() {
     [[ "$answer" = "y" ]]
 }
 
+dry_run_msg() {
+    echo -e "${CYAN}[DRY RUN] $*${NC}"
+}
+
 # Zshプラグイン冪等インストール（タグ指定で再現性確保）
 ensure_zsh_plugin() {
     local name="$1" repo_url="$2" dest="$3" tag="${4:-}"
@@ -124,7 +128,13 @@ echo -e "${CYAN}dotfiles セットアップ${NC}"
 # 1. Homebrew
 # ========================================
 show_step 1 6 "Homebrewの確認"
-if ! command -v brew &>/dev/null; then
+if [ "$DRY_RUN" = true ]; then
+    if command -v brew &>/dev/null; then
+        echo -e "${GREEN}✓ Homebrewはインストール済み${NC}"
+    else
+        dry_run_msg "Homebrewをインストールします"
+    fi
+elif ! command -v brew &>/dev/null; then
     if ask "Homebrewをインストールしますか?"; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         eval "$("${HOMEBREW_PREFIX}/bin/brew" shellenv)"
@@ -143,6 +153,15 @@ fi
 show_step 2 6 "アプリケーションのインストール"
 if [ "$SKIP_APPS" = true ]; then
     echo -e "${CYAN}スキップ${NC}"
+elif [ "$DRY_RUN" = true ]; then
+    if [ -f "$SCRIPT_DIR/Brewfile" ]; then
+        dry_run_msg "brew bundle --file=$SCRIPT_DIR/Brewfile --no-upgrade"
+        if command -v brew &>/dev/null; then
+            brew bundle check --file="$SCRIPT_DIR/Brewfile" --no-upgrade 2>/dev/null || true
+        fi
+    else
+        echo -e "${RED}Brewfileが見つかりません${NC}"; exit 1
+    fi
 elif [ -f "$SCRIPT_DIR/Brewfile" ]; then
     BUNDLE_ARGS=(--file="$SCRIPT_DIR/Brewfile" --no-upgrade)
     [[ "$VERBOSE" = true ]] && BUNDLE_ARGS+=(--verbose)
@@ -287,7 +306,9 @@ fi
 
 # --- ローカル設定ファイル ---
 if [ ! -f ~/.gitconfig.local ]; then
-    if [ "$ASSUME_YES" = true ]; then
+    if [ "$DRY_RUN" = true ]; then
+        dry_run_msg "$HOME/.gitconfig.local を作成します"
+    elif [ "$ASSUME_YES" = true ]; then
         cp "$SCRIPT_DIR/templates/gitconfig.local.template" ~/.gitconfig.local
         echo -e "${GREEN}✓ ~/.gitconfig.local（要編集）${NC}"
     else
@@ -300,8 +321,12 @@ if [ ! -f ~/.gitconfig.local ]; then
 fi
 
 if [ ! -f ~/.zshrc.local ]; then
-    cp "$SCRIPT_DIR/templates/zshrc.local.template" ~/.zshrc.local 2>/dev/null || true
-    echo -e "${GREEN}✓ ~/.zshrc.local${NC}"
+    if [ "$DRY_RUN" = true ]; then
+        dry_run_msg "$HOME/.zshrc.local を作成します"
+    else
+        cp "$SCRIPT_DIR/templates/zshrc.local.template" ~/.zshrc.local 2>/dev/null || true
+        echo -e "${GREEN}✓ ~/.zshrc.local${NC}"
+    fi
 fi
 
 # ========================================

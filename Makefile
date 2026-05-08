@@ -9,7 +9,7 @@ STOW_SIMULATE_FLAGS := --target=$(HOME) --dir=$(STOW_DIR)
 PACKAGES := zsh git nvim ghostty bat atuin claude codex yazi direnv cmux asdf cursor
 CURSOR_EXT_LIST := stow/cursor/.config/cursor/extensions.txt
 
-.PHONY: help install uninstall check bootstrap lint clean install-% uninstall-% packages cursor-sync cursor-diff doctor
+.PHONY: help install uninstall check check-strict bootstrap lint clean install-% uninstall-% packages stats cursor-sync cursor-diff doctor doctor-plan
 
 help:
 	@echo "Usage:"
@@ -17,10 +17,13 @@ help:
 	@echo "  make uninstall        全パッケージをアンインストール"
 	@echo "  make install-PKG      個別インストール (例: make install-zsh)"
 	@echo "  make check            Stowドライラン"
+	@echo "  make check-strict     Stowドライラン（差分・競合で失敗）"
 	@echo "  make doctor           シンボリックリンク健全性チェック"
+	@echo "  make doctor-plan      修復候補を表示（変更なし）"
 	@echo "  make bootstrap        完全セットアップ"
 	@echo "  make lint             ShellCheck"
 	@echo "  make clean            バックアップファイル削除"
+	@echo "  make stats            パッケージ数を表示"
 	@echo "  make cursor-sync      Cursor拡張を extensions.txt に同期"
 	@echo "  make cursor-diff      現状とリストの差分を表示（変更なし）"
 	@echo ""
@@ -47,6 +50,19 @@ check:
 		echo "=== $$pkg ==="; \
 		$(STOW) --simulate $(STOW_FLAGS) $$pkg 2>&1 || true; \
 	done
+
+check-strict:
+	@error=0; \
+	for pkg in $(PACKAGES); do \
+		echo "=== $$pkg ==="; \
+		output=$$($(STOW) --simulate -v $(STOW_SIMULATE_FLAGS) $$pkg 2>&1 || true); \
+		diff=$$(printf "%s\n" "$$output" | grep -vE "^WARNING: in simulation|^$$" || true); \
+		if [ -n "$$diff" ]; then \
+			printf "%s\n" "$$diff"; \
+			error=1; \
+		fi; \
+	done; \
+	exit $$error
 
 doctor:
 	@error=0; \
@@ -84,6 +100,28 @@ doctor:
 		printf "\033[31m✗ doctor fail\033[0m\n"; exit 1; \
 	fi
 
+doctor-plan:
+	@echo "▶ Stow 修復候補（変更なし）"; \
+	for pkg in $(PACKAGES); do \
+		diff=$$($(STOW) --simulate -v $(STOW_SIMULATE_FLAGS) $$pkg 2>&1 \
+			| grep -vE "^WARNING: in simulation|^$$" || true); \
+		if [ -n "$$diff" ]; then \
+			printf "\n=== %s ===\n" "$$pkg"; \
+			printf "%s\n" "$$diff"; \
+			printf "修復候補: make install-%s\n" "$$pkg"; \
+		fi; \
+	done; \
+	echo ""; \
+	echo "▶ 壊れた dotfiles 由来リンク（削除は手動確認）"; \
+	for d in "$$HOME" "$$HOME/.config" "$$HOME/.claude" "$$HOME/.codex" "$$HOME/.docker" "$$HOME/.gnupg" "$$HOME/Library/Application Support/com.mitchellh.ghostty" "$$HOME/Library/LaunchAgents"; do \
+		find "$$d" -maxdepth 4 -type l 2>/dev/null; \
+	done | sort -u | while read -r l; do \
+		[ -e "$$l" ] && continue; \
+		target=$$(readlink "$$l" 2>/dev/null || true); \
+		printf "%s" "$$target" | grep -q dotfiles || continue; \
+		printf "  %s -> %s\n" "$$l" "$$target"; \
+	done
+
 bootstrap:
 	bash bootstrap.sh
 
@@ -101,6 +139,15 @@ clean:
 
 packages:
 	@echo $(PACKAGES)
+
+stats:
+	@pkg_count=$$(printf "%s\n" $(PACKAGES) | wc -l | tr -d ' '); \
+	brew_count=$$(awk '/^[[:space:]]*brew /{count++} END{print count+0}' Brewfile); \
+	cask_count=$$(awk '/^[[:space:]]*cask /{count++} END{print count+0}' Brewfile); \
+	printf "stow packages: %s\n" "$$pkg_count"; \
+	printf "brew formulae: %s\n" "$$brew_count"; \
+	printf "brew casks: %s\n" "$$cask_count"; \
+	printf "brew total: %s\n" "$$((brew_count + cask_count))"
 
 cursor-diff:
 	@command -v cursor >/dev/null 2>&1 || { echo "❌ cursor CLI not found"; exit 1; }

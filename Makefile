@@ -91,6 +91,7 @@ lint:
 	@shellcheck -S warning bootstrap.sh
 	@shellcheck -S warning stow/claude/.claude/hooks/*.sh
 	@shellcheck -S warning stow/codex/.codex/hooks/*.sh
+	@shellcheck -S warning stow/codex/.codex/bin/*.sh
 
 clean:
 	@find . -name "*.backup.*" -delete

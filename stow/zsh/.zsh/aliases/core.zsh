@@ -54,6 +54,7 @@ alias cxr="codex resume"                  # ピッカーから選択再開
 alias cxe="codex exec"                    # 非対話一発実行
 alias cxa="codex --full-auto"             # 自動承認＋workspace 書込
 alias cxy="codex --dangerously-bypass-approvals-and-sandbox"  # YOLO（要注意）
+alias codex-commit-push="$HOME/.codex/bin/commit-push.sh"  # 確認付きcommit+push
 
 # ========================================
 # zoxide（高速ディレクトリジャンプ）

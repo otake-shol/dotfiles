@@ -17,7 +17,18 @@ notifications = true
 notification_method = "auto"
 alternate_screen = "auto"
 show_tooltips = true
-status_line = ["model-with-reasoning", "context-remaining", "current-dir"]
+status_line_use_colors = true
+status_line = [
+  "current-dir",
+  "git-branch",
+  "model-with-reasoning",
+  "context-remaining",
+  "context-used",
+  "five-hour-limit",
+  "weekly-limit",
+  "used-tokens",
+]
+terminal_title = ["project", "git-branch", "model-with-reasoning"]
 
 [shell_environment_policy]
 inherit = "core"

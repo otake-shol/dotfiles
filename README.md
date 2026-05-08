@@ -157,6 +157,8 @@ codex                  # 対話セッション開始
 codex -p fast          # 軽量プロファイル
 codex -p deep          # 高推論プロファイル
 codex review           # 非対話コードレビュー
+cxcp                   # 変更確認→検証→commit→push をCodexに依頼
+codex-commit-push "feat: ..."  # deterministicなcommit+push
 ~/.codex/hooks/verify.sh .  # 手動検証
 ```
 

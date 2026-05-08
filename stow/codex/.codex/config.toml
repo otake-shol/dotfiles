@@ -22,12 +22,17 @@ status_line = [
   "git-branch",
   "model-with-reasoning",
   "context-remaining",
-  "context-used",
   "five-hour-limit",
-  "weekly-limit",
   "used-tokens",
+  "run-state",
+  "activity",
+  "task-progress",
 ]
-terminal_title = ["project", "git-branch", "model-with-reasoning"]
+terminal_title = [
+  "project",
+  "git-branch",
+  "model-with-reasoning",
+]
 
 [shell_environment_policy]
 inherit = "core"

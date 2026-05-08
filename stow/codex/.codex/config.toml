@@ -9,7 +9,6 @@ personality = "pragmatic"
 notify = ["bash", "-lc", "~/.codex/hooks/notify.sh"]
 
 [features]
-codex_hooks = true
 hooks = true
 
 [tui]
@@ -47,7 +46,7 @@ open_world_enabled = false
 
 [mcp_servers.context7]
 command = "npx"
-args = ["-y", "@upstash/context7-mcp@latest"]
+args = ["@upstash/context7-mcp@latest"]
 enabled = true
 required = false
 startup_timeout_sec = 20
@@ -55,7 +54,7 @@ tool_timeout_sec = 60
 
 [mcp_servers.playwright]
 command = "npx"
-args = ["-y", "@playwright/mcp@latest"]
+args = ["@playwright/mcp@latest"]
 enabled = true
 required = false
 startup_timeout_sec = 20
@@ -63,12 +62,13 @@ tool_timeout_sec = 120
 
 [mcp_servers.github]
 url = "https://api.githubcopilot.com/mcp/"
+bearer_token_env_var = "CODEX_GITHUB_PERSONAL_ACCESS_TOKEN"
 enabled = true
 required = false
 
 [mcp_servers.hourei]
 command = "npx"
-args = ["-y", "hourei-mcp-server"]
+args = ["hourei-mcp-server"]
 enabled = true
 required = false
 startup_timeout_sec = 20
@@ -76,7 +76,7 @@ tool_timeout_sec = 60
 
 [mcp_servers.tax-law]
 command = "npx"
-args = ["-y", "tax-law-mcp"]
+args = ["tax-law-mcp"]
 enabled = true
 required = false
 startup_timeout_sec = 20

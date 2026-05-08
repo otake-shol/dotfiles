@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.codex/hooks/stop.sh",
+            "timeout": 30,
+            "statusMessage": "Running Codex stop hook"
+          }
+        ]
+      }
+    ]
+  }
+}

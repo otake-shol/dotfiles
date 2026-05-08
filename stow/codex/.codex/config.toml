@@ -1,0 +1,99 @@
+model = "gpt-5.5"
+model_reasoning_effort = "medium"
+model_verbosity = "medium"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+web_search = "cached"
+personality = "pragmatic"
+
+notify = ["bash", "-lc", "~/.codex/hooks/notify.sh"]
+
+[features]
+codex_hooks = true
+hooks = true
+
+[tui]
+notifications = true
+notification_method = "auto"
+alternate_screen = "auto"
+show_tooltips = true
+status_line = ["model-with-reasoning", "context-remaining", "current-dir"]
+
+[shell_environment_policy]
+inherit = "core"
+exclude = [
+  ".*TOKEN.*",
+  ".*SECRET.*",
+  ".*KEY.*",
+  ".*PASSWORD.*",
+  ".*CREDENTIAL.*",
+]
+
+[apps._default]
+enabled = true
+destructive_enabled = false
+open_world_enabled = false
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp@latest"]
+enabled = true
+required = false
+startup_timeout_sec = 20
+tool_timeout_sec = 60
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["-y", "@playwright/mcp@latest"]
+enabled = true
+required = false
+startup_timeout_sec = 20
+tool_timeout_sec = 120
+
+[mcp_servers.github]
+url = "https://api.githubcopilot.com/mcp/"
+enabled = true
+required = false
+
+[mcp_servers.hourei]
+command = "npx"
+args = ["-y", "hourei-mcp-server"]
+enabled = true
+required = false
+startup_timeout_sec = 20
+tool_timeout_sec = 60
+
+[mcp_servers.tax-law]
+command = "npx"
+args = ["-y", "tax-law-mcp"]
+enabled = true
+required = false
+startup_timeout_sec = 20
+tool_timeout_sec = 60
+
+[mcp_servers.mf-ca]
+url = "https://beta.mcp.developers.biz.moneyforward.com/mcp/ca/v3"
+enabled = true
+required = false
+
+[projects."/Users/otkshol/00_otake-ya"]
+trust_level = "trusted"
+
+[projects."/Users/otkshol/dotfiles"]
+trust_level = "trusted"
+
+[profiles.fast]
+model = "gpt-5.4-mini"
+model_reasoning_effort = "low"
+model_verbosity = "low"
+
+[profiles.deep]
+model = "gpt-5.5"
+model_reasoning_effort = "xhigh"
+model_verbosity = "medium"
+
+[profiles.review]
+model = "gpt-5.5"
+model_reasoning_effort = "high"
+model_verbosity = "medium"
+approval_policy = "on-request"

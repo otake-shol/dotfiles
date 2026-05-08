@@ -29,10 +29,12 @@ status_line = [
   "task-progress",
 ]
 terminal_title = [
-  "project",
-  "git-branch",
-  "model-with-reasoning",
+  "thread-title",
+  "run-state",
 ]
+
+[tui.model_availability_nux]
+"gpt-5.5" = 1
 
 [shell_environment_policy]
 inherit = "core"
@@ -96,6 +98,12 @@ required = false
 trust_level = "trusted"
 
 [projects."/Users/otkshol/dotfiles"]
+trust_level = "trusted"
+
+[projects."/Users/otkshol/Library/Mobile Documents/iCloud~md~obsidian/Documents/obsidian"]
+trust_level = "trusted"
+
+[projects."/Users/otkshol/00_otake-ya/projects/web/my-portfolio"]
 trust_level = "trusted"
 
 [profiles.fast]

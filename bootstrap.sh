@@ -179,8 +179,14 @@ fi
 # ========================================
 show_step 3 6 "dotfilesのシンボリックリンク作成"
 
+STOW_AVAILABLE=true
 if ! command -v stow &>/dev/null; then
-    echo -e "${RED}GNU Stowがインストールされていません${NC}"; exit 1
+    STOW_AVAILABLE=false
+    if [ "$DRY_RUN" = true ]; then
+        dry_run_msg "GNU StowをHomebrewでインストールします"
+    else
+        echo -e "${RED}GNU Stowがインストールされていません${NC}"; exit 1
+    fi
 fi
 
 read -r -a STOW_PACKAGES <<< "$(make -C "$SCRIPT_DIR" -s packages)"
@@ -190,7 +196,11 @@ for pkg in "${STOW_PACKAGES[@]}"; do
     fi
     if [ "$DRY_RUN" = true ]; then
         echo -e "${CYAN}[DRY RUN] $pkg${NC}"
-        stow --simulate -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg" 2>&1 || true
+        if [ "$STOW_AVAILABLE" = true ]; then
+            stow --simulate -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg" 2>&1 || true
+        else
+            dry_run_msg "stow --simulate -v --target=$HOME --dir=$SCRIPT_DIR/stow --restow $pkg"
+        fi
     else
         # --adopt: 初回のみ使用（HOMEの既存ファイルをstow/に取り込んで競合解消）
         # 2回目以降は--restowのみ（意図しないファイル取り込みを防止）

@@ -186,6 +186,27 @@ codex-commit-push "fix: ..." README.md Makefile  # 指定ファイルだけcommi
 
 設定: `stow/codex/.codex/config.toml`、グローバル指示: `stow/codex/.codex/AGENTS.md`
 
+### Codex MCP: App Store Connect Review
+
+`app-store-connect-review` MCPは、App Store Connect APIでApp Review用の連絡先・デモアカウント・審査メモ・添付ファイルを扱う。
+
+秘密情報はdotfilesへ保存しない。`~/.zshrc.local` などGit管理外のローカル設定で次を渡す:
+
+```bash
+export ASC_KID="YOUR_KEY_ID"
+export ASC_ISSUER_ID="YOUR_ISSUER_ID"
+export ASC_P8_PATH="$HOME/.appstoreconnect/private_keys/AuthKey_YOUR_KEY_ID.p8"
+```
+
+利用できる主なツール:
+
+- `asc_list_apps`
+- `asc_list_app_store_versions`
+- `asc_get_app_store_review_detail`
+- `asc_create_app_store_review_detail`
+- `asc_update_app_store_review_detail`
+- `asc_create_app_store_review_attachment`
+
 ## セキュリティ
 
 - **git-secrets**: AWS/Slack/GitHub/OpenAI/Anthropic等 8パターン検出（`.gitconfig`で定義、Stow管理）

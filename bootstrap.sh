@@ -76,6 +76,40 @@ dry_run_msg() {
     echo -e "${CYAN}[DRY RUN] $*${NC}"
 }
 
+install_codex_desktop() {
+    local app_path="/Applications/Codex.app"
+    local arch dmg_url tmp_dir dmg_path mount_point
+
+    if [ -d "$app_path" ]; then
+        echo -e "  ${GREEN}✓${NC} Codex Desktop"
+        return 0
+    fi
+
+    arch="$(uname -m)"
+    case "$arch" in
+        arm64)  dmg_url="https://persistent.oaistatic.com/codex-app-prod/Codex.dmg" ;;
+        x86_64) dmg_url="https://persistent.oaistatic.com/codex-app-prod/Codex-latest-x64.dmg" ;;
+        *)      echo -e "  ${YELLOW}⚠${NC} Codex Desktop 未対応アーキテクチャ: $arch"; return 0 ;;
+    esac
+
+    tmp_dir="$(mktemp -d)"
+    dmg_path="$tmp_dir/Codex.dmg"
+
+    curl -fsSL "$dmg_url" -o "$dmg_path"
+    mount_point="$(hdiutil attach "$dmg_path" -nobrowse | awk -F'\t' '/\/Volumes\// {print $NF; exit}')"
+    if [ -z "$mount_point" ] || [ ! -d "$mount_point/Codex.app" ]; then
+        echo -e "  ${YELLOW}⚠${NC} Codex Desktop DMGのマウントに失敗しました"
+        [ -n "$mount_point" ] && hdiutil detach "$mount_point" >/dev/null 2>&1 || true
+        rm -rf "$tmp_dir"
+        return 1
+    fi
+
+    cp -R "$mount_point/Codex.app" /Applications/
+    hdiutil detach "$mount_point" >/dev/null
+    rm -rf "$tmp_dir"
+    echo -e "  ${GREEN}✓${NC} Codex Desktop"
+}
+
 # Zshプラグイン冪等インストール（タグ指定で再現性確保）
 ensure_zsh_plugin() {
     local name="$1" repo_url="$2" dest="$3" tag="${4:-}"
@@ -169,6 +203,9 @@ elif [ -f "$SCRIPT_DIR/Brewfile" ]; then
     if ! brew bundle "${BUNDLE_ARGS[@]}"; then
         echo -e "${YELLOW}⚠ 一部パッケージのインストールに失敗しました${NC}"
         ask "失敗がありますが続行しますか?" || exit 1
+    fi
+    if ask "Codex Desktopをインストールしますか?"; then
+        install_codex_desktop
     fi
 else
     echo -e "${RED}Brewfileが見つかりません${NC}"; exit 1

@@ -140,6 +140,8 @@ make versions-audit    # .tool-versions の固定バージョン確認
 
 `Brewfile` は新しいMacを普段使いできる状態に近づけるため、CLIだけでなくGUIアプリも含める。`Core CLI Tools` と `Core GUI Applications` は常用前提、`Optional CLI Tools` と `Optional GUI Applications` は作業内容に応じた追加ツールとして扱う。
 
+OpenAI CodexはHomebrewの `cask "codex"` がCLIを提供する。Codex DesktopはHomebrew caskとは別物のため、`bootstrap.sh` が公式DMGをApple Silicon / Intelに応じて導入する。
+
 軽量セットアップにしたい場合は `bash bootstrap.sh --skip-apps` でアプリ導入を飛ばし、必要なStowリンクだけを `make install-PKG` で入れる。
 
 ## CI

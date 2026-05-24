@@ -39,6 +39,7 @@ brew "tree"                        # ディレクトリツリー表示
 # --- 開発ツール ---
 brew "stow"                        # dotfilesシンボリックリンク管理
 brew "shellcheck"                  # シェルスクリプトlinter(make lint)
+brew "fastlane"                    # iOS/Android リリース自動化(App Store Connect連携)
 
 # Optional CLI Tools
 # ========================================

@@ -1,0 +1,27 @@
+# fastlane App Store Connect連携用 環境変数の雛形。
+#
+# 使い方:
+#   1. このファイルを ~/.config/fastlane/env にコピーする
+#      mkdir -p ~/.config/fastlane
+#      cp ~/dotfiles/templates/fastlane-env.example ~/.config/fastlane/env
+#   2. 各値を実値に置換する（プレースホルダーは <...> で囲んでいる）
+#   3. App Store Connect API Key (.p8) を ~/.appstoreconnect/ に配置する
+#      （秘密情報のためdotfilesでは管理しない。iCloud Drive / 1Password等で別管理）
+#   4. シェル再起動で環境変数が自動 export される
+#      （stow/zsh/.zsh/tools.zsh が本ファイルを source する）
+#
+# App Store Connect API Key の発行手順:
+#   App Store Connect → ユーザーとアクセス → 統合 → App Store Connect API → キーを生成
+#   ダウンロードした AuthKey_XXXXXXXXXX.p8 を ~/.appstoreconnect/ に配置する
+
+# --- App Store Connect API Key（CI推奨、対話プロンプトなし） ---
+export APP_STORE_CONNECT_API_KEY_KEY_ID="<KEY_ID>"
+export APP_STORE_CONNECT_API_KEY_ISSUER_ID="<ISSUER_ID_UUID>"
+export APP_STORE_CONNECT_API_KEY_KEY_FILEPATH="$HOME/.appstoreconnect/AuthKey_<KEY_ID>.p8"
+
+# --- 任意: Apple ID（対話的に2FAを通す場合） ---
+# export FASTLANE_USER="<your-apple-id@example.com>"
+# export FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD="<app-specific-password>"
+
+# --- 任意: deliver/precheck の言語デフォルト ---
+# export DELIVER_LANGUAGE="ja"

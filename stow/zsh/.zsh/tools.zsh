@@ -69,6 +69,13 @@ if command -v direnv &>/dev/null; then
   unset _direnv_cache
 fi
 
+# --- fastlane ---
+# fastlane用の環境変数（App Store Connect API Key等）を
+# ローカルファイルから読み込む。
+# 雛形: ~/dotfiles/templates/fastlane-env.example
+# 実体ファイル(~/.config/fastlane/env)はgit管理外で各端末で個別に配置する。
+[[ -f "$HOME/.config/fastlane/env" ]] && source "$HOME/.config/fastlane/env"
+
 # --- PATH ---
 
 # trash command (safe delete)

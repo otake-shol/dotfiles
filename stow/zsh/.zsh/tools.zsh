@@ -76,6 +76,25 @@ fi
 # 実体ファイル(~/.config/fastlane/env)はgit管理外で各端末で個別に配置する。
 [[ -f "$HOME/.config/fastlane/env" ]] && source "$HOME/.config/fastlane/env"
 
+# 端末初期設定でenv未作成・プレースホルダー残のままを忘れないよう、
+# 24時間に一度だけリマインダーを表示する。
+_fastlane_env_reminder() {
+  local env_file="$HOME/.config/fastlane/env"
+  if [[ ! -f "$env_file" ]]; then
+    echo "fastlane env 未作成。'cd ~/dotfiles && make setup-fastlane-env' でセットアップしてください。"
+  elif grep -qE '"<[^"]+>"' "$env_file" 2>/dev/null; then
+    local count
+    count=$(grep -cE '"<[^"]+>"' "$env_file")
+    echo "fastlane env にプレースホルダーが${count}個残っています。'cd ~/dotfiles && make setup-fastlane-env' で更新してください。"
+  fi
+}
+_fastlane_reminder_cache="$HOME/.cache/fastlane-env-reminder"
+if ! _cache_valid "$_fastlane_reminder_cache"; then
+  _fastlane_env_reminder
+  _cache_touch "$_fastlane_reminder_cache"
+fi
+unset _fastlane_reminder_cache
+
 # --- PATH ---
 
 # trash command (safe delete)

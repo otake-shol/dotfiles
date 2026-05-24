@@ -12,7 +12,7 @@ PACKAGES := zsh git nvim ghostty bat atuin claude codex yazi direnv cmux asdf cu
 CURSOR_EXT_LIST := stow/cursor/.config/cursor/extensions.txt
 TOOL_VERSIONS := stow/asdf/.tool-versions
 
-.PHONY: help install uninstall check check-strict bootstrap lint clean install-% uninstall-% packages stats readme-check runtimes-install versions-audit cursor-sync cursor-diff doctor doctor-plan doctor-clean-broken
+.PHONY: help install uninstall check check-strict bootstrap lint clean install-% uninstall-% packages stats readme-check runtimes-install versions-audit cursor-sync cursor-diff doctor doctor-plan doctor-clean-broken setup-fastlane-env
 
 help:
 	@echo "Usage:"
@@ -32,6 +32,7 @@ help:
 	@echo "  make versions-audit   .tool-versions の固定バージョン確認"
 	@echo "  make cursor-sync      Cursor拡張を extensions.txt に同期"
 	@echo "  make cursor-diff      現状とリストの差分を表示（変更なし）"
+	@echo "  make setup-fastlane-env  fastlane用環境変数を対話的にセットアップ"
 	@echo ""
 	@echo "Packages: $(PACKAGES)"
 
@@ -100,11 +101,25 @@ doctor:
 		echo "$$broken" | sed 's|^|  ✗ |'; error=1; \
 	fi; \
 	echo ""; \
+	echo "▶ fastlane env 設定（任意。警告のみ、doctor判定には影響しない）"; \
+	env_file="$$HOME/.config/fastlane/env"; \
+	if [ ! -f "$$env_file" ]; then \
+		printf "  \033[33m⚠\033[0m %s 未作成 (修復: make setup-fastlane-env)\n" "$$env_file"; \
+	elif grep -qE '"<[^"]+>"' "$$env_file"; then \
+		count=$$(grep -cE '"<[^"]+>"' "$$env_file"); \
+		printf "  \033[33m⚠\033[0m %s にプレースホルダー残 %s個 (修復: make setup-fastlane-env)\n" "$$env_file" "$$count"; \
+	else \
+		printf "  \033[32m✓\033[0m %s\n" "$$env_file"; \
+	fi; \
+	echo ""; \
 	if [ $$error -eq 0 ]; then \
 		printf "\033[32m✓ doctor pass\033[0m\n"; \
 	else \
 		printf "\033[31m✗ doctor fail\033[0m\n"; exit 1; \
 	fi
+
+setup-fastlane-env:
+	@bash ./bin/setup-fastlane-env
 
 doctor-plan:
 	@echo "▶ Stow 修復候補（変更なし）"; \

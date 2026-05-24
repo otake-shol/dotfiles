@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+# fastlane用環境変数を対話的にセットアップする。
+# 雛形 ~/dotfiles/templates/fastlane-env.example をコピーし、
+# プレースホルダー(<...>)を順番に質問して埋める。
+# 既に実値が入っている項目は現在値を表示し、空Enterで維持。
+set -euo pipefail
+
+ENV_FILE="$HOME/.config/fastlane/env"
+TEMPLATE="$HOME/dotfiles/templates/fastlane-env.example"
+
+if [ ! -f "$TEMPLATE" ]; then
+  echo "雛形が見つかりません: $TEMPLATE" >&2
+  exit 1
+fi
+
+mkdir -p "$(dirname "$ENV_FILE")"
+
+if [ ! -f "$ENV_FILE" ]; then
+  cp "$TEMPLATE" "$ENV_FILE"
+  echo "雛形をコピー: $ENV_FILE"
+fi
+
+current_value() {
+  local var_name="$1"
+  grep -E "^export $var_name=" "$ENV_FILE" 2>/dev/null \
+    | head -1 \
+    | sed -E 's/^export [A-Z_]+="(.*)"$/\1/'
+}
+
+set_value() {
+  local var_name="$1"
+  local new_value="$2"
+  # 既存のexport行を置換。macOS sed (BSD)
+  if grep -qE "^export $var_name=" "$ENV_FILE"; then
+    sed -i '' "s|^export $var_name=.*|export $var_name=\"$new_value\"|" "$ENV_FILE"
+  else
+    echo "export $var_name=\"$new_value\"" >> "$ENV_FILE"
+  fi
+}
+
+prompt_var() {
+  local var_name="$1"
+  local label="$2"
+  local current
+  current=$(current_value "$var_name")
+  if [[ "$current" =~ ^\< ]] || [ -z "$current" ]; then
+    printf "  %s: " "$label"
+  else
+    printf "  %s (現在: %s): " "$label" "$current"
+  fi
+  local input
+  IFS= read -r input
+  if [ -n "$input" ]; then
+    set_value "$var_name" "$input"
+    printf "    → 更新\n"
+  fi
+}
+
+echo "==================================================="
+echo "  fastlane 環境変数セットアップ"
+echo "  ファイル: $ENV_FILE"
+echo "  空Enterで現在値を維持(スキップ)"
+echo "==================================================="
+
+echo ""
+echo "[1/2] 審査連絡先（複数アプリで共通）"
+prompt_var FASTLANE_REVIEW_FIRST_NAME "First Name (下の名前)"
+prompt_var FASTLANE_REVIEW_LAST_NAME  "Last Name (上の名前)"
+prompt_var FASTLANE_REVIEW_EMAIL      "Email"
+prompt_var FASTLANE_REVIEW_PHONE      "Phone (+81-90-xxxx-xxxx)"
+
+echo ""
+echo "[2/2] App Store Connect API Key（CI向け、対話プロンプト不要に）"
+prompt_var APP_STORE_CONNECT_API_KEY_KEY_ID       "Key ID (10文字英数字)"
+prompt_var APP_STORE_CONNECT_API_KEY_ISSUER_ID    "Issuer ID (UUID)"
+prompt_var APP_STORE_CONNECT_API_KEY_KEY_FILEPATH ".p8 ファイルの絶対パス"
+
+echo ""
+remaining=$(grep -cE '"<[^"]+>"' "$ENV_FILE" 2>/dev/null || true)
+remaining=${remaining:-0}
+if [ "$remaining" -gt 0 ]; then
+  echo "⚠ プレースホルダー残: ${remaining}個"
+  echo "  再実行で続きを入力: bash $0"
+else
+  echo "✓ プレースホルダーは全て設定されました"
+fi
+
+echo ""
+echo "シェル再起動か 'source $ENV_FILE' で有効化してください"

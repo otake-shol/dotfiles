@@ -23,5 +23,13 @@ export APP_STORE_CONNECT_API_KEY_KEY_FILEPATH="$HOME/.appstoreconnect/AuthKey_<K
 # export FASTLANE_USER="<your-apple-id@example.com>"
 # export FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD="<app-specific-password>"
 
+# --- 審査用連絡先（複数アプリで共通の個人情報） ---
+# scripts/setup-fastlane.mjs がこれらの環境変数を優先採用する。
+# 各アプリの fastlane/config.json の review セクションより優先される。
+export FASTLANE_REVIEW_FIRST_NAME="<First>"
+export FASTLANE_REVIEW_LAST_NAME="<Last>"
+export FASTLANE_REVIEW_EMAIL="<your-email@example.com>"
+export FASTLANE_REVIEW_PHONE="<+81-90-0000-0000>"
+
 # --- 任意: deliver/precheck の言語デフォルト ---
 # export DELIVER_LANGUAGE="ja"

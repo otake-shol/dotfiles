@@ -344,7 +344,17 @@ if [ -n "$usage_5h" ] || [ -n "$usage_7d" ]; then
     line2+="  "
 fi
 
-line2+="${PCT_STYLE}${PCT_COLOR}${ICON_BRAIN} ${bar} ${used_pct}%${RESET}${DIM}(${ctx_label})${RESET}"
+# 現在の使用トークン量（人間可読形式）
+used_tok=$((used_pct * ctx_size / 100))
+if [ "$used_tok" -ge 1000000 ]; then
+    used_tok_label="$((used_tok / 1000000)).$(( (used_tok % 1000000) / 100000 ))M"
+elif [ "$used_tok" -ge 1000 ]; then
+    used_tok_label="$((used_tok / 1000))K"
+else
+    used_tok_label="${used_tok}"
+fi
+
+line2+="${PCT_STYLE}${PCT_COLOR}${ICON_BRAIN} ${bar} ${used_pct}%${RESET} ${PCT_COLOR}${used_tok_label}${RESET}\033[37m/${ctx_label}${RESET}"
 
 # 200Kトークン超過警告
 if [ "$exceeds_200k" = "true" ]; then

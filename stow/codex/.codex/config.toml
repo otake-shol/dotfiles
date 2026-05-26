@@ -19,18 +19,8 @@ open_world_enabled = false
 [features]
 hooks = true
 
-[marketplaces.openai-bundled]
-last_updated = "2026-05-25T13:29:33Z"
-source_type = "local"
-source = "/Users/otkshol/.codex/.tmp/bundled-marketplaces/openai-bundled"
-
-[marketplaces.openai-primary-runtime]
-last_updated = "2026-05-25T04:28:49Z"
-source_type = "local"
-source = "/Users/otkshol/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
-
 [mcp_servers.app-store-connect-review]
-command = "/Users/otkshol/.codex/bin/app-store-connect-review-mcp.mjs"
+command = "~/.codex/bin/app-store-connect-review-mcp.mjs"
 enabled = true
 required = false
 startup_timeout_sec = 20
@@ -118,18 +108,6 @@ required = false
 startup_timeout_sec = 20
 tool_timeout_sec = 60
 
-[plugins."documents@openai-primary-runtime"]
-enabled = true
-
-[plugins."presentations@openai-primary-runtime"]
-enabled = true
-
-[plugins."spreadsheets@openai-primary-runtime"]
-enabled = true
-
-[plugins."browser@openai-bundled"]
-enabled = true
-
 [profiles.deep]
 model = "gpt-5.5"
 model_reasoning_effort = "xhigh"
@@ -145,45 +123,6 @@ approval_policy = "on-request"
 model = "gpt-5.5"
 model_reasoning_effort = "high"
 model_verbosity = "medium"
-
-[projects."/Users/otkshol/00_otake-ya"]
-trust_level = "trusted"
-
-[projects."/Users/otkshol/00_otake-ya/projects/mobile/archive/fe-app"]
-trust_level = "trusted"
-
-[projects."/Users/otkshol/00_otake-ya/projects/mobile/archive/fp3-app"]
-trust_level = "trusted"
-
-[projects."/Users/otkshol/00_otake-ya/projects/mobile/archive/ipass-app"]
-trust_level = "trusted"
-
-[projects."/Users/otkshol/00_otake-ya/projects/mobile/exam-apps/fp3-app"]
-trust_level = "trusted"
-
-[projects."/Users/otkshol/00_otake-ya/projects/mobile/exam-apps/live/fp2-app"]
-trust_level = "trusted"
-
-[projects."/Users/otkshol/00_otake-ya/projects/mobile/exam-apps/live/sg-app"]
-trust_level = "trusted"
-
-[projects."/Users/otkshol/00_otake-ya/projects/mobile/exam-apps/live/shindanshi-app"]
-trust_level = "trusted"
-
-[projects."/Users/otkshol/00_otake-ya/projects/mobile/exam-apps/wip/chizai-app"]
-trust_level = "trusted"
-
-[projects."/Users/otkshol/00_otake-ya/projects/web/my-portfolio"]
-trust_level = "trusted"
-
-[projects."/Users/otkshol/01_suishin-tech-knot/corporate-site"]
-trust_level = "trusted"
-
-[projects."/Users/otkshol/Library/Mobile Documents/iCloud~md~obsidian/Documents/obsidian"]
-trust_level = "trusted"
-
-[projects."/Users/otkshol/dotfiles"]
-trust_level = "trusted"
 
 [shell_environment_policy]
 exclude = [
@@ -219,12 +158,3 @@ terminal_title = [
     "thread-title",
     "run-state",
 ]
-
-[tui.model_availability_nux]
-"gpt-5.5" = 4
-
-[hooks.state]
-
-[hooks.state."/Users/otkshol/.codex/hooks.json:stop:0:0"]
-enabled = true
-trusted_hash = "sha256:ac51d733bdc9f724fd24211acc67fd71b6a0d8692cec5c5a6acc94afa675abdf"

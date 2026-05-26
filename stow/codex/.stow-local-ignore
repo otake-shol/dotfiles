@@ -1,0 +1,5 @@
+# Codex local-state（端末固有・生成物）はStow対象外
+\.codex/installation_id$
+\.codex/(auth\.json|history\.jsonl|models_cache\.json|version\.json)$
+\.codex/(cache|log|logs|memories|shell_snapshots|skills|state|tmp)(/.*)?$
+\.codex/.*\.sqlite(-wal|-shm)?$

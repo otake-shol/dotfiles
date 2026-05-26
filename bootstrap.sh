@@ -11,7 +11,10 @@
 #   -n, --dry-run      シミュレーション実行
 #   -y, --yes          対話プロンプトを自動応答
 #   -v, --verbose      詳細出力
-#   --skip-apps        アプリインストールをスキップ
+#   --skip-apps        Brewfile全体をスキップ（最小CLI依存のみ導入）
+#   --skip-gui-apps    --skip-apps の別名
+#   --cli-only         Brewfile から GUI cask を除外して導入
+#   --no-codex-desktop Codex Desktop DMG のインストール確認を行わない
 
 set -euo pipefail
 
@@ -22,8 +25,16 @@ DRY_RUN=false
 VERBOSE=false
 SKIP_APPS=false
 ASSUME_YES=false
+CLI_ONLY=false
+NO_CODEX_DESKTOP=false
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CURRENT_STEP=""
+# パッケージごとの除外は stow/<pkg>/.stow-local-ignore に分離。
+# CLI --ignore は basename 末尾マッチのため、ここではsafety netとして basename のみ指定。
+STOW_IGNORE_FLAGS=(
+    "--ignore=\\.p10k\\.zsh\$"
+    "--ignore=installation_id\$"
+)
 
 # Zshプラグインバージョン（更新時はここを変更）
 POWERLEVEL10K_TAG="v1.20.0"
@@ -40,6 +51,49 @@ detect_homebrew_prefix() {
     [[ "$(uname -m)" == "arm64" ]] && echo "/opt/homebrew" || echo "/usr/local"
 }
 
+brew_command() {
+    if command -v brew >/dev/null 2>&1; then
+        command -v brew
+        return 0
+    fi
+
+    local prefix
+    prefix="$(detect_homebrew_prefix)"
+    if [ -x "$prefix/bin/brew" ]; then
+        echo "$prefix/bin/brew"
+        return 0
+    fi
+
+    for prefix in /opt/homebrew /usr/local; do
+        if [ -x "$prefix/bin/brew" ]; then
+            echo "$prefix/bin/brew"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+load_homebrew_env() {
+    local brew_bin
+    if brew_bin="$(brew_command)"; then
+        eval "$("$brew_bin" shellenv)" 2>/dev/null || true
+    fi
+}
+
+ensure_minimal_cli_tools() {
+    local brew_bin
+    brew_bin="$(brew_command)" || {
+        echo -e "${RED}Homebrewが必要です${NC}"
+        exit 1
+    }
+
+    if ! command -v stow >/dev/null 2>&1; then
+        echo -e "${CYAN}最小CLI依存をインストール: stow${NC}"
+        "$brew_bin" install stow
+    fi
+}
+
 # ========================================
 # 引数解析
 # ========================================
@@ -48,9 +102,11 @@ while [[ "$#" -gt 0 ]]; do
         -n|--dry-run)   DRY_RUN=true ;;
         -y|--yes)       ASSUME_YES=true ;;
         -v|--verbose)   VERBOSE=true ;;
-        --skip-apps)    SKIP_APPS=true ;;
+        --skip-apps|--skip-gui-apps) SKIP_APPS=true ;;
+        --cli-only)     CLI_ONLY=true ;;
+        --no-codex-desktop) NO_CODEX_DESKTOP=true ;;
         -h|--help)
-            sed -n '2,14p' "$0" | sed 's/^# \?//'
+            sed -n '2,16p' "$0" | sed 's/^# \?//'
             exit 0 ;;
         *) echo -e "${RED}不明なオプション: $1${NC}"; exit 1 ;;
     esac
@@ -153,8 +209,6 @@ for cmd in git curl; do
     fi
 done
 
-HOMEBREW_PREFIX=$(detect_homebrew_prefix)
-
 echo -e "${CYAN}dotfiles セットアップ${NC}"
 [[ "$DRY_RUN" = true ]] && echo -e "${CYAN}[ドライランモード]${NC}"
 
@@ -163,23 +217,23 @@ echo -e "${CYAN}dotfiles セットアップ${NC}"
 # ========================================
 show_step 1 6 "Homebrewの確認"
 if [ "$DRY_RUN" = true ]; then
-    if command -v brew &>/dev/null; then
+    if brew_command >/dev/null 2>&1; then
         echo -e "${GREEN}✓ Homebrewはインストール済み${NC}"
     else
         dry_run_msg "Homebrewをインストールします"
     fi
-elif ! command -v brew &>/dev/null; then
+elif ! brew_command >/dev/null 2>&1; then
     if ask "Homebrewをインストールしますか?"; then
         # 公式インストーラのみ例外的に直接実行する。安全方針はREADMEの「セキュリティ」を参照。
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        eval "$("${HOMEBREW_PREFIX}/bin/brew" shellenv)"
+        load_homebrew_env
         echo -e "${GREEN}✓ Homebrewをインストールしました${NC}"
     else
         echo -e "${RED}Homebrewが必要です${NC}"; exit 1
     fi
 else
     echo -e "${GREEN}✓ Homebrewはインストール済み${NC}"
-    eval "$("${HOMEBREW_PREFIX}/bin/brew" shellenv)" 2>/dev/null || true
+    load_homebrew_env
 fi
 
 # ========================================
@@ -187,12 +241,17 @@ fi
 # ========================================
 show_step 2 6 "アプリケーションのインストール"
 if [ "$SKIP_APPS" = true ]; then
-    echo -e "${CYAN}スキップ${NC}"
+    if [ "$DRY_RUN" = true ]; then
+        dry_run_msg "Brewfile全体はスキップし、最小CLI依存(stow)のみ確認します"
+    else
+        ensure_minimal_cli_tools
+    fi
+    echo -e "${CYAN}Brewfile全体のインストールはスキップ${NC}"
 elif [ "$DRY_RUN" = true ]; then
     if [ -f "$SCRIPT_DIR/Brewfile" ]; then
         dry_run_msg "brew bundle --file=$SCRIPT_DIR/Brewfile --no-upgrade"
-        if command -v brew &>/dev/null; then
-            brew bundle check --file="$SCRIPT_DIR/Brewfile" --no-upgrade 2>/dev/null || true
+        if brew_bin="$(brew_command)"; then
+            "$brew_bin" bundle check --file="$SCRIPT_DIR/Brewfile" --no-upgrade 2>/dev/null || true
         fi
     else
         echo -e "${RED}Brewfileが見つかりません${NC}"; exit 1
@@ -200,11 +259,12 @@ elif [ "$DRY_RUN" = true ]; then
 elif [ -f "$SCRIPT_DIR/Brewfile" ]; then
     BUNDLE_ARGS=(--file="$SCRIPT_DIR/Brewfile" --no-upgrade)
     [[ "$VERBOSE" = true ]] && BUNDLE_ARGS+=(--verbose)
+    [[ "$CLI_ONLY" = true ]] && BUNDLE_ARGS+=(--no-cask)
     if ! brew bundle "${BUNDLE_ARGS[@]}"; then
         echo -e "${YELLOW}⚠ 一部パッケージのインストールに失敗しました${NC}"
         ask "失敗がありますが続行しますか?" || exit 1
     fi
-    if ask "Codex Desktopをインストールしますか?"; then
+    if [ "$NO_CODEX_DESKTOP" != true ] && [ "$CLI_ONLY" != true ] && ask "Codex Desktopをインストールしますか?"; then
         install_codex_desktop
     fi
 else
@@ -234,17 +294,17 @@ for pkg in "${STOW_PACKAGES[@]}"; do
     if [ "$DRY_RUN" = true ]; then
         echo -e "${CYAN}[DRY RUN] $pkg${NC}"
         if [ "$STOW_AVAILABLE" = true ]; then
-            stow --simulate -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg" 2>&1 || true
+            stow "${STOW_IGNORE_FLAGS[@]}" --simulate -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg" 2>&1 || true
         else
             dry_run_msg "stow --simulate -v --target=$HOME --dir=$SCRIPT_DIR/stow --restow $pkg"
         fi
     else
         # --adopt: 初回のみ使用（HOMEの既存ファイルをstow/に取り込んで競合解消）
         # 2回目以降は--restowのみ（意図しないファイル取り込みを防止）
-        if stow -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg" 2>/dev/null; then
+        if stow "${STOW_IGNORE_FLAGS[@]}" -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg" 2>/dev/null; then
             :
         elif ask "  $pkg で競合が発生。--adopt で既存ファイルを取り込みますか?"; then
-            stow -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow --adopt "$pkg"
+            stow "${STOW_IGNORE_FLAGS[@]}" -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow --adopt "$pkg"
             echo -e "  ${YELLOW}⚠ git diff で取り込まれたファイルを確認してください${NC}"
         fi
     fi
@@ -289,50 +349,14 @@ show_step 5 6 "追加設定"
 if [ "$DRY_RUN" = true ]; then
     echo -e "${CYAN}[DRY RUN] macOS defaults・追加設定をスキップ${NC}"
 else
-    # --- macOS defaults: Dock ---
-    defaults write com.apple.dock autohide -bool true
-    defaults write com.apple.dock autohide-delay -float 0
-    defaults write com.apple.dock autohide-time-modifier -float 0.3
-    defaults write com.apple.dock tilesize -int 48
-    defaults write com.apple.dock show-recents -bool false
-
-    # --- macOS defaults: Finder ---
-    defaults write com.apple.finder AppleShowAllFiles -bool true
-    defaults write com.apple.finder ShowPathbar -bool true
-    defaults write com.apple.finder ShowStatusBar -bool true
-    defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
-    defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
-    defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
-    defaults write NSGlobalDomain AppleShowAllExtensions -bool true
-
-    # --- macOS defaults: キーボード・入力 ---
-    defaults write NSGlobalDomain KeyRepeat -int 1
-    defaults write NSGlobalDomain InitialKeyRepeat -int 15
-    defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
-    defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
-    defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
-    defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
-    defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
-
-    # --- macOS defaults: トラックパッド・マウス ---
-    defaults write -g com.apple.mouse.scaling -float 5.0
-    defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
-    defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
-
-    # --- macOS defaults: UI ---
-    defaults write -g AppleShowScrollBars -string "Always"
-    defaults write -g AppleActionOnDoubleClick -string "Maximize"
-
-    # --- macOS defaults: セキュリティ・プライバシー ---
-    defaults write com.apple.screensaver askForPassword -int 1
-    defaults write com.apple.screensaver askForPasswordDelay -int 0
-    defaults write com.apple.AdLib forceLimitAdTracking -bool true
-    defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
-    defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
-
-    killall Dock 2>/dev/null || true
-    killall Finder 2>/dev/null || true
-    echo -e "${GREEN}✓ macOS defaults${NC}"
+    # --- macOS defaults（初回のみ適用、再適用は make macos-defaults） ---
+    MACOS_DEFAULTS_MARKER="$HOME/.dotfiles-macos-defaults-applied"
+    if [ ! -f "$MACOS_DEFAULTS_MARKER" ]; then
+        bash "$SCRIPT_DIR/bin/apply-macos-defaults"
+        touch "$MACOS_DEFAULTS_MARKER"
+    else
+        echo -e "${CYAN}macOS defaults 適用済み（再適用は 'make macos-defaults'）${NC}"
+    fi
 
     # --- git-secrets ---
     if command -v git-secrets &>/dev/null; then

@@ -1,0 +1,83 @@
+#!/bin/bash
+# apply-macos-defaults - macOS のシステム設定を適用する。
+#
+# bootstrap.sh から初回のみ自動で呼ばれる。
+# 再適用したい場合は `make macos-defaults` または直接このスクリプトを実行する。
+#
+# Usage:
+#   bash bin/apply-macos-defaults           # 適用
+#   bash bin/apply-macos-defaults --dry-run # 実行内容のみ表示
+set -euo pipefail
+
+DRY_RUN=false
+for arg in "$@"; do
+    case "$arg" in
+        -n|--dry-run) DRY_RUN=true ;;
+        -h|--help)
+            sed -n '2,12p' "$0" | sed 's/^# \?//'
+            exit 0
+            ;;
+        *) echo "不明なオプション: $arg" >&2; exit 1 ;;
+    esac
+done
+
+run() {
+    if [ "$DRY_RUN" = true ]; then
+        printf '[DRY RUN] %s\n' "$*"
+    else
+        "$@"
+    fi
+}
+
+if [[ "$(uname -s)" != "Darwin" ]]; then
+    echo "macOS専用です" >&2
+    exit 1
+fi
+
+# --- Dock ---
+run defaults write com.apple.dock autohide -bool true
+run defaults write com.apple.dock autohide-delay -float 0
+run defaults write com.apple.dock autohide-time-modifier -float 0.3
+run defaults write com.apple.dock tilesize -int 48
+run defaults write com.apple.dock show-recents -bool false
+
+# --- Finder ---
+run defaults write com.apple.finder AppleShowAllFiles -bool true
+run defaults write com.apple.finder ShowPathbar -bool true
+run defaults write com.apple.finder ShowStatusBar -bool true
+run defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+run defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+run defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+run defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+
+# --- キーボード・入力 ---
+run defaults write NSGlobalDomain KeyRepeat -int 1
+run defaults write NSGlobalDomain InitialKeyRepeat -int 15
+run defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
+run defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+run defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
+run defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+run defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+
+# --- トラックパッド・マウス ---
+run defaults write -g com.apple.mouse.scaling -float 5.0
+run defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
+run defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+
+# --- UI ---
+run defaults write -g AppleShowScrollBars -string "Always"
+run defaults write -g AppleActionOnDoubleClick -string "Maximize"
+
+# --- セキュリティ・プライバシー ---
+run defaults write com.apple.screensaver askForPassword -int 1
+run defaults write com.apple.screensaver askForPasswordDelay -int 0
+run defaults write com.apple.AdLib forceLimitAdTracking -bool true
+run defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+run defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+
+if [ "$DRY_RUN" = false ]; then
+    killall Dock 2>/dev/null || true
+    killall Finder 2>/dev/null || true
+fi
+
+echo "✓ macOS defaults 適用完了"

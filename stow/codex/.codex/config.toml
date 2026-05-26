@@ -1,71 +1,33 @@
+approval_policy = "on-request"
 model = "gpt-5.5"
 model_reasoning_effort = "medium"
 model_verbosity = "medium"
-approval_policy = "on-request"
+notify = [
+    "bash",
+    "-lc",
+    "~/.codex/hooks/notify.sh",
+]
+personality = "pragmatic"
 sandbox_mode = "workspace-write"
 web_search = "cached"
-personality = "pragmatic"
 
-notify = ["bash", "-lc", "~/.codex/hooks/notify.sh"]
+[apps._default]
+destructive_enabled = false
+enabled = true
+open_world_enabled = false
 
 [features]
 hooks = true
 
-[tui]
-notifications = true
-notification_method = "auto"
-alternate_screen = "auto"
-show_tooltips = true
-status_line_use_colors = true
-status_line = [
-  "current-dir",
-  "git-branch",
-  "model-with-reasoning",
-  "context-remaining",
-  "five-hour-limit",
-  "used-tokens",
-  "run-state",
-  "activity",
-  "task-progress",
-]
-terminal_title = [
-  "thread-title",
-  "run-state",
-]
+[marketplaces.openai-bundled]
+last_updated = "2026-05-25T13:29:33Z"
+source_type = "local"
+source = "/Users/otkshol/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
-[tui.model_availability_nux]
-"gpt-5.5" = 3
-
-[shell_environment_policy]
-inherit = "core"
-exclude = [
-  ".*TOKEN.*",
-  ".*SECRET.*",
-  ".*KEY.*",
-  ".*PASSWORD.*",
-  ".*CREDENTIAL.*",
-]
-
-[apps._default]
-enabled = true
-destructive_enabled = false
-open_world_enabled = false
-
-[mcp_servers.context7]
-command = "npx"
-args = ["@upstash/context7-mcp@latest"]
-enabled = true
-required = false
-startup_timeout_sec = 20
-tool_timeout_sec = 60
-
-[mcp_servers.playwright]
-command = "npx"
-args = ["@playwright/mcp@latest"]
-enabled = true
-required = false
-startup_timeout_sec = 20
-tool_timeout_sec = 120
+[marketplaces.openai-primary-runtime]
+last_updated = "2026-05-25T04:28:49Z"
+source_type = "local"
+source = "/Users/otkshol/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
 [mcp_servers.app-store-connect-review]
 command = "/Users/otkshol/.codex/bin/app-store-connect-review-mcp.mjs"
@@ -74,66 +36,195 @@ required = false
 startup_timeout_sec = 20
 tool_timeout_sec = 120
 
+[mcp_servers.app-store-connect-review.tools.asc_create_app_store_review_attachment]
+approval_mode = "approve"
+
 [mcp_servers.app-store-connect-review.tools.asc_create_app_store_review_detail]
+approval_mode = "approve"
+
+[mcp_servers.app-store-connect-review.tools.asc_list_app_store_versions]
+approval_mode = "approve"
+
+[mcp_servers.app-store-connect-review.tools.asc_list_apps]
 approval_mode = "approve"
 
 [mcp_servers.app-store-connect-review.tools.asc_update_app_store_review_detail]
 approval_mode = "approve"
 
-[mcp_servers.app-store-connect-review.tools.asc_create_app_store_review_attachment]
-approval_mode = "approve"
+[mcp_servers.context7]
+args = ["@upstash/context7-mcp@latest"]
+command = "npx"
+enabled = true
+required = false
+startup_timeout_sec = 20
+tool_timeout_sec = 60
 
 [mcp_servers.github]
-url = "https://api.githubcopilot.com/mcp/"
 bearer_token_env_var = "CODEX_GITHUB_PERSONAL_ACCESS_TOKEN"
-enabled = true
+enabled = false
 required = false
+url = "https://api.githubcopilot.com/mcp/"
 
 [mcp_servers.hourei]
-command = "npx"
 args = ["hourei-mcp-server"]
+command = "npx"
 enabled = true
 required = false
 startup_timeout_sec = 20
 tool_timeout_sec = 60
 
-[mcp_servers.tax-law]
-command = "npx"
-args = ["tax-law-mcp"]
-enabled = true
-required = false
-startup_timeout_sec = 20
-tool_timeout_sec = 60
+[mcp_servers.hourei.tools.get_law_data]
+approval_mode = "approve"
+
+[mcp_servers.hourei.tools.search_law]
+approval_mode = "approve"
 
 [mcp_servers.mf-ca]
+enabled = false
+required = false
 url = "https://beta.mcp.developers.biz.moneyforward.com/mcp/ca/v3"
+
+[mcp_servers.playwright]
+args = ["@playwright/mcp@latest"]
+command = "npx"
 enabled = true
 required = false
+startup_timeout_sec = 20
+tool_timeout_sec = 120
 
-[projects."/Users/otkshol/00_otake-ya"]
-trust_level = "trusted"
+[mcp_servers.playwright.tools.browser_close]
+approval_mode = "approve"
 
-[projects."/Users/otkshol/dotfiles"]
-trust_level = "trusted"
+[mcp_servers.playwright.tools.browser_evaluate]
+approval_mode = "approve"
 
-[projects."/Users/otkshol/Library/Mobile Documents/iCloud~md~obsidian/Documents/obsidian"]
-trust_level = "trusted"
+[mcp_servers.playwright.tools.browser_navigate]
+approval_mode = "approve"
 
-[projects."/Users/otkshol/00_otake-ya/projects/web/my-portfolio"]
-trust_level = "trusted"
+[mcp_servers.playwright.tools.browser_resize]
+approval_mode = "approve"
 
-[profiles.fast]
-model = "gpt-5.4-mini"
-model_reasoning_effort = "low"
-model_verbosity = "low"
+[mcp_servers.playwright.tools.browser_run_code_unsafe]
+approval_mode = "approve"
+
+[mcp_servers.playwright.tools.browser_tabs]
+approval_mode = "approve"
+
+[mcp_servers.tax-law]
+args = ["tax-law-mcp"]
+command = "npx"
+enabled = true
+required = false
+startup_timeout_sec = 20
+tool_timeout_sec = 60
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
 
 [profiles.deep]
 model = "gpt-5.5"
 model_reasoning_effort = "xhigh"
 model_verbosity = "medium"
 
+[profiles.fast]
+model = "gpt-5.4-mini"
+model_reasoning_effort = "low"
+model_verbosity = "low"
+
 [profiles.review]
+approval_policy = "on-request"
 model = "gpt-5.5"
 model_reasoning_effort = "high"
 model_verbosity = "medium"
-approval_policy = "on-request"
+
+[projects."/Users/otkshol/00_otake-ya"]
+trust_level = "trusted"
+
+[projects."/Users/otkshol/00_otake-ya/projects/mobile/archive/fe-app"]
+trust_level = "trusted"
+
+[projects."/Users/otkshol/00_otake-ya/projects/mobile/archive/fp3-app"]
+trust_level = "trusted"
+
+[projects."/Users/otkshol/00_otake-ya/projects/mobile/archive/ipass-app"]
+trust_level = "trusted"
+
+[projects."/Users/otkshol/00_otake-ya/projects/mobile/exam-apps/fp3-app"]
+trust_level = "trusted"
+
+[projects."/Users/otkshol/00_otake-ya/projects/mobile/exam-apps/live/fp2-app"]
+trust_level = "trusted"
+
+[projects."/Users/otkshol/00_otake-ya/projects/mobile/exam-apps/live/sg-app"]
+trust_level = "trusted"
+
+[projects."/Users/otkshol/00_otake-ya/projects/mobile/exam-apps/live/shindanshi-app"]
+trust_level = "trusted"
+
+[projects."/Users/otkshol/00_otake-ya/projects/mobile/exam-apps/wip/chizai-app"]
+trust_level = "trusted"
+
+[projects."/Users/otkshol/00_otake-ya/projects/web/my-portfolio"]
+trust_level = "trusted"
+
+[projects."/Users/otkshol/01_suishin-tech-knot/corporate-site"]
+trust_level = "trusted"
+
+[projects."/Users/otkshol/Library/Mobile Documents/iCloud~md~obsidian/Documents/obsidian"]
+trust_level = "trusted"
+
+[projects."/Users/otkshol/dotfiles"]
+trust_level = "trusted"
+
+[shell_environment_policy]
+exclude = [
+    ".*TOKEN.*",
+    ".*SECRET.*",
+    ".*KEY.*",
+    ".*PASSWORD.*",
+    ".*CREDENTIAL.*",
+]
+inherit = "core"
+
+[shell_environment_policy.set]
+CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1"
+
+[tui]
+alternate_screen = "auto"
+notification_method = "auto"
+notifications = true
+show_tooltips = true
+status_line = [
+    "current-dir",
+    "git-branch",
+    "model-with-reasoning",
+    "context-remaining",
+    "five-hour-limit",
+    "used-tokens",
+    "run-state",
+    "activity",
+    "task-progress",
+]
+status_line_use_colors = true
+terminal_title = [
+    "thread-title",
+    "run-state",
+]
+
+[tui.model_availability_nux]
+"gpt-5.5" = 4
+
+[hooks.state]
+
+[hooks.state."/Users/otkshol/.codex/hooks.json:stop:0:0"]
+enabled = true
+trusted_hash = "sha256:ac51d733bdc9f724fd24211acc67fd71b6a0d8692cec5c5a6acc94afa675abdf"

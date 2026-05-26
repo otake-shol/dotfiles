@@ -34,7 +34,7 @@ jobs:
         run: make readme-check
 
       - name: Stow conflict detection (dry run)
-        run: make check-strict
+        run: make check-conflicts
 
       - name: Zsh syntax check
         run: find stow/zsh -type f -name '*.zsh' -exec zsh -n {} +

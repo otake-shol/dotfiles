@@ -23,10 +23,48 @@ bash bootstrap.sh              # 通常実行
 bash bootstrap.sh -n           # ドライラン（変更なし）
 bash bootstrap.sh -y           # 完全自動（対話なし）
 bash bootstrap.sh -n -v        # ドライラン + 詳細出力
-bash bootstrap.sh --skip-apps  # アプリインストールをスキップ
+bash bootstrap.sh --skip-apps  # Brewfile全体をスキップ（stowのみ確保）
+bash bootstrap.sh --skip-gui-apps  # --skip-apps の別名
+bash bootstrap.sh --cli-only   # Brewfile から GUI cask を除外（CLIのみ導入）
+bash bootstrap.sh --no-codex-desktop  # Codex Desktop DMG の確認を行わない
 ```
 
 `bootstrap.sh` は Homebrew と Oh My Zsh の公式インストーラだけを明示例外として直接実行する。任意の remote script はパイプ実行しない。
+
+### 新PC移行チェックリスト
+
+`make new-mac` で同等の手順をいつでも表示できる。
+
+#### 自動（dotfiles で完結）
+
+```bash
+xcode-select --install
+git clone https://github.com/otake-shol/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+bash bootstrap.sh -y
+make doctor
+make validate              # リポジトリ整合性（絶対パス・local state・TOML/JSON 等）
+make setup-fastlane-env    # App Store Connect / fastlane を使う場合
+make runtimes-install      # Java/Node/Python/Terraform が必要になった時点で実行
+make cursor-sync           # Cursor拡張をリストに合わせる場合
+```
+
+#### 手動（dotfiles外）
+
+- App Store で **Xcode** をインストール（fastlane / iOS開発で必須）
+- **1Password** ログイン → SSH鍵 / GPG鍵 / `.p8` を `~/.ssh`, `~/.gnupg`, `~/.appstoreconnect/` に配置
+- `gh auth login`
+- `claude login`
+- `codex login`
+- `tailscale up`
+- `p10k configure`（プロンプト初期化）
+
+#### 移行直後の確認
+
+- 旧PCで事前に `make snapshot` → `.snapshot/<ts>/` を新PCへコピー
+- 新PCで `make snapshot` → 旧PCの `.snapshot/` と `diff` して欠落確認
+
+`~/.gitconfig.local`, `~/.zshrc.local`, `~/.config/fastlane/env`, App Store Connect の `.p8` など、個人情報・秘密情報はdotfilesへ入れず、1PasswordやiCloud Drive等から復元する。
 
 ## ディレクトリ構造
 
@@ -95,9 +133,9 @@ graph TB
 
 | パッケージ | 説明 | 主要ファイル |
 |-----------|------|-------------|
-| **zsh** | シェル設定（モジュール分割・遅延読み込み・56エイリアス・OMZ 6プラグイン） | `.zshrc`, `.zsh/{core,plugins,lazy,tools}.zsh` |
+| **zsh** | シェル設定（モジュール分割・遅延読み込み・68エイリアス・OMZ 6プラグイン） | `.zshrc`, `.zsh/{core,plugins,lazy,tools}.zsh` |
 | **git** | Git設定（28エイリアス・delta・git-secrets 8パターン） | `.gitconfig`, `.gitignore_global`, `.commit-template.txt`, `.editorconfig` |
-| **claude** | Claude Code（3 hookスクリプト・8コマンド・権限制御） | `.claude/settings.json`, `hooks/`, `commands/` |
+| **claude** | Claude Code（3 hookスクリプト・9コマンド・権限制御） | `.claude/settings.json`, `hooks/`, `commands/` |
 | **codex** | Codex CLI（config・AGENTS・hook・MCP） | `.codex/config.toml`, `.codex/AGENTS.md`, `.codex/hooks/` |
 | **ghostty** | GPUターミナル（TokyoNight・透過80%・JetBrains Mono） | `.config/ghostty/config` |
 | **cmux** | ワークスペース管理（5プリセット・色分け） | `.config/cmux/cmux.json` |
@@ -132,7 +170,16 @@ make stats             # Stow/Brewfile件数を表示
 make readme-check      # README内の件数が実体と一致するか確認
 make runtimes-install  # asdf plugin/runtime を .tool-versions から導入
 make versions-audit    # .tool-versions の固定バージョン確認
+make cursor-diff       # Cursor拡張の差分表示
+make cursor-sync       # Cursor拡張を extensions.txt に同期
+make setup-fastlane-env  # fastlane/App Store Connect env を対話設定
+make validate          # 移行可能性を機械検証（lint+readme+stow+toml+json+絶対パス）
+make snapshot          # 現PCの状態を .snapshot/<ts>/ に記録
+make new-mac           # 新PC移行ガイドを表示
+make macos-defaults    # macOS defaults を再適用
 ```
+
+macOS defaults は `bootstrap.sh` の初回実行時に `~/.dotfiles-macos-defaults-applied` を目印として一度だけ自動適用される。後から再適用したい場合は `make macos-defaults`。実装は `bin/apply-macos-defaults`。
 
 `make runtimes-install` は `stow/asdf/.tool-versions` を読み、未追加の asdf plugin を追加してから `asdf install` を実行する。Java/Node/Python/Terraform は時間とネットワーク依存が大きいため、bootstrap では自動実行せず必要な時だけ実行する。
 
@@ -142,12 +189,13 @@ make versions-audit    # .tool-versions の固定バージョン確認
 
 OpenAI CodexはHomebrewの `cask "codex"` がCLIを提供する。Codex DesktopはHomebrew caskとは別物のため、`bootstrap.sh` が公式DMGをApple Silicon / Intelに応じて導入する。
 
-軽量セットアップにしたい場合は `bash bootstrap.sh --skip-apps` でアプリ導入を飛ばし、必要なStowリンクだけを `make install-PKG` で入れる。
+軽量セットアップにしたい場合は `bash bootstrap.sh --skip-apps` でBrewfile全体の導入を飛ばす。この場合でもStowリンク作成に必要な `stow` だけはHomebrewで確保する。必要なStowリンクだけを入れたい場合は `make install-PKG` を使う。
 
 ## CI
 
 GitHub Actionsで以下を自動検証:
-- ShellCheck（bootstrap.sh + Claude hooks）
+- ShellCheck（bootstrap.sh + bin + Claude/Codex hooks）
+- Codex MCP JavaScript構文チェック
 - Stow競合検出（全パッケージのドライラン）
 - Zsh構文チェック
 - Brewfile構文検証
@@ -171,7 +219,7 @@ cc                     # 最新セッション続行
 cls                    # セッション一覧
 ```
 
-カスタムコマンド: `/verify`, `/commit-push`, `/spec`, `/review`, `/test`, `/worktree`, `/slides`, `/pc-checkup`
+カスタムコマンド: `/verify`, `/commit-push`, `/spec`, `/review`, `/test`, `/worktree`, `/slides`, `/pc-checkup`, `/release-ios`
 
 ## Codex
 
@@ -192,12 +240,15 @@ codex-commit-push "fix: ..." README.md Makefile  # 指定ファイルだけcommi
 
 `app-store-connect-review` MCPは、App Store Connect APIでApp Review用の連絡先・デモアカウント・審査メモ・添付ファイルを扱う。
 
-秘密情報はdotfilesへ保存しない。`~/.zshrc.local` などGit管理外のローカル設定で次を渡す:
+秘密情報はdotfilesへ保存しない。`make setup-fastlane-env` で `~/.config/fastlane/env` を作成し、Git管理外のローカル設定として次を渡す。`ASC_*` はMCP互換名としてテンプレートが自動で同じ値を参照する。
 
 ```bash
-export ASC_KID="YOUR_KEY_ID"
-export ASC_ISSUER_ID="YOUR_ISSUER_ID"
-export ASC_P8_PATH="$HOME/.appstoreconnect/private_keys/AuthKey_YOUR_KEY_ID.p8"
+export APP_STORE_CONNECT_API_KEY_KEY_ID="<KEY_ID>"
+export APP_STORE_CONNECT_API_KEY_ISSUER_ID="<ISSUER_ID_UUID>"
+export APP_STORE_CONNECT_API_KEY_KEY_FILEPATH="$HOME/.appstoreconnect/AuthKey_<KEY_ID>.p8"
+export ASC_KID="${APP_STORE_CONNECT_API_KEY_KEY_ID}"
+export ASC_ISSUER_ID="${APP_STORE_CONNECT_API_KEY_ISSUER_ID}"
+export ASC_P8_PATH="${APP_STORE_CONNECT_API_KEY_KEY_FILEPATH}"
 ```
 
 利用できる主なツール:
@@ -237,6 +288,9 @@ bootstrap.shが初回実行時に以下のローカル設定ファイルを`temp
 |---------|------|
 | `~/.gitconfig.local` | Gitユーザー名・メール・GPG署名 |
 | `~/.zshrc.local` | APIキー・MCPトークン・組織固有設定 |
+| `~/.config/fastlane/env` | fastlane / App Store Connect API Key・審査連絡先 |
+
+Powerlevel10k の `~/.p10k.zsh` は `p10k configure` で新PCごとに生成する。完全に同じプロンプトを移植したい場合は、現在の `~/.p10k.zsh` を `stow/zsh/.p10k.zsh` として管理対象に切り替える。
 
 ## トラブルシューティング
 

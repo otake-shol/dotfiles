@@ -108,18 +108,27 @@ async function getPrivateKey() {
     return p8Content.replace(/\\n/g, "\n");
   }
 
-  const keyPath = process.env.ASC_P8_PATH || process.env.APP_STORE_CONNECT_P8_PATH;
+  const keyPath =
+    process.env.ASC_P8_PATH ||
+    process.env.APP_STORE_CONNECT_P8_PATH ||
+    process.env.APP_STORE_CONNECT_API_KEY_KEY_FILEPATH;
   if (!keyPath) {
-    throw new Error("ASC_P8_PATH or APP_STORE_CONNECT_P8_PATH is required");
+    throw new Error("ASC_P8_PATH, APP_STORE_CONNECT_P8_PATH, or APP_STORE_CONNECT_API_KEY_KEY_FILEPATH is required");
   }
   return readFile(keyPath, "utf8");
 }
 
 async function createJwt() {
-  const keyId = process.env.ASC_KID || process.env.APP_STORE_CONNECT_KEY_ID;
-  const issuerId = process.env.ASC_ISSUER_ID || process.env.APP_STORE_CONNECT_ISSUER_ID;
+  const keyId =
+    process.env.ASC_KID ||
+    process.env.APP_STORE_CONNECT_KEY_ID ||
+    process.env.APP_STORE_CONNECT_API_KEY_KEY_ID;
+  const issuerId =
+    process.env.ASC_ISSUER_ID ||
+    process.env.APP_STORE_CONNECT_ISSUER_ID ||
+    process.env.APP_STORE_CONNECT_API_KEY_ISSUER_ID;
   if (!keyId || !issuerId) {
-    throw new Error("ASC_KID and ASC_ISSUER_ID are required");
+    throw new Error("ASC_KID/ASC_ISSUER_ID or APP_STORE_CONNECT_API_KEY_KEY_ID/APP_STORE_CONNECT_API_KEY_ISSUER_ID are required");
   }
 
   const now = Math.floor(Date.now() / 1000);

@@ -10,8 +10,9 @@ if [[ "$(uname -s)" != "Darwin" ]]; then
   exit 1
 fi
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ENV_FILE="$HOME/.config/fastlane/env"
-TEMPLATE="$HOME/dotfiles/templates/fastlane-env.example"
+TEMPLATE="$SCRIPT_DIR/templates/fastlane-env.example"
 
 if [ ! -f "$TEMPLATE" ]; then
   echo "雛形が見つかりません: $TEMPLATE" >&2

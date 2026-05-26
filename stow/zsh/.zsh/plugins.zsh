@@ -48,4 +48,8 @@ fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 export ZSH_COMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/zcompdump-${ZSH_VERSION}"
 
 # Oh My Zsh読み込み（内部でcompinitは呼ばれるがDISABLE_COMPFIXで高速化）
-source "$ZSH/oh-my-zsh.sh"
+if [[ -f "$ZSH/oh-my-zsh.sh" ]]; then
+  source "$ZSH/oh-my-zsh.sh"
+else
+  echo "Oh My Zsh が見つかりません。bootstrap.sh で導入するか、手動で ~/.oh-my-zsh を配置してください。" >&2
+fi

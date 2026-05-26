@@ -5,6 +5,9 @@ on:
     branches: [master, main]
   pull_request:
     branches: [master, main]
+  schedule:
+    - cron: '0 0 * * 1'  # 毎週月曜 00:00 UTC（versions-audit のみ）
+  workflow_dispatch:
 
 jobs:
   lint:
@@ -97,3 +100,29 @@ jobs:
         run: |
           brew install stow
           make check
+
+  versions-audit:
+    name: asdf versions audit (informational)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install asdf
+        run: |
+          git clone https://github.com/asdf-vm/asdf.git "$HOME/.asdf" --branch v0.14.1 --depth 1
+          echo "$HOME/.asdf/bin" >> "$GITHUB_PATH"
+          echo "$HOME/.asdf/shims" >> "$GITHUB_PATH"
+
+      - name: Add asdf plugins
+        continue-on-error: true
+        run: |
+          while read -r tool _ _; do
+            [ -z "$tool" ] && continue
+            case "$tool" in \#*) continue ;; esac
+            asdf plugin add "$tool" 2>/dev/null || true
+          done < stow/asdf/.tool-versions
+
+      - name: Versions audit (informational, never fails CI)
+        continue-on-error: true
+        run: make versions-audit

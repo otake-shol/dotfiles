@@ -17,7 +17,7 @@ TOOL_VERSIONS := stow/asdf/.tool-versions
 DOCTOR_LINK_DIRS := "$$HOME" "$$HOME/.config" "$$HOME/.claude" "$$HOME/.codex" "$$HOME/.docker" "$$HOME/.gnupg" "$$HOME/Library/Application Support/com.mitchellh.ghostty" "$$HOME/Library/LaunchAgents"
 SNAPSHOT_DIR := .snapshot/$(shell date +%Y%m%d-%H%M%S)
 
-.PHONY: help install uninstall check check-strict bootstrap lint clean install-% uninstall-% packages stats readme-check runtimes-install versions-audit cursor-sync cursor-diff doctor doctor-plan doctor-clean-broken setup-fastlane-env validate snapshot new-mac macos-defaults
+.PHONY: help install uninstall check check-strict bootstrap lint clean install-% uninstall-% packages stats readme-check readme-sync runtimes-install versions-audit cursor-sync cursor-diff doctor doctor-plan doctor-clean-broken setup-fastlane-env validate snapshot new-mac macos-defaults
 
 help:
 	@echo "Usage:"
@@ -33,6 +33,7 @@ help:
 	@echo "  make clean            バックアップファイル削除"
 	@echo "  make stats            パッケージ数を表示"
 	@echo "  make readme-check     README内の件数が実体と一致するか確認"
+	@echo "  make readme-sync      README内の件数を実体に合わせて自動更新"
 	@echo "  make runtimes-install asdf plugin/runtime を .tool-versions から導入"
 	@echo "  make versions-audit   .tool-versions の固定バージョン確認"
 	@echo "  make cursor-sync      Cursor拡張を extensions.txt に同期"
@@ -149,17 +150,19 @@ validate: lint readme-check check-strict
 	  echo "  ⚠ node 未導入（スキップ）"; \
 	fi
 	@echo "▶ 絶対パス混入チェック（ユーザー名依存）"
-	@hits=$$(grep -rn "/Users/[a-zA-Z0-9_-]\+" stow \
+	@hits=$$( { grep -rn "/Users/[a-zA-Z0-9_-]\+" stow \
 	     --include='*.toml' --include='*.json' --include='*.zsh' \
 	     --include='*.sh' --include='*.mjs' --include='*.lua' \
 	     --include='*.txt' --include='*.cfg' --include='*.conf' \
-	     2>/dev/null \
-	     | grep -v '\.template$$' || true); \
+	     2>/dev/null; \
+	   grep -n "/Users/[a-zA-Z0-9_-]\+" bootstrap.sh bin/* 2>/dev/null \
+	     | sed -E 's|^([^:]+:[0-9]+:)|\1|'; \
+	 } | grep -vE '(/\.template$$|^[^:]*\.template:|^[^:]*\.example:)' || true); \
 	if [ -n "$$hits" ]; then \
 	  printf '%s\n' "$$hits"; \
 	  echo "  ✗ 絶対パスが残存（新PCで壊れる）"; exit 1; \
 	else \
-	  echo "  ✓ 絶対パスなし"; \
+	  echo "  ✓ 絶対パスなし（stow/, bootstrap.sh, bin/）"; \
 	fi
 	@echo "▶ Codex local-state 混入チェック"
 	@if find stow/codex/.codex \( -name installation_id -o -name 'auth.json' -o -name '*.sqlite*' -o -name 'history.jsonl' \) 2>/dev/null | grep -q .; then \
@@ -281,11 +284,14 @@ doctor-clean-broken:
 bootstrap:
 	bash bootstrap.sh
 
+SHELLCHECK_TARGETS := bootstrap.sh \
+	bin/setup-fastlane-env bin/apply-macos-defaults \
+	$(wildcard stow/claude/.claude/hooks/*.sh) \
+	$(wildcard stow/codex/.codex/hooks/*.sh) \
+	$(wildcard stow/codex/.codex/bin/*.sh)
+
 lint:
-	@shellcheck -S warning bootstrap.sh bin/setup-fastlane-env bin/apply-macos-defaults
-	@shellcheck -S warning stow/claude/.claude/hooks/*.sh
-	@shellcheck -S warning stow/codex/.codex/hooks/*.sh
-	@shellcheck -S warning stow/codex/.codex/bin/*.sh
+	@shellcheck -S warning $(SHELLCHECK_TARGETS)
 	@if command -v node >/dev/null 2>&1; then \
 		node --check stow/codex/.codex/bin/*.mjs; \
 	else \
@@ -318,11 +324,26 @@ readme-check:
 	alias_count=$$(awk '/^alias /{count++} END{print count+0}' stow/zsh/.zsh/aliases/core.zsh); \
 	claude_command_count=$$(find stow/claude/.claude/commands -maxdepth 1 -name '*.md' | wc -l | tr -d ' '); \
 	error=0; \
-	grep -qE "GNU Stowパッケージ（$${pkg_count}個）" README.md || { echo "READMEのStowパッケージ数が不一致: $$pkg_count"; error=1; }; \
-	grep -qE "Brewfile $${brew_total}パッケージ" README.md || { echo "READMEのBrewfile件数が不一致: $$brew_total"; error=1; }; \
-	grep -qE "遅延読み込み・$${alias_count}エイリアス・" README.md || { echo "READMEのzshエイリアス数が不一致: $$alias_count"; error=1; }; \
-	grep -qE "hookスクリプト・$${claude_command_count}コマンド・" README.md || { echo "READMEのClaudeコマンド数が不一致: $$claude_command_count"; error=1; }; \
+	grep -qE "GNU Stowパッケージ（$${pkg_count}個）" README.md || { echo "READMEのStowパッケージ数が不一致: $$pkg_count (修復: make readme-sync)"; error=1; }; \
+	grep -qE "Brewfile $${brew_total}パッケージ" README.md || { echo "READMEのBrewfile件数が不一致: $$brew_total (修復: make readme-sync)"; error=1; }; \
+	grep -qE "遅延読み込み・$${alias_count}エイリアス・" README.md || { echo "READMEのzshエイリアス数が不一致: $$alias_count (修復: make readme-sync)"; error=1; }; \
+	grep -qE "hookスクリプト・$${claude_command_count}コマンド・" README.md || { echo "READMEのClaudeコマンド数が不一致: $$claude_command_count (修復: make readme-sync)"; error=1; }; \
 	exit $$error
+
+readme-sync:
+	@pkg_count=$$(printf "%s\n" $(PACKAGES) | wc -l | tr -d ' '); \
+	brew_count=$$(awk '/^[[:space:]]*brew /{count++} END{print count+0}' Brewfile); \
+	cask_count=$$(awk '/^[[:space:]]*cask /{count++} END{print count+0}' Brewfile); \
+	brew_total=$$((brew_count + cask_count)); \
+	alias_count=$$(awk '/^alias /{count++} END{print count+0}' stow/zsh/.zsh/aliases/core.zsh); \
+	claude_command_count=$$(find stow/claude/.claude/commands -maxdepth 1 -name '*.md' | wc -l | tr -d ' '); \
+	uname_s=$$(uname -s); \
+	if [ "$$uname_s" = "Darwin" ]; then sed_i=(-i ''); else sed_i=(-i); fi; \
+	sed "$${sed_i[@]}" -E "s/GNU Stowパッケージ（[0-9]+個）/GNU Stowパッケージ（$${pkg_count}個）/g" README.md; \
+	sed "$${sed_i[@]}" -E "s/Brewfile [0-9]+パッケージ/Brewfile $${brew_total}パッケージ/g" README.md; \
+	sed "$${sed_i[@]}" -E "s/遅延読み込み・[0-9]+エイリアス・/遅延読み込み・$${alias_count}エイリアス・/g" README.md; \
+	sed "$${sed_i[@]}" -E "s/hookスクリプト・[0-9]+コマンド・/hookスクリプト・$${claude_command_count}コマンド・/g" README.md; \
+	printf "stow=%s brew_total=%s alias=%s claude_cmd=%s に同期しました\n" "$$pkg_count" "$$brew_total" "$$alias_count" "$$claude_command_count"
 
 runtimes-install:
 	@if ! command -v asdf >/dev/null 2>&1; then echo "asdf not found"; exit 1; fi

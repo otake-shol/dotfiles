@@ -26,7 +26,8 @@ bash bootstrap.sh -n -v        # ドライラン + 詳細出力
 bash bootstrap.sh --skip-apps  # Brewfile全体をスキップ（stowのみ確保）
 bash bootstrap.sh --skip-gui-apps  # --skip-apps の別名
 bash bootstrap.sh --cli-only   # Brewfile から GUI cask を除外（CLIのみ導入）
-bash bootstrap.sh --no-codex-desktop  # Codex Desktop DMG の確認を行わない
+bash bootstrap.sh --no-codex-desktop    # Codex Desktop DMG をインストールしない
+bash bootstrap.sh -y --with-codex-desktop  # -y でも Codex Desktop を明示導入
 ```
 
 `bootstrap.sh` は Homebrew と Oh My Zsh の公式インストーラだけを明示例外として直接実行する。任意の remote script はパイプ実行しない。

@@ -11,10 +11,15 @@
 #   -n, --dry-run      シミュレーション実行
 #   -y, --yes          対話プロンプトを自動応答
 #   -v, --verbose      詳細出力
-#   --skip-apps        Brewfile全体をスキップ（最小CLI依存のみ導入）
-#   --skip-gui-apps    --skip-apps の別名
-#   --cli-only         Brewfile から GUI cask を除外して導入
-#   --no-codex-desktop Codex Desktop DMG のインストール確認を行わない
+#   --skip-apps         Brewfile全体をスキップ（最小CLI依存のみ導入）
+#   --skip-gui-apps     --skip-apps の別名
+#   --cli-only          Brewfile から GUI cask を除外して導入
+#   --no-codex-desktop  Codex Desktop DMG のインストールを行わない
+#   --with-codex-desktop Codex Desktop DMG を明示的に導入（-y と併用時の opt-in）
+#
+# Codex Desktop の挙動:
+#   対話モード（-y なし）: 確認プロンプト
+#   -y モード         : デフォルトでスキップ、--with-codex-desktop で明示導入
 
 set -euo pipefail
 
@@ -27,6 +32,7 @@ SKIP_APPS=false
 ASSUME_YES=false
 CLI_ONLY=false
 NO_CODEX_DESKTOP=false
+WITH_CODEX_DESKTOP=false
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CURRENT_STEP=""
 # パッケージごとの除外は stow/<pkg>/.stow-local-ignore に分離。
@@ -105,8 +111,9 @@ while [[ "$#" -gt 0 ]]; do
         --skip-apps|--skip-gui-apps) SKIP_APPS=true ;;
         --cli-only)     CLI_ONLY=true ;;
         --no-codex-desktop) NO_CODEX_DESKTOP=true ;;
+        --with-codex-desktop) WITH_CODEX_DESKTOP=true ;;
         -h|--help)
-            sed -n '2,16p' "$0" | sed 's/^# \?//'
+            sed -n '2,22p' "$0" | sed 's/^# \?//'
             exit 0 ;;
         *) echo -e "${RED}不明なオプション: $1${NC}"; exit 1 ;;
     esac
@@ -264,7 +271,13 @@ elif [ -f "$SCRIPT_DIR/Brewfile" ]; then
         echo -e "${YELLOW}⚠ 一部パッケージのインストールに失敗しました${NC}"
         ask "失敗がありますが続行しますか?" || exit 1
     fi
-    if [ "$NO_CODEX_DESKTOP" != true ] && [ "$CLI_ONLY" != true ] && ask "Codex Desktopをインストールしますか?"; then
+    if [ "$NO_CODEX_DESKTOP" = true ] || [ "$CLI_ONLY" = true ]; then
+        :
+    elif [ "$WITH_CODEX_DESKTOP" = true ]; then
+        install_codex_desktop
+    elif [ "$ASSUME_YES" = true ]; then
+        echo -e "${CYAN}Codex Desktop はスキップ（明示導入は --with-codex-desktop）${NC}"
+    elif ask "Codex Desktopをインストールしますか?"; then
         install_codex_desktop
     fi
 else
@@ -381,15 +394,18 @@ fi
 if [ ! -f ~/.gitconfig.local ]; then
     if [ "$DRY_RUN" = true ]; then
         dry_run_msg "$HOME/.gitconfig.local を作成します"
-    elif [ "$ASSUME_YES" = true ]; then
-        cp "$SCRIPT_DIR/templates/gitconfig.local.template" ~/.gitconfig.local
-        echo -e "${GREEN}✓ ~/.gitconfig.local（要編集）${NC}"
     else
-        echo -e "${YELLOW}Git ユーザー情報を設定します${NC}"
-        read -rp "ユーザー名: " git_name
-        read -rp "メールアドレス: " git_email
-        printf "[user]\n\tname = %s\n\temail = %s\n" "$git_name" "$git_email" > ~/.gitconfig.local
-        echo -e "${GREEN}✓ ~/.gitconfig.local${NC}"
+        cp "$SCRIPT_DIR/templates/gitconfig.local.template" ~/.gitconfig.local
+        if [ "$ASSUME_YES" = true ]; then
+            echo -e "${GREEN}✓ ~/.gitconfig.local（要編集）${NC}"
+        else
+            echo -e "${YELLOW}Git ユーザー情報を設定します（空Enterで雛形のまま）${NC}"
+            read -rp "ユーザー名: " git_name
+            read -rp "メールアドレス: " git_email
+            [ -n "$git_name" ]  && sed -i '' "s|name = Your Name|name = $git_name|" ~/.gitconfig.local
+            [ -n "$git_email" ] && sed -i '' "s|email = your.email@example.com|email = $git_email|" ~/.gitconfig.local
+            echo -e "${GREEN}✓ ~/.gitconfig.local${NC}"
+        fi
     fi
 fi
 
@@ -407,21 +423,32 @@ fi
 # ========================================
 show_step 6 6 "Claude Codeのセットアップ"
 
+add_mcp_server() {
+    local name="$1"; shift
+    local out exit_code
+    out="$(claude mcp add "$name" --scope user "$@" 2>&1)" && exit_code=0 || exit_code=$?
+    if [ $exit_code -eq 0 ]; then
+        echo -e "  ${GREEN}✓${NC} ${name}"
+    elif printf '%s' "$out" | grep -qiE 'already (exists|configured|added)'; then
+        echo -e "  ${GREEN}✓${NC} ${name} (既存)"
+    else
+        echo -e "  ${YELLOW}⚠${NC} ${name}: $(printf '%s' "$out" | head -1)"
+    fi
+}
+
 if command -v claude &>/dev/null; then
     if [ "$DRY_RUN" = true ]; then
         echo -e "${CYAN}[DRY RUN] MCPサーバー・プラグイン設定をスキップ${NC}"
     elif ask "Claude Code MCPサーバーを設定しますか?"; then
-        # MCPサーバー
-        claude mcp add context7 --scope user -- npx -y @upstash/context7-mcp@latest 2>/dev/null || true
-        claude mcp add playwright --scope user -- npx -y @playwright/mcp@latest 2>/dev/null || true
-        claude mcp add github --scope user --transport http https://api.githubcopilot.com/mcp/ 2>/dev/null || true
-        claude mcp add hourei --scope user -- npx -y hourei-mcp-server 2>/dev/null || true
-        claude mcp add tax-law --scope user -- npx -y tax-law-mcp 2>/dev/null || true
-        claude mcp add mf-ca --scope user --transport http https://beta.mcp.developers.biz.moneyforward.com/mcp/ca/v3 2>/dev/null || true
+        add_mcp_server context7    -- npx -y @upstash/context7-mcp@latest
+        add_mcp_server playwright  -- npx -y @playwright/mcp@latest
+        add_mcp_server github      --transport http https://api.githubcopilot.com/mcp/
+        add_mcp_server hourei      -- npx -y hourei-mcp-server
+        add_mcp_server tax-law     -- npx -y tax-law-mcp
+        add_mcp_server mf-ca       --transport http https://beta.mcp.developers.biz.moneyforward.com/mcp/ca/v3
         if command -v gws &>/dev/null; then
-            claude mcp add gws --scope user -- gws mcp -s all 2>/dev/null || true
+            add_mcp_server gws     -- gws mcp -s all
         fi
-        echo -e "${GREEN}✓ MCPサーバー${NC}"
 
         # プラグイン
         claude /plugin marketplace add obra/superpowers-marketplace 2>/dev/null || true

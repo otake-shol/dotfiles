@@ -19,6 +19,11 @@ export APP_STORE_CONNECT_API_KEY_KEY_ID="<KEY_ID>"
 export APP_STORE_CONNECT_API_KEY_ISSUER_ID="<ISSUER_ID_UUID>"
 export APP_STORE_CONNECT_API_KEY_KEY_FILEPATH="$HOME/.appstoreconnect/AuthKey_<KEY_ID>.p8"
 
+# app-store-connect-review MCP 互換名
+export ASC_KID="${APP_STORE_CONNECT_API_KEY_KEY_ID}"
+export ASC_ISSUER_ID="${APP_STORE_CONNECT_API_KEY_ISSUER_ID}"
+export ASC_P8_PATH="${APP_STORE_CONNECT_API_KEY_KEY_FILEPATH}"
+
 # --- 任意: Apple ID（対話的に2FAを通す場合） ---
 # export FASTLANE_USER="<your-apple-id@example.com>"
 # export FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD="<app-specific-password>"

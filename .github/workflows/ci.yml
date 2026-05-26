@@ -8,10 +8,18 @@ on:
 
 jobs:
   lint:
-    name: ShellCheck + Syntax
+    name: ShellCheck + Syntax + Validate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y stow shellcheck zsh
@@ -23,17 +31,13 @@ jobs:
         run: make readme-check
 
       - name: Stow conflict detection (dry run)
-        run: |
-          for pkg in $(make -s packages); do
-            echo "=== $pkg ==="
-            stow --simulate -v --target="$HOME" --dir=stow --restow "$pkg" 2>&1 || {
-              echo "::error::Stow conflict detected in package: $pkg"
-              exit 1
-            }
-          done
+        run: make check-strict
 
       - name: Zsh syntax check
         run: find stow/zsh -type f -name '*.zsh' -exec zsh -n {} +
+
+      - name: Validate (TOML/JSON/absolute-path/local-state)
+        run: make validate
 
   brewfile:
     name: Brewfile validation
@@ -83,6 +87,11 @@ jobs:
 
       - name: Bootstrap dry-run
         run: bash bootstrap.sh --dry-run --yes
+
+      - name: Bootstrap dry-run with empty HOME
+        run: |
+          FAKE_HOME="$(mktemp -d)"
+          HOME="$FAKE_HOME" bash bootstrap.sh --dry-run --yes
 
       - name: Stow install (dry-run)
         run: |

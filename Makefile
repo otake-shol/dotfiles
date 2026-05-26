@@ -4,15 +4,20 @@ SHELL := /bin/bash
 
 STOW := stow
 STOW_DIR := stow
-STOW_COMMON_FLAGS := -v --target=$(HOME) --dir=$(STOW_DIR)
+# パッケージごとの除外は stow/<pkg>/.stow-local-ignore に分離。
+# CLI --ignore は basename 末尾マッチのため、ここではsafety netとして basename のみ指定。
+STOW_IGNORE_FLAGS := --ignore='\.p10k\.zsh$$' --ignore='installation_id$$'
+STOW_COMMON_FLAGS := -v --target=$(HOME) --dir=$(STOW_DIR) $(STOW_IGNORE_FLAGS)
 STOW_INSTALL_FLAGS := $(STOW_COMMON_FLAGS) --restow
 STOW_DELETE_FLAGS := $(STOW_COMMON_FLAGS)
-STOW_SIMULATE_FLAGS := --target=$(HOME) --dir=$(STOW_DIR)
+STOW_SIMULATE_FLAGS := --target=$(HOME) --dir=$(STOW_DIR) $(STOW_IGNORE_FLAGS)
 PACKAGES := zsh git nvim ghostty bat atuin claude codex yazi direnv cmux asdf cursor
 CURSOR_EXT_LIST := stow/cursor/.config/cursor/extensions.txt
 TOOL_VERSIONS := stow/asdf/.tool-versions
+DOCTOR_LINK_DIRS := "$$HOME" "$$HOME/.config" "$$HOME/.claude" "$$HOME/.codex" "$$HOME/.docker" "$$HOME/.gnupg" "$$HOME/Library/Application Support/com.mitchellh.ghostty" "$$HOME/Library/LaunchAgents"
+SNAPSHOT_DIR := .snapshot/$(shell date +%Y%m%d-%H%M%S)
 
-.PHONY: help install uninstall check check-strict bootstrap lint clean install-% uninstall-% packages stats readme-check runtimes-install versions-audit cursor-sync cursor-diff doctor doctor-plan doctor-clean-broken setup-fastlane-env
+.PHONY: help install uninstall check check-strict bootstrap lint clean install-% uninstall-% packages stats readme-check runtimes-install versions-audit cursor-sync cursor-diff doctor doctor-plan doctor-clean-broken setup-fastlane-env validate snapshot new-mac macos-defaults
 
 help:
 	@echo "Usage:"
@@ -33,6 +38,10 @@ help:
 	@echo "  make cursor-sync      Cursor拡張を extensions.txt に同期"
 	@echo "  make cursor-diff      現状とリストの差分を表示（変更なし）"
 	@echo "  make setup-fastlane-env  fastlane用環境変数を対話的にセットアップ"
+	@echo "  make validate         移行可能性を機械検証（lint+readme+stow+toml+json+絶対パス）"
+	@echo "  make snapshot         現PCの状態を .snapshot/<ts>/ に記録（移行前の証拠）"
+	@echo "  make new-mac          新PC移行ガイドを表示"
+	@echo "  make macos-defaults   macOS defaults を再適用"
 	@echo ""
 	@echo "Packages: $(PACKAGES)"
 
@@ -89,7 +98,7 @@ doctor:
 	done; \
 	echo ""; \
 	echo "▶ \$$HOME 配下の壊れたシンボリックリンク (dotfiles 由来のみ)"; \
-	broken=$$(for d in "$$HOME" "$$HOME/.config" "$$HOME/.claude" "$$HOME/.codex"; do \
+	broken=$$(for d in $(DOCTOR_LINK_DIRS); do \
 		find "$$d" -maxdepth 4 -type l 2>/dev/null; \
 	done | sort -u | while read -r l; do \
 		[ -e "$$l" ] && continue; \
@@ -121,6 +130,116 @@ doctor:
 setup-fastlane-env:
 	@bash ./bin/setup-fastlane-env
 
+macos-defaults:
+	@bash ./bin/apply-macos-defaults
+
+validate: lint readme-check check-strict
+	@echo "▶ TOML 構文チェック"
+	@find stow -name '*.toml' -print0 | xargs -0 -n1 python3 -c \
+	  'import tomllib,sys; tomllib.load(open(sys.argv[1],"rb"))' \
+	  && echo "  ✓ TOML"
+	@echo "▶ JSON 構文チェック"
+	@find stow -name '*.json' -not -path '*/node_modules/*' -print0 | xargs -0 -n1 python3 -c \
+	  'import json,sys; json.load(open(sys.argv[1]))' \
+	  && echo "  ✓ JSON"
+	@echo "▶ .mjs 構文チェック"
+	@if command -v node >/dev/null 2>&1; then \
+	  node --check stow/codex/.codex/bin/*.mjs && echo "  ✓ Node syntax"; \
+	else \
+	  echo "  ⚠ node 未導入（スキップ）"; \
+	fi
+	@echo "▶ 絶対パス混入チェック（ユーザー名依存）"
+	@hits=$$(grep -rn "/Users/[a-zA-Z0-9_-]\+" stow \
+	     --include='*.toml' --include='*.json' --include='*.zsh' \
+	     --include='*.sh' --include='*.mjs' --include='*.lua' \
+	     --include='*.txt' --include='*.cfg' --include='*.conf' \
+	     2>/dev/null \
+	     | grep -v '\.template$$' || true); \
+	if [ -n "$$hits" ]; then \
+	  printf '%s\n' "$$hits"; \
+	  echo "  ✗ 絶対パスが残存（新PCで壊れる）"; exit 1; \
+	else \
+	  echo "  ✓ 絶対パスなし"; \
+	fi
+	@echo "▶ Codex local-state 混入チェック"
+	@if find stow/codex/.codex \( -name installation_id -o -name 'auth.json' -o -name '*.sqlite*' -o -name 'history.jsonl' \) 2>/dev/null | grep -q .; then \
+	  echo "  ✗ local stateがStow対象に混入"; exit 1; \
+	else \
+	  echo "  ✓ local stateなし"; \
+	fi
+	@$(MAKE) doctor
+	@echo ""
+	@printf "\033[32m✓ validate pass（リポジトリは新PCに移植可能）\033[0m\n"
+
+snapshot:
+	@mkdir -p $(SNAPSHOT_DIR)
+	@echo "▶ 現PC状態をスナップショット: $(SNAPSHOT_DIR)"
+	@if command -v brew >/dev/null 2>&1; then \
+	  brew bundle dump --file=$(SNAPSHOT_DIR)/Brewfile.actual --force --describe 2>/dev/null \
+	    && echo "  ✓ Brewfile.actual" || echo "  ⚠ brew bundle dump 失敗"; \
+	else echo "  - brew 未導入"; fi
+	@if command -v cursor >/dev/null 2>&1; then \
+	  cursor --list-extensions > $(SNAPSHOT_DIR)/cursor-extensions.txt 2>/dev/null \
+	    && echo "  ✓ cursor-extensions"; \
+	else echo "  - cursor 未導入"; fi
+	@if command -v asdf >/dev/null 2>&1; then \
+	  asdf current > $(SNAPSHOT_DIR)/asdf-current.txt 2>/dev/null \
+	    && echo "  ✓ asdf-current"; \
+	else echo "  - asdf 未導入"; fi
+	@if command -v claude >/dev/null 2>&1; then \
+	  claude mcp list > $(SNAPSHOT_DIR)/claude-mcp.txt 2>/dev/null \
+	    && echo "  ✓ claude-mcp"; \
+	else echo "  - claude 未導入"; fi
+	@if command -v gh >/dev/null 2>&1; then \
+	  gh auth status > $(SNAPSHOT_DIR)/gh-auth.txt 2>&1 \
+	    && echo "  ✓ gh-auth" || echo "  ⚠ gh 未ログイン"; \
+	else echo "  - gh 未導入"; fi
+	@if [ -d "$$HOME/.appstoreconnect" ]; then \
+	  ls -la "$$HOME/.appstoreconnect/" > $(SNAPSHOT_DIR)/appstoreconnect.txt 2>/dev/null \
+	    && echo "  ✓ asc-keys"; \
+	else echo "  - ASC keys なし"; fi
+	@defaults read NSGlobalDomain > $(SNAPSHOT_DIR)/defaults-global.txt 2>/dev/null \
+	  && echo "  ✓ defaults-global" || echo "  - defaults 取得失敗"
+	@if [ -f $(SNAPSHOT_DIR)/Brewfile.actual ]; then \
+	  diff -u Brewfile $(SNAPSHOT_DIR)/Brewfile.actual > $(SNAPSHOT_DIR)/Brewfile.drift 2>/dev/null || true; \
+	  if [ -s $(SNAPSHOT_DIR)/Brewfile.drift ]; then \
+	    echo "  ⚠ Brewfileドリフトあり: $(SNAPSHOT_DIR)/Brewfile.drift"; \
+	  else \
+	    echo "  ✓ Brewfile と実環境一致"; \
+	    rm -f $(SNAPSHOT_DIR)/Brewfile.drift; \
+	  fi; \
+	fi
+	@echo ""
+	@printf "\033[32m✓ snapshot 完了: %s\033[0m\n" "$(SNAPSHOT_DIR)"
+
+new-mac:
+	@printf '%s\n' \
+	  "▶ 新PC移行手順（順番に実行）" \
+	  "" \
+	  "  1. xcode-select --install" \
+	  "  2. bash bootstrap.sh -y                       # Brewfile + Stow + macOS設定" \
+	  "  3. make doctor                                # Stow健全性" \
+	  "  4. make validate                              # リポジトリ整合性" \
+	  "  5. make runtimes-install                      # asdf runtime（必要時のみ）" \
+	  "  6. make cursor-sync                           # Cursor拡張" \
+	  "  7. make setup-fastlane-env                    # ASC使う場合" \
+	  "" \
+	  "▶ 手動セットアップ（dotfiles外）" \
+	  "" \
+	  "  - App Store で Xcode をインストール（fastlane / iOS開発で必須）" \
+	  "  - 1Password ログイン → SSH鍵 / GPG鍵 / .p8 を ~/.ssh, ~/.gnupg, ~/.appstoreconnect/ に配置" \
+	  "  - gh auth login" \
+	  "  - claude login" \
+	  "  - codex login" \
+	  "  - tailscale up" \
+	  "  - p10k configure                              # プロンプト初期化" \
+	  "" \
+	  "▶ 移行直後の確認" \
+	  "" \
+	  "  - 旧PCで事前に make snapshot → .snapshot/<ts>/ を新PCにコピー" \
+	  "  - 新PCで make snapshot → 旧PCの .snapshot/ と diff して欠落確認" \
+	  ""
+
 doctor-plan:
 	@echo "▶ Stow 修復候補（変更なし）"; \
 	for pkg in $(PACKAGES); do \
@@ -134,7 +253,7 @@ doctor-plan:
 	done; \
 	echo ""; \
 	echo "▶ 壊れた dotfiles 由来リンク（削除は手動確認）"; \
-	for d in "$$HOME" "$$HOME/.config" "$$HOME/.claude" "$$HOME/.codex" "$$HOME/.docker" "$$HOME/.gnupg" "$$HOME/Library/Application Support/com.mitchellh.ghostty" "$$HOME/Library/LaunchAgents"; do \
+	for d in $(DOCTOR_LINK_DIRS); do \
 		find "$$d" -maxdepth 4 -type l 2>/dev/null; \
 	done | sort -u | while read -r l; do \
 		[ -e "$$l" ] && continue; \
@@ -149,7 +268,7 @@ doctor-clean-broken:
 		echo "例: make doctor-clean-broken CONFIRM=delete-broken-links"; \
 		exit 2; \
 	fi
-	@for d in "$$HOME" "$$HOME/.config" "$$HOME/.claude" "$$HOME/.codex" "$$HOME/.docker" "$$HOME/.gnupg" "$$HOME/Library/Application Support/com.mitchellh.ghostty" "$$HOME/Library/LaunchAgents"; do \
+	@for d in $(DOCTOR_LINK_DIRS); do \
 		find "$$d" -maxdepth 4 -type l 2>/dev/null; \
 	done | sort -u | while read -r l; do \
 		[ -e "$$l" ] && continue; \
@@ -163,10 +282,15 @@ bootstrap:
 	bash bootstrap.sh
 
 lint:
-	@shellcheck -S warning bootstrap.sh
+	@shellcheck -S warning bootstrap.sh bin/setup-fastlane-env bin/apply-macos-defaults
 	@shellcheck -S warning stow/claude/.claude/hooks/*.sh
 	@shellcheck -S warning stow/codex/.codex/hooks/*.sh
 	@shellcheck -S warning stow/codex/.codex/bin/*.sh
+	@if command -v node >/dev/null 2>&1; then \
+		node --check stow/codex/.codex/bin/*.mjs; \
+	else \
+		echo "node not found; skipping .mjs syntax check"; \
+	fi
 
 clean:
 	@find . -name "*.backup.*" -delete
@@ -191,9 +315,13 @@ readme-check:
 	brew_count=$$(awk '/^[[:space:]]*brew /{count++} END{print count+0}' Brewfile); \
 	cask_count=$$(awk '/^[[:space:]]*cask /{count++} END{print count+0}' Brewfile); \
 	brew_total=$$((brew_count + cask_count)); \
+	alias_count=$$(awk '/^alias /{count++} END{print count+0}' stow/zsh/.zsh/aliases/core.zsh); \
+	claude_command_count=$$(find stow/claude/.claude/commands -maxdepth 1 -name '*.md' | wc -l | tr -d ' '); \
 	error=0; \
-	grep -q "GNU Stowパッケージ（$${pkg_count}個）" README.md || { echo "READMEのStowパッケージ数が不一致: $$pkg_count"; error=1; }; \
-	grep -q "Brewfile $${brew_total}パッケージ" README.md || { echo "READMEのBrewfile件数が不一致: $$brew_total"; error=1; }; \
+	grep -qE "GNU Stowパッケージ（$${pkg_count}個）" README.md || { echo "READMEのStowパッケージ数が不一致: $$pkg_count"; error=1; }; \
+	grep -qE "Brewfile $${brew_total}パッケージ" README.md || { echo "READMEのBrewfile件数が不一致: $$brew_total"; error=1; }; \
+	grep -qE "遅延読み込み・$${alias_count}エイリアス・" README.md || { echo "READMEのzshエイリアス数が不一致: $$alias_count"; error=1; }; \
+	grep -qE "hookスクリプト・$${claude_command_count}コマンド・" README.md || { echo "READMEのClaudeコマンド数が不一致: $$claude_command_count"; error=1; }; \
 	exit $$error
 
 runtimes-install:

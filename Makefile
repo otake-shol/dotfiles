@@ -17,7 +17,7 @@ TOOL_VERSIONS := stow/asdf/.tool-versions
 DOCTOR_LINK_DIRS := "$$HOME" "$$HOME/.config" "$$HOME/.claude" "$$HOME/.codex" "$$HOME/.docker" "$$HOME/.gnupg" "$$HOME/Library/Application Support/com.mitchellh.ghostty" "$$HOME/Library/LaunchAgents"
 SNAPSHOT_DIR := .snapshot/$(shell date +%Y%m%d-%H%M%S)
 
-.PHONY: help install uninstall check check-strict bootstrap lint clean install-% uninstall-% packages stats readme-check readme-sync runtimes-install versions-audit cursor-sync cursor-diff doctor doctor-plan doctor-clean-broken setup-fastlane-env validate snapshot new-mac macos-defaults
+.PHONY: help install uninstall check check-strict check-conflicts bootstrap lint clean install-% uninstall-% packages stats readme-check readme-sync runtimes-install versions-audit cursor-sync cursor-diff doctor doctor-plan doctor-clean-broken setup-fastlane-env validate snapshot new-mac macos-defaults
 
 help:
 	@echo "Usage:"
@@ -26,6 +26,7 @@ help:
 	@echo "  make install-PKG      個別インストール (例: make install-zsh)"
 	@echo "  make check            Stowドライラン"
 	@echo "  make check-strict     Stowドライラン（差分・競合で失敗）"
+	@echo "  make check-conflicts  Stowドライラン（競合のみ失敗、CI向け）"
 	@echo "  make doctor           シンボリックリンク健全性チェック"
 	@echo "  make doctor-plan      修復候補を表示（変更なし）"
 	@echo "  make bootstrap        完全セットアップ"
@@ -81,6 +82,15 @@ check-strict:
 	done; \
 	exit $$error
 
+check-conflicts:
+	@for pkg in $(PACKAGES); do \
+		echo "=== $$pkg ==="; \
+		output=$$($(STOW) --simulate $(STOW_INSTALL_FLAGS) $$pkg 2>&1) || { \
+			printf "%s\n" "$$output"; \
+			exit 1; \
+		}; \
+	done
+
 doctor:
 	@error=0; \
 	echo "▶ Stow 同期状態"; \
@@ -134,7 +144,12 @@ setup-fastlane-env:
 macos-defaults:
 	@bash ./bin/apply-macos-defaults
 
-validate: lint readme-check check-strict
+validate: lint readme-check
+	@if [ "$${CI:-}" = "true" ]; then \
+	  $(MAKE) check-conflicts; \
+	else \
+	  $(MAKE) check-strict; \
+	fi
 	@echo "▶ TOML 構文チェック"
 	@find stow -name '*.toml' -print0 | xargs -0 -n1 python3 -c \
 	  'import tomllib,sys; tomllib.load(open(sys.argv[1],"rb"))' \
@@ -170,7 +185,11 @@ validate: lint readme-check check-strict
 	else \
 	  echo "  ✓ local stateなし"; \
 	fi
-	@$(MAKE) doctor
+	@if [ "$${CI:-}" = "true" ]; then \
+	  echo "▶ doctor はCIの空HOMEではスキップ（Stow競合はcheck-conflictsで検証済み）"; \
+	else \
+	  $(MAKE) doctor; \
+	fi
 	@echo ""
 	@printf "\033[32m✓ validate pass（リポジトリは新PCに移植可能）\033[0m\n"
 

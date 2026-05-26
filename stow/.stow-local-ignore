@@ -1,5 +1,0 @@
-# Codex runtime state is generated locally and should not be symlinked.
-^codex/\.codex/installation_id$
-^codex/\.codex/(auth\.json|history\.jsonl|models_cache\.json|version\.json)$
-^codex/\.codex/(cache|log|logs|memories|shell_snapshots|skills|state|tmp)(/.*)?$
-^codex/\.codex/.*\.sqlite(-wal|-shm)?$

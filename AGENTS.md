@@ -21,6 +21,7 @@ make lint        # ShellCheck 実行
 make check       # Stow ドライラン
 make install     # 全パッケージインストール
 make doctor      # stow 同期＋壊れリンク検出
+make validate    # lint＋README整合＋構文＋絶対パス/local-state混入検査
 ```
 
 ## 規約
@@ -29,6 +30,16 @@ make doctor      # stow 同期＋壊れリンク検出
 - **コミット**: Conventional Commits（`feat`, `fix`, `docs`, `refactor`, `chore` 等）。日本語本文OK
 - **ブランチ**: `master` 直接コミット可（個人リポジトリ）
 - **フォーマッタ**: shfmt（シェル）、Prettier（JSON/MD）
+
+## 変更時のルール（コミット前に必ず）
+
+リポジトリに変更を加えたら、**コミット前に `make validate` を通す**。validate は lint・README整合・TOML/JSON/.mjs 構文・絶対パス混入・Codex local-state 混入をまとめて検査する。
+
+- **修正対象だけ直して終わりにしない。** その変更が波及する派生物（README の件数、構文、リンク等）も同じコミットで揃える
+- validate が落ちたら、出力に表示される**修復コマンドを実行してから**コミットする
+  - 例: Brewfile のパッケージを増減 → `make readme-sync`（README のパッケージ件数を同期）
+  - 例: stow パッケージを増減 → `make readme-sync`（同上）
+- 「変更 → validate → 落ちたら修復 → 再 validate → green を確認 → commit」を1セットとする
 
 ## 触ってはいけないもの
 

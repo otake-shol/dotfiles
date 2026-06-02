@@ -87,6 +87,7 @@ cask "slack"                       # チームコミュニケーション
 cask "figma"                       # デザイン+プロトタイピング
 cask "claude"                      # Claude Code CLI
 cask "codex"                       # OpenAI Codex CLI(デスクトップ版はbootstrapで導入)
+cask "google-gemini"               # Google純正Geminiデスクトップアプリ(arm64+macOS15以降)
 cask "orbstack"                    # Docker Desktop代替(軽量+高速)
 
 # --- フォント ---

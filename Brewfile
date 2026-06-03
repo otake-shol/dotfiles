@@ -85,6 +85,7 @@ cask "slack"                       # チームコミュニケーション
 
 # --- デザイン・開発 ---
 cask "figma"                       # デザイン+プロトタイピング
+cask "zed"                         # Rust製ネイティブエディタ(高速/軽量・読む&レビュー面としてお試し導入)
 cask "claude"                      # Claude Code CLI
 cask "codex"                       # OpenAI Codex CLI(デスクトップ版はbootstrapで導入)
 cask "google-gemini"               # Google純正Geminiデスクトップアプリ(arm64+macOS15以降)

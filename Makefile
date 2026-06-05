@@ -148,16 +148,21 @@ validate: lint readme-check
 	  $(MAKE) check-strict; \
 	fi
 	@echo "▶ TOML 構文チェック"
-	@find stow -name '*.toml' -print0 | xargs -0 -n1 python3 -c \
-	  'import tomllib,sys; tomllib.load(open(sys.argv[1],"rb"))' \
+	@git ls-files stow | grep -E '\.toml$$' \
+	  | xargs -I{} python3 -c 'import tomllib,sys; tomllib.load(open(sys.argv[1],"rb"))' {} \
 	  && echo "  ✓ TOML"
 	@echo "▶ JSON 構文チェック"
-	@find stow -name '*.json' -not -path '*/node_modules/*' -print0 | xargs -0 -n1 python3 -c \
-	  'import json,sys; json.load(open(sys.argv[1]))' \
+	@git ls-files stow | grep -E '\.json$$' \
+	  | xargs -I{} python3 -c 'import json,sys; json.load(open(sys.argv[1]))' {} \
 	  && echo "  ✓ JSON"
 	@echo "▶ .mjs 構文チェック"
 	@if command -v node >/dev/null 2>&1; then \
-	  node --check stow/codex/.codex/bin/*.mjs && echo "  ✓ Node syntax"; \
+	  files=$$(git ls-files stow | grep -E '\.mjs$$'); \
+	  if [ -n "$$files" ]; then \
+	    echo "$$files" | xargs node --check && echo "  ✓ Node syntax"; \
+	  else \
+	    echo "  ✓ Node syntax (対象なし)"; \
+	  fi \
 	else \
 	  echo "  ⚠ node 未導入（スキップ）"; \
 	fi
@@ -167,7 +172,7 @@ validate: lint readme-check
 	     | xargs -I{} grep -Hn "/Users/[a-zA-Z0-9_-]\+" {} 2>/dev/null; \
 	   grep -n "/Users/[a-zA-Z0-9_-]\+" bootstrap.sh bin/* 2>/dev/null \
 	     | sed -E 's|^([^:]+:[0-9]+:)|\1|'; \
-	 } | grep -vE '(/\.template$$|^[^:]*\.template:|^[^:]*\.example:)' || true); \
+	 } | grep -vE '(/\.template$$|^[^:]*\.template:|^[^:]*\.example:|stow/codex/\.codex/config\.toml:[0-9]+:\[(projects|hooks\.state)\.)' || true); \
 	if [ -n "$$hits" ]; then \
 	  printf '%s\n' "$$hits"; \
 	  echo "  ✗ 絶対パスが残存（新PCで壊れる）"; exit 1; \

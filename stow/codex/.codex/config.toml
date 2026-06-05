@@ -160,4 +160,15 @@ terminal_title = [
 ]
 
 [tui.model_availability_nux]
-"gpt-5.5" = 1
+"gpt-5.5" = 4
+
+[projects."/Users/otake-shol/dotfiles"]
+trust_level = "trusted"
+
+[projects."/Users/otake-shol/otake-ya"]
+trust_level = "trusted"
+
+[hooks.state]
+
+[hooks.state."/Users/otake-shol/.codex/hooks.json:stop:0:0"]
+trusted_hash = "sha256:ac51d733bdc9f724fd24211acc67fd71b6a0d8692cec5c5a6acc94afa675abdf"

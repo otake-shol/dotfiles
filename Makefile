@@ -11,13 +11,12 @@ STOW_COMMON_FLAGS := -v --target=$(HOME) --dir=$(STOW_DIR) $(STOW_IGNORE_FLAGS)
 STOW_INSTALL_FLAGS := $(STOW_COMMON_FLAGS) --restow
 STOW_DELETE_FLAGS := $(STOW_COMMON_FLAGS)
 STOW_SIMULATE_FLAGS := --target=$(HOME) --dir=$(STOW_DIR) $(STOW_IGNORE_FLAGS)
-PACKAGES := zsh git nvim ghostty bat atuin claude codex yazi direnv cmux asdf cursor
-CURSOR_EXT_LIST := stow/cursor/.config/cursor/extensions.txt
+PACKAGES := zsh git nvim ghostty bat atuin claude codex yazi direnv cmux asdf
 TOOL_VERSIONS := stow/asdf/.tool-versions
 DOCTOR_LINK_DIRS := "$$HOME" "$$HOME/.config" "$$HOME/.claude" "$$HOME/.codex" "$$HOME/.docker" "$$HOME/.gnupg" "$$HOME/Library/Application Support/com.mitchellh.ghostty" "$$HOME/Library/LaunchAgents"
 SNAPSHOT_DIR := .snapshot/$(shell date +%Y%m%d-%H%M%S)
 
-.PHONY: help install uninstall check check-strict check-conflicts bootstrap lint clean install-% uninstall-% packages stats readme-check readme-sync runtimes-install versions-audit cursor-sync cursor-diff doctor doctor-plan doctor-clean-broken setup-fastlane-env validate snapshot new-mac macos-defaults
+.PHONY: help install uninstall check check-strict check-conflicts bootstrap lint clean install-% uninstall-% packages stats readme-check readme-sync runtimes-install versions-audit doctor doctor-plan doctor-clean-broken setup-fastlane-env validate snapshot new-mac macos-defaults
 
 help:
 	@echo "Usage:"
@@ -37,8 +36,6 @@ help:
 	@echo "  make readme-sync      README内の件数を実体に合わせて自動更新"
 	@echo "  make runtimes-install asdf plugin/runtime を .tool-versions から導入"
 	@echo "  make versions-audit   .tool-versions の固定バージョン確認"
-	@echo "  make cursor-sync      Cursor拡張を extensions.txt に同期"
-	@echo "  make cursor-diff      現状とリストの差分を表示（変更なし）"
 	@echo "  make setup-fastlane-env  fastlane用環境変数を対話的にセットアップ"
 	@echo "  make validate         移行可能性を機械検証（lint+readme+stow+toml+json+絶対パス）"
 	@echo "  make snapshot         現PCの状態を .snapshot/<ts>/ に記録（移行前の証拠）"
@@ -165,11 +162,9 @@ validate: lint readme-check
 	  echo "  ⚠ node 未導入（スキップ）"; \
 	fi
 	@echo "▶ 絶対パス混入チェック（ユーザー名依存）"
-	@hits=$$( { grep -rn "/Users/[a-zA-Z0-9_-]\+" stow \
-	     --include='*.toml' --include='*.json' --include='*.zsh' \
-	     --include='*.sh' --include='*.mjs' --include='*.lua' \
-	     --include='*.txt' --include='*.cfg' --include='*.conf' \
-	     2>/dev/null; \
+	@hits=$$( { git ls-files stow \
+	     | grep -E '\.(toml|json|zsh|sh|mjs|lua|txt|cfg|conf)$$' \
+	     | xargs -I{} grep -Hn "/Users/[a-zA-Z0-9_-]\+" {} 2>/dev/null; \
 	   grep -n "/Users/[a-zA-Z0-9_-]\+" bootstrap.sh bin/* 2>/dev/null \
 	     | sed -E 's|^([^:]+:[0-9]+:)|\1|'; \
 	 } | grep -vE '(/\.template$$|^[^:]*\.template:|^[^:]*\.example:)' || true); \
@@ -180,8 +175,10 @@ validate: lint readme-check
 	  echo "  ✓ 絶対パスなし（stow/, bootstrap.sh, bin/）"; \
 	fi
 	@echo "▶ Codex local-state 混入チェック"
-	@if find stow/codex/.codex \( -name installation_id -o -name 'auth.json' -o -name '*.sqlite*' -o -name 'history.jsonl' \) 2>/dev/null | grep -q .; then \
-	  echo "  ✗ local stateがStow対象に混入"; exit 1; \
+	@if git ls-files stow/codex/.codex 2>/dev/null \
+	    | grep -E '(^|/)(installation_id|auth\.json|history\.jsonl|.*\.sqlite([^/]*)?)$$' \
+	    | grep -q .; then \
+	  echo "  ✗ local stateがStow対象に混入（git管理下）"; exit 1; \
 	else \
 	  echo "  ✓ local stateなし"; \
 	fi
@@ -200,10 +197,6 @@ snapshot:
 	  brew bundle dump --file=$(SNAPSHOT_DIR)/Brewfile.actual --force --describe 2>/dev/null \
 	    && echo "  ✓ Brewfile.actual" || echo "  ⚠ brew bundle dump 失敗"; \
 	else echo "  - brew 未導入"; fi
-	@if command -v cursor >/dev/null 2>&1; then \
-	  cursor --list-extensions > $(SNAPSHOT_DIR)/cursor-extensions.txt 2>/dev/null \
-	    && echo "  ✓ cursor-extensions"; \
-	else echo "  - cursor 未導入"; fi
 	@if command -v asdf >/dev/null 2>&1; then \
 	  asdf current > $(SNAPSHOT_DIR)/asdf-current.txt 2>/dev/null \
 	    && echo "  ✓ asdf-current"; \
@@ -243,8 +236,7 @@ new-mac:
 	  "  3. make doctor                                # Stow健全性" \
 	  "  4. make validate                              # リポジトリ整合性" \
 	  "  5. make runtimes-install                      # asdf runtime（必要時のみ）" \
-	  "  6. make cursor-sync                           # Cursor拡張" \
-	  "  7. make setup-fastlane-env                    # ASC使う場合" \
+	  "  6. make setup-fastlane-env                    # ASC使う場合" \
 	  "" \
 	  "▶ 手動セットアップ（dotfiles外）" \
 	  "" \
@@ -395,22 +387,3 @@ versions-audit:
 		fi; \
 	done < "$$tool_versions"
 
-cursor-diff:
-	@command -v cursor >/dev/null 2>&1 || { echo "❌ cursor CLI not found"; exit 1; }
-	@desired=$$(grep -vE '^[[:space:]]*(#|$$)' $(CURSOR_EXT_LIST) | tr '[:upper:]' '[:lower:]' | sort -u); \
-	 current=$$(cursor --list-extensions 2>/dev/null | tr '[:upper:]' '[:lower:]' | sort -u); \
-	 echo "=== 追加予定 (リストにあるが未インストール) ==="; \
-	 comm -23 <(echo "$$desired") <(echo "$$current") | sed 's/^/  + /'; \
-	 echo "=== 削除予定 (インストール済みだがリスト外) ==="; \
-	 comm -13 <(echo "$$desired") <(echo "$$current") | sed 's/^/  - /'
-
-cursor-sync:
-	@command -v cursor >/dev/null 2>&1 || { echo "❌ cursor CLI not found"; exit 1; }
-	@echo "▶ Cursor拡張を同期中..."
-	@desired=$$(grep -vE '^[[:space:]]*(#|$$)' $(CURSOR_EXT_LIST) | tr '[:upper:]' '[:lower:]' | sort -u); \
-	 current=$$(cursor --list-extensions 2>/dev/null | tr '[:upper:]' '[:lower:]' | sort -u); \
-	 to_install=$$(comm -23 <(echo "$$desired") <(echo "$$current")); \
-	 to_remove=$$(comm -13 <(echo "$$desired") <(echo "$$current")); \
-	 for ext in $$to_install; do echo "  + $$ext"; cursor --install-extension "$$ext" >/dev/null; done; \
-	 for ext in $$to_remove; do echo "  - $$ext"; cursor --uninstall-extension "$$ext" >/dev/null; done
-	@echo "✓ 同期完了 ($$(cursor --list-extensions 2>/dev/null | wc -l | tr -d ' ') extensions installed)"

@@ -72,6 +72,15 @@ run defaults write -g AppleActionOnDoubleClick -string "Maximize"
 # バッテリー残量を%表示（新macOSはControl Center管理・-currentHost配下）
 run defaults -currentHost write com.apple.controlcenter BatteryShowPercentage -bool true
 
+# --- ランチャー（Raycast を ⌘+Space、Spotlight を Ctrl+Space に） ---
+# Spotlight 検索フィールド (symbolichotkeys id 64) を Ctrl+Space に変更。
+# parameters = (charCode 32=space, keyCode 49=space, modifier 262144=control)
+run defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 64 \
+    "{enabled = 1; value = { parameters = (32, 49, 262144); type = 'standard'; }; }"
+# Raycast グローバルホットキーを ⌘+Space に（49=space keyCode）。
+# Raycast 未インストールでも defaults 書き込みは無害、インストール時に反映される。
+run defaults write com.raycast.macos raycastGlobalHotkey -string "Command-49"
+
 # --- セキュリティ・プライバシー ---
 run defaults write com.apple.screensaver askForPassword -int 1
 run defaults write com.apple.screensaver askForPasswordDelay -int 0

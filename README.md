@@ -59,6 +59,7 @@ make cursor-sync           # Cursor拡張をリストに合わせる場合
 - `codex login`
 - `tailscale up`
 - `p10k configure`（プロンプト初期化）
+- **Chrome 縦タブ**: `chrome://flags` → "vertical" 検索 → Vertical Tabs を **Enabled** → 再起動（flagsはGoogle同期対象外のため手動設定が必要）
 
 #### 移行直後の確認
 
@@ -97,7 +98,7 @@ dotfiles/
 graph TB
     subgraph bootstrap["bootstrap.sh（ワンコマンドセットアップ）"]
         B1[Homebrew]
-        B1 --> B2[Brewfile 55パッケージ]
+        B1 --> B2[Brewfile 56パッケージ]
         B2 --> B3[GNU Stow シンボリックリンク]
         B3 --> B4[Oh My Zsh + プラグイン]
         B4 --> B5[macOS設定]

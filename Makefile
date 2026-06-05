@@ -253,7 +253,6 @@ new-mac:
 	  "  - gh auth login" \
 	  "  - claude login" \
 	  "  - codex login" \
-	  "  - tailscale up" \
 	  "  - p10k configure                              # プロンプト初期化" \
 	  "" \
 	  "▶ 移行直後の確認" \

@@ -57,7 +57,6 @@ make cursor-sync           # Cursor拡張をリストに合わせる場合
 - `gh auth login`
 - `claude login`
 - `codex login`
-- `tailscale up`
 - `p10k configure`（プロンプト初期化）
 - **Chrome 縦タブ**: `chrome://flags` → "vertical" 検索 → Vertical Tabs を **Enabled** → 再起動（flagsはGoogle同期対象外のため手動設定が必要）
 
@@ -98,7 +97,7 @@ dotfiles/
 graph TB
     subgraph bootstrap["bootstrap.sh（ワンコマンドセットアップ）"]
         B1[Homebrew]
-        B1 --> B2[Brewfile 56パッケージ]
+        B1 --> B2[Brewfile 54パッケージ]
         B2 --> B3[GNU Stow シンボリックリンク]
         B3 --> B4[Oh My Zsh + プラグイン]
         B4 --> B5[macOS設定]
@@ -135,7 +134,7 @@ graph TB
 
 | パッケージ | 説明 | 主要ファイル |
 |-----------|------|-------------|
-| **zsh** | シェル設定（モジュール分割・遅延読み込み・68エイリアス・OMZ 6プラグイン） | `.zshrc`, `.zsh/{core,plugins,lazy,tools}.zsh` |
+| **zsh** | シェル設定（モジュール分割・遅延読み込み・67エイリアス・OMZ 6プラグイン） | `.zshrc`, `.zsh/{core,plugins,lazy,tools}.zsh` |
 | **git** | Git設定（28エイリアス・delta・git-secrets 8パターン） | `.gitconfig`, `.gitignore_global`, `.commit-template.txt`, `.editorconfig` |
 | **claude** | Claude Code（3 hookスクリプト・9コマンド・権限制御） | `.claude/settings.json`, `hooks/`, `commands/` |
 | **codex** | Codex CLI（config・AGENTS・hook・MCP） | `.codex/config.toml`, `.codex/AGENTS.md`, `.codex/hooks/` |

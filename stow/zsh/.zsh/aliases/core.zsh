@@ -114,7 +114,6 @@ alias df="df -h"                     # ディスク空き容量(human-readable)
 alias du="du -sh"                    # ディスク使用量(summary)
 alias top="btop"                     # モダンなシステムモニター
 alias ports="lsof -i -P | grep LISTEN"
-alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 
 # ========================================
 # その他

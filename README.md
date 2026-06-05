@@ -47,7 +47,6 @@ make doctor
 make validate              # リポジトリ整合性（絶対パス・local state・TOML/JSON 等）
 make setup-fastlane-env    # App Store Connect / fastlane を使う場合
 make runtimes-install      # Java/Node/Python/Terraform が必要になった時点で実行
-make cursor-sync           # Cursor拡張をリストに合わせる場合
 ```
 
 #### 手動（dotfiles外）
@@ -71,14 +70,13 @@ make cursor-sync           # Cursor拡張をリストに合わせる場合
 
 ```
 dotfiles/
-├── stow/                  # GNU Stowパッケージ（13個）
+├── stow/                  # GNU Stowパッケージ（12個）
 │   ├── asdf/
 │   ├── atuin/
 │   ├── bat/
 │   ├── claude/
 │   ├── codex/
 │   ├── cmux/
-│   ├── cursor/
 │   ├── direnv/
 │   ├── ghostty/
 │   ├── git/
@@ -103,7 +101,7 @@ graph TB
         B4 --> B5[macOS設定]
     end
 
-    subgraph stow["stow/ — 13パッケージ"]
+    subgraph stow["stow/ — 12パッケージ"]
         S1[zsh]
         S2[git]
         S3[claude]
@@ -116,7 +114,6 @@ graph TB
         S10[atuin]
         S11[direnv]
         S12[asdf]
-        S13[cursor]
     end
 
     subgraph shell["zshモジュール読み込み順"]
@@ -146,7 +143,6 @@ graph TB
 | **atuin** | SQLite履歴検索（ファジー・シークレットフィルタ） | `.config/atuin/config.toml` |
 | **direnv** | ディレクトリ別環境変数（.env自動読み込み） | `.config/direnv/direnv.toml` |
 | **asdf** | バージョン管理（Java/Node/Python/Terraform固定） | `.tool-versions` |
-| **cursor** | Cursor拡張リスト管理 | `.config/cursor/extensions.txt` |
 
 ## シェル起動パフォーマンス
 
@@ -171,8 +167,6 @@ make stats             # Stow/Brewfile件数を表示
 make readme-check      # README内の件数が実体と一致するか確認
 make runtimes-install  # asdf plugin/runtime を .tool-versions から導入
 make versions-audit    # .tool-versions の固定バージョン確認
-make cursor-diff       # Cursor拡張の差分表示
-make cursor-sync       # Cursor拡張を extensions.txt に同期
 make setup-fastlane-env  # fastlane/App Store Connect env を対話設定
 make validate          # 移行可能性を機械検証（lint+readme+stow+toml+json+絶対パス）
 make snapshot          # 現PCの状態を .snapshot/<ts>/ に記録

@@ -68,6 +68,10 @@ run defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -
 run defaults write -g AppleShowScrollBars -string "Always"
 run defaults write -g AppleActionOnDoubleClick -string "Maximize"
 
+# --- Control Center / メニューバー ---
+# バッテリー残量を%表示（新macOSはControl Center管理・-currentHost配下）
+run defaults -currentHost write com.apple.controlcenter BatteryShowPercentage -bool true
+
 # --- セキュリティ・プライバシー ---
 run defaults write com.apple.screensaver askForPassword -int 1
 run defaults write com.apple.screensaver askForPasswordDelay -int 0
@@ -78,6 +82,7 @@ run defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 if [ "$DRY_RUN" = false ]; then
     killall Dock 2>/dev/null || true
     killall Finder 2>/dev/null || true
+    killall ControlCenter 2>/dev/null || true
 fi
 
 echo "✓ macOS defaults 適用完了"

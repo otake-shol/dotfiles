@@ -11,7 +11,7 @@ STOW_COMMON_FLAGS := -v --target=$(HOME) --dir=$(STOW_DIR) $(STOW_IGNORE_FLAGS)
 STOW_INSTALL_FLAGS := $(STOW_COMMON_FLAGS) --restow
 STOW_DELETE_FLAGS := $(STOW_COMMON_FLAGS)
 STOW_SIMULATE_FLAGS := --target=$(HOME) --dir=$(STOW_DIR) $(STOW_IGNORE_FLAGS)
-PACKAGES := zsh git nvim ghostty bat atuin claude codex yazi direnv cmux asdf
+PACKAGES := zsh git nvim ghostty bat atuin claude codex yazi direnv cmux asdf ssh
 TOOL_VERSIONS := stow/asdf/.tool-versions
 DOCTOR_LINK_DIRS := "$$HOME" "$$HOME/.config" "$$HOME/.claude" "$$HOME/.codex" "$$HOME/.docker" "$$HOME/.gnupg" "$$HOME/Library/Application Support/com.mitchellh.ghostty" "$$HOME/Library/LaunchAgents"
 SNAPSHOT_DIR := .snapshot/$(shell date +%Y%m%d-%H%M%S)

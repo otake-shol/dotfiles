@@ -1,0 +1,7 @@
+# SSH local state（端末固有・機密）は Stow 対象外
+\.ssh/known_hosts$
+\.ssh/known_hosts\.old$
+\.ssh/sockets(/.*)?$
+\.ssh/id_.*$
+\.ssh/.*\.pub$
+\.ssh/authorized_keys$

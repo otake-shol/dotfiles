@@ -70,7 +70,7 @@ make runtimes-install      # Java/Node/Python/Terraform が必要になった時
 
 ```
 dotfiles/
-├── stow/                  # GNU Stowパッケージ（12個）
+├── stow/                  # GNU Stowパッケージ（13個）
 │   ├── asdf/
 │   ├── atuin/
 │   ├── bat/

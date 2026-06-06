@@ -135,6 +135,7 @@
   "language": "日本語",
   "alwaysThinkingEnabled": true,
   "tui": "fullscreen",
-  "skipAutoPermissionPrompt": true,
-  "agentPushNotifEnabled": true
+  "theme": "dark",
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true
 }

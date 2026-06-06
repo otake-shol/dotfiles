@@ -53,6 +53,8 @@ stow/codex/.codex/skills/
 stow/codex/.codex/state/
 stow/codex/.codex/tmp/
 stow/codex/.codex/*.sqlite*
+stow/codex/.codex/generated_images/
+stow/codex/.codex/rules/
 
 # MCP auto-generated
 .playwright-mcp/

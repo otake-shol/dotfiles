@@ -15,6 +15,8 @@ PACKAGES := zsh git nvim ghostty bat atuin claude codex yazi direnv cmux asdf ss
 TOOL_VERSIONS := stow/asdf/.tool-versions
 DOCTOR_LINK_DIRS := "$$HOME" "$$HOME/.config" "$$HOME/.claude" "$$HOME/.codex" "$$HOME/.docker" "$$HOME/.gnupg" "$$HOME/Library/Application Support/com.mitchellh.ghostty" "$$HOME/Library/LaunchAgents"
 SNAPSHOT_DIR := .snapshot/$(shell date +%Y%m%d-%H%M%S)
+# tomllib (Python 3.11+) が使える python を検出。macOSのシステムpython3は3.9なのでbrewのpython@3.xを優先。
+TOML_PYTHON := $(shell for p in python3.14 python3.13 python3.12 python3.11 python3; do if command -v $$p >/dev/null 2>&1 && $$p -c 'import tomllib' >/dev/null 2>&1; then echo $$p; break; fi; done)
 
 .PHONY: help install uninstall check check-strict check-conflicts bootstrap lint clean install-% uninstall-% packages stats readme-check readme-sync runtimes-install versions-audit doctor doctor-plan doctor-clean-broken setup-fastlane-env validate snapshot new-mac macos-defaults
 
@@ -148,9 +150,13 @@ validate: lint readme-check
 	  $(MAKE) check-strict; \
 	fi
 	@echo "▶ TOML 構文チェック"
-	@git ls-files stow | grep -E '\.toml$$' \
-	  | xargs -I{} python3 -c 'import tomllib,sys; tomllib.load(open(sys.argv[1],"rb"))' {} \
-	  && echo "  ✓ TOML"
+	@if [ -z "$(TOML_PYTHON)" ]; then \
+	  echo "  ⚠ tomllib対応python (3.11+) が見つからず（スキップ）"; \
+	else \
+	  git ls-files stow | grep -E '\.toml$$' \
+	    | xargs -I{} $(TOML_PYTHON) -c 'import tomllib,sys; tomllib.load(open(sys.argv[1],"rb"))' {} \
+	    && echo "  ✓ TOML"; \
+	fi
 	@echo "▶ JSON 構文チェック"
 	@git ls-files stow | grep -E '\.json$$' \
 	  | xargs -I{} python3 -c 'import json,sys; json.load(open(sys.argv[1]))' {} \

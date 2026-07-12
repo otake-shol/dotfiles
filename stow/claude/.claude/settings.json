@@ -67,7 +67,6 @@
     "defaultMode": "auto",
     "disableBypassPermissionsMode": "disable"
   },
-  "model": "opus[1m]",
   "enableAllProjectMcpServers": false,
   "hooks": {
     "PreToolUse": [],
@@ -129,12 +128,13 @@
     "padding": 0
   },
   "enabledPlugins": {
-    "claude-mem@thedotmack": true,
-    "superpowers@superpowers-marketplace": true
+    "vercel@claude-plugins-official": true
   },
   "language": "日本語",
   "alwaysThinkingEnabled": true,
+  "effortLevel": "xhigh",
   "tui": "fullscreen",
+  "skipWorkflowUsageWarning": true,
   "theme": "dark",
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true

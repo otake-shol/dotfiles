@@ -35,6 +35,15 @@ stow/claude/.claude/telemetry/
 stow/claude/.claude/plugins/installed_plugins.json
 stow/claude/.claude/plugins/known_marketplaces.json
 stow/claude/.claude/plugins/marketplaces/
+stow/claude/.claude/plugins/cache/
+stow/claude/.claude/plugins/data/
+stow/claude/.claude/plugins/.last_inuse_sweep
+stow/claude/.claude/paste-cache/
+stow/claude/.claude/plans/
+stow/claude/.claude/session-env/
+stow/claude/.claude/stats-cache.json
+stow/claude/.claude/scheduled_tasks.lock
+stow/claude/.claude/teams/
 
 # Codex runtime state generated when validating the stow package
 stow/codex/.codex/installation_id

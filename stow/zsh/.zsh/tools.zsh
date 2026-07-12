@@ -39,6 +39,8 @@ fi
 # --- zoxide ---
 # --cmd cd: cdコマンドをzoxideに置き換え（公式推奨オプション）
 # 使い方: cd foo（スマートジャンプ）, cdi foo（fzf選択）, builtin cd（純粋なcd）
+# _ZO_DOCTOR=0: initがキャッシュ経由かつ.zshrc末尾でないため出るdoctor警告を抑止
+export _ZO_DOCTOR=0
 if command -v zoxide &>/dev/null; then
   _zoxide_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zoxide-init-cd.zsh"
   if ! _cache_valid "$_zoxide_cache"; then

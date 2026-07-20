@@ -95,7 +95,7 @@ dotfiles/
 graph TB
     subgraph bootstrap["bootstrap.sh（ワンコマンドセットアップ）"]
         B1[Homebrew]
-        B1 --> B2[Brewfile 55パッケージ]
+        B1 --> B2[Brewfile 56パッケージ]
         B2 --> B3[GNU Stow シンボリックリンク]
         B3 --> B4[Oh My Zsh + プラグイン]
         B4 --> B5[macOS設定]
@@ -219,14 +219,35 @@ cls                    # セッション一覧
 ## Codex
 
 ```bash
-codex                  # 対話セッション開始
-codex -p fast          # 軽量プロファイル
-codex -p deep          # 高推論プロファイル
+codex                  # Terra / medium（通常運転）
+codex -p fast          # Luna / low（軽量・高頻度）
+codex -p review        # Sol / high（高精度レビュー）
+codex -p deep          # Sol / xhigh（難問専用）
+codex -p research      # GPT-5.5 / medium（研究系の比較用）
+codex -p spark         # Codex-Spark / low（最小遅延の手動利用）
 codex review           # 非対話コードレビュー
 cxcp                   # 変更確認→検証→commit→push をCodexに依頼
 codex-commit-push "feat: ..."  # deterministicなcommit+push
 codex-commit-push "fix: ..." README.md Makefile  # 指定ファイルだけcommit+push
 ~/.codex/hooks/verify.sh .  # 手動検証
+```
+
+通常セッションは Terra を使い、必要な場合だけ custom agent へ委譲する。
+
+| agent | model | 用途 |
+|---|---|---|
+| `explorer` | GPT-5.6 Luna / low | 大量ファイル・ログのread-only探索 |
+| `worker` | GPT-5.6 Terra / medium | 独立した限定実装 |
+| `expert` | GPT-5.6 Sol / high | 難しい設計・デバッグ・高リスク判断 |
+| `reviewer` | GPT-5.6 Sol / high | セキュリティ・並行性・永続化・互換性レビュー |
+
+`gpt-5.5` と Codex-Spark は自動ルーティングせず、比較や最小遅延が必要なときだけ明示的に選ぶ。subagentは最大2体、再帰なしに制限する。
+
+`codex exec --json` のトークン使用量は次のように集計できる。複数の試行ログを渡すと、テスト成功までの累計トークン（Tokens-to-Green）を比較しやすい。
+
+```bash
+codex exec -p fast --ephemeral --json "リポジトリ構造を要約" > /tmp/codex-fast.jsonl
+~/.codex/bin/model-usage.sh /tmp/codex-fast.jsonl
 ```
 
 設定: `stow/codex/.codex/config.toml`、グローバル指示: `stow/codex/.codex/AGENTS.md`

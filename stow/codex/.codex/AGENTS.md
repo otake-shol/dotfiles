@@ -14,6 +14,17 @@
 - Do not revert user changes unless explicitly asked.
 - When a task changes code, run the narrowest useful verification before finishing.
 
+## Model Routing
+
+- Keep routine, clear, single-component work in the main agent; do not delegate it.
+- Codex should use the `explorer` agent for read-only scans spanning many files, large logs, or other noisy evidence that can be summarized compactly.
+- Codex should use the `worker` agent only for an independent, bounded implementation that can run in parallel with different main-agent work.
+- Codex should use the `expert` agent for security, data-loss, concurrency, or migration risk, or when at least two of these apply: ambiguous requirements, three or more affected components, multiple plausible root causes, or one failed implementation attempt.
+- Codex should use the `reviewer` agent after a non-trivial change only when correctness risk is elevated, such as security, concurrency, persistence, compatibility, or a public API contract.
+- Use at most two subagents per task. Do not delegate recursively, assign duplicate work, or repeat a completed scan without a concrete evidence gap.
+- Ask subagents for evidence-based summaries under 800 tokens. Keep raw logs and broad exploration out of the main thread.
+- `gpt-5.5` and Codex-Spark are manual comparison profiles; do not route to them automatically without representative eval evidence.
+
 ## Safety
 
 - Do not read or write `.env`, `*credentials*`, `*.key`, or files under `~/.ssh/`.

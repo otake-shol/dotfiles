@@ -1,15 +1,26 @@
 approval_policy = "on-request"
-model = "gpt-5.5"
+approvals_reviewer = "auto_review"
+model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
-model_verbosity = "medium"
+model_verbosity = "low"
+personality = "pragmatic"
+sandbox_mode = "workspace-write"
+web_search = "cached"
+
+# notify は computer-use プラグインが端末固有の絶対パスへ書き換えることがある。
+# コミット時はポータブルな notify.sh に戻す（プラグインは初回起動時に必要なら再設定する）。
 notify = [
     "bash",
     "-lc",
     "~/.codex/hooks/notify.sh",
 ]
-personality = "pragmatic"
-sandbox_mode = "workspace-write"
-web_search = "cached"
+
+[sandbox_workspace_write]
+network_access = true
+
+[agents]
+max_depth = 1
+max_threads = 3
 
 [apps._default]
 destructive_enabled = false
@@ -18,13 +29,12 @@ open_world_enabled = false
 
 [features]
 hooks = true
+js_repl = false
 
 [mcp_servers.app-store-connect-review]
 command = "~/.codex/bin/app-store-connect-review-mcp.mjs"
-enabled = true
-required = false
-startup_timeout_sec = 20
-tool_timeout_sec = 120
+startup_timeout_sec = 20.0
+tool_timeout_sec = 120.0
 
 [mcp_servers.app-store-connect-review.tools.asc_create_app_store_review_attachment]
 approval_mode = "approve"
@@ -42,26 +52,21 @@ approval_mode = "approve"
 approval_mode = "approve"
 
 [mcp_servers.context7]
-args = ["@upstash/context7-mcp@latest"]
 command = "npx"
-enabled = true
-required = false
-startup_timeout_sec = 20
-tool_timeout_sec = 60
+args = ["@upstash/context7-mcp@latest"]
+startup_timeout_sec = 20.0
+tool_timeout_sec = 60.0
 
 [mcp_servers.github]
+url = "https://api.githubcopilot.com/mcp/"
 bearer_token_env_var = "CODEX_GITHUB_PERSONAL_ACCESS_TOKEN"
 enabled = false
-required = false
-url = "https://api.githubcopilot.com/mcp/"
 
 [mcp_servers.hourei]
-args = ["hourei-mcp-server"]
 command = "npx"
-enabled = true
-required = false
-startup_timeout_sec = 20
-tool_timeout_sec = 60
+args = ["hourei-mcp-server"]
+startup_timeout_sec = 20.0
+tool_timeout_sec = 60.0
 
 [mcp_servers.hourei.tools.get_law_data]
 approval_mode = "approve"
@@ -70,17 +75,17 @@ approval_mode = "approve"
 approval_mode = "approve"
 
 [mcp_servers.mf-ca]
-enabled = false
-required = false
 url = "https://beta.mcp.developers.biz.moneyforward.com/mcp/ca/v3"
+enabled = false
 
 [mcp_servers.playwright]
-args = ["@playwright/mcp@latest"]
 command = "npx"
-enabled = true
-required = false
-startup_timeout_sec = 20
-tool_timeout_sec = 120
+args = ["@playwright/mcp@latest"]
+startup_timeout_sec = 20.0
+tool_timeout_sec = 120.0
+
+[mcp_servers.playwright.tools.browser_click]
+approval_mode = "approve"
 
 [mcp_servers.playwright.tools.browser_close]
 approval_mode = "approve"
@@ -100,29 +105,44 @@ approval_mode = "approve"
 [mcp_servers.playwright.tools.browser_tabs]
 approval_mode = "approve"
 
+[mcp_servers.playwright.tools.browser_type]
+approval_mode = "approve"
+
 [mcp_servers.tax-law]
-args = ["tax-law-mcp"]
 command = "npx"
-enabled = true
-required = false
-startup_timeout_sec = 20
-tool_timeout_sec = 60
+args = ["tax-law-mcp"]
+startup_timeout_sec = 20.0
+tool_timeout_sec = 60.0
 
-[profiles.deep]
-model = "gpt-5.5"
-model_reasoning_effort = "xhigh"
-model_verbosity = "medium"
+[mcp_servers.node_repl]
+args = []
+command = "/Applications/Codex.app/Contents/Resources/cua_node/bin/node_repl"
+startup_timeout_sec = 120
 
-[profiles.fast]
-model = "gpt-5.4-mini"
-model_reasoning_effort = "low"
-model_verbosity = "low"
+[mcp_servers.node_repl.env]
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = "/Applications/Codex.app/Contents/Resources/cua_node/lib/node_modules"
+NODE_REPL_NODE_PATH = "/Applications/Codex.app/Contents/Resources/cua_node/bin/node"
+NODE_REPL_TRUSTED_CODE_PATHS = "/Users/otake-shol/.codex"
+CODEX_HOME = "/Users/otake-shol/.codex"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "330cfa6875d3acd34ed3d321d03e97c0dd9ee3c1855467f2600215089f2d8279,6d25aa7656feac858f3a3bdaea5bcbab0dbfd426c9de8e6931ce90c399ee8e4f"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
+NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = "Control desktop apps on macOS through Computer Use."
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.715.31251"
+SKY_CUA_SERVICE_PATH = "/Users/otake-shol/.codex/plugins/cache/openai-bundled/computer-use/1.0.1000451/Codex Computer Use.app"
+CODEX_CLI_PATH = "/Applications/Codex.app/Contents/Resources/codex"
 
-[profiles.review]
-approval_policy = "on-request"
-model = "gpt-5.5"
-model_reasoning_effort = "high"
-model_verbosity = "medium"
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"
+
+[mcp_servers.computer-use]
+command = "./Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient"
+args = ["mcp"]
+cwd = "."
+enabled = false
 
 [shell_environment_policy]
 exclude = [
@@ -136,6 +156,9 @@ inherit = "core"
 
 [shell_environment_policy.set]
 CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "330cfa6875d3acd34ed3d321d03e97c0dd9ee3c1855467f2600215089f2d8279,6d25aa7656feac858f3a3bdaea5bcbab0dbfd426c9de8e6931ce90c399ee8e4f"
+NODE_REPL_TRUSTED_CODE_PATHS = "/Users/otake-shol/.codex"
 
 [tui]
 alternate_screen = "auto"
@@ -161,6 +184,7 @@ terminal_title = [
 
 [tui.model_availability_nux]
 "gpt-5.5" = 4
+"gpt-5.6-sol" = 4
 
 [projects."/Users/otake-shol/dotfiles"]
 trust_level = "trusted"
@@ -171,7 +195,98 @@ trust_level = "trusted"
 [projects."/Users/otake-shol/Library/Mobile Documents/iCloud~md~obsidian/Documents"]
 trust_level = "trusted"
 
+[projects."/Users/otake-shol/01_development/ai-dev-flow"]
+trust_level = "trusted"
+
+[projects."/Users/otake-shol/otake-ya/projects/mobile/exam-apps/shoubou-otsu6-app"]
+trust_level = "trusted"
+
+[projects."/Users/otake-shol/01_development/ai-ops-flow"]
+trust_level = "trusted"
+
+[projects."/Users/otake-shol/otake-ya/projects/mobile/exam-apps/shindanshi-app"]
+trust_level = "trusted"
+
+[projects."/Users/otake-shol/otake-ya/projects/web/my-portfolio"]
+trust_level = "trusted"
+
+[projects."/Users/otake-shol/01_development/engineering-leadership"]
+trust_level = "trusted"
+
+[projects."/Users/otake-shol/otake-ya/projects/web/catchup-studio"]
+trust_level = "trusted"
+
+[projects."/Users/otake-shol/otake-ya/projects/mobile/exam-apps/web-marketing-coreq-app"]
+trust_level = "trusted"
+
+[projects."/Users/otake-shol/otake-ya/projects/mobile/exam-apps/enekan-app"]
+trust_level = "trusted"
+
+[projects."/Users/otake-shol/otake-ya/projects/mobile/exam-apps/denken2-app"]
+trust_level = "trusted"
+
+[projects."/Users/otake-shol/otake-ya/projects/mobile/exam-apps/fp2-app"]
+trust_level = "trusted"
+
+[projects."/Users/otake-shol/otake-ya/projects/web/desk-goods-rank"]
+trust_level = "trusted"
+
+[projects."/Users/otake-shol/otake-ya/projects/mobile/exam-apps/denken3-app"]
+trust_level = "trusted"
+
 [hooks.state]
 
 [hooks.state."/Users/otake-shol/.codex/hooks.json:stop:0:0"]
 trusted_hash = "sha256:ac51d733bdc9f724fd24211acc67fd71b6a0d8692cec5c5a6acc94afa675abdf"
+
+[marketplaces.openai-bundled]
+last_updated = "2026-07-18T02:53:01Z"
+source_type = "local"
+source = "/Users/otake-shol/dotfiles/stow/codex/.codex/.tmp/bundled-marketplaces/openai-bundled"
+
+[marketplaces.openai-primary-runtime]
+last_updated = "2026-07-18T02:58:11Z"
+source_type = "local"
+source = "/Users/otake-shol/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."chrome@openai-bundled"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+
+[plugins."computer-use@openai-bundled"]
+enabled = true
+
+[plugins."template-creator@openai-primary-runtime"]
+enabled = true
+
+[plugins."sites@openai-bundled"]
+enabled = true
+
+[plugins."visualize@openai-bundled"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[desktop]
+keepRemoteControlAwakeWhilePluggedIn = true
+git-show-sidebar-pr-icons = true
+git-pull-request-merge-method = "squash"
+git-always-force-push = true
+appearanceTheme = "dark"
+dock-icon-preference = "codex-system"
+followUpQueueMode = "queue"
+
+[notice.model_migrations]
+"gpt-5.4" = "gpt-5.5"

@@ -64,6 +64,19 @@ stow/codex/.codex/tmp/
 stow/codex/.codex/*.sqlite*
 stow/codex/.codex/generated_images/
 stow/codex/.codex/rules/
+stow/codex/.codex/.app-server-state-reconciled-v1
+stow/codex/.codex/.codex-global-state.json
+stow/codex/.codex/.codex-global-state.json.bak
+stow/codex/.codex/.tmp/
+stow/codex/.codex/chrome-native-hosts-v2.json
+stow/codex/.codex/claude-cowork-import-history.json
+stow/codex/.codex/computer-use/
+stow/codex/.codex/external_agent_session_imports.json
+stow/codex/.codex/mcp-oauth-locks/
+stow/codex/.codex/plugins/
+stow/codex/.codex/session_index.jsonl
+stow/codex/.codex/sqlite/
+stow/codex/.codex/vendor_imports/
 
 # MCP auto-generated
 .playwright-mcp/

@@ -40,6 +40,7 @@ brew "tree"                        # ディレクトリツリー表示
 brew "stow"                        # dotfilesシンボリックリンク管理
 brew "shellcheck"                  # シェルスクリプトlinter(make lint)
 brew "fastlane"                    # iOS/Android リリース自動化(App Store Connect連携)
+brew "mas"                         # Mac App Store CLI(LINE等のApp Store製アプリ導入)
 
 # Optional CLI Tools
 # ========================================
@@ -81,6 +82,7 @@ cask "readdle-spark"               # メールクライアント
 cask "ticktick"                    # ToDoリスト+ポモドーロ
 cask "obsidian"                    # Markdownナレッジベース(Vault設定は別管理)
 cask "slack"                       # チームコミュニケーション
+mas "LINE", id: 539883307          # メッセージング(個人/家族・Mac App Store版・要mas)
 
 # --- デザイン・開発 ---
 cask "figma"                       # デザイン+プロトタイピング

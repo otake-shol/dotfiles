@@ -449,11 +449,6 @@ if command -v claude &>/dev/null; then
         if command -v gws &>/dev/null; then
             add_mcp_server gws     -- gws mcp -s all
         fi
-
-        # プラグイン
-        claude /plugin marketplace add obra/superpowers-marketplace 2>/dev/null || true
-        claude /plugin install superpowers@superpowers-marketplace 2>/dev/null || true
-        echo -e "${GREEN}✓ プラグイン${NC}"
     fi
 else
     echo -e "${CYAN}スキップ（Claude Code未インストール）${NC}"

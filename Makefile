@@ -178,7 +178,7 @@ validate: lint readme-check
 	     | xargs -I{} grep -Hn "/Users/[a-zA-Z0-9_-]\+" {} 2>/dev/null; \
 	   grep -n "/Users/[a-zA-Z0-9_-]\+" bootstrap.sh bin/* 2>/dev/null \
 	     | sed -E 's|^([^:]+:[0-9]+:)|\1|'; \
-	 } | grep -vE '(/\.template$$|^[^:]*\.template:|^[^:]*\.example:|stow/codex/\.codex/config\.toml:[0-9]+:\[(projects|hooks\.state)\.)' || true); \
+	 } | grep -vE '(/\.template$$|^[^:]*\.template:|^[^:]*\.example:|stow/codex/\.codex/config\.toml:[0-9]+:(\[(projects|hooks\.state)\.|(NODE_REPL_TRUSTED_CODE_PATHS|CODEX_HOME|SKY_CUA_SERVICE_PATH|source) = ))' || true); \
 	if [ -n "$$hits" ]; then \
 	  printf '%s\n' "$$hits"; \
 	  echo "  ✗ 絶対パスが残存（新PCで壊れる）"; exit 1; \

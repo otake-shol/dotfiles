@@ -29,8 +29,10 @@
       "Read(**/.env.*)",
       "Read(**/credentials*)",
       "Read(**/*secret*)",
+      "Bash(cat *.env*)",
       "Bash(rm -rf *)",
       "Bash(rm -r *)",
+      "Bash(rm -fr *)",
       "Bash(curl * | sh)",
       "Bash(curl * | bash)",
       "Bash(wget * | sh)",
@@ -67,6 +69,7 @@
     "defaultMode": "auto",
     "disableBypassPermissionsMode": "disable"
   },
+  "model": "claude-fable-5",
   "enableAllProjectMcpServers": false,
   "hooks": {
     "PreToolUse": [],

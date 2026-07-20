@@ -56,5 +56,15 @@
 - **thinking は output トークンとして課金**される。コスト優先のセッションは `/effort low〜medium` に落とす
 - **fast mode（`/fast`）は Opus のみ・料金2倍**。ライブデバッグ等の対話作業向け。バッチ・長時間タスクでは使わない。セッション途中で ON にすると履歴分も fast 料金になるため、使うなら開始時に
 - **prompt cache は 5分 TTL**。5分以上放置して再開すると全コンテキスト再読み込み（cache write は 1.25x、cache read は 0.1x）。長い CLAUDE.md や巨大コンテキストほど再開コストが増える
-- サブエージェントは frontmatter `model: haiku` で軽量化できる。読み取り・検証・分類系は haiku で十分（`~/.claude/agents/explore-lite` を活用）
 - 料金の目安（input/output per MTok）: Opus 4.8 $5/$25、Sonnet 5 $3/$15、Haiku 4.5 $1/$5
+
+### 委譲ルーティング（サブエージェントでモデルを使い分ける）
+
+メイン（opus/fable）は設計・判断・レビュー・横断デバッグに専念し、下位モデルで足りるタスクは委譲する:
+
+- 単純な探索・grep・設定値確認・内容要約 → `explore-lite`（haiku）
+- テスト/Lint/型チェックの実行と結果報告 → `verify-lite`（haiku）
+- 仕様が確定した実装・機械的リファクタ・仕様どおりのテスト追加 → `coder-std`（sonnet）。Goal / Constraints / Acceptance Criteria を明示して渡す
+- 曖昧な要件・設計判断・原因不明のデバッグは委譲しない（メインで実施）
+- ビルトインエージェント（Explore 等）を使う場合も、軽いタスクなら Agent 呼び出しの model パラメータで haiku/sonnet を指定してよい
+- 「乱用をやめる」原則との整合: 委譲するのは上記カテゴリに明確に該当するときのみ。判断に迷うならメインでやる

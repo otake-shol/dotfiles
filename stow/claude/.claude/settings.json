@@ -69,7 +69,7 @@
     "defaultMode": "auto",
     "disableBypassPermissionsMode": "disable"
   },
-  "model": "claude-fable-5",
+  "model": "opus[1m]",
   "enableAllProjectMcpServers": false,
   "hooks": {
     "PreToolUse": [],
@@ -128,7 +128,8 @@
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.sh",
-    "padding": 0
+    "padding": 0,
+    "refreshInterval": 30
   },
   "enabledPlugins": {
     "vercel@claude-plugins-official": true

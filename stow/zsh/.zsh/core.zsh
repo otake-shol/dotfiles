@@ -228,6 +228,40 @@ if [[ "$OSTYPE" == darwin* ]] && [[ -t 1 ]] && [[ -z "$CAFFEINATE_SHELL" ]] && [
     _caffeinate_watch $$ &!
 fi
 
+# --- iCloud等の同期フォルダからの claude/codex 起動を安全化するラッパー ---
+# iCloud/Google Drive 等（FileProvider管理）を CWD にして起動すると、起動時の
+# Seatbelt サンドボックス初期化が EPERM で落ちる既知不具合がある。
+#   claude: anthropics/claude-code#71955（settings.json では無効化不可）
+#   codex : sandbox_mode=workspace-write のサンドボックス初期化が同様に失敗
+# CWD が同期フォルダ配下のときだけ $HOME から起動して回避。通常パスは素通し。
+# 実体は `command` で呼ぶ（関数の無限再帰を防止）。
+_is_cloudsync_dir() {
+    local p=${1:-$PWD}
+    [[ "$p" == "$HOME/Library/Mobile Documents/"* ]] \
+        || [[ "$p" == "$HOME/Library/CloudStorage/"* ]]
+}
+
+claude() {
+    if _is_cloudsync_dir; then
+        local here=$PWD
+        print -ru2 -- "⚠️  同期フォルダのため \$HOME から起動し '$here' を --add-dir で追加（#71955回避）"
+        ( builtin cd -- "$HOME" && command claude --add-dir "$here" "$@" )
+    else
+        command claude "$@"
+    fi
+}
+
+codex() {
+    if _is_cloudsync_dir; then
+        local here=$PWD
+        print -ru2 -- "⚠️  同期フォルダのため \$HOME から起動（サンドボックス初期化のEPERM回避）"
+        print -ru2 -- "    Vault内ファイルを編集したい場合: codex --sandbox danger-full-access（サンドボックス無効）"
+        ( builtin cd -- "$HOME" && command codex "$@" )
+    else
+        command codex "$@"
+    fi
+}
+
 # 関数ファイルの読み込み（fzf-functions以外、fzfはlazy.zshで遅延読み込み）
 for func_file in "$ZSH_CONFIG_DIR/functions"/{git,util,claude,codex}-functions.zsh; do
     [[ -f "$func_file" ]] && source "$func_file"

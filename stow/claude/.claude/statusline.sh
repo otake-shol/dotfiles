@@ -26,6 +26,10 @@ eval "$(echo "$input" | jq -r '
   @sh "input_tokens=\(.context_window.current_usage.input_tokens // 0)",
   @sh "cache_creation=\(.context_window.current_usage.cache_creation_input_tokens // 0)",
   @sh "exceeds_200k=\(.exceeds_200k_tokens // false)",
+  @sh "effort_level=\(.effort.level // "")",
+  @sh "fast_mode=\(.fast_mode // false)",
+  @sh "pr_number=\(.pr.number // "")",
+  @sh "pr_review_state=\(.pr.review_state // "")",
   @sh "total_in_tok=\(.context_window.total_input_tokens // 0)",
   @sh "total_out_tok=\(.context_window.total_output_tokens // 0)"
 ')"
@@ -40,7 +44,9 @@ else
 fi
 
 # モデル名とカラー設定（バージョン番号付き）
-version=$(echo "$model" | grep -oE '[0-9]+\.[0-9]+' | head -1)
+# 「Opus 5」のようなメジャーのみの表記と「Opus 4.8」の両方に対応。
+# モデル名直後の数字だけを見るので「Opus 5 (1M context)」の 1M を拾わない。
+version=$(echo "$model" | sed -E 's/.*(Opus|Sonnet|Haiku)[[:space:]]*//' | grep -oE '^[0-9]+(\.[0-9]+)?')
 case "$model" in
     *Opus*)
         short_model="Opus${version:+ $version}"
@@ -60,34 +66,80 @@ case "$model" in
         ;;
 esac
 
-# Git ブランチ・ステータス取得
+# 現在日時＋epoch（1回のdate呼び出しで全取得）
+IFS='|' read -r day_of_week current_date current_time day_num now_epoch \
+  <<< "$(LC_TIME=en_US.UTF-8 date +"%a|%m/%d|%H:%M|%u|%s")"
+
+# --- 重い処理のキャッシュ（git status / pmset を CACHE_TTL 秒間は再実行しない） ---
+# refreshInterval によりアイドル中も定期実行されるため、公式docs推奨のキャッシュを挟む
+CACHE_DIR="$HOME/.claude/cache"
+[ -d "$CACHE_DIR" ] || mkdir -p "$CACHE_DIR"
+CACHE_TTL=5
+
+# キャッシュが新しければ 0（真）
+_cache_fresh() {
+    local f=$1 mtime
+    [ -f "$f" ] || return 1
+    mtime=$(stat -f %m "$f" 2>/dev/null) || return 1
+    [ $((now_epoch - mtime)) -lt "$CACHE_TTL" ]
+}
+
+# 変数定義行をアトミックに保存（並行セッションでの破損防止）
+_cache_save() {
+    local f=$1; shift
+    local tmp="${f}.tmp.$$"
+    printf '%s\n' "$@" > "$tmp" && mv "$tmp" "$f"
+}
+
+# Git ブランチ・ステータス取得（ディレクトリ単位で5秒キャッシュ）
 branch=""
 git_uncommitted=""
 git_unpushed=""
-if git rev-parse --is-inside-work-tree &>/dev/null; then
-    branch=$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
+_git_key=${dir_full//\//_}
+# bash は範囲外の負オフセットで空文字を返すため、長い時だけ末尾を切り出す
+[ ${#_git_key} -gt 100 ] && _git_key=${_git_key: -100}
+git_cache="$CACHE_DIR/statusline-git${_git_key}.env"
+if _cache_fresh "$git_cache"; then
+    # shellcheck source=/dev/null
+    . "$git_cache"
+else
+    if git rev-parse --is-inside-work-tree &>/dev/null; then
+        branch=$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
 
-    # 未コミットファイル数（変更+追加+削除）
-    uncommitted_count=$(git status --porcelain 2>/dev/null | wc -l | tr -d ' ')
-    if [ "$uncommitted_count" -gt 0 ]; then
-        git_uncommitted="●${uncommitted_count}"
-    fi
+        # 未コミットファイル数（変更+追加+削除）
+        uncommitted_count=$(git status --porcelain 2>/dev/null | wc -l | tr -d ' ')
+        if [ "$uncommitted_count" -gt 0 ]; then
+            git_uncommitted="●${uncommitted_count}"
+        fi
 
-    # 未プッシュコミット数
-    ahead=$(git rev-list --count '@{upstream}..HEAD' 2>/dev/null || echo "0")
-    if [ "$ahead" -gt 0 ]; then
-        git_unpushed="↑${ahead}"
+        # 未プッシュコミット数
+        ahead=$(git rev-list --count '@{upstream}..HEAD' 2>/dev/null || echo "0")
+        if [ "$ahead" -gt 0 ]; then
+            git_unpushed="↑${ahead}"
+        fi
     fi
+    # 非gitディレクトリも空値でキャッシュし、毎回 git を叩かないようにする
+    _cache_save "$git_cache" \
+        "$(printf 'branch=%q' "$branch")" \
+        "$(printf 'git_uncommitted=%q' "$git_uncommitted")" \
+        "$(printf 'git_unpushed=%q' "$git_unpushed")"
 fi
 
-# 現在日時（1回のdate呼び出しで全取得）
-IFS='|' read -r day_of_week current_date current_time day_num \
-  <<< "$(LC_TIME=en_US.UTF-8 date +"%a|%m/%d|%H:%M|%u")"
-
-# バッテリー残量（Mac専用・1回のpmset呼び出し）
-_batt=$(pmset -g batt 2>/dev/null)
-battery_pct=$(echo "$_batt" | grep -o '[0-9]*%' | tr -d '%')
-battery_charging=$(echo "$_batt" | grep -q 'AC Power' && echo "1" || echo "0")
+# バッテリー残量（Mac専用・5秒キャッシュ）
+battery_pct=""
+battery_charging="0"
+batt_cache="$CACHE_DIR/statusline-batt.env"
+if _cache_fresh "$batt_cache"; then
+    # shellcheck source=/dev/null
+    . "$batt_cache"
+else
+    _batt=$(pmset -g batt 2>/dev/null)
+    battery_pct=$(echo "$_batt" | grep -o '[0-9]*%' | tr -d '%')
+    battery_charging=$(echo "$_batt" | grep -q 'AC Power' && echo "1" || echo "0")
+    _cache_save "$batt_cache" \
+        "$(printf 'battery_pct=%q' "$battery_pct")" \
+        "$(printf 'battery_charging=%q' "$battery_charging")"
+fi
 
 # 曜日カラー（平日=白、土=青、日=赤）
 case "$day_num" in
@@ -127,9 +179,10 @@ ICON_BATT_OUT=$(printf '\xf3\xb0\x81\xbb')     # U+F007B (battery-outline)
 ICON_BATT_ALERT=$(printf '\xf3\xb0\x82\x8e')   # U+F008E (battery-alert)
 ICON_CHARGING=$(printf '\xef\x83\xa7')          # U+F0E7 (lightning bolt)
 ICON_CACHE=$(printf '\xf3\xb0\xa8\xb6')        # U+F0A36 (cached)
-ICON_TOKEN=$(printf '\xf3\xb0\xb2\xa3')        # U+F0CA3 (sigma)
 ICON_GAUGE=$(printf '\xef\x83\xa4')        # U+F0E4 (dashboard)
 ICON_WORKTREE=$(printf '\xef\x84\xa6')     # U+F126 (code-fork)
+ICON_PR=$(printf '\xef\x90\x87')           # U+F407 (git-pull-request)
+ICON_FAST=$(printf '\xef\x83\xa7')         # U+F0E7 (lightning bolt)
 
 # セパレータ
 SEP='┃'
@@ -185,9 +238,8 @@ _format_reset_time() {
 _format_relative_reset() {
     local reset_ts=$1
     [ -z "$reset_ts" ] && return
-    local now diff days hours mins
-    now=$(date +%s)
-    diff=$((reset_ts - now))
+    local diff days hours mins
+    diff=$((reset_ts - now_epoch))
     if [ "$diff" -le 0 ]; then
         echo -n "now"
         return
@@ -279,6 +331,18 @@ if [ -n "$branch" ]; then
     fi
 fi
 
+# PR表示（現ブランチにオープンPRがある時のみ。レビュー状態で色分け）
+if [ -n "$pr_number" ]; then
+    case "$pr_review_state" in
+        approved)          PR_COLOR=$GREEN;  pr_mark="✓" ;;
+        changes_requested) PR_COLOR=$RED;    pr_mark="✗" ;;
+        pending)           PR_COLOR=$YELLOW; pr_mark="…" ;;
+        draft)             PR_COLOR=$DIM;    pr_mark="◌" ;;
+        *)                 PR_COLOR=$COLOR_3; pr_mark="" ;;
+    esac
+    output+="  ${PR_COLOR}${ICON_PR} #${pr_number}${pr_mark:+ $pr_mark}${RESET}"
+fi
+
 # worktree表示
 if [ -n "$worktree_branch" ]; then
     output+="  ${COLOR_3}${ICON_WORKTREE} ${worktree_branch}${RESET}"
@@ -289,6 +353,21 @@ fi
 output+=" ${DIM}${SEP}${RESET} "
 
 output+="${MODEL_COLOR}${BOLD}${ICON_MODEL} ${short_model}${RESET}"
+
+# fast mode: 料金2倍なので ON の時だけ警告表示
+if [ "$fast_mode" = "true" ]; then
+    output+=" ${YELLOW}${BOLD}${ICON_FAST}FAST${RESET}"
+fi
+
+# effort: 常用値の xhigh 以外の時だけ表示（= 異常時のみ目立つ）
+if [ -n "$effort_level" ] && [ "$effort_level" != "xhigh" ]; then
+    case "$effort_level" in
+        max)        EFFORT_COLOR=$RED ;;      # 常用しない想定
+        low|medium) EFFORT_COLOR=$YELLOW ;;   # 品質を落としている状態
+        *)          EFFORT_COLOR=$DIM ;;
+    esac
+    output+=" ${EFFORT_COLOR}${effort_level}${RESET}"
+fi
 
 # バッテリー表示（段階アイコン）
 if [ -n "$battery_pct" ]; then
@@ -345,7 +424,11 @@ if [ -n "$usage_5h" ] || [ -n "$usage_7d" ]; then
 fi
 
 # 現在の使用トークン量（人間可読形式）
-used_tok=$((used_pct * ctx_size / 100))
+# total_input/output_tokens は「現在コンテキストに載っている」実測値（v2.1.132以降）。
+# used_pct は floor 済みの整数なので、そこから逆算すると1Mでは10K刻みになってしまう。
+used_tok=$((total_in_tok + total_out_tok))
+# 初回API応答前・/compact直後は 0 になるので、その時だけ％から概算する
+[ "$used_tok" -eq 0 ] && used_tok=$((used_pct * ctx_size / 100))
 if [ "$used_tok" -ge 1000000 ]; then
     used_tok_label="$((used_tok / 1000000)).$(( (used_tok % 1000000) / 100000 ))M"
 elif [ "$used_tok" -ge 1000 ]; then
@@ -356,13 +439,19 @@ fi
 
 line2+="${PCT_STYLE}${PCT_COLOR}${ICON_BRAIN} ${bar} ${used_pct}%${RESET} ${PCT_COLOR}${used_tok_label}${RESET}\033[37m/${ctx_label}${RESET}"
 
-# 200Kトークン超過警告
+# 200Kトークン超過
+# 1Mモデル: 200K超は「入力単価2倍ゾーンに入った」という課金情報（想定内なので点滅させない）
+# 200Kモデル: コンテキスト枯渇が近いので従来どおり警告
 if [ "$exceeds_200k" = "true" ]; then
-    line2+="  ${BLINK}${BOLD}${RED}⚠ >200K${RESET}"
+    if [ "$ctx_size" -ge 1000000 ]; then
+        line2+="  ${YELLOW}${BOLD}2x料金${RESET}"
+    else
+        line2+="  ${BLINK}${BOLD}${RED}⚠ >200K${RESET}"
+    fi
 fi
 
-# キャッシュヒット率＋節約額推定
-# モデル別 input price ($/MTok)。1Mコンテキストモードは2x。cache_read は 0.1x（90%割引）
+# キャッシュヒット率（直近API呼び出しの current_usage ベース）
+# 累積入力トークンを返すフィールドは現行JSONに無いため、累積の節約額推定は廃止した
 total_input=$((input_tokens + cache_read + cache_creation))
 if [ "$total_input" -gt 0 ]; then
     cache_pct=$((cache_read * 100 / total_input))
@@ -373,32 +462,7 @@ if [ "$total_input" -gt 0 ]; then
     else
         CACHE_COLOR=$RED
     fi
-    case "$model" in
-        *Opus*)   in_price=15 ;;
-        *Sonnet*) in_price=3 ;;
-        *Haiku*)  in_price=1 ;;
-        *)        in_price=15 ;;
-    esac
-    [ "$ctx_size" -ge 1000000 ] && in_price=$((in_price * 2))
-    # 累積キャッシュ節約推定: 累積入力 * cache_pct/100 * input_price * 0.9 / 1M
-    saved_label=""
-    if [ "$total_in_tok" -gt 0 ] && [ "$cache_pct" -gt 0 ]; then
-        saved_est=$(awk -v t="$total_in_tok" -v p="$cache_pct" -v ip="$in_price" \
-            'BEGIN { printf "%.2f", t * p / 100 * ip * 0.9 / 1000000 }')
-        saved_label=" ${DIM}≈\$${saved_est}節約${RESET}"
-    fi
-    line2+="  ${CACHE_COLOR}${ICON_CACHE}${cache_pct}%${RESET}${saved_label}"
-fi
-
-# 累積トークン
-total_tok=$((total_in_tok + total_out_tok))
-if [ "$total_tok" -gt 0 ]; then
-    if [ "$total_tok" -ge 1000000 ]; then
-        tok_label="$((total_tok / 1000000)).$(( (total_tok % 1000000) / 100000 ))M"
-    else
-        tok_label="$((total_tok / 1000))K"
-    fi
-    line2+="  ${DIM}${ICON_TOKEN}${tok_label}${RESET}"
+    line2+="  ${CACHE_COLOR}${ICON_CACHE}${cache_pct}%${RESET}"
 fi
 
 echo -e "$line2"
@@ -415,11 +479,15 @@ if [ "$duration_ms" -gt 0 ]; then
     else
         dur_label="${dur_m}m"
     fi
-    read -r cost_per_hour cost_per_day <<< \
-      "$(awk "BEGIN { h=$cost/($duration_sec/3600); printf \"%.2f %.2f\", h, h*8 }")"
     line3+="${BOLD}\$${cost_fmt}${RESET}${DIM}/${dur_label}${RESET}"
-    line3+="  ${DIM}≈${RESET} \$${cost_per_hour}${DIM}/h${RESET}"
-    line3+="  ${DIM}≈${RESET} \$${cost_per_day}${DIM}/8h${RESET}"
+    # duration_ms が1秒未満だと duration_sec=0 で awk が division by zero になるため除外
+    if [ "$duration_sec" -gt 0 ]; then
+        read -r cost_per_hour cost_per_day <<< \
+          "$(awk -v c="$cost" -v s="$duration_sec" \
+             'BEGIN { h=c/(s/3600); printf "%.2f %.2f", h, h*8 }')"
+        line3+="  ${DIM}≈${RESET} \$${cost_per_hour}${DIM}/h${RESET}"
+        line3+="  ${DIM}≈${RESET} \$${cost_per_day}${DIM}/8h${RESET}"
+    fi
 else
     line3+="${BOLD}\$${cost_fmt}${RESET}"
 fi

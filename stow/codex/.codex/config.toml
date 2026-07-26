@@ -32,6 +32,8 @@ hooks = true
 js_repl = false
 
 [mcp_servers.app-store-connect-review]
+# command の ~ は Codex が config.toml を書き戻す際に絶対パスへ展開されることがある。
+# コミット時は ~ 表記に戻す（絶対パスのままだと新PCで壊れ、make validate も落ちる）。
 command = "~/.codex/bin/app-store-connect-review-mcp.mjs"
 startup_timeout_sec = 20.0
 tool_timeout_sec = 120.0

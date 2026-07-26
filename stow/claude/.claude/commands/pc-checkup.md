@@ -30,6 +30,16 @@ ps -Ao pid,rss,comm -m | head -20
 lsof -i -P | grep LISTEN | head -20
 ```
 
+### 4. Claude Code のディスク使用量
+```bash
+du -sh ~/.claude/* 2>/dev/null | sort -rh | head -8
+find ~/.claude/projects -name '*.jsonl' -mtime +30 -exec du -ch {} + 2>/dev/null | tail -1
+find ~/.claude/cache -name '*.tmp.*' | wc -l
+```
+- `projects/` が支配的（セッションのトランスクリプト）。数百MB〜GB規模になる
+- `file-history/` は編集ファイルの復元履歴
+- `cache/*.tmp.*` は statusline の書き込みが中断された残骸（下記参照）
+
 ## 診断結果の出力フォーマット
 
 ```
@@ -74,6 +84,42 @@ pnpm store prune
 ```bash
 docker system prune -f
 ```
+
+### Claude Code のディスク掃除
+
+削除の影響が小さい順に並べている。上2つは確認不要、下2つは必ずユーザーに確認する。
+
+**1. 孤児 tmp ファイル（影響なし）**
+
+statusline は更新が重なると実行中にキャンセルされる仕様のため、`tmp` へ書いて `mv` する途中で止まった残骸が少しずつ溜まる。
+```bash
+find ~/.claude/cache -name '*.tmp.*' -mtime +1 -delete
+```
+
+**2. statusline のディレクトリ別キャッシュ（影響なし）**
+
+`statusline-git<パス>.env` は訪問したディレクトリごとに1ファイル増える。削除しても次回訪問時に再生成される。
+```bash
+find ~/.claude/cache -name 'statusline-git*.env' -mtime +7 -delete
+```
+- `usage-notify-state.env` は**消さない**（使用量通知の抑制状態。消すと通知が再送される）
+- `statusline-batt.env` も消さなくてよい（1ファイル固定）
+
+**3. 古いセッショントランスクリプト（⚠️ 要確認・容量の本命）**
+```bash
+# 先に対象量を確認してからユーザーに提示する
+find ~/.claude/projects -name '*.jsonl' -mtime +30 -exec du -ch {} + 2>/dev/null | tail -1
+# 削除
+find ~/.claude/projects -name '*.jsonl' -mtime +30 -delete
+```
+⚠️ 削除したセッションは `/resume` で復帰できなくなり、会話履歴の検索対象からも消える。日数は用途に応じて調整する（迷うなら +90）。
+
+**4. file-history（⚠️ 要確認）**
+```bash
+find ~/.claude/file-history -type f -mtime +30 -delete
+find ~/.claude/file-history -type d -empty -delete
+```
+⚠️ Claude が編集したファイルの復元履歴。ロールバックが不要になった期間ぶんだけ消す。
 
 ### メモリ圧迫時
 - 不要なブラウザタブを閉じる

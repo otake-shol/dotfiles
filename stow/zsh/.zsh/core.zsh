@@ -195,6 +195,39 @@ zstyle ':completion:*' special-dirs true
 # OMZ gitプラグインのalias解除（関数定義と競合するため、先に実行）
 unalias gpr gbr 2>/dev/null
 
+# --- ターミナル起動中はディスプレイスリープ（画面OFF）を抑止（電池連動）---
+# 条件: 実端末(tty)が開いている & (AC接続 or バッテリー残量 >= CAFFEINATE_MIN_BATT%)
+# 60秒ごとに再判定して caffeinate を自動 ON/OFF。端末を閉じると監視ごと終了し即解除。
+# [[ -t 1 ]] で本物のターミナルに限定（パイプ接続のフック/コマンドシェルには生やさない）。
+#   無効化      : CAFFEINATE_DISABLE=1（.zshenv で export）
+#   しきい値変更 : CAFFEINATE_MIN_BATT=50 等（.zshenv で export。既定 30）
+: ${CAFFEINATE_MIN_BATT:=30}
+if [[ "$OSTYPE" == darwin* ]] && [[ -t 1 ]] && [[ -z "$CAFFEINATE_SHELL" ]] && [[ -z "$CAFFEINATE_DISABLE" ]] \
+    && command -v caffeinate >/dev/null 2>&1; then
+    export CAFFEINATE_SHELL=1
+    _caffeinate_watch() {
+        local shell_pid=$1 caff_pid="" batt pct
+        while kill -0 "$shell_pid" 2>/dev/null; do
+            batt=$(pmset -g batt 2>/dev/null)
+            pct=$(print -r -- "$batt" | grep -Eo '[0-9]+%' | head -1 | tr -d '%')
+            if [[ "$batt" == *"'AC Power'"* ]] \
+               || { [[ -n "$pct" ]] && (( pct >= CAFFEINATE_MIN_BATT )); }; then
+                # 抑止すべき: caffeinate が動いていなければ起動（-w でシェル終了に即追従）
+                if [[ -z "$caff_pid" ]] || ! kill -0 "$caff_pid" 2>/dev/null; then
+                    caffeinate -d -w "$shell_pid" & caff_pid=$!
+                fi
+            else
+                # 抑止不要（低残量など）: 動いていれば停止して画面OFFを許可
+                [[ -n "$caff_pid" ]] && kill "$caff_pid" 2>/dev/null
+                caff_pid=""
+            fi
+            sleep 60
+        done
+        [[ -n "$caff_pid" ]] && kill "$caff_pid" 2>/dev/null  # シェル終了時の後始末
+    }
+    _caffeinate_watch $$ &!
+fi
+
 # 関数ファイルの読み込み（fzf-functions以外、fzfはlazy.zshで遅延読み込み）
 for func_file in "$ZSH_CONFIG_DIR/functions"/{git,util,claude,codex}-functions.zsh; do
     [[ -f "$func_file" ]] && source "$func_file"

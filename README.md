@@ -182,7 +182,7 @@ macOS defaults は `bootstrap.sh` の初回実行時に `~/.dotfiles-macos-defau
 
 `Brewfile` は新しいMacを普段使いできる状態に近づけるため、CLIだけでなくGUIアプリも含める。`Core CLI Tools` と `Core GUI Applications` は常用前提、`Optional CLI Tools` と `Optional GUI Applications` は作業内容に応じた追加ツールとして扱う。
 
-OpenAI CodexはHomebrewの `cask "codex"` がCLIを提供する。Codex DesktopはHomebrew caskとは別物のため、`bootstrap.sh` が公式DMGをApple Silicon / Intelに応じて導入する。
+OpenAI CodexはHomebrewの `cask "codex"` がCLIを提供する。Codex DesktopはHomebrew caskとは別物のため、`bootstrap.sh` が公式DMGをApple Silicon / Intelに応じて導入する。Remote Controlを使う場合は、固定パスのapp-serverを含む公式standalone版も `~/.codex/packages/standalone/` に導入する。
 
 軽量セットアップにしたい場合は `bash bootstrap.sh --skip-apps` でBrewfile全体の導入を飛ばす。この場合でもStowリンク作成に必要な `stow` だけはHomebrewで確保する。必要なStowリンクだけを入れたい場合は `make install-PKG` を使う。
 
@@ -219,13 +219,14 @@ cls                    # セッション一覧
 ## Codex
 
 ```bash
-codex                  # Terra / medium（通常運転）
+codex                  # Terra / medium（Remote Controlを自動起動・接続）
 codex -p fast          # Luna / low（軽量・高頻度）
 codex -p review        # Sol / high（高精度レビュー）
 codex -p deep          # Sol / xhigh（難問専用）
 codex -p research      # GPT-5.5 / medium（研究系の比較用）
 codex -p spark         # Codex-Spark / low（最小遅延の手動利用）
 codex review           # 非対話コードレビュー
+codex-session-cleanup  # セッションを一覧から複数選択し、確認後に完全削除
 cxcp                   # 変更確認→検証→commit→push をCodexに依頼
 codex-commit-push "feat: ..."  # deterministicなcommit+push
 codex-commit-push "fix: ..." README.md Makefile  # 指定ファイルだけcommit+push
@@ -233,6 +234,8 @@ codex-commit-push "fix: ..." README.md Makefile  # 指定ファイルだけcommi
 ```
 
 通常セッションは Terra を使い、必要な場合だけ custom agent へ委譲する。
+対話セッションと `resume` / `fork` / `archive` / `delete` / `unarchive` は、standalone版があれば自動的に `codex remote-control start` を実行して `unix://` のapp-serverへ接続する。`exec` / `review` などRemote非対応のサブコマンドは従来どおりローカル実行する。
+対話セッションの起動時、アクティブなセッションが20件以上なら24時間に1回だけ整理するか確認する。整理対象は `fzf` で複数選択し、最終確認後にRemote経由で完全削除する。閾値は `CODEX_SESSION_CLEANUP_THRESHOLD`、確認間隔（時間）は `CODEX_SESSION_CLEANUP_INTERVAL_HOURS`、自動確認の無効化は `CODEX_SESSION_CLEANUP_ENABLED=0` で変更できる。
 
 | agent | model | 用途 |
 |---|---|---|

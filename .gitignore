@@ -73,7 +73,10 @@ stow/codex/.codex/chrome-native-hosts-v2.json
 stow/codex/.codex/claude-cowork-import-history.json
 stow/codex/.codex/computer-use/
 stow/codex/.codex/external_agent_session_imports.json
+stow/codex/.codex/app-server-control/
+stow/codex/.codex/app-server-daemon/
 stow/codex/.codex/mcp-oauth-locks/
+stow/codex/.codex/packages/
 stow/codex/.codex/plugins/
 stow/codex/.codex/session_index.jsonl
 stow/codex/.codex/sqlite/

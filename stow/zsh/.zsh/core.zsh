@@ -251,14 +251,150 @@ claude() {
     fi
 }
 
+# Remote対応サブコマンドまたは通常の対話セッションなら成功を返す。
+# exec/review等の非対話・管理系サブコマンドはローカル実行のままにする。
+_codex_uses_remote() {
+    local arg
+    local skip_value=0
+
+    for arg in "$@"; do
+        if (( skip_value )); then
+            skip_value=0
+            continue
+        fi
+
+        case "$arg" in
+            --remote | --remote=* | --remote-auth-token-env | --remote-auth-token-env=*)
+                # 明示指定を尊重し、ラッパー側では接続先を上書きしない。
+                return 1
+                ;;
+            -h | --help | -V | --version)
+                return 1
+                ;;
+            -c | --config | --enable | --disable | -m | --model | --local-provider | -p | --profile | -s | --sandbox | -C | --cd | --add-dir | -a | --ask-for-approval)
+                skip_value=1
+                ;;
+            --config=* | --enable=* | --disable=* | --model=* | --local-provider=* | --profile=* | --sandbox=* | --cd=* | --add-dir=* | --ask-for-approval=*)
+                ;;
+            resume | fork | archive | delete | unarchive)
+                return 0
+                ;;
+            exec | e | review | login | logout | mcp | plugin | mcp-server | app-server | remote-control | app | completion | update | doctor | sandbox | debug | apply | a | cloud | cloud-tasks | exec-server | execpolicy | features | help)
+                return 1
+                ;;
+            --)
+                return 0
+                ;;
+            -*)
+                ;;
+            *)
+                # 未知の最初の位置引数は初回プロンプト。
+                return 0
+                ;;
+        esac
+    done
+
+    return 0
+}
+
+_codex_is_session_management() {
+    local arg
+    local skip_value=0
+
+    for arg in "$@"; do
+        if (( skip_value )); then
+            skip_value=0
+            continue
+        fi
+
+        case "$arg" in
+            -c | --config | --enable | --disable | -m | --model | --local-provider | -p | --profile | -s | --sandbox | -C | --cd | --add-dir | -a | --ask-for-approval | --remote-auth-token-env)
+                skip_value=1
+                ;;
+            resume | fork | archive | delete | unarchive)
+                return 0
+                ;;
+        esac
+    done
+
+    return 1
+}
+
+_codex_maybe_cleanup_sessions() {
+    local codex_bin=$1
+    shift
+    local cleanup_script="$HOME/.codex/bin/session-cleanup.mjs"
+
+    [[ -t 0 && -t 1 ]] || return 0
+    [[ "${CODEX_SESSION_CLEANUP_ENABLED:-1}" != "0" ]] || return 0
+    _codex_is_session_management "$@" && return 0
+    [[ -f "$cleanup_script" ]] || return 0
+    command -v node >/dev/null 2>&1 || return 0
+
+    if ! command node "$cleanup_script" --maybe-prompt --codex "$codex_bin"; then
+        print -ru2 -- "⚠️  Codexセッション数の確認に失敗しました（起動は継続します）"
+    fi
+}
+
+_codex_run() {
+    local standalone_codex="$HOME/.codex/packages/standalone/current/codex"
+    local codex_bin
+
+    if [[ -x "$standalone_codex" ]]; then
+        codex_bin="$standalone_codex"
+    else
+        codex_bin="$(whence -p codex)"
+    fi
+
+    if [[ -z "$codex_bin" ]]; then
+        print -ru2 -- "codex executable not found"
+        return 127
+    fi
+
+    if _codex_uses_remote "$@"; then
+        if [[ "$codex_bin" != "$standalone_codex" ]]; then
+            print -ru2 -- "⚠️  Remote連携にはCodex standalone版が必要なため、今回はローカル起動します"
+            "$codex_bin" "$@"
+            return
+        fi
+
+        if ! "$codex_bin" remote-control start >/dev/null 2>&1; then
+            print -ru2 -- "⚠️  Remote Controlを起動できなかったため、今回はローカル起動します"
+            "$codex_bin" "$@"
+            return
+        fi
+
+        _codex_maybe_cleanup_sessions "$codex_bin" "$@"
+        "$codex_bin" --remote unix:// "$@"
+    else
+        "$codex_bin" "$@"
+    fi
+}
+
+codex-session-cleanup() {
+    local standalone_codex="$HOME/.codex/packages/standalone/current/codex"
+    local cleanup_script="$HOME/.codex/bin/session-cleanup.mjs"
+
+    if [[ ! -x "$standalone_codex" ]]; then
+        print -ru2 -- "Codex standalone版が見つかりません"
+        return 127
+    fi
+    if [[ ! -f "$cleanup_script" ]] || ! command -v node >/dev/null 2>&1; then
+        print -ru2 -- "Codexセッション整理スクリプトを実行できません"
+        return 127
+    fi
+
+    command node "$cleanup_script" --interactive --codex "$standalone_codex"
+}
+
 codex() {
     if _is_cloudsync_dir; then
         local here=$PWD
         print -ru2 -- "⚠️  同期フォルダのため \$HOME から起動（サンドボックス初期化のEPERM回避）"
         print -ru2 -- "    Vault内ファイルを編集したい場合: codex --sandbox danger-full-access（サンドボックス無効）"
-        ( builtin cd -- "$HOME" && command codex "$@" )
+        ( builtin cd -- "$HOME" && _codex_run "$@" )
     else
-        command codex "$@"
+        _codex_run "$@"
     fi
 }
 

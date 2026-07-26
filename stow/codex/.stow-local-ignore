@@ -2,4 +2,5 @@
 \.codex/installation_id$
 \.codex/(auth\.json|history\.jsonl|models_cache\.json|version\.json)$
 \.codex/(cache|log|logs|memories|shell_snapshots|skills|state|tmp)(/.*)?$
+\.codex/(app-server-control|app-server-daemon|packages)(/.*)?$
 \.codex/.*\.sqlite(-wal|-shm)?$

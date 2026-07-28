@@ -1,0 +1,100 @@
+{
+  "$schema": "../schemas/brief.schema.json",
+  "meta": {
+    "id": "sample-project-gantt",
+    "title": "新機能リリース計画",
+    "part": "gantt",
+    "status": "draft"
+  },
+  "intent": {
+    "message": "依存関係と直近の遅延を共有する",
+    "audience": "プロジェクト関係者",
+    "placement": "article-inline"
+  },
+  "content": {
+    "eyebrow": "GANTT",
+    "title": "新機能リリース計画",
+    "subtitle": "外部API確認の遅延が、結合テストの開始条件になっている。",
+    "slots": {}
+  },
+  "data": {
+    "type": "gantt",
+    "today": "2026-08-12",
+    "rows": [
+      {
+        "id": "requirements",
+        "task": "要件整理",
+        "owner": "PM",
+        "start": "2026-08-01",
+        "end": "2026-08-05",
+        "status": "done",
+        "progress": 100
+      },
+      {
+        "id": "design",
+        "task": "UIデザイン",
+        "owner": "Design",
+        "start": "2026-08-06",
+        "end": "2026-08-11",
+        "status": "done",
+        "progress": 100,
+        "dependsOn": ["requirements"]
+      },
+      {
+        "id": "implementation",
+        "task": "実装",
+        "owner": "Dev",
+        "start": "2026-08-12",
+        "end": "2026-08-21",
+        "status": "active",
+        "progress": 55,
+        "dependsOn": ["design"]
+      },
+      {
+        "id": "api-review",
+        "task": "API仕様確認",
+        "owner": "PM",
+        "start": "2026-08-06",
+        "end": "2026-08-14",
+        "status": "blocked",
+        "progress": 40,
+        "dependsOn": ["requirements"]
+      },
+      {
+        "id": "qa",
+        "task": "結合テスト",
+        "owner": "QA",
+        "start": "2026-08-22",
+        "end": "2026-08-27",
+        "status": "planned",
+        "progress": 0,
+        "dependsOn": ["implementation", "api-review"]
+      },
+      {
+        "id": "release",
+        "task": "公開",
+        "owner": "PM",
+        "start": "2026-08-28",
+        "end": "2026-08-28",
+        "status": "planned",
+        "progress": 0,
+        "dependsOn": ["qa"],
+        "milestone": true
+      }
+    ]
+  },
+  "source": {
+    "label": "筆者作成",
+    "url": "",
+    "accessedAt": "",
+    "note": ""
+  },
+  "accessibility": {
+    "alt": "8月の新機能リリース計画。要件とデザインは完了、実装は55%、API仕様確認は遅延中。結合テスト後の8月28日公開を予定している。",
+    "colorIndependent": true
+  },
+  "output": {
+    "targets": ["blog", "slide"],
+    "formats": ["svg", "png"]
+  }
+}

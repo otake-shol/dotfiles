@@ -1,0 +1,41 @@
+{
+  "$schema": "../schemas/brief.schema.json",
+  "meta": {
+    "id": "yyyy-mm-dd-topic-flow",
+    "title": "図の管理名",
+    "part": "flow",
+    "status": "draft"
+  },
+  "intent": {
+    "message": "この図だけを見た読者に残したい一文",
+    "audience": "想定読者",
+    "placement": "article-inline"
+  },
+  "content": {
+    "eyebrow": "FLOW",
+    "title": "図中の主見出し",
+    "subtitle": "補足は一文まで",
+    "slots": {
+      "label-1": "入力を揃える",
+      "body-1": "事実と前提を分ける",
+      "label-2": "判断する",
+      "body-2": "比較軸を一つに絞る",
+      "label-3": "行動へ変える",
+      "body-3": "次の一歩を具体化する"
+    }
+  },
+  "source": {
+    "label": "筆者作成",
+    "url": "",
+    "accessedAt": "",
+    "note": ""
+  },
+  "accessibility": {
+    "alt": "3段階の流れを左から右へ示し、入力を揃えて判断し、行動へ変える関係を説明する図。",
+    "colorIndependent": true
+  },
+  "output": {
+    "targets": ["blog"],
+    "formats": ["svg", "png"]
+  }
+}

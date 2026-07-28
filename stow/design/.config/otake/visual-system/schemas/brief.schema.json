@@ -1,0 +1,254 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://otake-shol.dev/schemas/ovs-brief.schema.json",
+  "title": "Otake Visual System Brief",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "meta",
+    "intent",
+    "content",
+    "source",
+    "accessibility",
+    "output"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "meta": {
+            "properties": {
+              "part": {
+                "not": {
+                  "const": "cover"
+                }
+              }
+            },
+            "required": ["part"]
+          }
+        },
+        "required": ["meta"]
+      },
+      "then": {
+        "properties": {
+          "content": {
+            "properties": {
+              "title": {
+                "maxLength": 34
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "part"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "title": {
+          "type": "string"
+        },
+        "part": {
+          "enum": [
+            "cover",
+            "flow",
+            "matrix",
+            "comparison",
+            "chart",
+            "before-after",
+            "timeline",
+            "architecture",
+            "sequence",
+            "takeaway",
+            "warning",
+            "definition",
+            "gantt",
+            "roadmap",
+            "wbs",
+            "raci",
+            "raid",
+            "status-board"
+          ]
+        },
+        "status": {
+          "enum": ["draft", "review", "published"]
+        }
+      }
+    },
+    "intent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["message", "audience"],
+      "properties": {
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "audience": {
+          "type": "string",
+          "minLength": 1
+        },
+        "placement": {
+          "enum": ["cover", "article-inline", "slide", "social"]
+        }
+      }
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title"],
+      "properties": {
+        "eyebrow": {
+          "type": "string",
+          "maxLength": 24
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 48
+        },
+        "subtitle": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "slots": {
+          "type": "object",
+          "additionalProperties": {
+            "type": ["string", "number"]
+          }
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "enum": [
+            "bar",
+            "line",
+            "stacked-bar",
+            "dot",
+            "slope",
+            "scatter",
+            "heatmap",
+            "waterfall",
+            "small-multiples",
+            "progress",
+            "gantt"
+          ]
+        },
+        "unit": {
+          "type": "string"
+        },
+        "period": {
+          "type": "string"
+        },
+        "start": {
+          "type": "string",
+          "format": "date"
+        },
+        "end": {
+          "type": "string",
+          "format": "date"
+        },
+        "today": {
+          "type": "string",
+          "format": "date"
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label"],
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "anyOf": [
+            {
+              "const": ""
+            },
+            {
+              "format": "uri"
+            }
+          ]
+        },
+        "accessedAt": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "accessibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["alt", "colorIndependent"],
+      "properties": {
+        "alt": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 300
+        },
+        "colorIndependent": {
+          "const": true
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["targets", "formats"],
+      "properties": {
+        "targets": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "blog",
+              "hatena",
+              "ogp",
+              "x",
+              "square",
+              "vertical",
+              "slide",
+              "thumbnail"
+            ]
+          }
+        },
+        "formats": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["svg", "png"]
+          }
+        }
+      }
+    }
+  }
+}

@@ -24,7 +24,7 @@ fi
 # 環境変数（モジュール読み込み前に設定）
 # ========================================
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
-export PATH="/Applications/cmux.app/Contents/Resources/bin:${PATH}"
+export PATH="${HOME}/.local/bin:/Applications/cmux.app/Contents/Resources/bin:${PATH}"
 
 # ========================================
 # モジュール読み込み

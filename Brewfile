@@ -13,6 +13,7 @@ brew "git-delta"                   # diff表示: side-by-side+シンタックス
 
 # --- ランタイム・エディタ ---
 brew "asdf"                        # Node/Python/Terraform統一管理(.tool-versions)
+brew "node"                        # OVS・Codex MCP等のJavaScript CLI実行基盤
 brew "neovim"                      # 軽微な編集・git commit用
 
 # --- シェル・ターミナル ---
@@ -47,9 +48,11 @@ brew "mas"                         # Mac App Store CLI(LINE等のApp Store製ア
 
 # --- ドキュメント生成 ---
 brew "marp-cli"                    # Markdownスライド生成
+brew "mermaid-cli"                 # Markdown内のMermaidをOVSテーマ付きSVGへ変換
 brew "pandoc"                      # Markdown→PDF/HTML/Word 等の汎用変換
 brew "typst"                       # モダン組版エンジン(日本語PDF生成)
 brew "poppler"                     # PDFユーティリティ(pdfinfo/pdftotext 等)
+brew "librsvg"                     # OVSのSVG→PNG変換(rsvg-convert)
 
 # --- メディア・文字起こし ---
 brew "ffmpeg"                      # 音声/動画変換(yt-dlpの依存)

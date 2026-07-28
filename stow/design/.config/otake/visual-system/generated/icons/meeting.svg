@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" role="img" aria-labelledby="title">
+  <title id="title">会議</title>
+  <g fill="none" stroke="#1B2438" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 5h18v12H8l-4 4v-4H3Z"/>
+    <path d="M7 9h10M7 13h7"/>
+  </g>
+</svg>

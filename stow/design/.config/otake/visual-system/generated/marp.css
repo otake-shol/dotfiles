@@ -1,0 +1,346 @@
+/*
+ * @theme otake-visual
+ * @auto-scaling true
+ * @size 16:9 1280px 720px
+ * Generated from OVS tokens.json.
+ */
+
+@import "default";
+
+:root {
+  --ovs-canvas: #FFFBF5;
+  --ovs-surface: #FFFFFF;
+  --ovs-sunken: #F0F4F8;
+  --ovs-ink: #1B2438;
+  --ovs-ink-sub: #55617A;
+  --ovs-ink-mute: #687389;
+  --ovs-rule: #DDE5F0;
+  --ovs-primary: #1479BE;
+  --ovs-primary-dark: #0F5F99;
+  --ovs-primary-wash: #E8F3FA;
+  --ovs-wine: #85023E;
+  --ovs-wine-wash: #F5E7EC;
+  --ovs-coral: #FF6B4A;
+  --ovs-coral-wash: #FFEDE8;
+  --ovs-mint: #12C48B;
+  --ovs-mint-wash: #E3F9F1;
+  --ovs-mango: #FFA61E;
+  --ovs-mango-wash: #FFF3DF;
+  --ovs-violet: #744CF0;
+  --ovs-violet-wash: #EFEAFF;
+}
+
+section {
+  box-sizing: border-box;
+  width: 1280px;
+  height: 720px;
+  padding: 56px 72px;
+  color: var(--ovs-ink);
+  background: var(--ovs-canvas);
+  font-family: 'Noto Sans JP', 'Hiragino Sans', sans-serif;
+  font-size: 28px;
+  line-height: 1.55;
+}
+
+section::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 10px;
+  content: "";
+  background: linear-gradient(
+    180deg,
+    var(--ovs-primary) 0 70%,
+    var(--ovs-wine) 70% 100%
+  );
+}
+
+h1,
+h2,
+h3 {
+  color: var(--ovs-ink);
+  font-family: 'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif;
+}
+
+h1 {
+  margin: 0 0 0.65em;
+  font-size: 1.75em;
+  line-height: 1.25;
+}
+
+h1::after {
+  display: block;
+  width: 96px;
+  height: 7px;
+  margin-top: 16px;
+  content: "";
+  background: var(--ovs-primary);
+  border-radius: 999px;
+}
+
+h2 {
+  color: var(--ovs-primary-dark);
+  font-size: 1.35em;
+}
+
+h3 {
+  color: var(--ovs-wine);
+  font-size: 1.05em;
+}
+
+a {
+  color: var(--ovs-primary-dark);
+  text-decoration-thickness: 2px;
+}
+
+strong {
+  color: var(--ovs-wine);
+}
+
+mark {
+  padding: 0.08em 0.3em;
+  color: var(--ovs-ink);
+  background: #FFE66D;
+  border-radius: 12px;
+}
+
+code {
+  padding: 0.1em 0.35em;
+  color: var(--ovs-primary-dark);
+  background: var(--ovs-primary-wash);
+  border-radius: 6px;
+  font-family: 'Space Mono', 'SFMono-Regular', monospace;
+}
+
+pre {
+  padding: 0.8em 1em;
+  background: var(--ovs-surface);
+  border: 2.5px solid var(--ovs-ink);
+  border-radius: 18px;
+  box-shadow: 6px 6px 0 var(--ovs-ink);
+}
+
+pre code {
+  padding: 0;
+  color: var(--ovs-ink);
+  background: transparent;
+}
+
+blockquote {
+  padding: 0.75em 1em;
+  color: var(--ovs-ink);
+  background: var(--ovs-primary-wash);
+  border: 2.5px solid var(--ovs-ink);
+  border-left: 10px solid var(--ovs-primary);
+  border-radius: 18px;
+}
+
+table {
+  width: 100%;
+  overflow: hidden;
+  background: var(--ovs-surface);
+  border: 2.5px solid var(--ovs-ink);
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 18px;
+  box-shadow: 3px 3px 0 var(--ovs-ink);
+}
+
+th,
+td {
+  padding: 0.45em 0.65em;
+  border-color: var(--ovs-rule);
+}
+
+th {
+  color: var(--ovs-primary-dark);
+  background: var(--ovs-primary-wash);
+}
+
+li::marker {
+  color: var(--ovs-primary);
+}
+
+section.lead {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding-right: 26%;
+  background:
+    radial-gradient(circle at 90% 12%, var(--ovs-wine-wash) 0 70px, transparent 72px),
+    radial-gradient(circle at 88% 10%, var(--ovs-primary-wash) 0 150px, transparent 152px),
+    var(--ovs-canvas);
+}
+
+section.lead h1 {
+  font-size: 2.15em;
+}
+
+section.invert {
+  color: #F4F7FC;
+  background: #0E1526;
+}
+
+section.invert::before {
+  background: linear-gradient(
+    180deg,
+    var(--ovs-primary) 0 70%,
+    var(--ovs-wine) 70% 100%
+  );
+}
+
+section.invert h1,
+section.invert h2,
+section.invert h3,
+section.invert strong {
+  color: #F4F7FC;
+}
+
+section.quote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+section.quote blockquote {
+  max-width: 85%;
+  font-family: 'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif;
+  font-size: 1.35em;
+  text-align: center;
+}
+
+section.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+section.columns h1,
+section.columns h2 {
+  grid-column: 1 / -1;
+}
+
+section.timeline .steps,
+section.metric .cards {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+section.timeline .step,
+section.metric .card {
+  flex: 1;
+  padding: 20px;
+  background: var(--ovs-surface);
+  border: 2.5px solid var(--ovs-ink);
+  border-radius: 18px;
+  box-shadow: 3px 3px 0 var(--ovs-ink);
+}
+
+section.timeline .date {
+  display: inline-block;
+  padding: 0.15em 0.65em;
+  color: var(--ovs-surface);
+  background: var(--ovs-primary);
+  border-radius: 999px;
+  font-family: 'Plus Jakarta Sans', 'Avenir Next', sans-serif;
+  font-size: 0.75em;
+  font-weight: 700;
+}
+
+section.metric .value {
+  color: var(--ovs-primary);
+  font-family: 'Plus Jakarta Sans', 'Avenir Next', sans-serif;
+  font-size: 2em;
+  font-weight: 700;
+}
+
+section.metric .change {
+  color: var(--ovs-mint);
+  font-weight: 700;
+}
+
+.ovs-diagram {
+  margin: 0;
+  overflow: hidden;
+  background: var(--ovs-surface);
+  border: 2.5px solid var(--ovs-ink);
+  border-radius: 18px;
+  box-shadow: 6px 6px 0 var(--ovs-ink);
+}
+
+.ovs-diagram > img {
+  display: block;
+  width: 100%;
+  max-height: 470px;
+  padding: 18px;
+  object-fit: contain;
+  background: var(--ovs-canvas);
+}
+
+.ovs-diagram > figcaption {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  color: var(--ovs-ink-sub);
+  background: var(--ovs-sunken);
+  border-top: 1.5px solid var(--ovs-rule);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.ovs-diagram-meta {
+  display: grid;
+  gap: 1px;
+}
+
+.ovs-diagram-title {
+  color: var(--ovs-ink);
+  font-family: 'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif;
+  font-size: 16px;
+}
+
+.ovs-brand {
+  display: inline-flex;
+  flex: none;
+  gap: 7px;
+  align-items: center;
+  color: var(--ovs-wine);
+  font-family: 'Plus Jakarta Sans', 'Avenir Next', sans-serif;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ovs-marker {
+  display: inline-grid;
+  grid-template-columns: repeat(3, 5px);
+  gap: 2px;
+  padding: 3px;
+  background: var(--ovs-ink);
+  border-radius: 4px;
+}
+
+.ovs-marker > i {
+  width: 5px;
+  height: 10px;
+  background: var(--ovs-primary);
+  border-radius: 1px;
+}
+
+.ovs-marker > i:nth-child(2) {
+  height: 7px;
+  background: var(--ovs-mango);
+}
+
+.ovs-marker > i:nth-child(3) {
+  background: var(--ovs-wine);
+}
+
+footer,
+section::after {
+  color: var(--ovs-ink-mute);
+  font-size: 0.58em;
+}

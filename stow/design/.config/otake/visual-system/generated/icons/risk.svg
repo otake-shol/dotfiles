@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" role="img" aria-labelledby="title">
+  <title id="title">リスク</title>
+  <g fill="none" stroke="#1B2438" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3 22 21H2Z"/>
+    <path d="M12 9v5M12 17.5h.1"/>
+  </g>
+</svg>

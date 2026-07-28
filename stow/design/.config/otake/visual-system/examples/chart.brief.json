@@ -1,0 +1,64 @@
+{
+  "$schema": "../schemas/brief.schema.json",
+  "meta": {
+    "id": "sample-article-chart",
+    "title": "記事別の読了率",
+    "part": "chart",
+    "status": "draft"
+  },
+  "intent": {
+    "message": "記事Aの読了率が最も高い",
+    "audience": "記事の改善担当者",
+    "placement": "article-inline"
+  },
+  "content": {
+    "eyebrow": "CHART",
+    "title": "記事別の読了率を比較する",
+    "subtitle": "単位: %　対象期間: 2026年1–6月",
+    "slots": {}
+  },
+  "data": {
+    "type": "bar",
+    "unit": "%",
+    "period": "2026年1–6月",
+    "rows": [
+      {
+        "category": "記事 A",
+        "value": 81
+      },
+      {
+        "category": "記事 B",
+        "value": 61
+      },
+      {
+        "category": "記事 C",
+        "value": 48
+      },
+      {
+        "category": "記事 D",
+        "value": 33
+      }
+    ]
+  },
+  "source": {
+    "label": "サンプルデータ",
+    "url": "",
+    "accessedAt": "",
+    "note": "公開時は実データへ差し替える"
+  },
+  "accessibility": {
+    "alt": "4記事の読了率を横棒で比較し、記事Aが81%で最も高く、記事Dが33%で最も低いことを示す。",
+    "colorIndependent": true
+  },
+  "output": {
+    "targets": [
+      "blog",
+      "ogp",
+      "square"
+    ],
+    "formats": [
+      "svg",
+      "png"
+    ]
+  }
+}

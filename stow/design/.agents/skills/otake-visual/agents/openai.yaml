@@ -1,0 +1,4 @@
+interface:
+  display_name: "Otake Visual"
+  short_description: "記事から図解・チャート・媒体別画像を一貫して生成・検証する"
+  default_prompt: "Use $otake-visual to turn this article into consistent diagrams and media assets."

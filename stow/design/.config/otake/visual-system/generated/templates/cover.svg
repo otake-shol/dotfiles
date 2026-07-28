@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">記事カバーのテンプレート</title>
+  <desc id="desc">クリーム色の背景に記事タイトル、3つのキーワード、個人ブランドマーカーを配置したカバー。</desc>
+  <rect width="1200" height="675" fill="#FFFBF5"/>
+  <path d="M0 0H28V675H0Z" fill="#1479BE"/>
+  <path d="M28 0H36V675H28Z" fill="#85023E"/>
+  <circle cx="1060" cy="82" r="132" fill="#E8F3FA"/>
+  <circle cx="1132" cy="148" r="62" fill="#F5E7EC"/>
+
+  <g data-slot="eyebrow">
+    <rect x="72" y="64" width="194" height="38" rx="19" fill="#1B2438"/>
+    <text x="169" y="89" text-anchor="middle" fill="#F4F7FC" font-family="'Plus Jakarta Sans', 'Avenir Next', sans-serif" font-size="16px" font-weight="700" letter-spacing="1.4">VISUAL NOTE 001</text>
+  </g>
+
+  <g>
+    <text data-slot="title" x="72" y="190" fill="#1B2438" font-family="'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif" font-size="48px" font-weight="700">
+      <tspan x="72" dy="0">記事の中心メッセージを</tspan>
+      <tspan x="72" dy="68">短く、構造的に伝える</tspan>
+    </text>
+  </g>
+  <text data-slot="subtitle" x="75" y="340" fill="#55617A" font-family="'Noto Sans JP', 'Hiragino Sans', sans-serif" font-size="20px" font-weight="500">補足は一文だけ。詳しい説明は本文へ戻す。</text>
+
+  <g aria-hidden="true">
+    <rect x="78" y="430" width="254" height="94" rx="18" fill="#1B2438"/>
+    <rect x="72" y="424" width="254" height="94" rx="18" fill="#E8F3FA" stroke="#1B2438" stroke-width="2.5px"/>
+    <circle cx="110" cy="471" r="16" fill="#1479BE"/>
+    <text data-slot="label-1" x="142" y="478" fill="#1B2438" font-family="'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif" font-size="20px" font-weight="700">構造</text>
+
+    <rect x="370" y="430" width="254" height="94" rx="18" fill="#1B2438"/>
+    <rect x="364" y="424" width="254" height="94" rx="18" fill="#FFEDE8" stroke="#1B2438" stroke-width="2.5px"/>
+    <circle cx="402" cy="471" r="16" fill="#FF6B4A"/>
+    <text data-slot="label-2" x="434" y="478" fill="#1B2438" font-family="'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif" font-size="20px" font-weight="700">判断</text>
+
+    <rect x="662" y="430" width="254" height="94" rx="18" fill="#1B2438"/>
+    <rect x="656" y="424" width="254" height="94" rx="18" fill="#E3F9F1" stroke="#1B2438" stroke-width="2.5px"/>
+    <circle cx="694" cy="471" r="16" fill="#12C48B"/>
+    <text data-slot="label-3" x="726" y="478" fill="#1B2438" font-family="'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif" font-size="20px" font-weight="700">実践</text>
+  </g>
+
+  <text data-slot="source" x="72" y="620" fill="#687389" font-family="'Noto Sans JP', 'Hiragino Sans', sans-serif" font-size="14px">筆者作成</text>
+  <g transform="translate(892 586)"><g data-slot="brand" aria-label="otake-shol visual note">
+  <rect width="36" height="36" rx="9" fill="#1B2438"/>
+  <circle cx="16" cy="16" r="11" fill="none" stroke="#1479BE" stroke-width="2"/>
+  <g fill="#FFFFFF" aria-hidden="true">
+    <rect x="8" y="12" width="4" height="12" rx="1"/>
+    <rect x="13" y="12" width="4" height="12" rx="1"/>
+    <rect x="18" y="12" width="4" height="12" rx="1"/>
+    <rect x="23" y="12" width="4" height="12" rx="1"/>
+  </g>
+  <text x="48" y="16" fill="#1B2438" font-family="'Plus Jakarta Sans', 'Avenir Next', sans-serif" font-size="16px" font-weight="700">otake-shol</text>
+  <text x="48" y="34" fill="#687389" font-family="'Plus Jakarta Sans', 'Avenir Next', sans-serif" font-size="14px">visual note</text>
+</g></g>
+</svg>

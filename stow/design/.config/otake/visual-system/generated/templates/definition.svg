@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">定義カードのテンプレート</title>
+  <desc id="desc">用語、その短い定義、含むもの、含まないものを示す。</desc>
+  <rect width="1200" height="675" fill="#FFFBF5"/>
+  <rect x="64" y="54" width="142" height="36" rx="18" fill="#744CF0"/>
+  <text data-slot="eyebrow" x="135" y="79" text-anchor="middle" fill="#FFFFFF" font-family="'Plus Jakarta Sans', 'Avenir Next', sans-serif" font-size="16px" font-weight="700">DEFINITION</text>
+  <text data-slot="title" x="64" y="144" fill="#1B2438" font-family="'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif" font-size="36px" font-weight="700">最初に、言葉の意味をそろえる</text>
+  <text data-slot="subtitle" x="66" y="183" fill="#55617A" font-family="'Noto Sans JP', 'Hiragino Sans', sans-serif" font-size="20px">一般的な意味と異なる場合は、この記事での範囲を明記する。</text>
+
+  <g transform="translate(104 232)">
+    <rect x="8" y="8" width="992" height="300" rx="24" fill="#1B2438"/>
+    <rect width="992" height="300" rx="24" fill="#FFFFFF" stroke="#1B2438" stroke-width="4px"/>
+    <rect width="286" height="300" rx="21" fill="#EFEAFF"/>
+    <path d="M286 0V300" stroke="#1B2438" stroke-width="2.5px"/>
+    <text x="32" y="52" fill="#744CF0" font-family="'Plus Jakarta Sans', 'Avenir Next', sans-serif" font-size="16px" font-weight="700">TERM</text>
+    <text data-slot="term" x="32" y="112" fill="#1B2438" font-family="'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif" font-size="36px" font-weight="700">OVS</text>
+    <text data-slot="reading" x="34" y="152" fill="#55617A" font-family="'Plus Jakarta Sans', 'Avenir Next', sans-serif" font-size="16px">Otake Visual System</text>
+    <text data-slot="definition" x="330" y="78" fill="#1B2438" font-family="'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif" font-size="24px" font-weight="700">意図から一貫した図を生成する個人用の仕組み</text>
+    <line x1="330" y1="112" x2="944" y2="112" stroke="#DDE5F0" stroke-width="2.5px"/>
+    <rect x="330" y="146" width="104" height="34" rx="17" fill="#12C48B"/>
+    <text x="382" y="169" text-anchor="middle" fill="#1B2438" font-family="'Noto Sans JP', 'Hiragino Sans', sans-serif" font-size="14px" font-weight="700">含む</text>
+    <text data-slot="includes" x="454" y="170" fill="#55617A" font-family="'Noto Sans JP', 'Hiragino Sans', sans-serif" font-size="20px">brief・SVG・alt・検証</text>
+    <rect x="330" y="210" width="104" height="34" rx="17" fill="#FF6B4A"/>
+    <text x="382" y="233" text-anchor="middle" fill="#1B2438" font-family="'Noto Sans JP', 'Hiragino Sans', sans-serif" font-size="14px" font-weight="700">含まない</text>
+    <text data-slot="excludes" x="454" y="234" fill="#55617A" font-family="'Noto Sans JP', 'Hiragino Sans', sans-serif" font-size="20px">記事本文の代わりになる装飾</text>
+  </g>
+
+  <text data-slot="source" x="64" y="620" fill="#687389" font-family="'Noto Sans JP', 'Hiragino Sans', sans-serif" font-size="14px">筆者作成</text>
+  <g transform="translate(892 586)"><g data-slot="brand" aria-label="otake-shol visual note">
+  <rect width="36" height="36" rx="9" fill="#1B2438"/>
+  <circle cx="16" cy="16" r="11" fill="none" stroke="#1479BE" stroke-width="2"/>
+  <g fill="#FFFFFF" aria-hidden="true">
+    <rect x="8" y="12" width="4" height="12" rx="1"/>
+    <rect x="13" y="12" width="4" height="12" rx="1"/>
+    <rect x="18" y="12" width="4" height="12" rx="1"/>
+    <rect x="23" y="12" width="4" height="12" rx="1"/>
+  </g>
+  <text x="48" y="16" fill="#1B2438" font-family="'Plus Jakarta Sans', 'Avenir Next', sans-serif" font-size="16px" font-weight="700">otake-shol</text>
+  <text x="48" y="34" fill="#687389" font-family="'Plus Jakarta Sans', 'Avenir Next', sans-serif" font-size="14px">visual note</text>
+</g></g>
+</svg>

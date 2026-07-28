@@ -1,0 +1,12 @@
+{
+  "id": "retrospective",
+  "name": "振り返り",
+  "description": "出来事、問題、学び、次の改善を時系列で整理する。",
+  "sequence": ["cover", "timeline", "warning", "before-after", "takeaway"],
+  "prompts": [
+    "転機になった出来事は何か",
+    "再発を防ぎたい失敗は何か",
+    "以前と今で判断や行動はどう変わったか",
+    "次回も再利用できる学びは何か"
+  ]
+}

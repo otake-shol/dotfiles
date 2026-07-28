@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">RAIDログのテンプレート</title>
+  <desc id="desc">リスク、前提、課題、依存関係を4つのカードで整理する。</desc>
+  <rect width="1200" height="675" fill="#FFFBF5"/>
+  <rect x="64" y="54" width="102" height="36" rx="18" fill="#FF6B4A"/>
+  <text data-slot="eyebrow" x="115" y="79" text-anchor="middle" fill="#1B2438" font-family="'Plus Jakarta Sans', 'Avenir Next', sans-serif" font-size="16px" font-weight="700">RAID</text>
+  <text data-slot="title" x="64" y="144" fill="#1B2438" font-family="'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif" font-size="36px" font-weight="700">不確実性を、放置せず担当と期限へ変える</text>
+  <text data-slot="subtitle" x="66" y="183" fill="#55617A" font-family="'Noto Sans JP', 'Hiragino Sans', sans-serif" font-size="20px">Risk / Assumption / Issue / Dependencyを同じ粒度で共有する。</text>
+  <g transform="translate(64 226)" font-family="'Noto Sans JP', 'Hiragino Sans', sans-serif">
+    <g>
+      <rect x="6" y="6" width="250" height="282" rx="18" fill="#1B2438"/>
+      <rect width="250" height="282" rx="18" fill="#FFEDE8" stroke="#1B2438" stroke-width="2.5px"/>
+      <circle cx="34" cy="34" r="12" fill="#FF6B4A"/><text data-slot="label-1" x="58" y="41" fill="#1B2438" font-family="'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif" font-size="20px" font-weight="700">Risk</text>
+      <text data-slot="body-1" x="24" y="104" fill="#1B2438" font-size="20px" font-weight="700">納期の遅延可能性</text>
+      <text x="24" y="150" fill="#55617A" font-size="16px">影響と発生確率を確認</text>
+      <rect x="24" y="218" width="202" height="38" rx="12" fill="#FFFFFF" stroke="#1B2438" stroke-width="1.5px"/>
+      <text data-slot="owner-1" x="125" y="243" text-anchor="middle" fill="#1B2438" font-size="14px" font-weight="700">Owner: PM</text>
+    </g>
+    <g transform="translate(274 0)">
+      <rect x="6" y="6" width="250" height="282" rx="18" fill="#1B2438"/>
+      <rect width="250" height="282" rx="18" fill="#FFF3DF" stroke="#1B2438" stroke-width="2.5px"/>
+      <circle cx="34" cy="34" r="12" fill="#FFA61E"/><text data-slot="label-2" x="58" y="41" fill="#1B2438" font-family="'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif" font-size="20px" font-weight="700">Assumption</text>
+      <text data-slot="body-2" x="24" y="104" fill="#1B2438" font-size="20px" font-weight="700">既存基盤を再利用</text>
+      <text x="24" y="150" fill="#55617A" font-size="16px">検証日を決めて仮説化</text>
+      <rect x="24" y="218" width="202" height="38" rx="12" fill="#FFFFFF" stroke="#1B2438" stroke-width="1.5px"/>
+      <text data-slot="owner-2" x="125" y="243" text-anchor="middle" fill="#1B2438" font-size="14px" font-weight="700">確認: 8/05</text>
+    </g>
+    <g transform="translate(548 0)">
+      <rect x="6" y="6" width="250" height="282" rx="18" fill="#1B2438"/>
+      <rect width="250" height="282" rx="18" fill="#F5E7EC" stroke="#1B2438" stroke-width="2.5px"/>
+      <circle cx="34" cy="34" r="12" fill="#85023E"/><text data-slot="label-3" x="58" y="41" fill="#1B2438" font-family="'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif" font-size="20px" font-weight="700">Issue</text>
+      <text data-slot="body-3" x="24" y="104" fill="#1B2438" font-size="20px" font-weight="700">仕様が一部未確定</text>
+      <text x="24" y="150" fill="#55617A" font-size="16px">解消条件と担当を明記</text>
+      <rect x="24" y="218" width="202" height="38" rx="12" fill="#FFFFFF" stroke="#1B2438" stroke-width="1.5px"/>
+      <text data-slot="owner-3" x="125" y="243" text-anchor="middle" fill="#1B2438" font-size="14px" font-weight="700">Owner: Product</text>
+    </g>
+    <g transform="translate(822 0)">
+      <rect x="6" y="6" width="250" height="282" rx="18" fill="#1B2438"/>
+      <rect width="250" height="282" rx="18" fill="#EFEAFF" stroke="#1B2438" stroke-width="2.5px"/>
+      <circle cx="34" cy="34" r="12" fill="#744CF0"/><text data-slot="label-4" x="58" y="41" fill="#1B2438" font-family="'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif" font-size="20px" font-weight="700">Dependency</text>
+      <text data-slot="body-4" x="24" y="104" fill="#1B2438" font-size="20px" font-weight="700">外部APIの公開待ち</text>
+      <text x="24" y="150" fill="#55617A" font-size="16px">前後関係と代替案を確認</text>
+      <rect x="24" y="218" width="202" height="38" rx="12" fill="#FFFFFF" stroke="#1B2438" stroke-width="1.5px"/>
+      <text data-slot="owner-4" x="125" y="243" text-anchor="middle" fill="#1B2438" font-size="14px" font-weight="700">確認: 8/12</text>
+    </g>
+  </g>
+  <text data-slot="source" x="64" y="620" fill="#687389" font-family="'Noto Sans JP', 'Hiragino Sans', sans-serif" font-size="14px">筆者作成</text>
+  <g transform="translate(892 586)"><g data-slot="brand" aria-label="otake-shol visual note">
+  <rect width="36" height="36" rx="9" fill="#1B2438"/>
+  <circle cx="16" cy="16" r="11" fill="none" stroke="#1479BE" stroke-width="2"/>
+  <g fill="#FFFFFF" aria-hidden="true">
+    <rect x="8" y="12" width="4" height="12" rx="1"/>
+    <rect x="13" y="12" width="4" height="12" rx="1"/>
+    <rect x="18" y="12" width="4" height="12" rx="1"/>
+    <rect x="23" y="12" width="4" height="12" rx="1"/>
+  </g>
+  <text x="48" y="16" fill="#1B2438" font-family="'Plus Jakarta Sans', 'Avenir Next', sans-serif" font-size="16px" font-weight="700">otake-shol</text>
+  <text x="48" y="34" fill="#687389" font-family="'Plus Jakarta Sans', 'Avenir Next', sans-serif" font-size="14px">visual note</text>
+</g></g>
+</svg>

@@ -1,0 +1,130 @@
+// Generated from tokens.json — Otake Visual System 1.1.0
+export const tokens = {
+  "meta": {
+    "name": "Otake Visual System",
+    "shortName": "OVS",
+    "version": "1.1.0"
+  },
+  "canvas": {
+    "width": 1200,
+    "height": 675,
+    "safe": "64px",
+    "grid": "8px"
+  },
+  "color": {
+    "canvas": "#FFFBF5",
+    "surface": "#FFFFFF",
+    "sunken": "#F0F4F8",
+    "ink": "#1B2438",
+    "inkSub": "#55617A",
+    "inkMute": "#687389",
+    "rule": "#DDE5F0",
+    "primary": "#1479BE",
+    "primaryDark": "#0F5F99",
+    "primaryWash": "#E8F3FA",
+    "wine": "#85023E",
+    "wineWash": "#F5E7EC",
+    "coral": "#FF6B4A",
+    "coralWash": "#FFEDE8",
+    "mint": "#12C48B",
+    "mintWash": "#E3F9F1",
+    "mango": "#FFA61E",
+    "mangoWash": "#FFF3DF",
+    "violet": "#744CF0",
+    "violetWash": "#EFEAFF",
+    "yellow": "#FFE66D",
+    "night": "#0E1526",
+    "nightSurface": "#1A2337",
+    "nightInk": "#F4F7FC"
+  },
+  "font": {
+    "heading": "'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif",
+    "body": "'Noto Sans JP', 'Hiragino Sans', sans-serif",
+    "numeric": "'Plus Jakarta Sans', 'Avenir Next', sans-serif",
+    "mono": "'Space Mono', 'SFMono-Regular', monospace"
+  },
+  "type": {
+    "display": "48px",
+    "title": "36px",
+    "heading": "24px",
+    "body": "20px",
+    "label": "16px",
+    "caption": "14px"
+  },
+  "space": {
+    "xs": "8px",
+    "sm": "12px",
+    "md": "16px",
+    "lg": "24px",
+    "xl": "32px",
+    "xxl": "48px",
+    "safe": "64px"
+  },
+  "radius": {
+    "card": "18px",
+    "control": "12px",
+    "pill": "999px"
+  },
+  "stroke": {
+    "hairline": "1.5px",
+    "rule": "2.5px",
+    "emphasis": "4px"
+  },
+  "shadow": {
+    "x": "6px",
+    "y": "6px",
+    "smallX": "3px",
+    "smallY": "3px"
+  },
+  "output": {
+    "blog": {
+      "width": 1200,
+      "height": 675,
+      "safe": 64,
+      "density": "full"
+    },
+    "hatena": {
+      "width": 1200,
+      "height": 675,
+      "safe": 64,
+      "density": "full"
+    },
+    "ogp": {
+      "width": 1200,
+      "height": 630,
+      "safe": 64,
+      "density": "full"
+    },
+    "x": {
+      "width": 1600,
+      "height": 900,
+      "safe": 80,
+      "density": "full"
+    },
+    "square": {
+      "width": 1080,
+      "height": 1080,
+      "safe": 72,
+      "density": "compact"
+    },
+    "vertical": {
+      "width": 1080,
+      "height": 1350,
+      "safe": 72,
+      "density": "compact"
+    },
+    "slide": {
+      "width": 1280,
+      "height": 720,
+      "safe": 64,
+      "density": "full"
+    },
+    "thumbnail": {
+      "width": 600,
+      "height": 338,
+      "safe": 32,
+      "density": "compact"
+    }
+  }
+};
+export default tokens;

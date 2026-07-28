@@ -70,17 +70,19 @@ make runtimes-install      # Java/Node/Python/Terraform が必要になった時
 
 ```
 dotfiles/
-├── stow/                  # GNU Stowパッケージ（13個）
+├── stow/                  # GNU Stowパッケージ（14個）
 │   ├── asdf/
 │   ├── atuin/
 │   ├── bat/
 │   ├── claude/
 │   ├── codex/
 │   ├── cmux/
+│   ├── design/
 │   ├── direnv/
 │   ├── ghostty/
 │   ├── git/
 │   ├── nvim/
+│   ├── ssh/
 │   ├── yazi/
 │   └── zsh/
 ├── templates/             # ローカル設定テンプレート
@@ -95,13 +97,13 @@ dotfiles/
 graph TB
     subgraph bootstrap["bootstrap.sh（ワンコマンドセットアップ）"]
         B1[Homebrew]
-        B1 --> B2[Brewfile 56パッケージ]
+        B1 --> B2[Brewfile 59パッケージ]
         B2 --> B3[GNU Stow シンボリックリンク]
         B3 --> B4[Oh My Zsh + プラグイン]
         B4 --> B5[macOS設定]
     end
 
-    subgraph stow["stow/ — 12パッケージ"]
+    subgraph stow["stow/ — 14パッケージ"]
         S1[zsh]
         S2[git]
         S3[claude]
@@ -114,6 +116,8 @@ graph TB
         S10[atuin]
         S11[direnv]
         S12[asdf]
+        S13[ssh]
+        S14[design]
     end
 
     subgraph shell["zshモジュール読み込み順"]
@@ -133,8 +137,9 @@ graph TB
 |-----------|------|-------------|
 | **zsh** | シェル設定（モジュール分割・遅延読み込み・67エイリアス・OMZ 6プラグイン） | `.zshrc`, `.zsh/{core,plugins,lazy,tools}.zsh` |
 | **git** | Git設定（28エイリアス・delta・git-secrets 8パターン） | `.gitconfig`, `.gitignore_global`, `.commit-template.txt`, `.editorconfig` |
-| **claude** | Claude Code（3 hookスクリプト・9コマンド・権限制御） | `.claude/settings.json`, `hooks/`, `commands/` |
+| **claude** | Claude Code（3 hookスクリプト・10コマンド・権限制御） | `.claude/settings.json`, `hooks/`, `commands/` |
 | **codex** | Codex CLI（config・AGENTS・hook・MCP） | `.codex/config.toml`, `.codex/AGENTS.md`, `.codex/hooks/` |
+| **design** | OVS図解・チャート・媒体別画像・AIスキル | `.config/otake/visual-system/`, `.local/bin/ovs`, `.agents/skills/otake-visual/` |
 | **ghostty** | GPUターミナル（TokyoNight・透過80%・JetBrains Mono） | `.config/ghostty/config` |
 | **cmux** | ワークスペース管理（5プリセット・色分け） | `.config/cmux/cmux.json` |
 | **nvim** | 軽量エディタ（プラグインなし・git commit用） | `.config/nvim/init.lua` |
@@ -143,6 +148,7 @@ graph TB
 | **atuin** | SQLite履歴検索（ファジー・シークレットフィルタ） | `.config/atuin/config.toml` |
 | **direnv** | ディレクトリ別環境変数（.env自動読み込み） | `.config/direnv/direnv.toml` |
 | **asdf** | バージョン管理（Java/Node/Python/Terraform固定） | `.tool-versions` |
+| **ssh** | SSHのStow除外境界（秘密鍵は管理対象外） | `.stow-local-ignore` |
 
 ## シェル起動パフォーマンス
 
@@ -155,12 +161,14 @@ Powerlevel10kの**Instant Prompt**により、体感起動は瞬時。重いツ�
 ```bash
 make install           # 全Stowパッケージをインストール
 make install-zsh       # 個別インストール
+make install-design    # ビジュアルシステムをインストール
 make uninstall         # 全パッケージをアンインストール
 make check             # Stowドライラン（競合検出）
 make check-strict      # Stowドライラン（差分・競合で失敗）
 make doctor            # Stow同期・壊れたリンク検出
 make doctor-plan       # 修復候補を表示（変更なし）
 make lint              # ShellCheck
+make design-check      # ビジュアルシステム生成物・SVG構文チェック
 make clean             # バックアップファイル・.DS_Store削除
 make packages          # パッケージ一覧表示
 make stats             # Stow/Brewfile件数を表示
@@ -176,7 +184,30 @@ make macos-defaults    # macOS defaults を再適用
 
 macOS defaults は `bootstrap.sh` の初回実行時に `~/.dotfiles-macos-defaults-applied` を目印として一度だけ自動適用される。後から再適用したい場合は `make macos-defaults`。実装は `bin/apply-macos-defaults`。
 
-`make runtimes-install` は `stow/asdf/.tool-versions` を読み、未追加の asdf plugin を追加してから `asdf install` を実行する。Java/Node/Python/Terraform は時間とネットワーク依存が大きいため、bootstrap では自動実行せず必要な時だけ実行する。
+`make runtimes-install` は `stow/asdf/.tool-versions` を読み、未追加の asdf plugin を追加してから固定版を導入する。OVS等の基盤用NodeはBrewfileから自動導入し、プロジェクト用のJava/Node/Python/Terraform固定版は時間とネットワーク依存が大きいため、必要な時だけ`make runtimes-install`で追加する。
+
+## Otake Visual System
+
+ブログ記事・スライド・OGP・SNSで使う図表／図解の個人デザインシステムを
+`stow/design/.config/otake/visual-system/` で管理する。インストール後の参照先は
+`~/.config/otake/visual-system/`、CLIは`ovs`。
+
+```bash
+make install-design
+exec zsh
+
+ovs new article-name
+ovs suggest article-name/article.md
+ovs render article-name/article-name.brief.json
+ovs document ~/.config/otake/visual-system/examples/document.md --target html,marp
+ovs gantt ~/.config/otake/visual-system/examples/data/gantt.csv --title "リリース計画"
+ovs preview article-name/dist
+make design-check
+```
+
+18図解パーツ、10チャート、26共通アイコン、6記事・PMレシピ、8媒体サイズを提供する。
+トークンの唯一の正は`tokens.json`。CSS・JavaScript・SVG・Marpテーマは生成物として同期する。
+Claudeは`/visual`、Codexは`$otake-visual`から同じJSON briefとCLIを使う。
 
 ## Brewfileの範囲
 
@@ -191,6 +222,7 @@ OpenAI CodexはHomebrewの `cask "codex"` がCLIを提供する。Codex Desktop�
 GitHub Actionsで以下を自動検証:
 - ShellCheck（bootstrap.sh + bin + Claude/Codex hooks）
 - Codex MCP JavaScript構文チェック
+- OVS全パーツ・チャート・SVG安全性・PNG寸法・Marpテーマ
 - Stow競合検出（全パッケージのドライラン）
 - Zsh構文チェック
 - Brewfile構文検証
@@ -214,7 +246,7 @@ cc                     # 最新セッション続行
 cls                    # セッション一覧
 ```
 
-カスタムコマンド: `/verify`, `/commit-push`, `/spec`, `/review`, `/test`, `/worktree`, `/slides`, `/pc-checkup`, `/release-ios`
+カスタムコマンド: `/verify`, `/commit-push`, `/spec`, `/review`, `/test`, `/worktree`, `/slides`, `/visual`, `/pc-checkup`, `/release-ios`
 
 ## Codex
 

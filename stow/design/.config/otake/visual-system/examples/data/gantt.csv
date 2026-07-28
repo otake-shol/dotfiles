@@ -1,0 +1,7 @@
+id,task,group,start,end,owner,status,progress,dependsOn,milestone
+requirements,要件整理,企画,2026-08-01,2026-08-05,PM,完了,100,,false
+design,UIデザイン,制作,2026-08-06,2026-08-11,Design,完了,100,requirements,false
+implementation,実装,制作,2026-08-12,2026-08-21,Dev,進行中,55,design,false
+api-review,API仕様確認,外部依存,2026-08-06,2026-08-14,PM,遅延,40,requirements,false
+qa,結合テスト,検証,2026-08-22,2026-08-27,QA,未着手,0,implementation|api-review,false
+release,公開,リリース,2026-08-28,2026-08-28,PM,未着手,0,qa,true

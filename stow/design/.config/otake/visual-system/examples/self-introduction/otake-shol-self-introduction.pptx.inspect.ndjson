@@ -1,0 +1,63 @@
+{"kind":"deck","id":"pr/p0s3qk","name":"Deck"}
+{"kind":"layout","layoutId":"c44838c7-cdfb-435d-9e48-16c658c3e47b","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"655eec45-953e-4fd3-bb04-5b173c8f2387","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/kupohe","slide":1,"title":"SELF INTRODUCTION","textShapes":7}
+{"kind":"shape","id":"sh/ovul4jml","slide":1,"name":"portrait-rule","bbox":[606,0,12,720]}
+{"kind":"textbox","id":"sh/2tc32t4f","slide":1,"name":"title-eyebrow","text":"SELF INTRODUCTION","textPreview":"SELF INTRODUCTION","textChars":17,"textLines":1,"bbox":[64,58,214,38]}
+{"kind":"textbox","id":"sh/1832tonu","slide":1,"name":"name-ja","text":"竹内 尊紀","textPreview":"竹内 尊紀","textChars":5,"textLines":1,"bbox":[64,142,470,80]}
+{"kind":"textbox","id":"sh/g7al0j69","slide":1,"name":"name-en","text":"Takanori Takeuchi  /  otake-shol","textPreview":"Takanori Takeuchi  /  otake-shol","textChars":32,"textLines":1,"bbox":[68,222,490,34]}
+{"kind":"shape","id":"sh/f61kre54","slide":1,"name":"title-divider","bbox":[64,286,448,0]}
+{"kind":"textbox","id":"sh/u5sjy9oj","slide":1,"name":"role","text":"PjM・開発PL\n× Engineer","textPreview":"PjM・開発PL | × Engineer","textChars":19,"textLines":2,"bbox":[64,324,470,110]}
+{"kind":"textbox","id":"sh/t4j2p4ny","slide":1,"name":"title-message","text":"技術を理解しながら、\n開発運営を設計する。","textPreview":"技術を理解しながら、 | 開発運営を設計する。","textChars":21,"textLines":2,"bbox":[64,472,484,100]}
+{"kind":"textbox","id":"sh/s3a1wz6d","slide":1,"name":"hobby-note","text":"学生時代はバンドで鍵盤担当","textPreview":"学生時代はバンドで鍵盤担当","textChars":13,"textLines":1,"bbox":[66,612,440,30]}
+{"kind":"textbox","id":"sh/6tk3ypsv","slide":1,"name":"footer-1","text":"otake-shol / self introduction  ·  01","textPreview":"otake-shol / self introduction  ·  01","textChars":37,"textLines":1,"bbox":[64,680,420,22]}
+{"kind":"image","id":"im/q5sfmlwr","slide":1,"name":"","alt":"ショルダーキーボードを演奏する竹内尊紀","bbox":[618,0,662,720]}
+{"kind":"notes","id":"nt/kupohe","slide":1,"text":"[Sources]\n- /Users/otake-shol/otake-ya/projects/web/my-portfolio/public/images/profile.jpg\n- /Users/otake-shol/otake-ya/projects/web/my-portfolio/README.md"}
+{"kind":"slide","id":"sl/ciu080","slide":2,"title":"Slide 2","textShapes":0}
+{"kind":"image","id":"im/0f6tcnyt","slide":2,"name":"","alt":"実装から開発運営、PjMへ役割が広がった経歴タイムライン","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/ciu080","slide":2,"text":"[Sources]\n- /Users/otake-shol/otake-ya/projects/web/my-portfolio/src/locales/ja.json\n- /Users/otake-shol/dotfiles/stow/design/.config/otake/visual-system/examples/self-introduction/briefs/career-timeline.brief.json\n- https://www.otake-shol.com"}
+{"kind":"slide","id":"sl/8e3go9","slide":3,"title":"強みは、技術と運営を同じ解像度で扱えること","textShapes":10}
+{"kind":"textbox","id":"sh/1gf6xc7u","slide":3,"name":"strength-title","text":"強みは、技術と運営を同じ解像度で扱えること","textPreview":"強みは、技術と運営を同じ解像度で扱えること","textChars":21,"textLines":1,"bbox":[64,54,1152,64]}
+{"kind":"textbox","id":"sh/edo7mh83","slide":3,"name":"strength-subtitle","text":"Requirements × Technology × Risk","textPreview":"Requirements × Technology × Risk","textChars":32,"textLines":1,"bbox":[66,126,560,36]}
+{"kind":"shape","id":"sh/fexov2po","slide":3,"name":"strength-left-rule","bbox":[64,208,500,0]}
+{"kind":"textbox","id":"sh/sbmpk7qd","slide":3,"name":"technical-heading","text":"TECHNICAL\nCONTEXT","textPreview":"TECHNICAL | CONTEXT","textChars":17,"textLines":2,"bbox":[64,230,440,112]}
+{"kind":"textbox","id":"sh/tcv6tc7y","slide":3,"name":"technical-body","text":"実装・レビュー・運用の経験を土台に、\n技術的な制約と選択肢を読み解く。","textPreview":"実装・レビュー・運用の経験を土台に、 | 技術的な制約と選択肢を読み解く。","textChars":35,"textLines":2,"bbox":[64,366,470,72]}
+{"kind":"textbox","id":"sh/6947ix87","slide":3,"name":"times","text":"×","textPreview":"×","textChars":1,"textLines":1,"bbox":[582,276,110,90]}
+{"kind":"shape","id":"sh/rador2ps","slide":3,"name":"strength-right-rule","bbox":[718,208,498,0]}
+{"kind":"textbox","id":"sh/c7qpwrqh","slide":3,"name":"project-heading","text":"PROJECT\nDESIGN","textPreview":"PROJECT | DESIGN","textChars":14,"textLines":2,"bbox":[718,230,440,112]}
+{"kind":"textbox","id":"sh/x8zq5w72","slide":3,"name":"project-body","text":"要求・計画・依存・リスク・品質をつなぎ、\n継続できる開発運営へ落とし込む。","textPreview":"要求・計画・依存・リスク・品質をつなぎ、 | 継続できる開発運営へ落とし込む。","textChars":37,"textLines":2,"bbox":[718,366,498,72]}
+{"kind":"shape","id":"sh/x0b29cve","slide":3,"name":"strength-quote-bg","bbox":[64,478,1152,106]}
+{"kind":"textbox","id":"sh/wz210rut","slide":3,"name":"strength-quote","text":"技術的な論点を理解したうえで、運営の仕組みを設計する。","textPreview":"技術的な論点を理解したうえで、運営の仕組みを設計する。","textChars":27,"textLines":1,"bbox":[98,505,1084,42]}
+{"kind":"textbox","id":"sh/vyt07md8","slide":3,"name":"credentials","text":"PMP®  ·  IPA プロジェクトマネージャ  ·  CSM  ·  AWS SAA  ·  Java Gold","textPreview":"PMP®  ·  IPA プロジェクトマネージャ  ·  CSM  ·  AWS SAA  ·  Java Gold","textChars":58,"textLines":1,"bbox":[64,622,1152,30]}
+{"kind":"textbox","id":"sh/axkjyhcn","slide":3,"name":"footer-3","text":"otake-shol / self introduction  ·  03","textPreview":"otake-shol / self introduction  ·  03","textChars":37,"textLines":1,"bbox":[64,680,420,22]}
+{"kind":"notes","id":"nt/8e3go9","slide":3,"text":"[Sources]\n- /Users/otake-shol/otake-ya/projects/web/my-portfolio/src/locales/ja.json\n- /Users/otake-shol/otake-ya/projects/web/my-portfolio/src/app/card/page.tsx"}
+{"kind":"slide","id":"sl/8r6ayd","slide":4,"title":"個人開発では、学習体験をプロダクトまで仕上げる","textShapes":11}
+{"kind":"textbox","id":"sh/87ql0fa5","slide":4,"name":"product-title","text":"個人開発では、学習体験をプロダクトまで仕上げる","textPreview":"個人開発では、学習体験をプロダクトまで仕上げる","textChars":23,"textLines":1,"bbox":[64,52,1010,64]}
+{"kind":"textbox","id":"sh/m5o3y5sf","slide":4,"name":"metric-one","text":"2,100","textPreview":"2,100","textChars":5,"textLines":1,"bbox":[64,166,330,88]}
+{"kind":"textbox","id":"sh/hczmdkr2","slide":4,"name":"metric-one-label","text":"オリジナル基本問題","textPreview":"オリジナル基本問題","textChars":9,"textLines":1,"bbox":[70,250,360,34]}
+{"kind":"textbox","id":"sh/wbql4fah","slide":4,"name":"metric-two","text":"314","textPreview":"314","textChars":3,"textLines":1,"bbox":[64,320,260,80]}
+{"kind":"textbox","id":"sh/vah4butw","slide":4,"name":"metric-two-label","text":"論点まとめ","textPreview":"論点まとめ","textChars":5,"textLines":1,"bbox":[70,396,300,34]}
+{"kind":"textbox","id":"sh/u9832psb","slide":4,"name":"metric-three","text":"21","textPreview":"21","textChars":2,"textLines":1,"bbox":[64,466,210,80]}
+{"kind":"textbox","id":"sh/xgf210bi","slide":4,"name":"metric-three-label","text":"横断比較表","textPreview":"横断比較表","textChars":5,"textLines":1,"bbox":[70,542,300,34]}
+{"kind":"textbox","id":"sh/cfmlsvax","slide":4,"name":"product-message","text":"問題演習と知識整理を、\n一つの学習導線にまとめる。","textPreview":"問題演習と知識整理を、 | 一つの学習導線にまとめる。","textChars":25,"textLines":2,"bbox":[398,200,310,92]}
+{"kind":"textbox","id":"sh/u90v6d4z","slide":4,"name":"product-features","text":"全7科目 × 300問\n完全オフライン\n買い切り・サブスクなし","textPreview":"全7科目 × 300問 | 完全オフライン | 買い切り・サブスクなし","textChars":31,"textLines":3,"bbox":[400,340,300,116]}
+{"kind":"shape","id":"sh/va9czi5k","slide":4,"name":"phone-shadow","bbox":[834,146,310,518]}
+{"kind":"textbox","id":"sh/hcru1snq","slide":4,"name":"product-process","text":"構想 → 設計 → 実装 → 公開 → 改善","textPreview":"構想 → 設計 → 実装 → 公開 → 改善","textChars":22,"textLines":1,"bbox":[400,548,400,40]}
+{"kind":"textbox","id":"sh/id0vax4b","slide":4,"name":"footer-4","text":"otake-shol / self introduction  ·  04","textPreview":"otake-shol / self introduction  ·  04","textChars":37,"textLines":1,"bbox":[64,680,420,22]}
+{"kind":"image","id":"im/u5876d0j","slide":4,"name":"","geometry":"roundRect","alt":"中小企業診断士1次試験対策アプリのアイコン","bbox":[1110,42,106,106]}
+{"kind":"image","id":"im/fudob29k","slide":4,"name":"","geometry":"roundRect","alt":"中小企業診断士1次試験対策アプリのホーム画面","bbox":[818,130,310,518]}
+{"kind":"notes","id":"nt/8r6ayd","slide":4,"text":"[Sources]\n- /Users/otake-shol/otake-ya/projects/web/my-portfolio/src/data/apps.ts\n- /Users/otake-shol/otake-ya/projects/web/my-portfolio/public/apps/shindanshi/screenshots/01_home.png\n- /Users/otake-shol/otake-ya/projects/web/my-portfolio/public/apps/shindanshi/icon.png"}
+{"kind":"slide","id":"sl/vgnzji","slide":5,"title":"Slide 5","textShapes":0}
+{"kind":"image","id":"im/x4fmx8zu","slide":5,"name":"","alt":"プロダクトを作り、価値を伝え、仕組みへ残す個人開発の流れ","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/vgnzji","slide":5,"text":"[Sources]\n- /Users/otake-shol/dotfiles/README.md\n- /Users/otake-shol/dotfiles/stow/design/.config/otake/visual-system/README.md\n- /Users/otake-shol/dotfiles/stow/design/.config/otake/visual-system/examples/self-introduction/briefs/personal-system.brief.json"}
+{"kind":"slide","id":"sl/gknbws","slide":6,"title":"WHAT I BRING","textShapes":6}
+{"kind":"shape","id":"sh/654zuh8z","slide":6,"name":"close-wine-bar","bbox":[0,0,18,720]}
+{"kind":"textbox","id":"sh/t8vy5crq","slide":6,"name":"close-eyebrow","text":"WHAT I BRING","textPreview":"WHAT I BRING","textChars":12,"textLines":1,"bbox":[68,62,300,30]}
+{"kind":"textbox","id":"sh/s7mhw7q5","slide":6,"name":"close-title","text":"技術を理解し、\n運営を設計し、\n成果が続く形にする。","textPreview":"技術を理解し、 | 運営を設計し、 | 成果が続く形にする。","textChars":26,"textLines":3,"bbox":[64,132,530,230]}
+{"kind":"textbox","id":"sh/jitgz298","slide":6,"name":"close-name","text":"竹内 尊紀  /  Takanori Takeuchi","textPreview":"竹内 尊紀  /  Takanori Takeuchi","textChars":27,"textLines":1,"bbox":[66,424,520,34]}
+{"kind":"textbox","id":"sh/ihkzqx83","slide":6,"name":"close-links","text":"otake-shol.com\n\ngithub.com/otake-shol","textPreview":"otake-shol.com |  | github.com/otake-shol","textChars":37,"textLines":3,"bbox":[66,486,430,94]}
+{"kind":"shape","id":"sh/5kvy1cre","slide":6,"name":"portfolio-frame-shadow","bbox":[684,148,540,330]}
+{"kind":"textbox","id":"sh/3exgb69s","slide":6,"name":"close-caption","text":"Project Manager  ×  Business Analyst  ×  Engineer","textPreview":"Project Manager  ×  Business Analyst  ×  Engineer","textChars":49,"textLines":1,"bbox":[670,512,538,34]}
+{"kind":"textbox","id":"sh/2doz2187","slide":6,"name":"footer-6","text":"otake-shol / self introduction  ·  06","textPreview":"otake-shol / self introduction  ·  06","textChars":37,"textLines":1,"bbox":[64,680,420,22]}
+{"kind":"image","id":"im/98nux0jq","slide":6,"name":"","geometry":"roundRect","alt":"otake-sholポートフォリオサイトの画面","bbox":[668,132,540,330]}
+{"kind":"notes","id":"nt/gknbws","slide":6,"text":"[Sources]\n- /Users/otake-shol/otake-ya/projects/web/my-portfolio/public/images/works/portfolio.jpg\n- https://www.otake-shol.com\n- https://github.com/otake-shol"}

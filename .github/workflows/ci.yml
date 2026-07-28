@@ -25,7 +25,10 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y stow shellcheck zsh
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y stow shellcheck zsh libxml2-utils librsvg2-bin
+          npm install --global @marp-team/marp-cli@4.4.0
 
       - name: ShellCheck
         run: make lint

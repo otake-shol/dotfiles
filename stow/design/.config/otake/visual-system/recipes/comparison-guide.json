@@ -1,0 +1,12 @@
+{
+  "id": "comparison-guide",
+  "name": "比較・選定",
+  "description": "変更前後と選択肢を同じ判断軸で比較する。",
+  "sequence": ["cover", "before-after", "comparison", "matrix", "takeaway"],
+  "prompts": [
+    "比較前後で変わる状態は何か",
+    "全候補に共通する判断軸は何か",
+    "優先順位を分ける2軸は何か",
+    "誰に何を推奨するか"
+  ]
+}

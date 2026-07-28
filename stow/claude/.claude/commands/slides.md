@@ -1,6 +1,6 @@
 ---
-description: Markdownスライドを生成（クイック/インタラクティブ）
-allowed-tools: Read, Write, Glob, Bash(marp *), Bash(mkdir *), Bash(open *)
+description: OVSテーマでMarkdownスライドを生成（クイック/インタラクティブ）
+allowed-tools: Read, Write, Glob, Bash(marp *), Bash(ovs *), Bash(mkdir *), Bash(open *)
 ---
 
 # /slides - AIスライド生成
@@ -77,7 +77,7 @@ Marp CLIを使ってMarkdownからスライド（PDF/HTML/PPTX）を生成する
 marp: true
 paginate: true
 size: 16:9
-theme: catppuccin-latte
+theme: otake-visual
 ---
 ```
 
@@ -90,29 +90,29 @@ theme: catppuccin-latte
 - スライドタイプに応じてクラスを使い分ける（lead, invert, quote, columns）
 - `---` でスライドを区切る
 
-## カスタムテーマ
+## OVSテーマ
 
-Catppuccin Latteテーマを使う場合：
+ブログ図解と同じOtake Visual Systemテーマを標準で使う：
 
 ```bash
-marp --no-stdin slide.md -o slide.pdf --theme ~/.claude/commands/slides-theme.css
+marp --no-stdin slide.md -o slide.pdf --theme ~/.config/otake/visual-system/generated/marp.css
 ```
 
-テーマを使うかどうかはユーザーに確認する。
+色・フォント・カード・強調は`tokens.json`由来。スライド側で色を直接追加しない。
 
 ## 出力
 
 出力先ディレクトリをユーザーに確認した上で、3形式を同時生成：
 
 ```bash
-marp --no-stdin slide.md -o slide.pdf
-marp --no-stdin slide.md -o slide.html
-marp --no-stdin slide.md -o slide.pptx
+marp --no-stdin slide.md -o slide.pdf --theme ~/.config/otake/visual-system/generated/marp.css
+marp --no-stdin slide.md -o slide.html --theme ~/.config/otake/visual-system/generated/marp.css
+marp --no-stdin slide.md -o slide.pptx --theme ~/.config/otake/visual-system/generated/marp.css
 ```
 
 注意: `--no-stdin` は必須。省略するとstdin待ちでハングする。
 
-カスタムテーマ使用時は各コマンドに `--theme ~/.claude/commands/slides-theme.css` を追加。
+`--theme ~/.config/otake/visual-system/generated/marp.css`を常に付ける。
 
 生成後、`open slide.pdf` でプレビューを開く。
 
@@ -144,9 +144,9 @@ marp --no-stdin slide.md -o slide.pptx
 
 ```markdown
 <!-- _class: lead -->           <!-- このスライドのみクラス適用 -->
-<!-- _backgroundColor: #000 --> <!-- このスライドのみ背景色 -->
-<!-- _color: #fff -->           <!-- このスライドのみ文字色 -->
 ```
+
+背景色と文字色を直接指定せず、OVSテーマのクラスを使う。
 
 ### フィットヘッダー
 
@@ -156,6 +156,6 @@ marp --no-stdin slide.md -o slide.pptx
 
 ### デザイン原則
 
-- **視覚階層**: h1=青(accent), h2=紫(accent2), h3=シアン(cyan)
-- **強調**: `**太字**`=黄色, `<mark>ハイライト</mark>`=黄色背景
+- **視覚階層**: 濃紺の本文、Recruit Blueの主張、wineの補助強調
+- **強調**: `**太字**`=wine、`<mark>ハイライト</mark>`=yellow背景
 - **余白**: 詰め込みすぎない。1スライド1メッセージを徹底

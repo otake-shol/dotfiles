@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" role="img" aria-labelledby="title">
+  <title id="title">レビュー</title>
+  <g fill="none" stroke="#1B2438" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 3h12v14H4Z"/>
+    <path d="m8 8 2 2 4-4"/>
+    <path d="M8 13h5"/>
+    <path d="M15.5 16.5 21 22"/>
+  </g>
+</svg>

@@ -11,14 +11,15 @@ STOW_COMMON_FLAGS := -v --target=$(HOME) --dir=$(STOW_DIR) $(STOW_IGNORE_FLAGS)
 STOW_INSTALL_FLAGS := $(STOW_COMMON_FLAGS) --restow
 STOW_DELETE_FLAGS := $(STOW_COMMON_FLAGS)
 STOW_SIMULATE_FLAGS := --target=$(HOME) --dir=$(STOW_DIR) $(STOW_IGNORE_FLAGS)
-PACKAGES := zsh git nvim ghostty bat atuin claude codex yazi direnv cmux asdf ssh
+PACKAGES := zsh git nvim ghostty bat atuin claude codex yazi direnv cmux asdf ssh design
 TOOL_VERSIONS := stow/asdf/.tool-versions
+VISUAL_SYSTEM_DIR := stow/design/.config/otake/visual-system
 DOCTOR_LINK_DIRS := "$$HOME" "$$HOME/.config" "$$HOME/.claude" "$$HOME/.codex" "$$HOME/.docker" "$$HOME/.gnupg" "$$HOME/Library/Application Support/com.mitchellh.ghostty" "$$HOME/Library/LaunchAgents"
 SNAPSHOT_DIR := .snapshot/$(shell date +%Y%m%d-%H%M%S)
 # tomllib (Python 3.11+) が使える python を検出。macOSのシステムpython3は3.9なのでbrewのpython@3.xを優先。
 TOML_PYTHON := $(shell for p in python3.14 python3.13 python3.12 python3.11 python3; do if command -v $$p >/dev/null 2>&1 && $$p -c 'import tomllib' >/dev/null 2>&1; then echo $$p; break; fi; done)
 
-.PHONY: help install uninstall check check-strict check-conflicts bootstrap lint clean install-% uninstall-% packages stats readme-check readme-sync runtimes-install versions-audit doctor doctor-plan doctor-clean-broken setup-fastlane-env validate snapshot new-mac macos-defaults
+.PHONY: help install uninstall check check-strict check-conflicts bootstrap lint design-check clean install-% uninstall-% packages stats readme-check readme-sync runtimes-install versions-audit doctor doctor-plan doctor-clean-broken setup-fastlane-env validate snapshot new-mac macos-defaults
 
 help:
 	@echo "Usage:"
@@ -32,6 +33,7 @@ help:
 	@echo "  make doctor-plan      修復候補を表示（変更なし）"
 	@echo "  make bootstrap        完全セットアップ"
 	@echo "  make lint             ShellCheck"
+	@echo "  make design-check     ビジュアルシステム生成物・SVG構文チェック"
 	@echo "  make clean            バックアップファイル削除"
 	@echo "  make stats            パッケージ数を表示"
 	@echo "  make readme-check     README内の件数が実体と一致するか確認"
@@ -143,7 +145,7 @@ setup-fastlane-env:
 macos-defaults:
 	@bash ./bin/apply-macos-defaults
 
-validate: lint readme-check
+validate: lint readme-check design-check
 	@if [ "$${CI:-}" = "true" ]; then \
 	  $(MAKE) check-conflicts; \
 	else \
@@ -309,7 +311,8 @@ SHELLCHECK_TARGETS := bootstrap.sh \
 	bin/setup-fastlane-env bin/apply-macos-defaults \
 	$(wildcard stow/claude/.claude/hooks/*.sh) \
 	$(wildcard stow/codex/.codex/hooks/*.sh) \
-	$(wildcard stow/codex/.codex/bin/*.sh)
+	$(wildcard stow/codex/.codex/bin/*.sh) \
+	$(wildcard stow/design/.local/bin/*)
 
 lint:
 	@shellcheck -S warning $(SHELLCHECK_TARGETS)
@@ -317,6 +320,47 @@ lint:
 		node --check stow/codex/.codex/bin/*.mjs; \
 	else \
 		echo "node not found; skipping .mjs syntax check"; \
+	fi
+
+design-check:
+	@command -v node >/dev/null 2>&1 || { \
+		echo "node not found; OVSのビルドとCLI実行に必須です（brew install node）"; \
+		exit 1; \
+	}
+	@node --check $(VISUAL_SYSTEM_DIR)/scripts/build.mjs
+	@node --check $(VISUAL_SYSTEM_DIR)/scripts/core.mjs
+	@node --check $(VISUAL_SYSTEM_DIR)/scripts/ovs.mjs
+	@node $(VISUAL_SYSTEM_DIR)/scripts/build.mjs --check
+	@for json in $$(find $(VISUAL_SYSTEM_DIR) -name '*.json' -type f); do \
+		node -e 'JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8"))' "$$json"; \
+	done
+	@node --test $(VISUAL_SYSTEM_DIR)/test/*.test.mjs
+	@if command -v xmllint >/dev/null 2>&1; then \
+		for svg in $(VISUAL_SYSTEM_DIR)/generated/templates/*.svg $(VISUAL_SYSTEM_DIR)/generated/icons/*.svg; do \
+			xmllint --noout "$$svg"; \
+		done; \
+		echo "✓ visual-system SVG"; \
+	else \
+		echo "xmllint not found; skipping visual-system SVG syntax check"; \
+	fi
+	@if command -v rsvg-convert >/dev/null 2>&1; then \
+		tmp_png=$$(mktemp "$${TMPDIR:-/tmp}/ovs-render.XXXXXX"); \
+		trap 'rm -f "$$tmp_png"' EXIT; \
+		for svg in $(VISUAL_SYSTEM_DIR)/generated/templates/*.svg; do \
+			rsvg-convert --width 320 --output "$$tmp_png" "$$svg"; \
+		done; \
+		echo "✓ visual-system 320px render"; \
+	else \
+		echo "rsvg-convert not found; skipping visual-system render check"; \
+	fi
+	@if command -v marp >/dev/null 2>&1; then \
+		tmp_html=$$(mktemp "$${TMPDIR:-/tmp}/ovs-marp.XXXXXX"); \
+		trap 'rm -f "$$tmp_html"' EXIT; \
+		marp --no-stdin --html --theme $(VISUAL_SYSTEM_DIR)/generated/marp.css \
+			$(VISUAL_SYSTEM_DIR)/examples/slide.md --output "$$tmp_html" >/dev/null; \
+		echo "✓ visual-system Marp theme"; \
+	else \
+		echo "marp not found; skipping visual-system theme check"; \
 	fi
 
 clean:
@@ -397,4 +441,3 @@ versions-audit:
 			printf "  ✓ %s pinned=%s\n" "$$tool" "$$version"; \
 		fi; \
 	done < "$$tool_versions"
-

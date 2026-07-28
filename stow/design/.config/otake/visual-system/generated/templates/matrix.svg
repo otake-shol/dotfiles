@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">2軸マトリクスのテンプレート</title>
+  <desc id="desc">重要度と実行容易性の2軸に4つの対象を配置する。</desc>
+  <defs>
+    <marker id="axis-arrow" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto">
+      <path d="M1 1L10 5.5L1 10Z" fill="#1B2438"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="675" fill="#FFFBF5"/>
+  <rect x="64" y="54" width="132" height="36" rx="18" fill="#744CF0"/>
+  <text data-slot="eyebrow" x="130" y="79" text-anchor="middle" fill="#FFFFFF" font-family="'Plus Jakarta Sans', 'Avenir Next', sans-serif" font-size="16px" font-weight="700">MATRIX</text>
+  <text data-slot="title" x="64" y="144" fill="#1B2438" font-family="'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif" font-size="36px" font-weight="700">2つの軸で、優先する領域を見つける</text>
+
+  <g transform="translate(250 210)">
+    <rect x="6" y="6" width="720" height="360" rx="18" fill="#1B2438"/>
+    <rect width="720" height="360" rx="18" fill="#FFFFFF" stroke="#1B2438" stroke-width="2.5px"/>
+    <path d="M0 180H720M360 0V360" stroke="#1B2438" stroke-width="1.5px"/>
+    <path d="M0 0H360V180H0Z" fill="#E8F3FA"/>
+    <path d="M360 0H720V180H360Z" fill="#E3F9F1"/>
+    <path d="M0 180H360V360H0Z" fill="#F0F4F8"/>
+    <path d="M360 180H720V360H360Z" fill="#FFF3DF"/>
+    <path d="M0 180H720M360 0V360" stroke="#1B2438" stroke-width="1.5px"/>
+
+    <text data-slot="label-quadrant-1" x="28" y="38" fill="#0F5F99" font-family="'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif" font-size="16px" font-weight="700">計画して育てる</text>
+    <text data-slot="label-quadrant-2" x="388" y="38" fill="#1B2438" font-family="'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif" font-size="16px" font-weight="700">今すぐ着手</text>
+    <text data-slot="label-quadrant-3" x="28" y="218" fill="#55617A" font-family="'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif" font-size="16px" font-weight="700">保留・観察</text>
+    <text data-slot="label-quadrant-4" x="388" y="218" fill="#1B2438" font-family="'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif" font-size="16px" font-weight="700">小さく試す</text>
+
+    <g data-slot="point-1">
+      <circle cx="548" cy="86" r="19" fill="#12C48B" stroke="#1B2438" stroke-width="2.5px"/>
+      <rect x="574" y="68" width="112" height="36" rx="18" fill="#FFFFFF" stroke="#1B2438" stroke-width="1.5px"/>
+      <text data-slot="point-label-1" x="630" y="92" text-anchor="middle" fill="#1B2438" font-family="'Noto Sans JP', 'Hiragino Sans', sans-serif" font-size="16px" font-weight="700">施策 A</text>
+    </g>
+    <g data-slot="point-2">
+      <circle cx="438" cy="138" r="17" fill="#1479BE" stroke="#1B2438" stroke-width="2.5px"/>
+      <text data-slot="point-label-2" x="438" y="144" text-anchor="middle" fill="#FFFFFF" font-family="'Plus Jakarta Sans', 'Avenir Next', sans-serif" font-size="16px" font-weight="700">B</text>
+    </g>
+    <g data-slot="point-3">
+      <circle cx="518" cy="278" r="17" fill="#FFA61E" stroke="#1B2438" stroke-width="2.5px"/>
+      <text data-slot="point-label-3" x="518" y="284" text-anchor="middle" fill="#1B2438" font-family="'Plus Jakarta Sans', 'Avenir Next', sans-serif" font-size="16px" font-weight="700">C</text>
+    </g>
+    <g data-slot="point-4">
+      <circle cx="204" cy="112" r="17" fill="#744CF0" stroke="#1B2438" stroke-width="2.5px"/>
+      <text data-slot="point-label-4" x="204" y="118" text-anchor="middle" fill="#FFFFFF" font-family="'Plus Jakarta Sans', 'Avenir Next', sans-serif" font-size="16px" font-weight="700">D</text>
+    </g>
+  </g>
+
+  <line x1="226" y1="590" x2="1000" y2="590" stroke="#1B2438" stroke-width="2.5px" marker-end="url(#axis-arrow)"/>
+  <text data-slot="label-x-low" x="218" y="618" fill="#55617A" font-family="'Noto Sans JP', 'Hiragino Sans', sans-serif" font-size="16px">実行が難しい</text>
+  <text data-slot="label-x-high" x="800" y="618" fill="#55617A" font-family="'Noto Sans JP', 'Hiragino Sans', sans-serif" font-size="16px">実行しやすい</text>
+  <line x1="218" y1="582" x2="218" y2="196" stroke="#1B2438" stroke-width="2.5px" marker-end="url(#axis-arrow)"/>
+  <text data-slot="label-y-high" x="92" y="232" fill="#55617A" font-family="'Noto Sans JP', 'Hiragino Sans', sans-serif" font-size="16px">重要度が高い</text>
+  <text data-slot="source" x="64" y="650" fill="#687389" font-family="'Noto Sans JP', 'Hiragino Sans', sans-serif" font-size="14px">筆者作成</text>
+  <g transform="translate(936 620)"><g data-slot="brand" aria-label="otake-shol visual note">
+  <rect width="36" height="36" rx="9" fill="#1B2438"/>
+  <circle cx="16" cy="16" r="11" fill="none" stroke="#1479BE" stroke-width="2"/>
+  <g fill="#FFFFFF" aria-hidden="true">
+    <rect x="8" y="12" width="4" height="12" rx="1"/>
+    <rect x="13" y="12" width="4" height="12" rx="1"/>
+    <rect x="18" y="12" width="4" height="12" rx="1"/>
+    <rect x="23" y="12" width="4" height="12" rx="1"/>
+  </g>
+  <text x="48" y="16" fill="#1B2438" font-family="'Plus Jakarta Sans', 'Avenir Next', sans-serif" font-size="16px" font-weight="700">otake-shol</text>
+  <text x="48" y="34" fill="#687389" font-family="'Plus Jakarta Sans', 'Avenir Next', sans-serif" font-size="14px">visual note</text>
+</g></g>
+</svg>

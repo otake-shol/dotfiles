@@ -1,0 +1,47 @@
+{
+  "$schema": "../../../schemas/brief.schema.json",
+  "meta": {
+    "id": "self-intro-career",
+    "title": "自己紹介・経歴",
+    "part": "timeline",
+    "status": "draft"
+  },
+  "intent": {
+    "message": "実装経験を土台に、開発運営とPjMへ役割を広げてきた",
+    "audience": "初対面のプロジェクト関係者",
+    "placement": "slide"
+  },
+  "content": {
+    "eyebrow": "CAREER",
+    "title": "役割は、実装から開発運営へ広がった",
+    "subtitle": "HR領域を中心とするBtoC Webサービスで約8年。",
+    "slots": {
+      "date-1": "ENGINEER",
+      "label-1": "実装・レビュー",
+      "body-1": "約4年",
+      "date-2": "TEAM LEAD",
+      "label-2": "BEチームを牽引",
+      "body-2": "約1年",
+      "date-3": "DEV PL",
+      "label-3": "開発全体を設計",
+      "body-3": "約3年",
+      "date-4": "PjM",
+      "label-4": "複数系統を横断",
+      "body-4": "兼務 約1年9か月"
+    }
+  },
+  "source": {
+    "label": "otake-shol Portfolio 公開プロフィール",
+    "url": "https://www.otake-shol.com",
+    "accessedAt": "2026-07-28",
+    "note": ""
+  },
+  "accessibility": {
+    "alt": "エンジニア約4年、バックエンドチームリーダー約1年、開発PL約3年を経て、約1年9か月PjMを兼務した経歴を左から右へ示す。",
+    "colorIndependent": true
+  },
+  "output": {
+    "targets": ["slide"],
+    "formats": ["svg", "png"]
+  }
+}

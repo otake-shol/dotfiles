@@ -1,0 +1,9 @@
+#!/bin/bash
+set -euo pipefail
+
+visual_system_dir="${XDG_CONFIG_HOME:-${HOME}/.config}/otake/visual-system"
+if ! command -v node >/dev/null 2>&1; then
+  echo "ovs: node が必要です（brew install node）" >&2
+  exit 127
+fi
+exec node "${visual_system_dir}/scripts/ovs.mjs" "$@"

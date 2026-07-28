@@ -1,0 +1,41 @@
+{
+  "$schema": "../../../schemas/brief.schema.json",
+  "meta": {
+    "id": "self-intro-personal-system",
+    "title": "自己紹介・個人開発",
+    "part": "flow",
+    "status": "draft"
+  },
+  "intent": {
+    "message": "個人開発でも、成果物と再現性をセットでつくる",
+    "audience": "初対面のプロジェクト関係者",
+    "placement": "slide"
+  },
+  "content": {
+    "eyebrow": "BUILD",
+    "title": "成果物と、繰り返せる仕組みをセットでつくる",
+    "subtitle": "作る・伝える・再利用するまでを、一つの開発活動として設計する。",
+    "slots": {
+      "label-1": "プロダクトを作る",
+      "body-1": "学習アプリを公開",
+      "label-2": "価値を伝える",
+      "body-2": "ポートフォリオ・記事",
+      "label-3": "仕組みへ残す",
+      "body-3": "dotfiles・OVS・自動検証"
+    }
+  },
+  "source": {
+    "label": "筆者作成",
+    "url": "",
+    "accessedAt": "",
+    "note": ""
+  },
+  "accessibility": {
+    "alt": "学習アプリというプロダクトを作り、ポートフォリオや記事で価値を伝え、dotfilesとOVSと自動検証へ仕組みとして残す3段階の流れ。",
+    "colorIndependent": true
+  },
+  "output": {
+    "targets": ["slide"],
+    "formats": ["svg", "png"]
+  }
+}

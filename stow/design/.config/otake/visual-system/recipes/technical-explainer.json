@@ -1,0 +1,12 @@
+{
+  "id": "technical-explainer",
+  "name": "技術解説",
+  "description": "概念を定義し、構成と処理順を説明して要点を残す。",
+  "sequence": ["cover", "definition", "architecture", "sequence", "takeaway"],
+  "prompts": [
+    "読者が最初に誤解しやすい言葉は何か",
+    "境界となるコンポーネントは何か",
+    "どの順番が結果を左右するか",
+    "読者が覚える一文は何か"
+  ]
+}

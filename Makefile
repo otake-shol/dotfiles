@@ -19,7 +19,7 @@ SNAPSHOT_DIR := .snapshot/$(shell date +%Y%m%d-%H%M%S)
 # tomllib (Python 3.11+) が使える python を検出。macOSのシステムpython3は3.9なのでbrewのpython@3.xを優先。
 TOML_PYTHON := $(shell for p in python3.14 python3.13 python3.12 python3.11 python3; do if command -v $$p >/dev/null 2>&1 && $$p -c 'import tomllib' >/dev/null 2>&1; then echo $$p; break; fi; done)
 
-.PHONY: help install uninstall check check-strict check-conflicts bootstrap lint design-check clean install-% uninstall-% packages stats readme-check readme-sync runtimes-install versions-audit doctor doctor-plan doctor-clean-broken setup-fastlane-env validate snapshot new-mac macos-defaults
+.PHONY: help install uninstall check check-strict check-conflicts bootstrap lint test-bootstrap design-check clean install-% uninstall-% packages stats readme-check readme-sync runtimes-install versions-audit doctor doctor-plan doctor-clean-broken setup-fastlane-env validate snapshot new-mac macos-defaults
 
 help:
 	@echo "Usage:"
@@ -33,6 +33,7 @@ help:
 	@echo "  make doctor-plan      修復候補を表示（変更なし）"
 	@echo "  make bootstrap        完全セットアップ"
 	@echo "  make lint             ShellCheck"
+	@echo "  make test-bootstrap   bootstrapのStow競合安全性テスト"
 	@echo "  make design-check     ビジュアルシステム生成物・SVG構文チェック"
 	@echo "  make clean            バックアップファイル削除"
 	@echo "  make stats            パッケージ数を表示"
@@ -145,7 +146,7 @@ setup-fastlane-env:
 macos-defaults:
 	@bash ./bin/apply-macos-defaults
 
-validate: lint readme-check design-check
+validate: lint test-bootstrap readme-check design-check
 	@if [ "$${CI:-}" = "true" ]; then \
 	  $(MAKE) check-conflicts; \
 	else \
@@ -187,9 +188,9 @@ validate: lint readme-check design-check
 	else \
 	  echo "  ✓ 絶対パスなし（stow/, bootstrap.sh, bin/）"; \
 	fi
-	@echo "▶ Codex local-state 混入チェック"
-	@if git ls-files stow/codex/.codex 2>/dev/null \
-	    | grep -E '(^|/)(installation_id|auth\.json|history\.jsonl|.*\.sqlite([^/]*)?)$$' \
+	@echo "▶ AIツール local-state 混入チェック"
+	@if git ls-files stow/claude/.claude stow/codex/.codex 2>/dev/null \
+	    | grep -E '(^|/)(installation_id|auth\.json|history\.jsonl|.*\.sqlite([^/]*)?|\.rc-[^/]+|process_manager(/.*)?)$$' \
 	    | grep -q .; then \
 	  echo "  ✗ local stateがStow対象に混入（git管理下）"; exit 1; \
 	else \
@@ -309,6 +310,7 @@ bootstrap:
 
 SHELLCHECK_TARGETS := bootstrap.sh \
 	bin/setup-fastlane-env bin/apply-macos-defaults \
+	tests/bootstrap-safety.sh \
 	$(wildcard stow/claude/.claude/hooks/*.sh) \
 	$(wildcard stow/codex/.codex/hooks/*.sh) \
 	$(wildcard stow/codex/.codex/bin/*.sh) \
@@ -321,6 +323,9 @@ lint:
 	else \
 		echo "node not found; skipping .mjs syntax check"; \
 	fi
+
+test-bootstrap:
+	@bash tests/bootstrap-safety.sh
 
 design-check:
 	@command -v node >/dev/null 2>&1 || { \
@@ -376,39 +381,45 @@ stats:
 	@pkg_count=$$(printf "%s\n" $(PACKAGES) | wc -l | tr -d ' '); \
 	brew_count=$$(awk '/^[[:space:]]*brew /{count++} END{print count+0}' Brewfile); \
 	cask_count=$$(awk '/^[[:space:]]*cask /{count++} END{print count+0}' Brewfile); \
+	mas_count=$$(awk '/^[[:space:]]*mas /{count++} END{print count+0}' Brewfile); \
 	printf "stow packages: %s\n" "$$pkg_count"; \
 	printf "brew formulae: %s\n" "$$brew_count"; \
 	printf "brew casks: %s\n" "$$cask_count"; \
-	printf "brew total: %s\n" "$$((brew_count + cask_count))"
+	printf "mas apps: %s\n" "$$mas_count"; \
+	printf "Brewfile total: %s\n" "$$((brew_count + cask_count + mas_count))"
 
 readme-check:
 	@pkg_count=$$(printf "%s\n" $(PACKAGES) | wc -l | tr -d ' '); \
 	brew_count=$$(awk '/^[[:space:]]*brew /{count++} END{print count+0}' Brewfile); \
 	cask_count=$$(awk '/^[[:space:]]*cask /{count++} END{print count+0}' Brewfile); \
-	brew_total=$$((brew_count + cask_count)); \
+	mas_count=$$(awk '/^[[:space:]]*mas /{count++} END{print count+0}' Brewfile); \
+	brew_total=$$((brew_count + cask_count + mas_count)); \
 	alias_count=$$(awk '/^alias /{count++} END{print count+0}' stow/zsh/.zsh/aliases/core.zsh); \
-	claude_command_count=$$(find stow/claude/.claude/commands -maxdepth 1 -name '*.md' | wc -l | tr -d ' '); \
+	claude_hook_count=$$(git ls-files --cached 'stow/claude/.claude/hooks/*.sh' | wc -l | tr -d ' '); \
+	claude_command_count=$$(git ls-files --cached 'stow/claude/.claude/commands/*.md' | wc -l | tr -d ' '); \
 	error=0; \
 	grep -qE "GNU Stowパッケージ（$${pkg_count}個）" README.md || { echo "READMEのStowパッケージ数が不一致: $$pkg_count (修復: make readme-sync)"; error=1; }; \
 	grep -qE "Brewfile $${brew_total}パッケージ" README.md || { echo "READMEのBrewfile件数が不一致: $$brew_total (修復: make readme-sync)"; error=1; }; \
 	grep -qE "遅延読み込み・$${alias_count}エイリアス・" README.md || { echo "READMEのzshエイリアス数が不一致: $$alias_count (修復: make readme-sync)"; error=1; }; \
-	grep -qE "hookスクリプト・$${claude_command_count}コマンド・" README.md || { echo "READMEのClaudeコマンド数が不一致: $$claude_command_count (修復: make readme-sync)"; error=1; }; \
+	grep -qE "Claude Code（$${claude_hook_count} hookスクリプト・$${claude_command_count}コマンド・" README.md || { echo "READMEのClaude hook/コマンド数が不一致: hooks=$$claude_hook_count commands=$$claude_command_count (修復: make readme-sync)"; error=1; }; \
 	exit $$error
 
 readme-sync:
 	@pkg_count=$$(printf "%s\n" $(PACKAGES) | wc -l | tr -d ' '); \
 	brew_count=$$(awk '/^[[:space:]]*brew /{count++} END{print count+0}' Brewfile); \
 	cask_count=$$(awk '/^[[:space:]]*cask /{count++} END{print count+0}' Brewfile); \
-	brew_total=$$((brew_count + cask_count)); \
+	mas_count=$$(awk '/^[[:space:]]*mas /{count++} END{print count+0}' Brewfile); \
+	brew_total=$$((brew_count + cask_count + mas_count)); \
 	alias_count=$$(awk '/^alias /{count++} END{print count+0}' stow/zsh/.zsh/aliases/core.zsh); \
-	claude_command_count=$$(find stow/claude/.claude/commands -maxdepth 1 -name '*.md' | wc -l | tr -d ' '); \
+	claude_hook_count=$$(git ls-files --cached 'stow/claude/.claude/hooks/*.sh' | wc -l | tr -d ' '); \
+	claude_command_count=$$(git ls-files --cached 'stow/claude/.claude/commands/*.md' | wc -l | tr -d ' '); \
 	uname_s=$$(uname -s); \
 	if [ "$$uname_s" = "Darwin" ]; then sed_i=(-i ''); else sed_i=(-i); fi; \
 	sed "$${sed_i[@]}" -E "s/GNU Stowパッケージ（[0-9]+個）/GNU Stowパッケージ（$${pkg_count}個）/g" README.md; \
 	sed "$${sed_i[@]}" -E "s/Brewfile [0-9]+パッケージ/Brewfile $${brew_total}パッケージ/g" README.md; \
 	sed "$${sed_i[@]}" -E "s/遅延読み込み・[0-9]+エイリアス・/遅延読み込み・$${alias_count}エイリアス・/g" README.md; \
-	sed "$${sed_i[@]}" -E "s/hookスクリプト・[0-9]+コマンド・/hookスクリプト・$${claude_command_count}コマンド・/g" README.md; \
-	printf "stow=%s brew_total=%s alias=%s claude_cmd=%s に同期しました\n" "$$pkg_count" "$$brew_total" "$$alias_count" "$$claude_command_count"
+	sed "$${sed_i[@]}" -E "s/Claude Code（[0-9]+ hookスクリプト・[0-9]+コマンド・/Claude Code（$${claude_hook_count} hookスクリプト・$${claude_command_count}コマンド・/g" README.md; \
+	printf "stow=%s brew_total=%s alias=%s claude_hooks=%s claude_cmd=%s に同期しました\n" "$$pkg_count" "$$brew_total" "$$alias_count" "$$claude_hook_count" "$$claude_command_count"
 
 runtimes-install:
 	@if ! command -v asdf >/dev/null 2>&1; then echo "asdf not found"; exit 1; fi

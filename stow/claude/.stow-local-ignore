@@ -1,0 +1,4 @@
+# Claude Code local-state（端末固有・生成物）はStow対象外
+\.claude/\.rc-last-scan$
+\.claude/\.rc-seen-sessions$
+\.claude/chrome/chrome-native-host$

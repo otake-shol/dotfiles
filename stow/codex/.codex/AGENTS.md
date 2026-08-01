@@ -5,6 +5,13 @@
 - Default to Japanese for user-facing explanations unless the user asks otherwise.
 - Keep final answers concise and include concrete verification results when files changed.
 
+## 資料文体ルール
+
+- 資料タイトル・見出しは体言止め。本文では「Aは、B。」構文を原則禁止。
+- 助詞直後の不要な読点を入れない。「Aを、Bする」「Aが、Bになる」「Aで。Bする」は、誤読防止の必要がない限り「AをBする」「AがBになる」「AでBする」に修正する。
+- 読点は意味の切れ、並列、長文の誤読防止に必要な場合のみ使用。
+- 出力前に「は、」「を、」「が、」「で、」「など、」を全件確認し、不要な読点を削除する。
+
 ## Working Style
 
 - Read the local code and project instructions before making changes.

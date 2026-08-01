@@ -16,6 +16,7 @@
 #   --cli-only          Brewfile から GUI cask を除外して導入
 #   --no-codex-desktop  Codex Desktop DMG のインストールを行わない
 #   --with-codex-desktop Codex Desktop DMG を明示的に導入（-y と併用時の opt-in）
+#   --adopt-conflicts    Stow競合時の既存ファイル取り込みを明示的に許可
 #
 # Codex Desktop の挙動:
 #   対話モード（-y なし）: 確認プロンプト
@@ -33,6 +34,7 @@ ASSUME_YES=false
 CLI_ONLY=false
 NO_CODEX_DESKTOP=false
 WITH_CODEX_DESKTOP=false
+ADOPT_CONFLICTS=false
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CURRENT_STEP=""
 # パッケージごとの除外は stow/<pkg>/.stow-local-ignore に分離。
@@ -112,8 +114,9 @@ while [[ "$#" -gt 0 ]]; do
         --cli-only)     CLI_ONLY=true ;;
         --no-codex-desktop) NO_CODEX_DESKTOP=true ;;
         --with-codex-desktop) WITH_CODEX_DESKTOP=true ;;
+        --adopt-conflicts) ADOPT_CONFLICTS=true ;;
         -h|--help)
-            sed -n '2,22p' "$0" | sed 's/^# \?//'
+            sed -n '2,23p' "$0" | sed 's/^# \?//'
             exit 0 ;;
         *) echo -e "${RED}不明なオプション: $1${NC}"; exit 1 ;;
     esac
@@ -176,15 +179,24 @@ install_codex_desktop() {
 # Zshプラグイン冪等インストール（タグ指定で再現性確保）
 ensure_zsh_plugin() {
     local name="$1" repo_url="$2" dest="$3" tag="${4:-}"
-    if [ -d "$dest/.git" ]; then
+    local dest_root="" repo_root=""
+    if [ -d "$dest" ]; then
+        dest_root="$(cd "$dest" && pwd -P)"
+        repo_root="$(git -C "$dest" rev-parse --show-toplevel 2>/dev/null || true)"
+        [ -n "$repo_root" ] && repo_root="$(cd "$repo_root" && pwd -P)"
+    fi
+    if [ -n "$repo_root" ] && [ "$dest_root" = "$repo_root" ]; then
         # タグ指定時は固定バージョンを維持（pullしない）
         if [ -n "$tag" ]; then
             echo -e "  ${GREEN}✓${NC} $name (${tag})"
         else
             git -C "$dest" pull --quiet 2>/dev/null && echo -e "  ${GREEN}✓${NC} $name" || echo -e "  ${YELLOW}⚠${NC} $name"
         fi
+    elif [ -e "$dest" ] || [ -L "$dest" ]; then
+        echo -e "  ${RED}✗${NC} $name: Git管理外の既存パスを自動削除しません: $dest"
+        echo -e "  ${YELLOW}手動で退避または削除してから再実行してください${NC}"
+        return 1
     else
-        [ -d "$dest" ] && rm -rf "$dest"
         if [ -n "$tag" ]; then
             git clone --depth=1 --branch "$tag" "$repo_url" "$dest" 2>/dev/null
         else
@@ -307,18 +319,28 @@ for pkg in "${STOW_PACKAGES[@]}"; do
     if [ "$DRY_RUN" = true ]; then
         echo -e "${CYAN}[DRY RUN] $pkg${NC}"
         if [ "$STOW_AVAILABLE" = true ]; then
-            stow "${STOW_IGNORE_FLAGS[@]}" --simulate -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg" 2>&1 || true
+            if [ "$ADOPT_CONFLICTS" = true ]; then
+                stow "${STOW_IGNORE_FLAGS[@]}" --simulate -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow --adopt "$pkg" 2>&1 || true
+            else
+                stow "${STOW_IGNORE_FLAGS[@]}" --simulate -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg" 2>&1 || true
+            fi
         else
             dry_run_msg "stow --simulate -v --target=$HOME --dir=$SCRIPT_DIR/stow --restow $pkg"
         fi
     else
-        # --adopt: 初回のみ使用（HOMEの既存ファイルをstow/に取り込んで競合解消）
-        # 2回目以降は--restowのみ（意図しないファイル取り込みを防止）
-        if stow "${STOW_IGNORE_FLAGS[@]}" -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg" 2>/dev/null; then
+        if stow "${STOW_IGNORE_FLAGS[@]}" -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow "$pkg"; then
             :
-        elif ask "  $pkg で競合が発生。--adopt で既存ファイルを取り込みますか?"; then
+        elif [ "$ADOPT_CONFLICTS" = true ]; then
+            if [ "$ASSUME_YES" != true ] && ! ask "  $pkg の競合ファイルを --adopt で取り込みますか?"; then
+                echo -e "${RED}Stow競合を解消できなかったため中止します: $pkg${NC}"
+                exit 1
+            fi
             stow "${STOW_IGNORE_FLAGS[@]}" -v --target="$HOME" --dir="$SCRIPT_DIR/stow" --restow --adopt "$pkg"
             echo -e "  ${YELLOW}⚠ git diff で取り込まれたファイルを確認してください${NC}"
+        else
+            echo -e "${RED}Stow競合を検出したため中止します: $pkg${NC}"
+            echo -e "${YELLOW}内容を確認し、取り込みが必要な場合だけ --adopt-conflicts を付けて再実行してください${NC}"
+            exit 1
         fi
     fi
 done

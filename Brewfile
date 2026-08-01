@@ -89,6 +89,7 @@ mas "LINE", id: 539883307          # メッセージング(個人/家族・Mac A
 
 # --- デザイン・開発 ---
 cask "figma"                       # デザイン+プロトタイピング
+cask "cursor"                      # AI機能統合コードエディタ
 cask "zed"                         # Rust製ネイティブエディタ(高速/軽量・読む&レビュー面としてお試し導入)
 cask "claude"                      # Claudeデスクトップアプリ(公式チャットGUI)
 cask "claude-code@latest"          # Claude Code CLI(公式cask・claudeバイナリ・即時最新)

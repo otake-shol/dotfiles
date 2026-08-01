@@ -52,12 +52,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Verify Brewfile syntax
-        run: |
-          if ! brew bundle check --file=Brewfile --no-upgrade 2>&1; then
-            echo "::warning::Brewfile syntax check failed (some packages may not be installed locally)"
-          fi
+        run: brew bundle list --all --file=Brewfile >/dev/null
 
-      - name: Check all packages are available
+      - name: Check Homebrew formulae and casks are available
         run: |
           errors=0
           while IFS= read -r line; do
@@ -83,7 +80,7 @@ jobs:
             echo "::error::$errors package(s) not found in Homebrew"
             exit 1
           fi
-          echo "✓ All Brewfile packages are available"
+          echo "✓ All Homebrew formulae and casks are available"
 
   bootstrap:
     name: Bootstrap dry-run

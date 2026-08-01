@@ -69,7 +69,6 @@
     "defaultMode": "auto",
     "disableBypassPermissionsMode": "disable"
   },
-  "model": "opus[1m]",
   "enableAllProjectMcpServers": false,
   "hooks": {
     "PreToolUse": [],
@@ -90,6 +89,15 @@
           {
             "type": "command",
             "command": "cmux claude-hook session-start"
+          }
+        ]
+      },
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/remote-session-check.sh"
           }
         ]
       }
@@ -137,9 +145,14 @@
   "language": "日本語",
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
+  "remote": {
+    "defaultEnvironmentId": "env_01M9DMSeyGyKQxnNiUD13RRy"
+  },
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
   "theme": "dark",
+  "remoteControlAtStartup": true,
+  "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true
 }

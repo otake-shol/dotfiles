@@ -31,18 +31,18 @@ if [ -z "$(git status --porcelain)" ]; then
     exit 0
 fi
 
-has_secret_path() {
-    grep -E '(^|/)(\.env(\.|$)|.*credentials.*|.*\.key$)' >/dev/null
+has_blocked_path() {
+    grep -E '(^|/)(\.env(\.|$)|.*credentials.*|.*\.key$|auth\.json$|history\.jsonl$|installation_id$|.*\.sqlite([^/]*)?$|\.rc-[^/]+$|process_manager(/|$))' >/dev/null
 }
 
 if [ "${#files[@]}" -gt 0 ]; then
-    if printf "%s\n" "${files[@]}" | has_secret_path; then
-        echo "Refusing to commit possible secret files." >&2
+    if printf "%s\n" "${files[@]}" | has_blocked_path; then
+        echo "Refusing to commit secret or runtime-state files." >&2
         printf "%s\n" "${files[@]}" >&2
         exit 1
     fi
-elif git status --porcelain | awk '{print $2}' | has_secret_path; then
-    echo "Refusing to commit possible secret files." >&2
+elif git status --porcelain | awk '{print $2}' | has_blocked_path; then
+    echo "Refusing to commit secret or runtime-state files." >&2
     git status --porcelain
     exit 1
 fi
@@ -71,8 +71,8 @@ if git diff --cached --quiet; then
     exit 0
 fi
 
-if git diff --cached --name-only | has_secret_path; then
-    echo "Refusing to commit possible secret files." >&2
+if git diff --cached --name-only | has_blocked_path; then
+    echo "Refusing to commit secret or runtime-state files." >&2
     git diff --cached --name-only >&2
     exit 1
 fi

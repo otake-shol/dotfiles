@@ -1,0 +1,4 @@
+interface:
+  display_name: "Exam App Design System"
+  short_description: "資格試験アプリの共通デザイン基盤を監査・導入・検証する"
+  default_prompt: "Use $exam-app-design-system to audit and apply the shared design system to this exam app."

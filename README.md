@@ -28,9 +28,11 @@ bash bootstrap.sh --skip-gui-apps  # --skip-apps の別名
 bash bootstrap.sh --cli-only   # Brewfile から GUI cask を除外（CLIのみ導入）
 bash bootstrap.sh --no-codex-desktop    # Codex Desktop DMG をインストールしない
 bash bootstrap.sh -y --with-codex-desktop  # -y でも Codex Desktop を明示導入
+bash bootstrap.sh --adopt-conflicts  # Stow競合ファイルの取り込みを明示許可
 ```
 
 `bootstrap.sh` は Homebrew と Oh My Zsh の公式インストーラだけを明示例外として直接実行する。任意の remote script はパイプ実行しない。
+Stow競合はデフォルトで失敗終了する。既存ファイルをリポジトリへ取り込む必要がある場合だけ、内容を確認して `--adopt-conflicts` を指定する。
 
 ### 新PC移行チェックリスト
 
@@ -97,7 +99,7 @@ dotfiles/
 graph TB
     subgraph bootstrap["bootstrap.sh（ワンコマンドセットアップ）"]
         B1[Homebrew]
-        B1 --> B2[Brewfile 59パッケージ]
+        B1 --> B2[Brewfile 61パッケージ]
         B2 --> B3[GNU Stow シンボリックリンク]
         B3 --> B4[Oh My Zsh + プラグイン]
         B4 --> B5[macOS設定]
@@ -137,9 +139,9 @@ graph TB
 |-----------|------|-------------|
 | **zsh** | シェル設定（モジュール分割・遅延読み込み・67エイリアス・OMZ 6プラグイン） | `.zshrc`, `.zsh/{core,plugins,lazy,tools}.zsh` |
 | **git** | Git設定（28エイリアス・delta・git-secrets 8パターン） | `.gitconfig`, `.gitignore_global`, `.commit-template.txt`, `.editorconfig` |
-| **claude** | Claude Code（3 hookスクリプト・10コマンド・権限制御） | `.claude/settings.json`, `hooks/`, `commands/` |
+| **claude** | Claude Code（4 hookスクリプト・10コマンド・権限制御） | `.claude/settings.json`, `hooks/`, `commands/` |
 | **codex** | Codex CLI（config・AGENTS・hook・MCP） | `.codex/config.toml`, `.codex/AGENTS.md`, `.codex/hooks/` |
-| **design** | OVS図解・チャート・媒体別画像・AIスキル | `.config/otake/visual-system/`, `.local/bin/ovs`, `.agents/skills/otake-visual/` |
+| **design** | OVS図解・チャート・媒体別画像・アプリデザインAIスキル | `.config/otake/visual-system/`, `.local/bin/ovs`, `.agents/skills/{otake-visual,exam-app-design-system}/` |
 | **ghostty** | GPUターミナル（TokyoNight・透過80%・JetBrains Mono） | `.config/ghostty/config` |
 | **cmux** | ワークスペース管理（5プリセット・色分け） | `.config/cmux/cmux.json` |
 | **nvim** | 軽量エディタ（プラグインなし・git commit用） | `.config/nvim/init.lua` |
@@ -168,6 +170,7 @@ make check-strict      # Stowドライラン（差分・競合で失敗）
 make doctor            # Stow同期・壊れたリンク検出
 make doctor-plan       # 修復候補を表示（変更なし）
 make lint              # ShellCheck
+make test-bootstrap    # bootstrapのStow競合安全性テスト
 make design-check      # ビジュアルシステム生成物・SVG構文チェック
 make clean             # バックアップファイル・.DS_Store削除
 make packages          # パッケージ一覧表示
@@ -209,6 +212,13 @@ make design-check
 トークンの唯一の正は`tokens.json`。CSS・JavaScript・SVG・Marpテーマは生成物として同期する。
 Claudeは`/visual`、Codexは`$otake-visual`から同じJSON briefとCLIを使う。
 
+## Qualification Exam App Design System
+
+React Native（Expo）の資格試験アプリでは、Codexの
+`$exam-app-design-system`で共通デザイン基盤を監査・導入する。
+共通仕様とQGuideは`exam-app-template`、記事・スライド図解はOVS、
+科目色・アプリアイコン・教材図解は各アプリを正本とし、素材をdotfilesへ重複させない。
+
 ## Brewfileの範囲
 
 `Brewfile` は新しいMacを普段使いできる状態に近づけるため、CLIだけでなくGUIアプリも含める。`Core CLI Tools` と `Core GUI Applications` は常用前提、`Optional CLI Tools` と `Optional GUI Applications` は作業内容に応じた追加ツールとして扱う。
@@ -221,6 +231,7 @@ OpenAI CodexはHomebrewの `cask "codex"` がCLIを提供する。Codex Desktop�
 
 GitHub Actionsで以下を自動検証:
 - ShellCheck（bootstrap.sh + bin + Claude/Codex hooks）
+- bootstrapのStow競合安全性テスト
 - Codex MCP JavaScript構文チェック
 - OVS全パーツ・チャート・SVG安全性・PNG寸法・Marpテーマ
 - Stow競合検出（全パッケージのドライラン）

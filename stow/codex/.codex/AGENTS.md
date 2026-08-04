@@ -50,3 +50,19 @@
 
 - For this dotfiles repository, prefer `make lint`, `make check`, and `make doctor` as appropriate.
 - For TypeScript/React projects, prefer typecheck, lint, unit tests, and targeted Playwright checks based on the change.
+
+## Cost Control
+
+- Never propose a paid upgrade as the first response to a quota limit. Look for a
+  local or free path first, and only raise paid options if none exists.
+- **EAS build quota**: when `eas build` fails with "used its iOS builds from the
+  Free plan this month", do not wait for the reset and do not upgrade the plan.
+  Rebuild locally instead:
+  `npx eas build --platform ios --profile production --local --non-interactive --output ./build-vX.Y.Z.ipa`
+  Local builds fetch the same remote credentials, so the resulting IPA is signed
+  identically and is accepted by App Store Connect. Requires a Mac with Xcode and
+  fastlane; no cache, so each run is a full build. When submitting, pass the IPA
+  path rather than selecting a cloud build.
+  Verified 2026-08-05 on shindanshi-app v4.1.0 (cloud quota exhausted → local build succeeded).
+- Apply the same rule to other metered services: exhausted free tier means switch
+  to the local equivalent, not to a subscription.

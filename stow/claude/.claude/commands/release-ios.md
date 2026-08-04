@@ -40,6 +40,42 @@ eas build --platform ios --profile production
 
 時間がかかるためユーザーに確認。既にビルド済みならスキップ可。
 
+#### 無料枠が尽きたらローカルビルドへ切り替える（課金しない）
+
+こう言って失敗したら、**待つ必要も有料プランへ上げる必要も無い。**
+
+```
+This account has used its iOS builds from the Free plan this month,
+which will reset in N days.
+```
+
+`--local` を付けて手元の Mac でビルドする。
+
+```bash
+npx eas build --platform ios --profile production --local \
+  --non-interactive --output ./build-vX.Y.Z.ipa
+```
+
+**署名はクラウドと同じ。** ログに `Using remote iOS credentials (Expo server)` と
+出るとおり、同一の証明書・プロビジョニングプロファイルを取りに行くので、
+App Store が受け付ける正当な IPA になる
+（2026-08-05 shindanshi-app v4.1.0 で実証。クラウド枠切れ → ローカルで成功）。
+
+- **前提**: Xcode 入りの Mac、fastlane、ディスク空き。通信も要る（buildNumber は EAS が採番）
+- **キャッシュは効かない**（`Local builds do not support saving cache`）。毎回フルビルドで 15〜30 分
+- **`eas submit` では IPA のパスを渡す**（クラウドビルドのように一覧から選べない）
+
+**枠のために課金する前に、必ずローカルを試すこと。**
+
+#### expo-doctor がパッチ差分で落ちてもリリースを止めない
+
+`RUN_EXPO_DOCTOR` の「packages match versions required by installed Expo SDK」が
+落ちても、中身がパッチレベルのズレなら**ビルドは継続する**。
+
+リリース直前にライブラリを動かすと実機確認をやり直すことになるので、
+**動作確認を通した組み合わせのまま出し、追随は次のサイクルで行う。**
+メジャー・マイナーのズレや、他のチェックも落ちている場合は別途判断する。
+
 ### 5. メタデータ送信
 
 スクショ変更ありなら：

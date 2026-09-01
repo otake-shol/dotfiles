@@ -1,6 +1,7 @@
 .DS_Store
 *.swp
 *~
+*.bak
 Brewfile.lock.json
 
 # Local settings (personal info / secrets)
@@ -85,6 +86,9 @@ stow/codex/.codex/process_manager/
 stow/codex/.codex/session_index.jsonl
 stow/codex/.codex/sqlite/
 stow/codex/.codex/vendor_imports/
+stow/codex/.codex/ambient-suggestions/
+stow/codex/.codex/thread-writer-locks/
+stow/codex/.codex/tui-thread-reference-capabilities/
 
 # MCP auto-generated
 .playwright-mcp/

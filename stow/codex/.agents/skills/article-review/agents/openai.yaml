@@ -1,0 +1,4 @@
+interface:
+  display_name: "技術記事の編集レビュー"
+  short_description: "構成、文法、表記、明確さに基づく日本語記事レビュー"
+  default_prompt: "$article-review を使って、この技術記事を構成、文法、表記、明確さの観点からレビューしてください。"

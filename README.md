@@ -99,7 +99,7 @@ dotfiles/
 graph TB
     subgraph bootstrap["bootstrap.sh（ワンコマンドセットアップ）"]
         B1[Homebrew]
-        B1 --> B2[Brewfile 61パッケージ]
+        B1 --> B2[Brewfile 63パッケージ]
         B2 --> B3[GNU Stow シンボリックリンク]
         B3 --> B4[Oh My Zsh + プラグイン]
         B4 --> B5[macOS設定]
@@ -140,8 +140,8 @@ graph TB
 | **zsh** | シェル設定（モジュール分割・遅延読み込み・67エイリアス・OMZ 6プラグイン） | `.zshrc`, `.zsh/{core,plugins,lazy,tools}.zsh` |
 | **git** | Git設定（28エイリアス・delta・git-secrets 8パターン） | `.gitconfig`, `.gitignore_global`, `.commit-template.txt`, `.editorconfig` |
 | **claude** | Claude Code（4 hookスクリプト・10コマンド・権限制御） | `.claude/settings.json`, `hooks/`, `commands/` |
-| **codex** | Codex CLI（config・AGENTS・hook・MCP） | `.codex/config.toml`, `.codex/AGENTS.md`, `.codex/hooks/` |
-| **design** | OVS図解・チャート・媒体別画像・アプリデザインAIスキル | `.config/otake/visual-system/`, `.local/bin/ovs`, `.agents/skills/{otake-visual,exam-app-design-system}/` |
+| **codex** | Codex CLI（config・AGENTS・hook・MCP・技術ブログ執筆・レビュースキル） | `.codex/config.toml`, `.codex/AGENTS.md`, `.codex/hooks/`, `.agents/skills/{technical-blog-writing,tech-review,article-review}/` |
+| **design** | OVS図解・チャート・媒体別画像・アプリデザイン・ELI5視覚説明 | `.config/otake/visual-system/`, `.local/bin/ovs`, `.agents/skills/{otake-visual,exam-app-design-system,eli5}/` |
 | **ghostty** | GPUターミナル（TokyoNight・透過80%・JetBrains Mono） | `.config/ghostty/config` |
 | **cmux** | ワークスペース管理（5プリセット・色分け） | `.config/cmux/cmux.json` |
 | **nvim** | 軽量エディタ（プラグインなし・git commit用） | `.config/nvim/init.lua` |
@@ -278,6 +278,10 @@ codex-commit-push "fix: ..." README.md Makefile  # 指定ファイルだけcommi
 
 通常セッションは Terra を使い、必要な場合だけ custom agent へ委譲する。
 対話セッションと `resume` / `fork` / `archive` / `delete` / `unarchive` は、standalone版があれば自動的に `codex remote-control start` を実行して `unix://` のapp-serverへ接続する。`exec` / `review` などRemote非対応のサブコマンドは従来どおりローカル実行する。
+
+プロンプトで`$eli5 なぜ空は青いの`と指定すると、大きな図と少ない言葉による初心者向けの視覚説明を生成する。
+技術記事の構成、執筆、推敲、公開前の自己確認には`$technical-blog-writing`を指定する。読者の課題、一次情報、動作確認、制約を軸に日本語記事を組み立てる。
+技術的正確性の確認には`$tech-review`、構成・文法・表記の確認には`$article-review`を指定する。どちらも既定では原稿を変更せず、修正依頼がある場合だけ編集する。
 対話セッションの起動時、アクティブなセッションが20件以上なら24時間に1回だけ整理するか確認する。整理対象は `fzf` で複数選択し、最終確認後にRemote経由で完全削除する。閾値は `CODEX_SESSION_CLEANUP_THRESHOLD`、確認間隔（時間）は `CODEX_SESSION_CLEANUP_INTERVAL_HOURS`、自動確認の無効化は `CODEX_SESSION_CLEANUP_ENABLED=0` で変更できる。
 
 | agent | model | 用途 |

@@ -1,0 +1,7 @@
+interface:
+  display_name: "ELI5"
+  short_description: "複雑な話を大きな絵と少ない言葉でやさしく説明する視覚ガイド"
+  default_prompt: "$eli5 を使い、このテーマを大きな絵と少ない言葉で説明してください。"
+
+policy:
+  allow_implicit_invocation: false

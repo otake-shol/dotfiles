@@ -1,0 +1,4 @@
+interface:
+  display_name: "技術ブログ執筆"
+  short_description: "根拠と動作確認に基づく日本語技術記事の構成・執筆・推敲"
+  default_prompt: "$technical-blog-writing を使い、読者の課題から始まる技術記事を構成または執筆してください。"

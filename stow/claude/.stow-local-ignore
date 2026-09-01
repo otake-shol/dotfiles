@@ -2,3 +2,4 @@
 \.claude/\.rc-last-scan$
 \.claude/\.rc-seen-sessions$
 \.claude/chrome/chrome-native-host$
+\.claude/.*\.bak$

@@ -2,6 +2,12 @@
 # 使用方法: brew bundle --file=Brewfile
 
 # ========================================
+# Third-party Taps
+# ========================================
+
+tap "stablyai/orca"               # Orca公式Homebrew tap
+
+# ========================================
 # Core CLI Tools
 # ========================================
 
@@ -74,6 +80,7 @@ cask "cleanshot"                   # スクリーンショット+録画+注釈
 cask "jordanbaird-ice"             # メニューバーアイコン整理
 cask "raycast"                     # Spotlight代替(拡張+スニペット)
 cask "elgato-stream-deck"          # Stream Deck ハードウェア制御アプリ(プロファイルは別管理)
+cask "tailscale-app"               # Orca Mobile・リモート接続用プライベートネットワーク
 
 # Optional GUI Applications
 # ========================================
@@ -94,6 +101,7 @@ cask "zed"                         # Rust製ネイティブエディタ(高速/�
 cask "claude"                      # Claudeデスクトップアプリ(公式チャットGUI)
 cask "claude-code@latest"          # Claude Code CLI(公式cask・claudeバイナリ・即時最新)
 cask "codex"                       # OpenAI Codex CLI(デスクトップ版はbootstrapで導入)
+cask "orca"                        # worktree分離型AIエージェント開発環境
 cask "google-gemini"               # Google純正Geminiデスクトップアプリ(arm64+macOS15以降)
 cask "orbstack"                    # Docker Desktop代替(軽量+高速)
 

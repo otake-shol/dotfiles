@@ -1,7 +1,10 @@
 # Codex local-state（端末固有・生成物）はStow対象外
+Documents/Codex(/.*)?$
 \.codex/installation_id$
 \.codex/(auth\.json|history\.jsonl|models_cache\.json|version\.json)$
 \.codex/(cache|log|logs|memories|shell_snapshots|skills|state|tmp)(/.*)?$
 \.codex/(app-server-control|app-server-daemon|packages)(/.*)?$
+\.codex/(ambient-suggestions|thread-writer-locks|tui-thread-reference-capabilities)(/.*)?$
 \.codex/process_manager(/.*)?$
 \.codex/.*\.sqlite(-wal|-shm)?$
+\.codex/.*\.bak$

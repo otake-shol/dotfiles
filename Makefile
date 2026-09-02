@@ -180,15 +180,7 @@ validate: lint test-bootstrap readme-check design-check
 	  echo "  ⚠ node 未導入（スキップ）"; \
 	fi
 	@echo "▶ 絶対パス混入チェック（ユーザー名依存）"
-	@hits=$$( { { git ls-files stow templates \
-	     | grep -E '\.(toml|json|zsh|sh|mjs|lua|txt|cfg|conf)$$' \
-	     | while read -r file; do [ -f "$$file" ] && printf '%s\n' "$$file"; done; \
-	     [ ! -f templates/codex-config.toml.template ] || printf '%s\n' templates/codex-config.toml.template; \
-	     [ ! -f templates/codex-hooks.json.template ] || printf '%s\n' templates/codex-hooks.json.template; } \
-	     | xargs -I{} grep -Hn "/Users/[a-zA-Z0-9_-]\+" {} 2>/dev/null; \
-	   grep -n "/Users/[a-zA-Z0-9_-]\+" bootstrap.sh bin/* 2>/dev/null \
-	     | sed -E 's|^([^:]+:[0-9]+:)|\1|'; \
-	 } | grep -vE '(^|/)gitconfig\.local\.template:|(^|/)zshrc\.local\.template:|(^|/)fastlane-env\.example:' || true); \
+	@hits=$$(git grep -n -I -E '/Users/[a-zA-Z0-9_-]+' -- stow templates bootstrap.sh bin 2>/dev/null || true); \
 	if [ -n "$$hits" ]; then \
 	  printf '%s\n' "$$hits"; \
 	  echo "  ✗ 絶対パスが残存（新PCで壊れる）"; exit 1; \

@@ -156,12 +156,16 @@ validate: lint test-bootstrap readme-check design-check
 	@if [ -z "$(TOML_PYTHON)" ]; then \
 	  echo "  ⚠ tomllib対応python (3.11+) が見つからず（スキップ）"; \
 	else \
-	  git ls-files stow | grep -E '\.toml$$' \
+	  { git ls-files stow | grep -E '\.toml$$'; \
+	    [ ! -f templates/codex-config.toml.template ] || printf '%s\n' templates/codex-config.toml.template; \
+	  } | while read -r file; do [ -f "$$file" ] && printf '%s\n' "$$file"; done \
 	    | xargs -I{} $(TOML_PYTHON) -c 'import tomllib,sys; tomllib.load(open(sys.argv[1],"rb"))' {} \
 	    && echo "  ✓ TOML"; \
 	fi
 	@echo "▶ JSON 構文チェック"
-	@git ls-files stow | grep -E '\.json$$' \
+	@{ git ls-files stow | grep -E '\.json$$'; \
+	  [ ! -f templates/codex-hooks.json.template ] || printf '%s\n' templates/codex-hooks.json.template; \
+	} | while read -r file; do [ -f "$$file" ] && printf '%s\n' "$$file"; done \
 	  | xargs -I{} python3 -c 'import json,sys; json.load(open(sys.argv[1]))' {} \
 	  && echo "  ✓ JSON"
 	@echo "▶ .mjs 構文チェック"
@@ -176,12 +180,15 @@ validate: lint test-bootstrap readme-check design-check
 	  echo "  ⚠ node 未導入（スキップ）"; \
 	fi
 	@echo "▶ 絶対パス混入チェック（ユーザー名依存）"
-	@hits=$$( { git ls-files stow \
+	@hits=$$( { { git ls-files stow templates \
 	     | grep -E '\.(toml|json|zsh|sh|mjs|lua|txt|cfg|conf)$$' \
+	     | while read -r file; do [ -f "$$file" ] && printf '%s\n' "$$file"; done; \
+	     [ ! -f templates/codex-config.toml.template ] || printf '%s\n' templates/codex-config.toml.template; \
+	     [ ! -f templates/codex-hooks.json.template ] || printf '%s\n' templates/codex-hooks.json.template; } \
 	     | xargs -I{} grep -Hn "/Users/[a-zA-Z0-9_-]\+" {} 2>/dev/null; \
 	   grep -n "/Users/[a-zA-Z0-9_-]\+" bootstrap.sh bin/* 2>/dev/null \
 	     | sed -E 's|^([^:]+:[0-9]+:)|\1|'; \
-	 } | grep -vE '(/\.template$$|^[^:]*\.template:|^[^:]*\.example:|stow/codex/\.codex/config\.toml:[0-9]+:(\[(projects|hooks\.state)\.|(NODE_REPL_TRUSTED_CODE_PATHS|CODEX_HOME|SKY_CUA_SERVICE_PATH|source) = ))' || true); \
+	 } | grep -vE '(^|/)gitconfig\.local\.template:|(^|/)zshrc\.local\.template:|(^|/)fastlane-env\.example:' || true); \
 	if [ -n "$$hits" ]; then \
 	  printf '%s\n' "$$hits"; \
 	  echo "  ✗ 絶対パスが残存（新PCで壊れる）"; exit 1; \
@@ -195,6 +202,13 @@ validate: lint test-bootstrap readme-check design-check
 	  echo "  ✗ local stateがStow対象に混入（git管理下）"; exit 1; \
 	else \
 	  echo "  ✓ local stateなし"; \
+	fi
+	@echo "▶ 公開対象外ファイルの追跡チェック"
+	@if git ls-files | while read -r file; do [ -e "$$file" ] && printf '%s\n' "$$file"; done \
+	    | grep -Eq '(^stow/codex/\.codex/(config\.toml|hooks\.json)$$|\.pptx\.inspect\.ndjson$$|/otake-shol-self-introduction\.pptx$$)'; then \
+	  echo "  ✗ ローカル設定またはPPTX検査生成物がGit管理下"; exit 1; \
+	else \
+	  echo "  ✓ 公開対象外ファイルなし"; \
 	fi
 	@if [ "$${CI:-}" = "true" ]; then \
 	  echo "▶ doctor はCIの空HOMEではスキップ（Stow競合はcheck-conflictsで検証済み）"; \
@@ -309,7 +323,7 @@ bootstrap:
 	bash bootstrap.sh
 
 SHELLCHECK_TARGETS := bootstrap.sh \
-	bin/setup-fastlane-env bin/apply-macos-defaults \
+	bin/setup-fastlane-env bin/setup-codex-config bin/apply-macos-defaults \
 	tests/bootstrap-safety.sh \
 	$(wildcard stow/claude/.claude/hooks/*.sh) \
 	$(wildcard stow/codex/.codex/hooks/*.sh) \

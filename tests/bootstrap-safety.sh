@@ -63,8 +63,21 @@ fi
 grep -q -- ' --adopt ' "$STOW_TEST_LOG" && fail "-yだけで--adoptが実行されました"
 
 : > "$STOW_TEST_LOG"
+mkdir -p "$TEST_HOME/.codex"
+printf 'model = "preserve-me"\n' > "$TEST_HOME/.codex/config.toml"
+printf '{"marker":"preserve-hooks"}\n' > "$TEST_HOME/.codex/hooks.json"
 run_bootstrap -y --adopt-conflicts || fail "明示opt-in付きの-yで--adoptできませんでした"
 grep -q -- ' --adopt ' "$STOW_TEST_LOG" || fail "明示opt-in時に--adoptが実行されませんでした"
+CODEX_LOCAL_CONFIG="$TEST_HOME/.config/dotfiles-local/codex/config.toml"
+[ -f "$CODEX_LOCAL_CONFIG" ] || fail "Codexローカル設定が作成されませんでした"
+grep -q 'preserve-me' "$CODEX_LOCAL_CONFIG" || fail "既存のCodex設定が保全されませんでした"
+[ -L "$TEST_HOME/.codex/config.toml" ] || fail "Codex設定symlinkが作成されませんでした"
+[ "$(readlink "$TEST_HOME/.codex/config.toml")" = "$CODEX_LOCAL_CONFIG" ] || fail "Codex設定symlinkの参照先が不正です"
+CODEX_LOCAL_HOOKS="$TEST_HOME/.config/dotfiles-local/codex/hooks.json"
+[ -f "$CODEX_LOCAL_HOOKS" ] || fail "Codexローカルhook設定が作成されませんでした"
+grep -q 'preserve-hooks' "$CODEX_LOCAL_HOOKS" || fail "既存のCodex hook設定が保全されませんでした"
+[ -L "$TEST_HOME/.codex/hooks.json" ] || fail "Codex hook設定symlinkが作成されませんでした"
+[ "$(readlink "$TEST_HOME/.codex/hooks.json")" = "$CODEX_LOCAL_HOOKS" ] || fail "Codex hook設定symlinkの参照先が不正です"
 
 : > "$STOW_TEST_LOG"
 if printf 'n\n' | run_bootstrap --adopt-conflicts; then

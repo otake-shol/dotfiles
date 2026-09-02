@@ -3,6 +3,8 @@
 *~
 *.bak
 Brewfile.lock.json
+*.pptx.inspect.ndjson
+stow/design/.config/otake/visual-system/examples/self-introduction/otake-shol-self-introduction.pptx
 
 # Local settings (personal info / secrets)
 .gitconfig.local
@@ -57,6 +59,10 @@ stow/codex/.codex/auth.json
 stow/codex/.codex/history.jsonl
 stow/codex/.codex/models_cache.json
 stow/codex/.codex/version.json
+stow/codex/.codex/config.toml
+stow/codex/.codex/hooks.json
+stow/codex/.codex/dictation-history/
+stow/codex/.codex/transcription-history.jsonl
 stow/codex/.codex/cache/
 stow/codex/.codex/log/
 stow/codex/.codex/logs/

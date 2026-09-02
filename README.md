@@ -300,7 +300,7 @@ codex exec -p fast --ephemeral --json "リポジトリ構造を要約" > /tmp/co
 ~/.codex/bin/model-usage.sh /tmp/codex-fast.jsonl
 ```
 
-設定: `stow/codex/.codex/config.toml`、グローバル指示: `stow/codex/.codex/AGENTS.md`
+設定テンプレート: `templates/codex-config.toml.template`、ローカル設定: `~/.config/dotfiles-local/codex/`、グローバル指示: `stow/codex/.codex/AGENTS.md`
 
 ### Codex MCP: App Store Connect Review
 
@@ -354,7 +354,11 @@ bootstrap.shが初回実行時に以下のローカル設定ファイルを`temp
 |---------|------|
 | `~/.gitconfig.local` | Gitユーザー名・メール・GPG署名 |
 | `~/.zshrc.local` | APIキー・MCPトークン・組織固有設定 |
+| `~/.config/dotfiles-local/codex/config.toml` | Codexのプロジェクト信頼設定・プラグイン生成パス・端末固有状態 |
+| `~/.config/dotfiles-local/codex/hooks.json` | Codexアプリが端末固有パスへ更新するhook設定 |
 | `~/.config/fastlane/env` | fastlane / App Store Connect API Key・審査連絡先 |
+
+Codexの`config.toml`と`hooks.json`は `~/.codex/` からローカル設定へのsymlinkで参照する。初回セットアップ時に既存設定を保全して移動し、設定がない場合はテンプレートから作成する。
 
 Powerlevel10k の `~/.p10k.zsh` は `p10k configure` で新PCごとに生成する。完全に同じプロンプトを移植したい場合は、現在の `~/.p10k.zsh` を `stow/zsh/.p10k.zsh` として管理対象に切り替える。
 

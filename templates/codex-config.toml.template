@@ -1,0 +1,183 @@
+approval_policy = "on-request"
+approvals_reviewer = "auto_review"
+model = "gpt-5.6-sol"
+model_reasoning_effort = "high"
+model_verbosity = "low"
+personality = "pragmatic"
+sandbox_mode = "workspace-write"
+web_search = "cached"
+
+notify = ["bash", "-lc", "~/.codex/hooks/notify.sh"]
+
+[sandbox_workspace_write]
+network_access = true
+
+[agents]
+max_depth = 1
+max_threads = 3
+
+[apps._default]
+destructive_enabled = false
+enabled = true
+open_world_enabled = false
+
+[features]
+hooks = true
+js_repl = false
+
+[mcp_servers.app-store-connect-review]
+command = "~/.codex/bin/app-store-connect-review-mcp.mjs"
+startup_timeout_sec = 20.0
+tool_timeout_sec = 120.0
+
+[mcp_servers.app-store-connect-review.tools.asc_create_app_store_review_attachment]
+approval_mode = "approve"
+
+[mcp_servers.app-store-connect-review.tools.asc_create_app_store_review_detail]
+approval_mode = "approve"
+
+[mcp_servers.app-store-connect-review.tools.asc_list_app_store_versions]
+approval_mode = "approve"
+
+[mcp_servers.app-store-connect-review.tools.asc_list_apps]
+approval_mode = "approve"
+
+[mcp_servers.app-store-connect-review.tools.asc_update_app_store_review_detail]
+approval_mode = "approve"
+
+[mcp_servers.context7]
+command = "npx"
+args = ["@upstash/context7-mcp@latest"]
+startup_timeout_sec = 20.0
+tool_timeout_sec = 60.0
+
+[mcp_servers.github]
+url = "https://api.githubcopilot.com/mcp/"
+bearer_token_env_var = "CODEX_GITHUB_PERSONAL_ACCESS_TOKEN"
+enabled = false
+
+[mcp_servers.hourei]
+command = "npx"
+args = ["hourei-mcp-server"]
+startup_timeout_sec = 20.0
+tool_timeout_sec = 60.0
+
+[mcp_servers.hourei.tools.get_law_data]
+approval_mode = "approve"
+
+[mcp_servers.hourei.tools.search_law]
+approval_mode = "approve"
+
+[mcp_servers.mf-ca]
+url = "https://beta.mcp.developers.biz.moneyforward.com/mcp/ca/v3"
+enabled = false
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["@playwright/mcp@latest"]
+startup_timeout_sec = 20.0
+tool_timeout_sec = 120.0
+
+[mcp_servers.playwright.tools.browser_click]
+approval_mode = "approve"
+
+[mcp_servers.playwright.tools.browser_close]
+approval_mode = "approve"
+
+[mcp_servers.playwright.tools.browser_evaluate]
+approval_mode = "approve"
+
+[mcp_servers.playwright.tools.browser_navigate]
+approval_mode = "approve"
+
+[mcp_servers.playwright.tools.browser_resize]
+approval_mode = "approve"
+
+[mcp_servers.playwright.tools.browser_run_code_unsafe]
+approval_mode = "approve"
+
+[mcp_servers.playwright.tools.browser_tabs]
+approval_mode = "approve"
+
+[mcp_servers.playwright.tools.browser_type]
+approval_mode = "approve"
+
+[mcp_servers.tax-law]
+command = "npx"
+args = ["tax-law-mcp"]
+startup_timeout_sec = 20.0
+tool_timeout_sec = 60.0
+
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"
+
+[mcp_servers.posthog]
+url = "https://mcp.posthog.com/mcp"
+
+[shell_environment_policy]
+exclude = [
+    ".*TOKEN.*",
+    ".*SECRET.*",
+    ".*KEY.*",
+    ".*PASSWORD.*",
+    ".*CREDENTIAL.*",
+]
+inherit = "core"
+
+[shell_environment_policy.set]
+CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1"
+
+[tui]
+alternate_screen = "auto"
+notification_method = "auto"
+notifications = true
+show_tooltips = true
+status_line = ["git-branch", "current-dir", "model-with-reasoning", "context-remaining", "five-hour-limit", "used-tokens", "run-state", "task-progress"]
+status_line_use_colors = true
+terminal_title = [
+    "thread-title",
+    "run-state",
+]
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."chrome@openai-bundled"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+
+[plugins."computer-use@openai-bundled"]
+enabled = true
+
+[plugins."template-creator@openai-primary-runtime"]
+enabled = true
+
+[plugins."sites@openai-bundled"]
+enabled = true
+
+[plugins."visualize@openai-bundled"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[desktop]
+keepRemoteControlAwakeWhilePluggedIn = true
+git-show-sidebar-pr-icons = true
+git-pull-request-merge-method = "squash"
+git-always-force-push = true
+appearanceTheme = "dark"
+dock-icon-preference = "codex-system"
+followUpQueueMode = "queue"
+conversationDetailMode = "STEPS_PROSE"
+
+[notice.model_migrations]
+"gpt-5.4" = "gpt-5.5"

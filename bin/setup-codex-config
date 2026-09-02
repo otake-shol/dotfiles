@@ -1,0 +1,54 @@
+#!/bin/bash
+
+set -euo pipefail
+
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+LOCAL_CODEX_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles-local/codex"
+CODEX_DIR="${CODEX_HOME:-$HOME/.codex}"
+
+link_local_file() {
+    local name="$1"
+    local template_path="$2"
+    local source_path="$CODEX_DIR/$name"
+    local local_path="$LOCAL_CODEX_DIR/$name"
+    local current_target
+
+    if [ ! -f "$template_path" ]; then
+        echo "Codexテンプレートが見つかりません: $template_path" >&2
+        return 1
+    fi
+
+    if [ -L "$source_path" ]; then
+        current_target="$(readlink "$source_path")"
+        if [ "$current_target" = "$local_path" ]; then
+            echo "✓ Codexローカルファイルは分離済み: $local_path"
+            return 0
+        fi
+
+        echo "既存のsymlinkを上書きしません: $source_path -> $current_target" >&2
+        return 1
+    fi
+
+    if [ -e "$source_path" ]; then
+        if [ -e "$local_path" ]; then
+            echo "移行元と移行先の両方にCodexファイルがあります。内容を確認してください。" >&2
+            echo "  移行元: $source_path" >&2
+            echo "  移行先: $local_path" >&2
+            return 1
+        fi
+
+        mv "$source_path" "$local_path"
+        echo "✓ 既存のCodexファイルをリポジトリ外へ移動: $local_path"
+    elif [ ! -e "$local_path" ]; then
+        cp "$template_path" "$local_path"
+        echo "✓ Codexローカルファイルをテンプレートから作成: $local_path"
+    fi
+
+    chmod 600 "$local_path"
+    ln -s "$local_path" "$source_path"
+    echo "✓ Codex symlinkを作成: $source_path"
+}
+
+mkdir -p "$LOCAL_CODEX_DIR" "$CODEX_DIR"
+link_local_file "config.toml" "$REPO_DIR/templates/codex-config.toml.template"
+link_local_file "hooks.json" "$REPO_DIR/templates/codex-hooks.json.template"

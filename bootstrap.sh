@@ -346,6 +346,13 @@ for pkg in "${STOW_PACKAGES[@]}"; do
 done
 echo -e "${GREEN}✓ Stowパッケージ完了 (${STOW_PACKAGES[*]})${NC}"
 
+# Codexの端末固有設定をGit管理外へ分離
+if [ "$DRY_RUN" = true ]; then
+    dry_run_msg "$HOME/.codex/config.toml をローカル専用設定へ分離します"
+else
+    bash "$SCRIPT_DIR/bin/setup-codex-config"
+fi
+
 # SSH ディレクトリ
 if [ "$DRY_RUN" != true ]; then
     mkdir -p ~/.ssh/sockets && chmod 700 ~/.ssh

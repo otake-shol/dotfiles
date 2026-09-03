@@ -277,7 +277,7 @@ codex-commit-push "fix: ..." README.md Makefile  # 指定ファイルだけcommi
 ```
 
 通常セッションは Terra を使い、必要な場合だけ custom agent へ委譲する。
-対話セッションと `resume` / `fork` / `archive` / `delete` / `unarchive` は、standalone版があれば自動的に `codex remote-control start` を実行して `unix://` のapp-serverへ接続する。`exec` / `review` などRemote非対応のサブコマンドは従来どおりローカル実行する。
+対話セッションと `resume` / `fork` / `archive` / `delete` / `unarchive` は、standalone版があれば `$HOME` から `codex remote-control start` を実行して `unix://` のapp-serverへ接続する。各スレッドの作業ディレクトリは `-C` で明示する。`exec` / `review` などRemote非対応のサブコマンドは従来どおりローカル実行する。
 
 プロンプトで`$eli5 なぜ空は青いの`と指定すると、大きな図と少ない言葉による初心者向けの視覚説明を生成する。
 技術記事の構成、執筆、推敲、公開前の自己確認には`$technical-blog-writing`を指定する。読者の課題、一次情報、動作確認、制約を軸に日本語記事を組み立てる。

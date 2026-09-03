@@ -30,7 +30,15 @@ ps -Ao pid,rss,comm -m | head -20
 lsof -i -P | grep LISTEN | head -20
 ```
 
-### 4. Claude Code のディスク使用量
+### 4. Codex Computer Use ゾンビプロセスの確認
+```bash
+~/dotfiles/bin/cleanup-codex-zombies
+```
+- Codex.app の Computer Use Agent (kernel.js) はセッション終了後も子プロセスが正しくkillされず残留することがある
+- fd（ファイルディスクリプタ）を掴んだまま数十日単位で残り、「Too many open files」の原因になる
+- 1日以上残留しているものが出たら `~/dotfiles/bin/cleanup-codex-zombies --kill` で終了してよい（正常なセッションが誤検知されることはまず無い）
+
+### 5. Claude Code のディスク使用量
 ```bash
 du -sh ~/.claude/* 2>/dev/null | sort -rh | head -8
 find ~/.claude/projects -name '*.jsonl' -mtime +30 -exec du -ch {} + 2>/dev/null | tail -1
@@ -67,6 +75,11 @@ find ~/.claude/cache -name '*.tmp.*' | wc -l
 ```
 
 ## よくある対応案
+
+### Codex Computer Use ゾンビプロセスの終了
+```bash
+~/dotfiles/bin/cleanup-codex-zombies --kill
+```
 
 ### 開発サーバーの停止
 ```bash

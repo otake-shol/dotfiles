@@ -339,6 +339,9 @@ _codex_maybe_cleanup_sessions() {
 _codex_run() {
     local standalone_codex="$HOME/.codex/packages/standalone/current/codex"
     local codex_bin
+    local launch_cwd=$PWD
+    local arg
+    local has_explicit_cwd=0
 
     if [[ -x "$standalone_codex" ]]; then
         codex_bin="$standalone_codex"
@@ -358,14 +361,30 @@ _codex_run() {
             return
         fi
 
-        if ! "$codex_bin" remote-control start >/dev/null 2>&1; then
+        # app-serverのcwdが最初に起動したリポジトリへ固定されないよう、
+        # 常駐プロセスは$HOMEから起動する。スレッドのcwdは下で明示する。
+        if ! (builtin cd -- "$HOME" && "$codex_bin" remote-control start >/dev/null 2>&1); then
             print -ru2 -- "⚠️  Remote Controlを起動できなかったため、今回はローカル起動します"
             "$codex_bin" "$@"
             return
         fi
 
         _codex_maybe_cleanup_sessions "$codex_bin" "$@"
-        "$codex_bin" --remote unix:// "$@"
+
+        for arg in "$@"; do
+            case "$arg" in
+                -C | --cd | --cd=*)
+                    has_explicit_cwd=1
+                    break
+                    ;;
+            esac
+        done
+
+        if ((has_explicit_cwd)); then
+            "$codex_bin" --remote unix:// "$@"
+        else
+            "$codex_bin" --remote unix:// -C "$launch_cwd" "$@"
+        fi
     else
         "$codex_bin" "$@"
     fi

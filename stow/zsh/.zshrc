@@ -26,6 +26,9 @@ fi
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 export PATH="${HOME}/.local/bin:/Applications/cmux.app/Contents/Resources/bin:${PATH}"
 
+# fd上限引き上げ（Codex等がsubmodule多数のリポジトリでEMFILEを起こす対策）
+ulimit -n 65536
+
 # ========================================
 # モジュール読み込み
 # ========================================

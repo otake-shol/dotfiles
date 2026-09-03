@@ -1,0 +1,70 @@
+#!/bin/bash
+
+set -euo pipefail
+
+THRESHOLD_DAYS="${CODEX_ZOMBIE_THRESHOLD_DAYS:-1}"
+
+usage() {
+    cat <<EOF
+Usage: cleanup-codex-zombies [--kill]
+
+Codex.app の Computer Use Agent (kernel.js) は、セッション終了後も
+子プロセスが正しく終了処理されず残留することがある。
+このスクリプトは ${THRESHOLD_DAYS} 日以上残留している kernel.js プロセスを
+検出し、一覧表示する（デフォルトはドライラン）。
+
+  --kill  一覧表示に加えて実際にプロセスを終了する
+EOF
+}
+
+elapsed_days() {
+    local pid="$1"
+    local etime
+    etime="$(ps -o etime= -p "$pid" 2>/dev/null | tr -d ' ')"
+
+    case "$etime" in
+        *-*) echo "${etime%%-*}" ;;
+        *) echo 0 ;;
+    esac
+}
+
+main() {
+    local kill_mode=0
+    local pids pid days cmd found=0
+
+    case "${1:-}" in
+        --kill) kill_mode=1 ;;
+        -h | --help)
+            usage
+            exit 0
+            ;;
+    esac
+
+    pids="$(pgrep -f 'kernel\.js' || true)"
+    if [ -z "$pids" ]; then
+        echo "kernel.js プロセスなし"
+        return 0
+    fi
+
+    for pid in $pids; do
+        days="$(elapsed_days "$pid")"
+        [ "$days" -lt "$THRESHOLD_DAYS" ] && continue
+
+        found=1
+        cmd="$(ps -o command= -p "$pid" 2>/dev/null || true)"
+        echo "pid=$pid  ${days}日以上残留  ${cmd}"
+
+        if [ "$kill_mode" -eq 1 ]; then
+            kill "$pid" && echo "  -> killed pid=$pid"
+        fi
+    done
+
+    if [ "$found" -eq 0 ]; then
+        echo "${THRESHOLD_DAYS}日以上残留しているプロセスなし"
+    elif [ "$kill_mode" -eq 0 ]; then
+        echo ""
+        echo "実際に終了するには --kill を付けて再実行してください"
+    fi
+}
+
+main "$@"

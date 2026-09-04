@@ -11,10 +11,10 @@ STOW_COMMON_FLAGS := -v --target=$(HOME) --dir=$(STOW_DIR) $(STOW_IGNORE_FLAGS)
 STOW_INSTALL_FLAGS := $(STOW_COMMON_FLAGS) --restow
 STOW_DELETE_FLAGS := $(STOW_COMMON_FLAGS)
 STOW_SIMULATE_FLAGS := --target=$(HOME) --dir=$(STOW_DIR) $(STOW_IGNORE_FLAGS)
-PACKAGES := zsh git nvim ghostty bat atuin claude codex yazi direnv cmux asdf ssh design
+PACKAGES := zsh git nvim ghostty bat atuin claude codex yazi direnv cmux asdf ssh design agents
 TOOL_VERSIONS := stow/asdf/.tool-versions
 VISUAL_SYSTEM_DIR := stow/design/.config/otake/visual-system
-DOCTOR_LINK_DIRS := "$$HOME" "$$HOME/.config" "$$HOME/.claude" "$$HOME/.codex" "$$HOME/.docker" "$$HOME/.gnupg" "$$HOME/Library/Application Support/com.mitchellh.ghostty" "$$HOME/Library/LaunchAgents"
+DOCTOR_LINK_DIRS := "$$HOME" "$$HOME/.config" "$$HOME/.claude" "$$HOME/.codex" "$$HOME/.agents" "$$HOME/.docker" "$$HOME/.gnupg" "$$HOME/Library/Application Support/com.mitchellh.ghostty" "$$HOME/Library/LaunchAgents"
 SNAPSHOT_DIR := .snapshot/$(shell date +%Y%m%d-%H%M%S)
 # tomllib (Python 3.11+) が使える python を検出。macOSのシステムpython3は3.9なのでbrewのpython@3.xを優先。
 TOML_PYTHON := $(shell for p in python3.14 python3.13 python3.12 python3.11 python3; do if command -v $$p >/dev/null 2>&1 && $$p -c 'import tomllib' >/dev/null 2>&1; then echo $$p; break; fi; done)

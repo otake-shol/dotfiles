@@ -1,0 +1,49 @@
+---
+name: "source-command-review"
+description: "コードレビュー"
+---
+
+# source-command-review
+
+Use this skill when the user asks to run the migrated source command `review`.
+
+## Command Template
+
+# /review - コードレビュー
+
+指定されたコードまたは変更差分をレビューします。
+
+## レビュー観点
+
+### 必須チェック
+- ロジックの正確性
+- エッジケースの考慮
+- エラーハンドリング
+- セキュリティ（OWASP Top 10）
+
+### 品質チェック
+- コードの可読性
+- 命名の適切さ
+- DRY原則の遵守
+- 適切な抽象化レベル
+
+### パフォーマンス
+- N+1クエリの有無
+- 不要な計算・ループ
+- メモリ効率
+
+## 出力フォーマット
+
+```
+## サマリー
+[全体的な評価]
+
+## 問題点
+- [優先度: 高/中/低] [問題の説明]
+
+## 改善提案
+- [提案内容]
+
+## 良い点
+- [褒めるべき点]
+```

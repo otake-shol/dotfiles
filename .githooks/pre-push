@@ -1,0 +1,14 @@
+#!/bin/bash
+set -euo pipefail
+
+# dotfiles-managed-privacy-hook
+repo_dir="$(git rev-parse --show-toplevel)"
+hook_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+input_file="$(mktemp "${TMPDIR:-/tmp}/dotfiles-pre-push.XXXXXX")"
+trap 'rm -f "$input_file"' EXIT
+cat > "$input_file"
+
+python3 "$repo_dir/bin/check-public-content" --pre-push < "$input_file"
+if [ -x "$hook_dir/pre-push.before-privacy" ]; then
+    "$hook_dir/pre-push.before-privacy" "$@" < "$input_file"
+fi

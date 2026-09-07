@@ -2,6 +2,7 @@
 *.swp
 *~
 *.bak
+__pycache__/
 Brewfile.lock.json
 *.pptx.inspect.ndjson
 stow/design/.config/otake/visual-system/examples/self-introduction/otake-shol-self-introduction.pptx
@@ -12,7 +13,7 @@ stow/design/.config/otake/visual-system/examples/self-introduction/otake-shol-se
 settings.local.json
 # Personal Claude instructions and skills (kept locally for Stow)
 stow/claude/.claude/*.local.md
-stow/claude/.claude/skills/fact/
+stow/claude/.claude/skills/fact
 .env
 .env.*
 !.env.tpl

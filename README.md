@@ -68,7 +68,7 @@ make runtimes-install      # Java/Node/Python/Terraform が必要になった時
 
 `~/.gitconfig.local`, `~/.zshrc.local`, `~/.config/fastlane/env`, App Store Connect の `.p8` など、個人情報・秘密情報はdotfilesへ入れず、1PasswordやiCloud Drive等から復元する。
 
-Claudeの個人プロフィールは `stow/claude/.claude/profile.local.md`、個人向けの記録スキルは `stow/claude/.claude/skills/fact/` にローカル保存する。両方ともGit管理外だがStowの対象に含め、プロフィールを `CLAUDE.md` から参照する。新PCでは非公開バックアップから復元して `make install-claude` を実行する。個人指示用の `stow/claude/.claude/*.local.md` と `fact/` の誤追跡は `make validate` で検出する。
+Claudeの個人設定は `~/.config/dotfiles-local/claude/` に保存する（`XDG_CONFIG_HOME`指定時はその配下）。`make setup-claude-local` でプロフィールと個人向けの記録スキルを既存内容のまま移し、`stow/claude/.claude/profile.local.md` と `skills/fact` にGit管理外のsymlinkを作成する。プロフィールを `CLAUDE.md` から参照し、スキルの利用方法も維持する。新PCでは外部の非公開設定を復元して `make setup-claude-local install-claude setup-privacy-hook` を実行する。移行元と移行先の両方にファイルがある場合は上書きせず停止する。
 
 ## ディレクトリ構造
 
@@ -234,6 +234,7 @@ OpenAI CodexはHomebrewの `cask "codex"` がCLIを提供する。Codex Desktop�
 GitHub Actionsで以下を自動検証:
 - ShellCheck（bootstrap.sh + bin + Claude/Codex hooks）
 - bootstrapのStow競合安全性テスト
+- 個人設定の移行・公開検査テスト、ステージ済み内容の公開検査
 - Codex MCP JavaScript構文チェック
 - OVS全パーツ・チャート・SVG安全性・PNG寸法・Marpテーマ
 - Stow競合検出（全パッケージのドライラン）
@@ -330,6 +331,10 @@ export ASC_P8_PATH="${APP_STORE_CONNECT_API_KEY_KEY_FILEPATH}"
 
 ## セキュリティ
 
+- **公開検査**: `make setup-privacy-hook` でこのリポジトリのpre-push検査を有効化する。送信する各コミットを検査し、途中で追加して後から削除した内容も対象にする。既存pre-pushがあれば保全して継続実行する。`core.hooksPath`指定時は上書きせず停止する。
+- **個人向けの禁止語句**: `~/.config/dotfiles-local/privacy/blocked-phrases.txt` に公開したくない語句を1行ずつ記載する。禁止語句自体をGitへ登録しない。`make privacy-check` とpre-pushで検出し、本文や一致した値をログへ出さない。新PCではこのファイルも非公開バックアップから復元する。
+- **検査範囲**: 公開対象外のファイル名、代表的な認証情報形式、ローカルの禁止語句を検査する。任意の私生活の文章を意味から判定するものではなく、画像内の文字も対象外。CIではローカル禁止語句を配布せず、共通ルールを検査する。GitHubのPush protectionも併用する。
+- **読み取り禁止ファイル**: 既存の環境変数テンプレートとSSH設定は固定のGit blob IDとの一致だけを許容し、内容を読まない。変更や別パスへの追加は拒否する。この例外は既存内容の安全性を保証するものではない。
 - **git-secrets**: AWS/Slack/GitHub/OpenAI/Anthropic等 8パターン検出（`.gitconfig`で定義、Stow管理）
 - **Claude Code権限**: 自動実行寄りの許可 + deny（.env/SSH鍵/rm -rf/sudo/再帰的chmod・chown）、ask（force push/curl/brew uninstall/stow -D 等）でゲート
 - **Codex権限**: workspace-write + on-request。`.env`/credentials/SSH鍵/破壊的操作は `AGENTS.md` で明示的に禁止・確認。

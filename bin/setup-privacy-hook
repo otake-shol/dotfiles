@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+"""Install this repository's pre-push check without replacing existing checks."""
+
+from pathlib import Path
+import subprocess
+
+
+def main():
+    repo = Path(__file__).resolve().parent.parent
+    config = subprocess.run(["git", "-C", str(repo), "config", "--get", "core.hooksPath"],
+                            capture_output=True, text=True)
+    if config.returncode not in (0, 1):
+        raise SystemExit("Git hook設定を確認できません")
+    if config.returncode == 0:
+        raise SystemExit("core.hooksPath設定を上書きしません。既存フックへ公開検査を組み込んでください")
+    hooks = Path(subprocess.check_output(
+        ["git", "-C", str(repo), "rev-parse", "--git-path", "hooks"], text=True).strip())
+    if not hooks.is_absolute():
+        hooks = repo / hooks
+    if hooks.is_symlink():
+        raise SystemExit("共有先の可能性があるhooksディレクトリリンクへ書き込みません")
+    hooks.mkdir(parents=True, exist_ok=True)
+    target = hooks / "pre-push"
+    previous = hooks / "pre-push.before-privacy"
+    content = (repo / ".githooks/pre-push").read_bytes()
+    if target.is_symlink():
+        raise SystemExit("既存pre-pushリンクを上書きしません")
+    if target.exists() and target.read_bytes() == content:
+        target.chmod(0o755)
+        print("✓ pre-push公開検査は設定済み")
+        return
+    if target.exists() and b"# dotfiles-managed-privacy-hook\n" in target.read_bytes():
+        raise SystemExit("既存の管理フックに差分があります。内容を確認して更新してください")
+    if target.exists():
+        if previous.exists() or previous.is_symlink():
+            raise SystemExit("既存フックの退避先が使用中です。上書きしません")
+        target.rename(previous)
+    target.write_bytes(content)
+    target.chmod(0o755)
+    print("✓ pre-push公開検査を有効化（既存フックも継続実行）")
+
+
+if __name__ == "__main__":
+    main()

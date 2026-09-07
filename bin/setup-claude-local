@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+"""Move personal Claude files outside the checkout, preserving local links."""
+
+import argparse
+import os
+from pathlib import Path
+import shutil
+
+
+def migrate(source, destination):
+    if source.is_symlink():
+        if source.resolve() != destination.resolve() or not destination.exists():
+            raise ValueError(f"既存リンクを上書きしません: {source}")
+        return
+    if source.exists() and destination.exists():
+        raise ValueError(f"移行元と移行先の両方が存在します: {source.name}")
+    if source.exists():
+        shutil.move(str(source), str(destination))
+    if destination.exists():
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.symlink_to(destination, target_is_directory=destination.is_dir())
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--repo", type=Path, default=Path(__file__).resolve().parent.parent)
+    parser.add_argument("--config-dir", type=Path,
+                        default=Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")))
+    args = parser.parse_args()
+    repo = args.repo.resolve()
+    local = (args.config_dir / "dotfiles-local").resolve()
+    if local == repo or repo in local.parents:
+        parser.error("個人設定の保存先はリポジトリ外に指定してください")
+    claude = local / "claude"
+    privacy = local / "privacy"
+    for directory in (claude, claude / "skills", privacy):
+        if directory.is_symlink() or (directory.exists() and not directory.is_dir()):
+            parser.error(f"保存先ディレクトリの既存リンク・ファイルを上書きしません: {directory}")
+    source = repo / "stow/claude/.claude"
+    pairs = [(source / "profile.local.md", claude / "profile.local.md"),
+             (source / "skills/fact", claude / "skills/fact")]
+    # Check both destinations before moving either file.
+    for old, new in pairs:
+        if new.is_symlink():
+            parser.error(f"保存先の既存リンクを上書きしません: {new}")
+        if old.is_symlink():
+            if old.resolve() != new.resolve() or not new.exists():
+                parser.error(f"既存リンクを上書きしません: {old}")
+        elif old.exists() and new.exists():
+            parser.error(f"移行元と移行先の両方が存在します: {old.name}")
+    rules = privacy / "blocked-phrases.txt"
+    if rules.is_symlink() or (rules.exists() and not rules.is_file()):
+        parser.error("公開禁止語句ファイルの既存リンク・ディレクトリを上書きしません")
+    claude.mkdir(parents=True, exist_ok=True, mode=0o700)
+    claude.chmod(0o700)
+    (claude / "skills").mkdir(exist_ok=True, mode=0o700)
+    if not pairs[0][0].exists() and not pairs[0][1].exists():
+        pairs[0][1].write_text("# Personal profile\n", encoding="utf-8")
+    for old, new in pairs:
+        migrate(old, new)
+    (claude / "profile.local.md").chmod(0o600)
+    privacy.mkdir(exist_ok=True, mode=0o700)
+    privacy.chmod(0o700)
+    if not rules.exists():
+        rules.write_text("# One private phrase per line. Keep this file outside Git.\n", encoding="utf-8")
+    rules.chmod(0o600)
+    print("✓ Claude個人設定をリポジトリ外へ分離（既存内容を保持）")
+    print(f"  保存先: {claude}")
+    print(f"  公開禁止語句: {rules}")
+
+
+if __name__ == "__main__":
+    main()

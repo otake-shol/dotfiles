@@ -20,6 +20,7 @@ SNAPSHOT_DIR := .snapshot/$(shell date +%Y%m%d-%H%M%S)
 TOML_PYTHON := $(shell for p in python3.14 python3.13 python3.12 python3.11 python3; do if command -v $$p >/dev/null 2>&1 && $$p -c 'import tomllib' >/dev/null 2>&1; then echo $$p; break; fi; done)
 
 .PHONY: help install uninstall check check-strict check-conflicts bootstrap lint test-bootstrap design-check clean install-% uninstall-% packages stats readme-check readme-sync runtimes-install versions-audit doctor doctor-plan doctor-clean-broken setup-fastlane-env validate snapshot new-mac macos-defaults
+.PHONY: setup-claude-local setup-privacy-hook privacy-check test-privacy
 
 help:
 	@echo "Usage:"
@@ -42,6 +43,9 @@ help:
 	@echo "  make runtimes-install asdf plugin/runtime を .tool-versions から導入"
 	@echo "  make versions-audit   .tool-versions の固定バージョン確認"
 	@echo "  make setup-fastlane-env  fastlane用環境変数を対話的にセットアップ"
+	@echo "  make setup-claude-local  Claude個人設定をリポジトリ外へ移行"
+	@echo "  make setup-privacy-hook プッシュ前の公開検査を有効化"
+	@echo "  make privacy-check    ステージ済み内容の公開検査"
 	@echo "  make validate         移行可能性を機械検証（lint+readme+stow+toml+json+絶対パス）"
 	@echo "  make snapshot         現PCの状態を .snapshot/<ts>/ に記録（移行前の証拠）"
 	@echo "  make new-mac          新PC移行ガイドを表示"
@@ -146,7 +150,7 @@ setup-fastlane-env:
 macos-defaults:
 	@bash ./bin/apply-macos-defaults
 
-validate: lint test-bootstrap readme-check design-check
+validate: lint test-bootstrap test-privacy privacy-check readme-check design-check
 	@if [ "$${CI:-}" = "true" ]; then \
 	  $(MAKE) check-conflicts; \
 	else \
@@ -197,7 +201,7 @@ validate: lint test-bootstrap readme-check design-check
 	fi
 	@echo "▶ 公開対象外ファイルの追跡チェック"
 	@if git ls-files stow/claude/.claude \
-	    | grep -Eq '(^stow/claude/\.claude/[^/]*\.local\.md$$|^stow/claude/\.claude/skills/fact/)'; then \
+	    | grep -Eq '(^stow/claude/\.claude/[^/]*\.local\.md$$|^stow/claude/\.claude/skills/fact(/|$$))'; then \
 	  echo "  ✗ 個人向けClaude設定がGit管理下（修復: 対象を git rm --cached で追跡解除）"; exit 1; \
 	fi
 	@if git ls-files | while read -r file; do [ -e "$$file" ] && printf '%s\n' "$$file"; done \
@@ -319,6 +323,7 @@ bootstrap:
 	bash bootstrap.sh
 
 SHELLCHECK_TARGETS := bootstrap.sh \
+	.githooks/pre-push \
 	bin/setup-fastlane-env bin/setup-codex-config bin/apply-macos-defaults \
 	tests/bootstrap-safety.sh \
 	$(wildcard stow/claude/.claude/hooks/*.sh) \
@@ -336,6 +341,19 @@ lint:
 
 test-bootstrap:
 	@bash tests/bootstrap-safety.sh
+
+setup-claude-local:
+	@python3 bin/setup-claude-local
+
+setup-privacy-hook:
+	@python3 bin/setup-privacy-hook
+
+privacy-check:
+	@python3 bin/check-public-content --index
+
+test-privacy:
+	@python3 -B -m unittest discover -s tests -p 'test_*privacy*.py'
+	@python3 -B -m unittest discover -s tests -p 'test_public_content.py'
 
 design-check:
 	@command -v node >/dev/null 2>&1 || { \

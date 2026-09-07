@@ -301,6 +301,13 @@ fi
 # ========================================
 show_step 3 6 "dotfilesのシンボリックリンク作成"
 
+if [ "$DRY_RUN" = true ] || [ "${CI:-}" = "true" ]; then
+    dry_run_msg "Claude個人設定の外部分離とpre-push公開検査の設定をスキップします"
+else
+    python3 "$SCRIPT_DIR/bin/setup-claude-local"
+    python3 "$SCRIPT_DIR/bin/setup-privacy-hook"
+fi
+
 STOW_AVAILABLE=true
 if ! command -v stow &>/dev/null; then
     STOW_AVAILABLE=false

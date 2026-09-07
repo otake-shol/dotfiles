@@ -196,6 +196,10 @@ validate: lint test-bootstrap readme-check design-check
 	  echo "  ✓ local stateなし"; \
 	fi
 	@echo "▶ 公開対象外ファイルの追跡チェック"
+	@if git ls-files stow/claude/.claude \
+	    | grep -Eq '(^stow/claude/\.claude/[^/]*\.local\.md$$|^stow/claude/\.claude/skills/fact/)'; then \
+	  echo "  ✗ 個人向けClaude設定がGit管理下（修復: 対象を git rm --cached で追跡解除）"; exit 1; \
+	fi
 	@if git ls-files | while read -r file; do [ -e "$$file" ] && printf '%s\n' "$$file"; done \
 	    | grep -Eq '(^stow/codex/\.codex/(config\.toml|hooks\.json)$$|\.pptx\.inspect\.ndjson$$|/otake-shol-self-introduction\.pptx$$)'; then \
 	  echo "  ✗ ローカル設定またはPPTX検査生成物がGit管理下"; exit 1; \

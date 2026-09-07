@@ -68,11 +68,13 @@ make runtimes-install      # Java/Node/Python/Terraform が必要になった時
 
 `~/.gitconfig.local`, `~/.zshrc.local`, `~/.config/fastlane/env`, App Store Connect の `.p8` など、個人情報・秘密情報はdotfilesへ入れず、1PasswordやiCloud Drive等から復元する。
 
+Claudeの個人プロフィールは `stow/claude/.claude/profile.local.md`、個人向けの記録スキルは `stow/claude/.claude/skills/fact/` にローカル保存する。両方ともGit管理外だがStowの対象に含め、プロフィールを `CLAUDE.md` から参照する。新PCでは非公開バックアップから復元して `make install-claude` を実行する。個人指示用の `stow/claude/.claude/*.local.md` と `fact/` の誤追跡は `make validate` で検出する。
+
 ## ディレクトリ構造
 
 ```
 dotfiles/
-├── stow/                  # GNU Stowパッケージ（14個）
+├── stow/                  # GNU Stowパッケージ（15個）
 │   ├── asdf/
 │   ├── atuin/
 │   ├── bat/

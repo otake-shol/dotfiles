@@ -4,8 +4,7 @@
 
 @~/.claude/environment.md
 @~/.claude/engineering-quality.md
-
----
+@~/.claude/profile.local.md
 
 ---
 

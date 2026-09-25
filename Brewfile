@@ -92,10 +92,12 @@ cask "readdle-spark"               # メールクライアント
 cask "ticktick"                    # ToDoリスト+ポモドーロ
 cask "obsidian"                    # Markdownナレッジベース(Vault設定は別管理)
 cask "slack"                       # チームコミュニケーション
+cask "discord"                     # コミュニティ・ボイスチャット
 mas "LINE", id: 539883307          # メッセージング(個人/家族・Mac App Store版・要mas)
 
 # --- デザイン・開発 ---
 cask "figma"                       # デザイン+プロトタイピング
+cask "blender"                     # 3Dモデリング・アニメーション・レンダリング
 cask "cursor"                      # AI機能統合コードエディタ
 cask "zed"                         # Rust製ネイティブエディタ(高速/軽量・読む&レビュー面としてお試し導入)
 cask "claude"                      # Claudeデスクトップアプリ(公式チャットGUI)

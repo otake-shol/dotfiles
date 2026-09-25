@@ -30,6 +30,15 @@ eval "$(echo "$input" | jq -r '
   @sh "fast_mode=\(.fast_mode // false)",
   @sh "pr_number=\(.pr.number // "")",
   @sh "pr_review_state=\(.pr.review_state // "")",
+  @sh "pr_url=\(.pr.url // "")",
+  @sh "git_worktree=\(.workspace.git_worktree // "")",
+  @sh "pc_present=\(if .prompt_cache then "1" else "" end)",
+  @sh "pc_observed=\(.prompt_cache.caching_observed // false)",
+  @sh "pc_warm=\(.prompt_cache.warm // false)",
+  @sh "pc_hit=\(.prompt_cache.hit_ratio // "")",
+  @sh "pc_expires=\(.prompt_cache.expires_at // "")",
+  @sh "pc_misses=\(.prompt_cache.misses // 0)",
+  @sh "pc_miss_cause=\(.prompt_cache.last_miss_cause.causes[0]? // "")",
   @sh "total_in_tok=\(.context_window.total_input_tokens // 0)",
   @sh "total_out_tok=\(.context_window.total_output_tokens // 0)"
 ')"
@@ -340,7 +349,10 @@ if [ -n "$pr_number" ]; then
         draft)             PR_COLOR=$DIM;    pr_mark="◌" ;;
         *)                 PR_COLOR=$COLOR_3; pr_mark="" ;;
     esac
-    output+="  ${PR_COLOR}${ICON_PR} #${pr_number}${pr_mark:+ $pr_mark}${RESET}"
+    pr_label="${ICON_PR} #${pr_number}${pr_mark:+ $pr_mark}"
+    # OSC 8 ハイパーリンク（Cmd+クリックでPRを開く）
+    [ -n "$pr_url" ] && pr_label="\033]8;;${pr_url}\a${pr_label}\033]8;;\a"
+    output+="  ${PR_COLOR}${pr_label}${RESET}"
 fi
 
 # worktree表示
@@ -348,6 +360,9 @@ if [ -n "$worktree_branch" ]; then
     output+="  ${COLOR_3}${ICON_WORKTREE} ${worktree_branch}${RESET}"
 elif [ -n "$worktree_name" ]; then
     output+="  ${COLOR_3}${ICON_WORKTREE} ${worktree_name}${RESET}"
+elif [ -n "$git_worktree" ]; then
+    # Claude の worktree セッション外でも、git worktree add 製（orca 等）なら名前を出す
+    output+="  ${COLOR_3}${ICON_WORKTREE} ${git_worktree}${RESET}"
 fi
 
 output+=" ${DIM}${SEP}${RESET} "
@@ -450,19 +465,48 @@ if [ "$exceeds_200k" = "true" ]; then
     fi
 fi
 
-# キャッシュヒット率（直近API呼び出しの current_usage ベース）
-# 累積入力トークンを返すフィールドは現行JSONに無いため、累積の節約額推定は廃止した
-total_input=$((input_tokens + cache_read + cache_creation))
-if [ "$total_input" -gt 0 ]; then
-    cache_pct=$((cache_read * 100 / total_input))
-    if [ "$cache_pct" -gt 60 ]; then
-        CACHE_COLOR=$GREEN
-    elif [ "$cache_pct" -gt 30 ]; then
-        CACHE_COLOR=$YELLOW
-    else
-        CACHE_COLOR=$RED
+# プロンプトキャッシュ（v2.1.251+ の prompt_cache を優先）
+# hit%: セッション累積ヒット率 / 冷却までの残り時間 / 無駄な再キャッシュ(miss)回数と直近原因
+if [ -n "$pc_present" ] && [ "$pc_observed" = "true" ]; then
+    if [ -n "$pc_hit" ]; then
+        cache_pct=$(awk -v r="$pc_hit" 'BEGIN { printf "%d", r*100 }')
+        if [ "$cache_pct" -gt 80 ]; then
+            CACHE_COLOR=$GREEN
+        elif [ "$cache_pct" -gt 50 ]; then
+            CACHE_COLOR=$YELLOW
+        else
+            CACHE_COLOR=$RED
+        fi
+        line2+="  ${CACHE_COLOR}${ICON_CACHE}${cache_pct}%${RESET}"
     fi
-    line2+="  ${CACHE_COLOR}${ICON_CACHE}${cache_pct}%${RESET}"
+    if [ "$pc_warm" = "true" ] && [ -n "$pc_expires" ]; then
+        # 冷えると次の送信で全コンテキスト再書き込み（1.25x）になるので残り時間を出す
+        cold_in=$((pc_expires - now_epoch))
+        if [ "$cold_in" -le 60 ]; then
+            line2+=" ${YELLOW}${BOLD}あと${cold_in}sで冷却${RESET}"
+        else
+            line2+=" ${DIM}$(_format_relative_reset "$pc_expires")${RESET}"
+        fi
+    else
+        line2+=" ${RED}${BOLD}❄cold${RESET}"
+    fi
+    if [ "$pc_misses" -gt 0 ]; then
+        line2+=" ${RED}miss${pc_misses}${pc_miss_cause:+(${pc_miss_cause})}${RESET}"
+    fi
+else
+    # 旧バージョン/初回応答前: 直近API呼び出しの current_usage から算出
+    total_input=$((input_tokens + cache_read + cache_creation))
+    if [ "$total_input" -gt 0 ]; then
+        cache_pct=$((cache_read * 100 / total_input))
+        if [ "$cache_pct" -gt 60 ]; then
+            CACHE_COLOR=$GREEN
+        elif [ "$cache_pct" -gt 30 ]; then
+            CACHE_COLOR=$YELLOW
+        else
+            CACHE_COLOR=$RED
+        fi
+        line2+="  ${CACHE_COLOR}${ICON_CACHE}${cache_pct}%${RESET}"
+    fi
 fi
 
 echo -e "$line2"

@@ -53,7 +53,7 @@
 - 切替は `/model <alias>` と `/effort <level>`。未対応の effort 値はそのモデルの上限に自動 fallback（例: Opus 4.6 で xhigh → high）
 - **thinking は output トークンとして課金**される。コスト優先のセッションは `/effort low〜medium` に落とす
 - **fast mode（`/fast`）は Opus のみ・料金2倍**。ライブデバッグ等の対話作業向け。バッチ・長時間タスクでは使わない。セッション途中で ON にすると履歴分も fast 料金になるため、使うなら開始時に
-- **prompt cache は 5分 TTL**。5分以上放置して再開すると全コンテキスト再読み込み（cache write は 1.25x、cache read は 0.1x）。長い CLAUDE.md や巨大コンテキストほど再開コストが増える
+- **prompt cache の TTL は 5分 or 1時間**（セッションで異なり、overage 時は5分に落ちる）。実際の残り時間は statusline のキャッシュ表示（`あとNm` / `❄cold`）で確認する。冷えてから再開すると全コンテキストを再書き込み（cache write は 5分TTLで1.25x・1時間TTLで2x、cache read は 0.1x）。長い CLAUDE.md や巨大コンテキストほど再開コストが増える
 - 料金の目安（input/output per MTok）: Opus 4.8 $5/$25、Sonnet 5 $3/$15、Haiku 4.5 $1/$5
 
 ### 委譲ルーティング（サブエージェントでモデルを使い分ける）

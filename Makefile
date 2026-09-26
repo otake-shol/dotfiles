@@ -273,6 +273,8 @@ new-mac:
 	  "  - gh auth login" \
 	  "  - claude login" \
 	  "  - codex login" \
+	  "  - Orcaを起動し、リポジトリとAIエージェントを設定（orca open --json）" \
+	  "  - orca status --json                          # Orcaの起動・接続確認" \
 	  "  - p10k configure                              # プロンプト初期化" \
 	  "" \
 	  "▶ 移行直後の確認" \

@@ -23,10 +23,15 @@ make_executable() {
 
 fail() {
     echo "✗ $*" >&2
+    if [ -f "$BOOTSTRAP_LOG" ]; then
+        cat "$BOOTSTRAP_LOG" >&2
+    fi
     exit 1
 }
 
 mkdir -p "$TEST_HOME" "$FAKE_BIN"
+# テーマ取得のネットワークアクセスを避け、Stowと設定分離だけを検証する。
+mkdir -p "$TEST_HOME/.local/share/nvim/site/pack/colors/start/tokyonight.nvim"
 : > "$TEST_HOME/.dotfiles-macos-defaults-applied"
 : > "$STOW_TEST_LOG"
 
@@ -49,8 +54,11 @@ make_executable "$FAKE_BIN/stow" \
     'case " $* " in *" --adopt "*) exit 0 ;; *) exit 1 ;; esac'
 
 run_bootstrap() {
+    # Ubuntu runner等の設定先を引き継がず、移行先もテスト用HOMEへ閉じる。
     CI=true \
         HOME="$TEST_HOME" \
+        XDG_CONFIG_HOME="$TEST_HOME/.config" \
+        CODEX_HOME="$TEST_HOME/.codex" \
         PATH="$FAKE_BIN:/usr/bin:/bin" \
         STOW_TEST_LOG="$STOW_TEST_LOG" \
         /bin/bash "$REPO_DIR/bootstrap.sh" --skip-apps --no-codex-desktop "$@" \

@@ -3,7 +3,7 @@
 # --- カラーコード定数 ---
 NC='\033[0m'
 
-# --- エディタ ---
+# --- ターミナル内の編集・Gitメッセージ入力（主要IDEはOrca） ---
 export EDITOR="nvim"
 export VISUAL="nvim"
 export GIT_EDITOR="nvim"

@@ -63,11 +63,14 @@ brew "librsvg"                     # OVSのSVG→PNG変換(rsvg-convert)
 # --- メディア・文字起こし ---
 brew "ffmpeg"                      # 音声/動画変換(yt-dlpの依存)
 brew "yt-dlp"                      # YouTube等の動画/字幕/音声ダウンロード
-brew "whisper-cpp"                 # ローカル音声文字起こし(C++高速実装)
+brew "whisper.cpp"                 # ローカル音声文字起こし(C++高速実装・旧whisper-cpp)
 
 # ========================================
 # Core GUI Applications
 # ========================================
+
+# --- メインエディタ・IDE ---
+cask "orca"                        # メインIDE(worktree・AIエージェント・ターミナル管理)
 
 # --- ターミナル ---
 cask "ghostty"                     # Zig製高速ターミナル(GPU描画+TokyoNight)
@@ -98,12 +101,11 @@ mas "LINE", id: 539883307          # メッセージング(個人/家族・Mac A
 # --- デザイン・開発 ---
 cask "figma"                       # デザイン+プロトタイピング
 cask "blender"                     # 3Dモデリング・アニメーション・レンダリング
-cask "cursor"                      # AI機能統合コードエディタ
-cask "zed"                         # Rust製ネイティブエディタ(高速/軽量・読む&レビュー面としてお試し導入)
+cask "cursor"                      # 補助エディタ(AI機能統合)
+cask "zed"                         # 補助エディタ(コード閲覧・レビュー用)
 cask "claude"                      # Claudeデスクトップアプリ(公式チャットGUI)
 cask "claude-code@latest"          # Claude Code CLI(公式cask・claudeバイナリ・即時最新)
 cask "codex"                       # OpenAI Codex CLI(デスクトップ版はbootstrapで導入)
-cask "orca"                        # worktree分離型AIエージェント開発環境
 cask "google-gemini"               # Google純正Geminiデスクトップアプリ(arm64+macOS15以降)
 cask "orbstack"                    # Docker Desktop代替(軽量+高速)
 

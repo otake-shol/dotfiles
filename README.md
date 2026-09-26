@@ -2,7 +2,16 @@
 
 [![CI](https://github.com/otake-shol/dotfiles/actions/workflows/ci.yml/badge.svg)](https://github.com/otake-shol/dotfiles/actions/workflows/ci.yml)
 
-macOS向けの個人開発環境設定ファイル。GNU Stowによるモジュール管理、ワンコマンドセットアップ、全ツールTokyoNight統一。
+Orcaを主要エディタ・IDEとするmacOS向けの個人開発環境設定ファイル。GNU Stowによるモジュール管理とワンコマンドセットアップに対応。
+
+## 開発ツールの役割
+
+| ツール | 用途 |
+| --- | --- |
+| **Orca** | 日常の開発、worktree管理、AIエージェント実行、内蔵ターミナル・ブラウザ |
+| **Neovim** | ターミナル内の軽微な編集、Gitのメッセージ入力（`EDITOR`・`VISUAL`・`GIT_EDITOR`） |
+| **Cursor / Zed** | 補助的な編集、コード閲覧・レビュー |
+| **Ghostty / cmux** | 独立したターミナル作業 |
 
 ## 前提条件
 
@@ -58,6 +67,7 @@ make runtimes-install      # Java/Node/Python/Terraform が必要になった時
 - `gh auth login`
 - `claude login`
 - `codex login`
+- **Orca** を起動し、利用するリポジトリとAIエージェントを設定（[導入・確認手順](#orcaの導入確認)）
 - `p10k configure`（プロンプト初期化）
 - **Chrome 縦タブ**: `chrome://flags` → "vertical" 検索 → Vertical Tabs を **Enabled** → 再起動（flagsはGoogle同期対象外のため手動設定が必要）
 
@@ -101,7 +111,7 @@ dotfiles/
 graph TB
     subgraph bootstrap["bootstrap.sh（ワンコマンドセットアップ）"]
         B1[Homebrew]
-        B1 --> B2[Brewfile 63パッケージ]
+        B1 --> B2[Brewfile 65パッケージ]
         B2 --> B3[GNU Stow シンボリックリンク]
         B3 --> B4[Oh My Zsh + プラグイン]
         B4 --> B5[macOS設定]
@@ -229,9 +239,23 @@ OpenAI CodexはHomebrewの `cask "codex"` がCLIを提供する。Codex Desktop�
 
 軽量セットアップにしたい場合は `bash bootstrap.sh --skip-apps` でBrewfile全体の導入を飛ばす。この場合でもStowリンク作成に必要な `stow` だけはHomebrewで確保する。必要なStowリンクだけを入れたい場合は `make install-PKG` を使う。
 
+### Orcaの導入・確認
+
+OrcaをBrewfileのCore GUI Applicationsとして導入する。既存のMacでOrcaだけを追加する場合は次を実行する。
+
+```bash
+brew tap stablyai/orca
+brew install --cask orca
+orca open --json
+orca status --json
+```
+
+新PCではOrcaにリポジトリを登録し、利用するAIエージェントを設定する。リポジトリ登録、worktree、セッションなどの端末固有状態はOrca側で管理する。CLIの操作方法は `orca skills get orca-cli` でインストール済みバージョンのガイドを確認する。
+
 ## CI
 
 GitHub Actionsで以下を自動検証:
+
 - ShellCheck（bootstrap.sh + bin + Claude/Codex hooks）
 - bootstrapのStow競合安全性テスト
 - 個人設定の移行・公開検査テスト、ステージ済み内容の公開検査
@@ -239,7 +263,7 @@ GitHub Actionsで以下を自動検証:
 - OVS全パーツ・チャート・SVG安全性・PNG寸法・Marpテーマ
 - Stow競合検出（全パッケージのドライラン）
 - Zsh構文チェック
-- Brewfile構文検証
+- Brewfile構文とformula・caskの取得可否（定義済みtapを準備して検証）
 
 ## キーバインド
 

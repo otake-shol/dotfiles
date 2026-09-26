@@ -1,6 +1,6 @@
 # AGENTS.md
 
-dotfiles リポジトリ。macOS 環境を GNU Stow + Homebrew + Claude Code で再現する個人設定。
+dotfiles リポジトリ。Orcaを主要エディタ・IDEとするmacOS開発環境をGNU Stow + Homebrewで再現する個人設定。
 
 ## 構成
 

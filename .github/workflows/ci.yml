@@ -54,6 +54,12 @@ jobs:
       - name: Verify Brewfile syntax
         run: brew bundle list --all --file=Brewfile >/dev/null
 
+      - name: Set up Brewfile taps
+        run: |
+          brew bundle list --taps --file=Brewfile | while IFS= read -r tap; do
+            brew tap "$tap"
+          done
+
       - name: Check Homebrew formulae and casks are available
         run: |
           errors=0
@@ -64,20 +70,22 @@ jobs:
 
             if [[ "$line" =~ ^brew\ \"([^\"]+)\" ]]; then
               pkg="${BASH_REMATCH[1]}"
-              if ! brew info "$pkg" &>/dev/null; then
-                echo "::error::Formula not found: $pkg"
+              if ! output=$(brew info --formula "$pkg" 2>&1); then
+                printf '%s\n' "$output"
+                echo "::error::Formula lookup failed: $pkg"
                 errors=$((errors + 1))
               fi
             elif [[ "$line" =~ ^cask\ \"([^\"]+)\" ]]; then
               pkg="${BASH_REMATCH[1]}"
-              if ! brew info --cask "$pkg" &>/dev/null; then
-                echo "::error::Cask not found: $pkg"
+              if ! output=$(brew info --cask "$pkg" 2>&1); then
+                printf '%s\n' "$output"
+                echo "::error::Cask lookup failed: $pkg"
                 errors=$((errors + 1))
               fi
             fi
           done < Brewfile
           if [ "$errors" -gt 0 ]; then
-            echo "::error::$errors package(s) not found in Homebrew"
+            echo "::error::$errors Homebrew package lookup(s) failed"
             exit 1
           fi
           echo "✓ All Homebrew formulae and casks are available"

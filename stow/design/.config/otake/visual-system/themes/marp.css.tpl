@@ -135,6 +135,7 @@ blockquote {
 }
 
 table {
+  display: table;
   width: 100%;
   overflow: hidden;
   background: var(--ovs-surface);
@@ -226,6 +227,7 @@ section.metric .cards {
   display: flex;
   gap: 20px;
   justify-content: space-between;
+  margin-bottom: 40px;
 }
 
 section.timeline .step,
@@ -236,6 +238,14 @@ section.metric .card {
   border: {{stroke.rule}} solid var(--ovs-ink);
   border-radius: {{radius.card}};
   box-shadow: {{shadow.smallX}} {{shadow.smallY}} 0 var(--ovs-ink);
+}
+
+/* 例外・変化・行動の一か所だけに使う。本文色にはしない */
+section.timeline .step.is-accent,
+section.metric .card.is-accent {
+  background: var(--ovs-coral-wash);
+  border-color: var(--ovs-coral);
+  box-shadow: {{shadow.smallX}} {{shadow.smallY}} 0 var(--ovs-coral);
 }
 
 section.timeline .date {
@@ -337,6 +347,48 @@ section.metric .change {
 
 .ovs-marker > i:nth-child(3) {
   background: var(--ovs-wine);
+}
+
+/* 色の面積配分。各spanの比率は style="flex: 数値" で指定する */
+.ovs-balance {
+  display: flex;
+  height: 64px;
+  margin: 8px 0 20px;
+  overflow: hidden;
+  border: {{stroke.rule}} solid var(--ovs-ink);
+  border-radius: {{radius.control}};
+}
+
+.ovs-balance > .canvas { background: var(--ovs-canvas); }
+.ovs-balance > .primary { background: var(--ovs-primary); }
+.ovs-balance > .deep { background: var(--ovs-ink); }
+.ovs-balance > .soft { background: var(--ovs-primary-wash); }
+.ovs-balance > .accent { background: var(--ovs-coral); }
+
+/* 章の現在地。_header に章名を並べ、現在の章だけを **太字** にする */
+header {
+  top: 20px;
+  left: 72px;
+  right: 72px;
+  color: var(--ovs-ink-mute);
+  font-size: 20px;
+  letter-spacing: 0.04em;
+}
+
+header strong {
+  color: var(--ovs-ink);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 6px;
+}
+
+section.invert header {
+  color: {{color.rule}};
+}
+
+section.invert header strong {
+  color: {{color.nightInk}};
 }
 
 footer,

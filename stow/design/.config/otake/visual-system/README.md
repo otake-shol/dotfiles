@@ -35,6 +35,11 @@ ovs preview design-system-article/dist
 
 パーツの判断基準は[PARTS.md](./PARTS.md)、見本は[EXAMPLES.md](./EXAMPLES.md)。
 
+Markdownスライド制作はClaude `/slides` とCodex `source-command-slides` で共通化。
+構成、テーマ、出力形式、表示確認は
+[`otake-visual` の共通指針](../../../.agents/skills/otake-visual/references/slides.md)で管理する。
+形式の指定がなければMarkdownとHTMLを生成する。
+
 ## 記事から作る
 
 ### 1. 図の候補を出す

@@ -246,6 +246,9 @@ marp --no-stdin --html --theme "$slide_theme" slide.md -o slide.pptx
 `--allow-local-files` を追加する。HTMLと素材は相対参照を保って一緒に渡す。
 `marp` がなければMarkdownを完成させ、未変換の形式を伝える。勝手にインストールしない。
 
+PDF・PPTX・PNGの変換はブラウザー（Chromium）を起動する。Codexなどのサンドボックスで起動に失敗した場合は
+サンドボックス外での実行を承認してもらう。承認できなければHTMLまでを生成し、画像での表示確認は未実施と報告する。
+
 ## 表示確認と完了条件
 
 1. 要求された形式の変換成功、枚数、元資料との対応、画像リンクを確認する。

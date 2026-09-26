@@ -7,6 +7,13 @@ description: Turn articles, technical explanations, comparisons, retrospectives,
 
 Use the OVS CLI as the only rendering path. Edit JSON briefs; never hand-edit generated SVG.
 
+For Markdown/Marp deck creation or slide layout work, first read
+[the shared slide guide](references/slides.md). It owns deck structure, theme
+resolution, export selection, and visual review for both Claude `/slides` and
+Codex `source-command-slides`. Use the workflow below for diagram assets within
+the deck; it does not replace Marp for rendering the deck itself. Preserve any
+user-supplied template or design direction.
+
 ## Workflow
 
 1. Resolve the CLI:

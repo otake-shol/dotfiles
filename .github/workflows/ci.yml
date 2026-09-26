@@ -51,6 +51,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # runnerイメージ内の古いformula一覧で改名済みパッケージを誤判定しない。
+      - name: Update Homebrew metadata
+        run: |
+          brew update
+          brew --version
+
       - name: Verify Brewfile syntax
         run: brew bundle list --all --file=Brewfile >/dev/null
 

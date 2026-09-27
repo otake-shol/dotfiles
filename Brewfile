@@ -111,3 +111,7 @@ cask "orbstack"                    # Docker Desktop代替(軽量+高速)
 
 # --- フォント ---
 cask "font-jetbrains-mono-nerd-font"  # メインフォント(リガチャ+Nerd Font)
+cask "font-zen-maru-gothic"            # OVS見出し(スライド・図解)
+cask "font-noto-sans-jp"               # OVS本文(スライド・図解)
+cask "font-plus-jakarta-sans"          # OVS数字(スライド・図解)
+cask "font-space-mono"                 # OVSコード(スライド・図解)

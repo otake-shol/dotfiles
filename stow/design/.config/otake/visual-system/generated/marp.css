@@ -166,15 +166,142 @@ section.lead {
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  padding-right: 26%;
-  background:
-    radial-gradient(circle at 90% 12%, var(--ovs-wine-wash) 0 70px, transparent 72px),
-    radial-gradient(circle at 88% 10%, var(--ovs-primary-wash) 0 150px, transparent 152px),
-    var(--ovs-canvas);
+  padding-right: 16%;
 }
 
 section.lead h1 {
   font-size: 2.15em;
+  word-break: auto-phrase;
+  text-wrap: balance;
+}
+
+/* 表紙の発表情報。名前・肩書とイベント名・日付を左下に固定する */
+section.lead .meta {
+  position: absolute;
+  left: 72px;
+  bottom: 56px;
+  padding-left: 20px;
+  color: var(--ovs-ink-sub);
+  font-size: 0.78em;
+  line-height: 1.6;
+  border-left: 4px solid var(--ovs-primary);
+}
+
+section.lead .meta p {
+  margin: 0;
+}
+
+section.lead .meta strong {
+  color: var(--ovs-ink);
+}
+
+/* 自己紹介。左に人物（.who）と連絡先（.links）、右に本文（.body）を置く */
+section.profile {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
+  grid-template-areas:
+    "title title"
+    "who body"
+    "links body";
+  align-content: center;
+  column-gap: 48px;
+  row-gap: 40px;
+}
+
+section.profile > h1 {
+  grid-area: title;
+}
+
+section.profile > .who,
+section.profile > .links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+section.profile > .who {
+  grid-area: who;
+}
+
+section.profile > .links {
+  grid-area: links;
+  color: var(--ovs-ink-sub);
+  font-size: 0.8em;
+  line-height: 1.5;
+}
+
+/* 顔写真は正方形の画像を円形に切り抜く。屋号マークなど切り抜かない画像は .who.is-mark にする */
+section.profile > .who img {
+  flex: none;
+  box-sizing: border-box;
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border: 2.5px solid var(--ovs-ink);
+  border-radius: 50%;
+  box-shadow: 3px 3px 0 var(--ovs-ink);
+}
+
+section.profile > .who.is-mark img {
+  width: 156px;
+  height: 156px;
+  object-fit: contain;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+section.profile > .who p {
+  color: var(--ovs-ink-sub);
+  font-size: 0.9em;
+  line-height: 1.7;
+}
+
+section.profile > .links img {
+  flex: none;
+  box-sizing: content-box;
+  width: 136px;
+  height: 136px;
+  padding: 8px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--ovs-ink);
+  border-radius: 12px;
+}
+
+section.profile > .who p,
+section.profile > .links p {
+  margin: 0;
+}
+
+section.profile > .who strong {
+  color: var(--ovs-ink);
+  font-family: 'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif;
+  font-size: 1.4em;
+  letter-spacing: 0.04em;
+}
+
+section.profile > .body {
+  grid-area: body;
+  align-self: center;
+  padding: 28px 32px;
+  font-size: 0.92em;
+  background: var(--ovs-surface);
+  border: 2.5px solid var(--ovs-ink);
+  border-radius: 18px;
+  box-shadow: 3px 3px 0 var(--ovs-ink);
+}
+
+section.profile > .body li + li {
+  margin-top: 0.35em;
+}
+
+section.profile > .body > :first-child {
+  margin-top: 0;
+}
+
+section.profile > .body > :last-child {
+  margin-bottom: 0;
 }
 
 section.invert {

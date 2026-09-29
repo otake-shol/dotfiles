@@ -206,11 +206,12 @@ section.profile {
     "links body";
   align-content: center;
   column-gap: 48px;
-  row-gap: 40px;
+  row-gap: 32px;
 }
 
 section.profile > h1 {
   grid-area: title;
+  margin-bottom: 0.35em;
 }
 
 section.profile > .who,
@@ -281,6 +282,13 @@ section.profile > .who strong {
   letter-spacing: 0.04em;
 }
 
+/* 表示名の読み。表示名の直後に <small> で添える */
+section.profile > .who small {
+  color: var(--ovs-ink-mute);
+  font-size: 0.8em;
+  letter-spacing: 0.06em;
+}
+
 section.profile > .body {
   grid-area: body;
   align-self: center;
@@ -294,6 +302,11 @@ section.profile > .body {
 
 section.profile > .body li + li {
   margin-top: 0.35em;
+}
+
+/* 本題との接点など、項目の太字は色を増やさず本文色の太字にする */
+section.profile > .body li strong {
+  color: var(--ovs-ink);
 }
 
 section.profile > .body > :first-child {

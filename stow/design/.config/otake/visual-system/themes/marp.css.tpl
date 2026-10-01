@@ -42,23 +42,33 @@ section {
   line-height: 1.55;
 }
 
-section::before {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 10px;
-  content: "";
-  background: linear-gradient(
-    180deg,
-    var(--ovs-primary) 0 70%,
-    var(--ovs-wine) 70% 100%
-  );
-}
-
 h1,
 h2,
 h3 {
   color: var(--ovs-ink);
   font-family: {{font.heading}};
+}
+
+/*
+ * 日本語の改行。front matterの lang: ja で有効になる。
+ * 文節で折り返し（BudouX）、見出しは行の長さをそろえ、本文は最終行の孤立を避ける。
+ */
+h1,
+h2,
+h3 {
+  word-break: auto-phrase;
+  text-wrap: balance;
+}
+
+p,
+li,
+td,
+th,
+blockquote,
+figcaption {
+  word-break: auto-phrase;
+  text-wrap: pretty;
+  overflow-wrap: break-word;
 }
 
 h1 {
@@ -171,8 +181,6 @@ section.lead {
 
 section.lead h1 {
   font-size: 2.15em;
-  word-break: auto-phrase;
-  text-wrap: balance;
 }
 
 /* 表紙の発表情報。名前・肩書とイベント名・日付を左下に固定する */
@@ -320,14 +328,6 @@ section.profile > .body > :last-child {
 section.invert {
   color: {{color.nightInk}};
   background: {{color.night}};
-}
-
-section.invert::before {
-  background: linear-gradient(
-    180deg,
-    var(--ovs-primary) 0 70%,
-    var(--ovs-wine) 70% 100%
-  );
 }
 
 section.invert h1,
@@ -535,4 +535,22 @@ footer,
 section::after {
   color: var(--ovs-ink-mute);
   font-size: 0.58em;
+}
+
+/* 出典（フッター）とページ番号は本文と章表示の左右端（72px）にそろえる */
+footer {
+  left: 72px;
+  right: 72px;
+  bottom: 20px;
+}
+
+section::after {
+  right: 72px;
+  bottom: 20px;
+}
+
+/* 濃色背景ではink-muteのコントラストが3.8:1に落ちるため明るい罫線色にする */
+section.invert footer,
+section.invert::after {
+  color: {{color.rule}};
 }

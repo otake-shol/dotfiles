@@ -1,5 +1,6 @@
 ---
 marp: true
+lang: ja
 theme: otake-visual
 paginate: true
 size: 16:9

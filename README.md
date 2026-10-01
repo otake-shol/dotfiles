@@ -217,6 +217,7 @@ ovs render article-name/article-name.brief.json
 ovs document ~/.config/otake/visual-system/examples/document.md --target html,marp
 ovs gantt ~/.config/otake/visual-system/examples/data/gantt.csv --title "リリース計画"
 ovs preview article-name/dist
+ovs deck verify slides/topic/slide.md --minutes 10 --shots /tmp/slide-check
 make design-check
 ```
 
@@ -260,7 +261,7 @@ GitHub Actionsで以下を自動検証:
 - bootstrapのStow競合安全性テスト
 - 個人設定の移行・公開検査テスト、ステージ済み内容の公開検査
 - Codex MCP JavaScript構文チェック
-- OVS全パーツ・チャート・SVG安全性・PNG寸法・Marpテーマ
+- OVS全パーツ・チャート・SVG安全性・PNG寸法・Marpテーマ・スライドの静的検査
 - Stow競合検出（全パッケージのドライラン）
 - Zsh構文チェック
 - Brewfile構文とformula・caskの取得可否（定義済みtapを準備して検証）

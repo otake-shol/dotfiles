@@ -36,6 +36,16 @@ import {
   validateBrief,
   validateSvg,
 } from "./core.mjs";
+import { browserExecutable } from "./browser.mjs";
+import { checkDeck, formatRenderIssues, renderRules } from "./deck-check.mjs";
+import {
+  deckModes,
+  formatIssues,
+  formatRules,
+  lintDeck,
+  outlineDeck,
+  parseDeck,
+} from "./deck.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const args = process.argv.slice(2);
@@ -178,6 +188,13 @@ function help() {
   ovs preview [DIR] [--out gallery.html] [--force]
   ovs lint <SVG|DIR>
   ovs list [parts|charts|pm|recipes|targets|icons]
+
+スライド（Marp）の検査:
+  ovs deck outline <slide.md> [--minutes N] [--format md]   タイトル列と推定時間
+  ovs deck lint <slide.md> [--mode present|read] [--minutes N] [--strict] [--json]
+  ovs deck check <slide.md> [--shots DIR] [--theme CSS] [--json]   描画して実測
+  ovs deck verify <slide.md> [--minutes N] [--mode M] [--shots DIR]   lint＋check
+  ovs deck rules                                           検査ルールと根拠
 
 原則:
   OVSネイティブ図はJSON briefを入力にし、SVG・PNG・altを同時生成します。
@@ -1338,6 +1355,7 @@ function marpMarkdown(markdown) {
   if (lines[0]?.trim() !== "---") {
     return `---
 marp: true
+lang: ja
 theme: otake-visual
 ---
 
@@ -1353,11 +1371,17 @@ ${markdown}`;
   const directives = {
     marp: false,
     theme: false,
+    lang: false,
   };
   const updated = header.map((line) => {
     if (/^marp\s*:/.test(line)) {
       directives.marp = true;
       return "marp: true";
+    }
+    // 文書が言語を指定していれば尊重する。未指定なら日本語として改行・読み上げさせる
+    if (/^lang\s*:/.test(line)) {
+      directives.lang = true;
+      return line;
     }
     if (/^theme\s*:/.test(line)) {
       directives.theme = true;
@@ -1371,47 +1395,10 @@ ${markdown}`;
   if (!directives.theme) {
     updated.push("theme: otake-visual");
   }
+  if (!directives.lang) {
+    updated.push("lang: ja");
+  }
   return ["---", ...updated, "---", ...lines.slice(closing + 1)].join("\n");
-}
-
-function browserExecutable() {
-  if (
-    process.env.PUPPETEER_EXECUTABLE_PATH &&
-    existsSync(process.env.PUPPETEER_EXECUTABLE_PATH)
-  ) {
-    return process.env.PUPPETEER_EXECUTABLE_PATH;
-  }
-  for (const commandName of [
-    "google-chrome",
-    "chromium",
-    "chromium-browser",
-    "brave-browser",
-    "microsoft-edge",
-  ]) {
-    const result = spawnSync("which", [commandName], { encoding: "utf8" });
-    if (result.status === 0 && result.stdout.trim()) {
-      return result.stdout.trim();
-    }
-  }
-  for (const [application, executable] of [
-    ["Google Chrome.app", "Google Chrome"],
-    ["Chromium.app", "Chromium"],
-    ["Brave Browser.app", "Brave Browser"],
-    ["Microsoft Edge.app", "Microsoft Edge"],
-  ]) {
-    const candidate = resolve(
-      "/",
-      "Applications",
-      application,
-      "Contents",
-      "MacOS",
-      executable,
-    );
-    if (existsSync(candidate)) {
-      return candidate;
-    }
-  }
-  return "";
 }
 
 function document(values) {
@@ -1645,6 +1632,95 @@ function document(values) {
   }
 }
 
+function deckFile(positional, subcommand) {
+  const file = positional[0];
+  if (!file) {
+    throw new Error(`ovs deck ${subcommand} <slide.md> を指定してください`);
+  }
+  if (!existsSync(file)) {
+    throw new Error(`${file} が見つかりません`);
+  }
+  return file;
+}
+
+function deckLint(file, options) {
+  if (options.mode && !deckModes.includes(options.mode)) {
+    throw new Error(`--mode は${deckModes.join("、")}から選択してください`);
+  }
+  const result = lintDeck(parseDeck(readFileSync(file, "utf8")), {
+    mode: options.mode,
+    minutes: options.minutes,
+  });
+  if (options.json) {
+    console.log(JSON.stringify(result, null, 2));
+  } else {
+    console.log(formatIssues(file, result));
+  }
+  const failed =
+    result.issues.some((entry) => entry.severity === "error") ||
+    (options.strict && result.issues.some((entry) => entry.severity === "warn"));
+  return !failed;
+}
+
+async function deckCheck(file, options) {
+  const shots =
+    options.shots === true
+      ? resolve(tmpdir(), `ovs-deck-${basename(file, extname(file))}`)
+      : options.shots
+        ? resolve(options.shots)
+        : undefined;
+  const result = await checkDeck(resolve(file), {
+    theme: typeof options.theme === "string" ? resolve(options.theme) : undefined,
+    shots,
+  });
+  if (options.json) {
+    console.log(JSON.stringify(result, null, 2));
+  } else {
+    console.log(formatRenderIssues(file, result));
+  }
+  return !result.issues.some((entry) => entry.severity === "error");
+}
+
+async function deck(values) {
+  const subcommand = values.shift() ?? "help";
+  const { positional, options } = parseOptions(values);
+  if (subcommand === "rules") {
+    console.log(formatRules());
+    console.log("");
+    for (const [id, rule] of Object.entries(renderRules)) {
+      console.log(`${id.padEnd(20)} ${rule.severity.padEnd(5)} ${rule.summary}`);
+    }
+    return;
+  }
+  if (subcommand === "outline") {
+    const file = deckFile(positional, subcommand);
+    console.log(
+      outlineDeck(parseDeck(readFileSync(file, "utf8")), {
+        format: options.format,
+        minutes: options.minutes,
+      }),
+    );
+    return;
+  }
+  if (subcommand === "lint") {
+    if (!deckLint(deckFile(positional, subcommand), options)) process.exitCode = 1;
+    return;
+  }
+  if (subcommand === "check") {
+    if (!(await deckCheck(deckFile(positional, subcommand), options))) process.exitCode = 1;
+    return;
+  }
+  if (subcommand === "verify") {
+    const file = deckFile(positional, subcommand);
+    const linted = deckLint(file, options);
+    console.log("");
+    const checked = await deckCheck(file, { ...options, json: false });
+    if (!linted || !checked) process.exitCode = 1;
+    return;
+  }
+  throw new Error("deckはoutline、lint、check、verify、rulesから選択してください");
+}
+
 function list(values) {
   const { positional } = parseOptions(values);
   const kind = positional[0] ?? "parts";
@@ -1723,6 +1799,8 @@ try {
     preview(args);
   } else if (command === "list") {
     list(args);
+  } else if (command === "deck") {
+    await deck(args);
   } else {
     fail(`未定義のコマンド: ${command}`, 2);
     help();

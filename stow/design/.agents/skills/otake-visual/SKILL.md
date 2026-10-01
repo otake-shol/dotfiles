@@ -12,7 +12,9 @@ For Markdown/Marp deck creation or slide layout work, first read
 resolution, export selection, and visual review for both Claude `/slides` and
 Codex `source-command-slides`. Use the workflow below for diagram assets within
 the deck; it does not replace Marp for rendering the deck itself. Preserve any
-user-supplied template or design direction.
+user-supplied template or design direction. Verify decks with
+`ovs deck verify slide.md --minutes N --shots DIR` (static lint plus headless
+render measurement with annotated screenshots).
 
 ## Workflow
 

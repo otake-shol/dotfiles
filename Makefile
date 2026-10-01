@@ -365,11 +365,16 @@ design-check:
 	@node --check $(VISUAL_SYSTEM_DIR)/scripts/build.mjs
 	@node --check $(VISUAL_SYSTEM_DIR)/scripts/core.mjs
 	@node --check $(VISUAL_SYSTEM_DIR)/scripts/ovs.mjs
+	@node --check $(VISUAL_SYSTEM_DIR)/scripts/browser.mjs
+	@node --check $(VISUAL_SYSTEM_DIR)/scripts/deck.mjs
+	@node --check $(VISUAL_SYSTEM_DIR)/scripts/deck-check.mjs
 	@node $(VISUAL_SYSTEM_DIR)/scripts/build.mjs --check
 	@for json in $$(find $(VISUAL_SYSTEM_DIR) -name '*.json' -type f); do \
 		node -e 'JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8"))' "$$json"; \
 	done
 	@node --test $(VISUAL_SYSTEM_DIR)/test/*.test.mjs
+	@node $(VISUAL_SYSTEM_DIR)/scripts/ovs.mjs deck lint $(VISUAL_SYSTEM_DIR)/examples/slide.md >/dev/null
+	@echo "✓ visual-system slide lint"
 	@if command -v xmllint >/dev/null 2>&1; then \
 		for svg in $(VISUAL_SYSTEM_DIR)/generated/templates/*.svg $(VISUAL_SYSTEM_DIR)/generated/icons/*.svg; do \
 			xmllint --noout "$$svg"; \

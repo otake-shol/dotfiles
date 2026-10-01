@@ -30,7 +30,7 @@ ovs preview design-system-article/dist
 | レシピ | 技術解説、比較・選定、データストーリー、振り返り、プロジェクト計画、週次ステータス |
 | 出力先 | blog、Hatena、OGP、X、正方形、縦長、スライド、サムネイル |
 | AI連携 | Claude `/visual`、Codex `$otake-visual` |
-| スライド | OVSトークンから生成するMarpテーマ |
+| スライド | OVSトークンから生成するMarpテーマと、描画を実測する検査（`ovs deck`） |
 | ドキュメント | Markdown内のMermaidを共通SVGへ変換し、HTMLとMarpへ出力 |
 
 パーツの判断基準は[PARTS.md](./PARTS.md)、見本は[EXAMPLES.md](./EXAMPLES.md)。
@@ -39,6 +39,22 @@ Markdownスライド制作はClaude `/slides` とCodex `source-command-slides` �
 構成、テーマ、出力形式、表示確認は
 [`otake-visual` の共通指針](../../../.agents/skills/otake-visual/references/slides.md)で管理する。
 形式の指定がなければMarkdownとHTMLを生成する。
+
+## スライドを検査する
+
+```bash
+ovs deck outline slide.md --minutes 10                     # タイトル列と推定時間
+ovs deck lint slide.md --minutes 10                        # 構成・文面・出典・時間の静的検査
+ovs deck check slide.md --shots /tmp/slide-check           # 描画して実測し、枠付き画像と25%一覧を保存
+ovs deck verify slide.md --minutes 10 --shots /tmp/slide-check   # lint＋check
+ovs deck rules                                             # ルールと根拠
+```
+
+`check` はMarpでbareテンプレートのHTMLを作り、ヘッドレスChromeを
+DevTools Protocolのパイプで操作して、はみ出し・枠での切れ・フッターやページ番号との衝突・
+重なり・最終行の孤立・小さな文字・コントラスト・画像切れ・フォント未導入を測る。
+追加の依存はなく、Chrome系ブラウザとmarpがあれば動く。errorがあると終了コード1を返す。
+配布用の資料は `--mode read` で本文量の目安を切り替える。
 
 ## 記事から作る
 
@@ -239,6 +255,7 @@ ovs export <file.svg>          媒体別サイズへ展開
 ovs preview [dir]              HTMLギャラリーを生成
 ovs lint <svg|dir>             安全性・構文・altを検証
 ovs list <kind>                パーツ等の一覧を表示
+ovs deck <outline|lint|check|verify|rules> <slide.md>   Marpスライドを検査
 ```
 
 `render`、`chart`、`gantt`、`document`、`export`、`preview`、`suggest --write`は

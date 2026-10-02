@@ -1,0 +1,12 @@
+{
+  "name": "朝の開発トリアージ",
+  "provider": "codex",
+  "promptFile": "dev-triage.md",
+  "rrule": "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;BYHOUR=8;BYMINUTE=30",
+  "timezone": "Asia/Tokyo",
+  "workspace": "path:~/dotfiles",
+  "precheck": "bin/orca-dev-triage-precheck",
+  "reuseSession": false,
+  "missedRunGraceMinutes": 240,
+  "enabled": true
+}

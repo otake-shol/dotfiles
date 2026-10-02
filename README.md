@@ -99,6 +99,7 @@ dotfiles/
 │   ├── ssh/
 │   ├── yazi/
 │   └── zsh/
+├── orca/automations/      # Orca Automationsの定義（local/は個人用・Git管理外）
 ├── templates/             # ローカル設定テンプレート
 ├── bootstrap.sh           # ワンコマンドセットアップ
 ├── Brewfile               # Homebrewパッケージ定義
@@ -252,6 +253,20 @@ orca status --json
 ```
 
 新PCではOrcaにリポジトリを登録し、利用するAIエージェントを設定する。リポジトリ登録、worktree、セッションなどの端末固有状態はOrca側で管理する。CLIの操作方法は `orca skills get orca-cli` でインストール済みバージョンのガイドを確認する。
+
+#### Orca Automationsのコード管理
+
+定期実行するAutomationは `orca/automations/<name>.json`（設定）と `.md`（プロンプト）で管理し、名前で照合してOrcaへ反映する。個人的な定義は `orca/automations/local/` に置く（Git管理外のため別途バックアップする）。
+
+```bash
+make orca-plan                 # 定義とOrcaの差分を表示
+make orca-apply                # 定義をOrcaへ反映（作成・更新）
+bin/orca-automations export    # 未管理のAutomationをlocal/へ書き出し
+```
+
+| Automation | 内容 |
+|------------|------|
+| 朝の開発トリアージ | 平日8:30。Orca登録リポのオープンPRと失敗中ワークフローを読み取り専用で分析し、要対応があれば通知。前回から変化がなければprecheck（`bin/orca-dev-triage-precheck`）でスキップ |
 
 ## CI
 

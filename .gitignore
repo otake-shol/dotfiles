@@ -109,3 +109,6 @@ Library/
 
 # 移行前後のスナップショット（make snapshot）
 .snapshot/
+
+# Orca automations（個人用の定義は公開リポに含めない）
+orca/automations/local/

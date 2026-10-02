@@ -20,7 +20,7 @@ SNAPSHOT_DIR := .snapshot/$(shell date +%Y%m%d-%H%M%S)
 TOML_PYTHON := $(shell for p in python3.14 python3.13 python3.12 python3.11 python3; do if command -v $$p >/dev/null 2>&1 && $$p -c 'import tomllib' >/dev/null 2>&1; then echo $$p; break; fi; done)
 
 .PHONY: help install uninstall check check-strict check-conflicts bootstrap lint test-bootstrap design-check clean install-% uninstall-% packages stats readme-check readme-sync runtimes-install versions-audit doctor doctor-plan doctor-clean-broken setup-fastlane-env validate snapshot new-mac macos-defaults
-.PHONY: setup-claude-local setup-privacy-hook privacy-check test-privacy
+.PHONY: setup-claude-local setup-privacy-hook privacy-check test-privacy test-orca orca-plan orca-apply
 
 help:
 	@echo "Usage:"
@@ -50,6 +50,8 @@ help:
 	@echo "  make snapshot         現PCの状態を .snapshot/<ts>/ に記録（移行前の証拠）"
 	@echo "  make new-mac          新PC移行ガイドを表示"
 	@echo "  make macos-defaults   macOS defaults を再適用"
+	@echo "  make orca-plan        Orca Automations定義と実体の差分表示"
+	@echo "  make orca-apply       Orca Automations定義を反映"
 	@echo ""
 	@echo "Packages: $(PACKAGES)"
 
@@ -150,7 +152,7 @@ setup-fastlane-env:
 macos-defaults:
 	@bash ./bin/apply-macos-defaults
 
-validate: lint test-bootstrap test-privacy privacy-check readme-check design-check
+validate: lint test-bootstrap test-privacy test-orca privacy-check readme-check design-check
 	@if [ "$${CI:-}" = "true" ]; then \
 	  $(MAKE) check-conflicts; \
 	else \
@@ -275,6 +277,7 @@ new-mac:
 	  "  - codex login" \
 	  "  - Orcaを起動し、リポジトリとAIエージェントを設定（orca open --json）" \
 	  "  - orca status --json                          # Orcaの起動・接続確認" \
+	  "  - make orca-apply                             # Orca Automationsを定義から復元（local/は旧PCからコピー）" \
 	  "  - p10k configure                              # プロンプト初期化" \
 	  "" \
 	  "▶ 移行直後の確認" \
@@ -356,6 +359,15 @@ privacy-check:
 test-privacy:
 	@python3 -B -m unittest discover -s tests -p 'test_*privacy*.py'
 	@python3 -B -m unittest discover -s tests -p 'test_public_content.py'
+
+test-orca:
+	@python3 -B -m unittest discover -s tests -p 'test_orca_*.py'
+
+orca-plan:
+	@bin/orca-automations plan
+
+orca-apply:
+	@bin/orca-automations apply
 
 design-check:
 	@command -v node >/dev/null 2>&1 || { \

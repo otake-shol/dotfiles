@@ -1,0 +1,214 @@
+#!/usr/bin/env python3
+"""Manage Orca automations as code (orca/automations/*.json + prompt .md).
+
+Specs in orca/automations/ are public (committed). Specs in orca/automations/local/
+are git-ignored for personal automations. Automations are matched by name.
+
+  bin/orca-automations plan            # diff specs against Orca
+  bin/orca-automations apply [--name N] # create or update automations from specs
+  bin/orca-automations export          # write unmanaged automations to local/
+"""
+
+import argparse
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+SPEC_DIR = ROOT / "orca/automations"
+LOCAL_DIR = SPEC_DIR / "local"
+COMPARED_FIELDS = ("provider", "prompt", "rrule", "timezone", "workspacePath",
+                   "precheck", "reuseSession", "missedRunGraceMinutes", "enabled")
+
+
+def expand_selector(selector, home=None):
+    """Expand a leading ~ in a path: selector."""
+    home = str(home or Path.home())
+    if selector.startswith("path:~"):
+        return "path:" + home + selector[len("path:~"):]
+    return selector
+
+
+def contract_path(path, home=None):
+    """Turn an absolute path under home into a portable path:~ selector."""
+    home = str(home or Path.home())
+    if path == home or path.startswith(home + "/"):
+        return "path:~" + path[len(home):]
+    return "path:" + path
+
+
+def load_specs(dirs):
+    """Load spec files and inline their prompt files. Later dirs cannot shadow names."""
+    specs = {}
+    for directory in dirs:
+        for file in sorted(Path(directory).glob("*.json")):
+            spec = json.loads(file.read_text(encoding="utf-8"))
+            spec["prompt"] = (file.parent / spec.pop("promptFile")).read_text(encoding="utf-8")
+            spec["source"] = str(file)
+            if spec["name"] in specs:
+                raise ValueError(f"duplicate automation name: {spec['name']}")
+            specs[spec["name"]] = spec
+    return specs
+
+
+def normalize_precheck(value):
+    """Return the precheck command string from a live or spec value."""
+    if isinstance(value, dict):
+        return value.get("command")
+    return value or None
+
+
+def spec_view(spec, home=None):
+    """Comparable dict for a spec."""
+    workspace = expand_selector(spec["workspace"], home)
+    return {
+        "provider": spec["provider"],
+        "prompt": spec["prompt"],
+        "rrule": spec["rrule"],
+        "timezone": spec["timezone"],
+        "workspacePath": workspace[len("path:"):] if workspace.startswith("path:") else workspace,
+        "precheck": normalize_precheck(spec.get("precheck")),
+        "reuseSession": bool(spec.get("reuseSession", False)),
+        "missedRunGraceMinutes": spec.get("missedRunGraceMinutes"),
+        "enabled": bool(spec.get("enabled", False)),
+    }
+
+
+def live_view(automation):
+    """Comparable dict for an automation returned by `orca automations list`."""
+    return {
+        "provider": automation.get("agentId"),
+        "prompt": automation.get("prompt"),
+        "rrule": automation.get("rrule"),
+        "timezone": automation.get("timezone"),
+        "workspacePath": (automation.get("runContext") or {}).get("path"),
+        "precheck": normalize_precheck(automation.get("precheck")),
+        "reuseSession": bool(automation.get("reuseSession")),
+        "missedRunGraceMinutes": automation.get("missedRunGraceMinutes"),
+        "enabled": bool(automation.get("enabled")),
+    }
+
+
+def diff_fields(spec, live):
+    """Names of compared fields that differ."""
+    return [field for field in COMPARED_FIELDS if spec[field] != live[field]]
+
+
+def build_args(spec, automation_id=None, home=None):
+    """orca CLI arguments that create (or fully re-apply) a spec."""
+    head = ["orca", "automations"]
+    head += ["edit", automation_id] if automation_id else ["create"]
+    args = head + [
+        "--name", spec["name"],
+        "--provider", spec["provider"],
+        "--prompt", spec["prompt"],
+        "--trigger", spec["rrule"],
+        "--timezone", spec["timezone"],
+        "--workspace", expand_selector(spec["workspace"], home),
+        "--workspace-mode", "existing",
+        "--reuse-session" if spec.get("reuseSession") else "--fresh-session",
+        "--enabled" if spec.get("enabled") else "--disabled",
+    ]
+    if spec.get("missedRunGraceMinutes") is not None:
+        args += ["--missed-run-grace-minutes", str(spec["missedRunGraceMinutes"])]
+    if spec.get("precheck"):
+        args += ["--precheck", spec["precheck"]]
+    return args + ["--json"]
+
+
+def to_spec(automation, home=None):
+    """Spec dict (without prompt) for a live automation, used by export."""
+    precheck = normalize_precheck(automation.get("precheck"))
+    spec = {
+        "name": automation["name"],
+        "provider": automation["agentId"],
+        "rrule": automation["rrule"],
+        "timezone": automation["timezone"],
+        "workspace": contract_path((automation.get("runContext") or {}).get("path", ""), home),
+        "reuseSession": bool(automation.get("reuseSession")),
+        "missedRunGraceMinutes": automation.get("missedRunGraceMinutes"),
+        "enabled": bool(automation.get("enabled")),
+    }
+    if precheck:
+        spec["precheck"] = precheck
+    return spec
+
+
+def orca_json(args):
+    out = subprocess.run(args, check=True, capture_output=True, text=True)
+    payload = json.loads(out.stdout)
+    if not payload.get("ok", True):
+        raise RuntimeError(f"orca failed: {payload}")
+    return payload.get("result")
+
+
+def live_automations():
+    return {a["name"]: a for a in orca_json(["orca", "automations", "list", "--json"])["automations"]}
+
+
+def cmd_plan(specs, live):
+    changed = 0
+    for name, spec in specs.items():
+        if name not in live:
+            print(f"+ create  {name}")
+            changed += 1
+            continue
+        fields = diff_fields(spec_view(spec), live_view(live[name]))
+        if fields:
+            print(f"~ update  {name}  ({', '.join(fields)})")
+            changed += 1
+        else:
+            print(f"= same    {name}")
+    for name in sorted(set(live) - set(specs)):
+        print(f"? unmanaged {name}  (取り込み: bin/orca-automations export)")
+    return changed
+
+
+def cmd_apply(specs, live, only=None):
+    for name, spec in specs.items():
+        if only and name != only:
+            continue
+        current = live.get(name)
+        if current and not diff_fields(spec_view(spec), live_view(current)):
+            print(f"= same    {name}")
+            continue
+        result = orca_json(build_args(spec, current["id"] if current else None))
+        automation = result.get("automation", result)
+        print(f"{'~ updated' if current else '+ created'} {name}  ({automation.get('id')})")
+
+
+def cmd_export(specs, live, target):
+    target.mkdir(parents=True, exist_ok=True)
+    for name, automation in live.items():
+        if name in specs:
+            continue
+        slug = automation["id"][:8]
+        spec = to_spec(automation)
+        spec["promptFile"] = f"{slug}.md"
+        (target / f"{slug}.md").write_text(automation["prompt"], encoding="utf-8")
+        (target / f"{slug}.json").write_text(
+            json.dumps(spec, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        print(f"exported {name} -> {target / slug}.json")
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("command", choices=("plan", "apply", "export"))
+    parser.add_argument("--name", help="apply only the automation with this name")
+    args = parser.parse_args(argv)
+
+    specs = load_specs([SPEC_DIR, LOCAL_DIR])
+    live = live_automations()
+    if args.command == "plan":
+        cmd_plan(specs, live)
+    elif args.command == "apply":
+        cmd_apply(specs, live, args.name)
+    else:
+        cmd_export(specs, live, LOCAL_DIR)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

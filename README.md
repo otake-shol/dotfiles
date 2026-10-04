@@ -154,7 +154,7 @@ graph TB
 | **git** | Git設定（28エイリアス・delta・git-secrets 8パターン） | `.gitconfig`, `.gitignore_global`, `.commit-template.txt`, `.editorconfig` |
 | **claude** | Claude Code（4 hookスクリプト・10コマンド・権限制御） | `.claude/settings.json`, `hooks/`, `commands/` |
 | **codex** | Codex CLI（config・AGENTS・hook・MCP・技術ブログ執筆・レビュースキル） | `.codex/config.toml`, `.codex/AGENTS.md`, `.codex/hooks/`, `.agents/skills/{technical-blog-writing,tech-review,article-review}/` |
-| **design** | OVS図解・チャート・媒体別画像・アプリデザイン・ELI5視覚説明 | `.config/otake/visual-system/`, `.local/bin/ovs`, `.agents/skills/{otake-visual,exam-app-design-system,eli5}/` |
+| **design** | OVS図解・チャート・媒体別画像・アプリデザイン・ELI5視覚説明・物語型スライド | `.config/otake/visual-system/`, `.local/bin/ovs`, `.agents/skills/{otake-visual,exam-app-design-system,eli5,create-story-slides}/` |
 | **ghostty** | GPUターミナル（TokyoNight・透過80%・JetBrains Mono） | `.config/ghostty/config` |
 | **cmux** | ワークスペース管理（5プリセット・色分け） | `.config/cmux/cmux.json` |
 | **nvim** | 軽量エディタ（プラグインなし・git commit用） | `.config/nvim/init.lua` |
@@ -225,6 +225,19 @@ make design-check
 18図解パーツ、10チャート、26共通アイコン、6記事・PMレシピ、8媒体サイズを提供する。
 トークンの唯一の正は`tokens.json`。CSS・JavaScript・SVG・Marpテーマは生成物として同期する。
 Claudeは`/visual`、Codexは`$otake-visual`から同じJSON briefとCLIを使う。
+
+## Story Slides
+
+日本語のビジネスプレゼンを1枚1メッセージの物語で組み立て、Marpで作ってPDFに書き出すスキル。
+Claudeは`/create-story-slides`、Codexは`$create-story-slides`から使う。
+提案・計画・振り返り・事例の型、自己紹介スライドの要否、L01〜L18のレイアウトを決める。
+配色は紺・青・オレンジの専用テーマで、OVSの`/slides`とは使い分ける。
+
+```bash
+~/.agents/skills/create-story-slides/scripts/build.sh slide.md out/   # 描画検査→PDF→発表メモ
+```
+
+描画検査は`ovs deck check`、書き出しはmarp-cliを使う。全レイアウトの見本は`assets/sample-*.md`。
 
 ## Qualification Exam App Design System
 

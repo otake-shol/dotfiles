@@ -1,7 +1,9 @@
 # Markdownスライド制作の共通指針
 
 Claude `/slides` とCodex `source-command-slides` の共通仕様。
-構成・デザイン・出力・検証の変更はこのファイルと同じ階層の `slides-*.md` に集約する。
+構成・出力・検証の共通手順はこのファイルと同じ階層の `slides-*.md` に集約する。
+デザインの正本は [create-story-slidesのStandard仕様](../../create-story-slides/references/design-system.md)。
+OVSにも同じ配色・書体・面の役割を適用する。
 このファイルを最初に全文読み、各工程の参照先をその工程に入る前に全文読む。
 
 ## 目指す状態

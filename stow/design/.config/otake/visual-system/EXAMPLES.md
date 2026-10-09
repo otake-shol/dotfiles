@@ -60,4 +60,4 @@ open generated/gallery.html
 - 320px幅でも見出しと主要値が読めるか
 - 意味色の役割が図をまたいで変わっていないか
 - 色を外しても線、位置、ラベルで関係を追えるか
-- `shindanshi-app`と`my-portfolio`の延長に見えつつ、どちらかのコピーになっていないか
+- create-story-slidesのStandardと配色・書体・境界・面の役割が一致しているか

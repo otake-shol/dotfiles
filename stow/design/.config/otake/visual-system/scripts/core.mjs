@@ -50,10 +50,33 @@ export const chartTypes = [
 
 const palette = [
   tokens.color.primary,
-  tokens.color.coral,
-  tokens.color.mint,
-  tokens.color.violet,
+  tokens.color.primaryDark,
+  tokens.color.inkMute,
+  tokens.color.ink,
 ];
+const seriesDashes = ["none", "12 6", "3 6", "12 5 3 5"];
+
+// Texture preserves series identity in grayscale without extra brand colors.
+function seriesTexture(x, y, width, height, index) {
+  if (index === 0 || width <= 0) return "";
+  const lines = [];
+  if (index === 2) {
+    for (let offset = 8; offset < height; offset += 8) {
+      lines.push(`M${x} ${y + offset}h${width}`);
+    }
+  } else if (index === 3) {
+    for (let offset = 6; offset < width; offset += 8) {
+      lines.push(`M${x + offset} ${y}v${height}`);
+    }
+  } else {
+    for (let offset = -height; offset < width; offset += 10) {
+      const start = Math.max(0, offset);
+      const end = Math.min(width, offset + height);
+      lines.push(`M${x + start} ${y + height - (start - offset)}L${x + end} ${y + height - (end - offset)}`);
+    }
+  }
+  return `<path d="${lines.join(" ")}" fill="none" stroke="${tokens.color.surface}" stroke-width="1"/>`;
+}
 
 export function escapeXml(value) {
   return String(value)
@@ -558,7 +581,7 @@ function chartShell(brief, chartBody) {
   <desc id="desc">${escapeXml(brief.accessibility.alt)}</desc>
   <rect width="1200" height="675" fill="${tokens.color.canvas}"/>
   <rect x="64" y="54" width="112" height="36" rx="18" fill="${tokens.color.mint}"/>
-  <text data-slot="eyebrow" x="120" y="79" text-anchor="middle" fill="${tokens.color.ink}" font-family="${tokens.font.numeric}" font-size="${tokens.type.label}" font-weight="700">CHART</text>
+  <text data-slot="eyebrow" x="120" y="79" text-anchor="middle" fill="${tokens.color.ink}" font-family="${tokens.font.body}" font-size="${tokens.type.label}" font-weight="700">CHART</text>
   <text data-slot="title" x="64" y="144" fill="${tokens.color.ink}" font-family="${tokens.font.heading}" font-size="${tokens.type.title}" font-weight="700">${title}</text>
   <text data-slot="subtitle" x="66" y="183" fill="${tokens.color.inkSub}" font-family="${tokens.font.body}" font-size="${tokens.type.body}">${subtitle}</text>
   ${chartBody}
@@ -605,8 +628,8 @@ function renderBar(rows, unit) {
         const width = Math.max(3, (value / max) * 760);
         const y = index * rowGap + 10;
         return `<text x="188" y="${y + 27}" text-anchor="end" fill="${tokens.color.ink}" font-family="${tokens.font.body}" font-size="${tokens.type.body}">${escapeXml(rowLabel(row, index))}</text>
-    <rect x="210" y="${y}" width="${width.toFixed(1)}" height="36" rx="12" fill="${palette[index % palette.length]}" stroke="${tokens.color.ink}" stroke-width="${tokens.stroke.hairline}"/>
-    <text x="${Math.min(1010, 228 + width).toFixed(1)}" y="${y + 27}" fill="${tokens.color.ink}" font-family="${tokens.font.numeric}" font-size="${tokens.type.body}" font-weight="700">${escapeXml(value)}${escapeXml(unit)}</text>`;
+    <rect x="210" y="${y}" width="${width.toFixed(1)}" height="36" rx="12" fill="${palette[index % palette.length]}" stroke="${tokens.color.rule}" stroke-width="${tokens.stroke.hairline}"/>
+    <text x="${Math.min(1010, 228 + width).toFixed(1)}" y="${y + 27}" fill="${tokens.color.ink}" font-family="${tokens.font.body}" font-size="${tokens.type.body}" font-weight="700">${escapeXml(value)}${escapeXml(unit)}</text>`;
       })
       .join("\n")}
   </g>`;
@@ -640,7 +663,7 @@ function renderLine(rows, unit) {
         const points = items
           .map((row, index) => `${xAt(index).toFixed(1)},${yAt(row.value).toFixed(1)}`)
           .join(" ");
-        return `<polyline points="${points}" fill="none" stroke="${color}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        return `<polyline points="${points}" fill="none" stroke="${color}" stroke-width="5" stroke-dasharray="${seriesDashes[seriesIndex]}" stroke-linecap="round" stroke-linejoin="round"/>
       ${items
         .map(
           (row, index) =>
@@ -677,20 +700,20 @@ function renderStackedBar(rows, unit) {
               )
               .reduce((sum, row) => sum + Math.max(0, finite(row.value, "value")), 0);
             const width = (value / max) * 760;
-            const segment = `<rect x="${x.toFixed(1)}" y="${categoryIndex * 58}" width="${width.toFixed(1)}" height="36" fill="${palette[seriesIndex]}" stroke="${tokens.color.ink}" stroke-width="${tokens.stroke.hairline}"/>`;
+            const segment = `<rect x="${x.toFixed(1)}" y="${categoryIndex * 58}" width="${width.toFixed(1)}" height="36" fill="${palette[seriesIndex]}" stroke="${tokens.color.rule}" stroke-width="${tokens.stroke.hairline}"/>${seriesTexture(x, categoryIndex * 58, width, 36, seriesIndex)}`;
             x += width;
             return segment;
           })
           .join("");
         return `<text x="188" y="${categoryIndex * 58 + 26}" text-anchor="end" fill="${tokens.color.ink}" font-family="${tokens.font.body}" font-size="${tokens.type.body}">${escapeXml(category)}</text>
         ${segments}
-        <text x="${Math.min(1030, x + 12).toFixed(1)}" y="${categoryIndex * 58 + 26}" fill="${tokens.color.ink}" font-family="${tokens.font.numeric}" font-size="${tokens.type.label}" font-weight="700">${sums[categoryIndex]}${escapeXml(unit)}</text>`;
+        <text x="${Math.min(1030, x + 12).toFixed(1)}" y="${categoryIndex * 58 + 26}" fill="${tokens.color.ink}" font-family="${tokens.font.body}" font-size="${tokens.type.label}" font-weight="700">${sums[categoryIndex]}${escapeXml(unit)}</text>`;
       })
       .join("\n")}
     ${series
       .map(
         (name, index) =>
-          `<circle cx="${250 + index * 180}" cy="322" r="7" fill="${palette[index]}"/><text x="${265 + index * 180}" y="328" fill="${tokens.color.inkSub}" font-family="${tokens.font.body}" font-size="${tokens.type.caption}">${escapeXml(name)}</text>`,
+          `<rect x="${235 + index * 180}" y="312" width="24" height="20" fill="${palette[index]}"/>${seriesTexture(235 + index * 180, 312, 24, 20, index)}<text x="${265 + index * 180}" y="328" fill="${tokens.color.inkSub}" font-family="${tokens.font.body}" font-size="${tokens.type.caption}">${escapeXml(name)}</text>`,
       )
       .join("\n")}
   </g>`;
@@ -709,7 +732,7 @@ function renderDot(rows, unit) {
         return `<line x1="230" y1="${y}" x2="1000" y2="${y}" stroke="${tokens.color.rule}" stroke-width="${tokens.stroke.hairline}"/>
         <text x="208" y="${y + 7}" text-anchor="end" fill="${tokens.color.ink}" font-family="${tokens.font.body}" font-size="${tokens.type.label}">${escapeXml(rowLabel(row, index))}</text>
         <circle cx="${x.toFixed(1)}" cy="${y}" r="11" fill="${palette[index % palette.length]}" stroke="${tokens.color.ink}" stroke-width="${tokens.stroke.rule}"/>
-        <text x="${(x + 20).toFixed(1)}" y="${y + 7}" fill="${tokens.color.ink}" font-family="${tokens.font.numeric}" font-size="${tokens.type.label}" font-weight="700">${values[index]}${escapeXml(unit)}</text>`;
+        <text x="${(x + 20).toFixed(1)}" y="${y + 7}" fill="${tokens.color.ink}" font-family="${tokens.font.body}" font-size="${tokens.type.label}" font-weight="700">${values[index]}${escapeXml(unit)}</text>`;
       })
       .join("\n")}
   </g>`;
@@ -736,7 +759,7 @@ function renderSlope(rows, unit) {
         return `<line x1="340" y1="${yAt(start).toFixed(1)}" x2="860" y2="${yAt(end).toFixed(1)}" stroke="${color}" stroke-width="4"/>
         <circle cx="340" cy="${yAt(start).toFixed(1)}" r="7" fill="${color}"/>
         <circle cx="860" cy="${yAt(end).toFixed(1)}" r="7" fill="${color}"/>
-        <text x="320" y="${(yAt(start) + 6).toFixed(1)}" text-anchor="end" fill="${tokens.color.ink}" font-family="${tokens.font.numeric}" font-size="${tokens.type.caption}">${start}${escapeXml(unit)}</text>
+        <text x="320" y="${(yAt(start) + 6).toFixed(1)}" text-anchor="end" fill="${tokens.color.ink}" font-family="${tokens.font.body}" font-size="${tokens.type.caption}">${start}${escapeXml(unit)}</text>
         <text x="880" y="${(yAt(end) + 6).toFixed(1)}" fill="${tokens.color.ink}" font-family="${tokens.font.body}" font-size="${tokens.type.caption}">${escapeXml(rowLabel(row, index))} ${end}${escapeXml(unit)}</text>`;
       })
       .join("\n")}
@@ -765,10 +788,10 @@ function renderScatter(rows, unit) {
 
 function heatColor(value, domain) {
   const ratio = (finite(value, "value") - domain[0]) / (domain[1] - domain[0]);
-  if (ratio < 0.25) return tokens.color.primaryWash;
-  if (ratio < 0.5) return tokens.color.mangoWash;
-  if (ratio < 0.75) return tokens.color.mango;
-  return tokens.color.coral;
+  if (ratio < 0.25) return tokens.color.sunken;
+  if (ratio < 0.5) return tokens.color.primaryWash;
+  if (ratio < 0.75) return tokens.color.primary;
+  return tokens.color.primaryDark;
 }
 
 function renderHeatmap(rows, unit) {
@@ -796,8 +819,8 @@ function renderHeatmap(rows, unit) {
         const xIndex = xs.indexOf(String(row.x));
         const yIndex = ys.indexOf(String(row.y));
         const value = finite(row.value, "value");
-        return `<rect x="${(xIndex * cellWidth).toFixed(1)}" y="${(yIndex * cellHeight).toFixed(1)}" width="${cellWidth.toFixed(1)}" height="${cellHeight.toFixed(1)}" fill="${heatColor(value, domain)}" stroke="${tokens.color.ink}" stroke-width="${tokens.stroke.hairline}"/>
-        <text x="${(xIndex * cellWidth + cellWidth / 2).toFixed(1)}" y="${(yIndex * cellHeight + cellHeight / 2 + 7).toFixed(1)}" text-anchor="middle" fill="${tokens.color.ink}" font-family="${tokens.font.numeric}" font-size="${tokens.type.label}" font-weight="700">${value}${escapeXml(unit)}</text>`;
+        return `<rect x="${(xIndex * cellWidth).toFixed(1)}" y="${(yIndex * cellHeight).toFixed(1)}" width="${cellWidth.toFixed(1)}" height="${cellHeight.toFixed(1)}" fill="${heatColor(value, domain)}" stroke="${tokens.color.rule}" stroke-width="${tokens.stroke.hairline}"/>
+        <text x="${(xIndex * cellWidth + cellWidth / 2).toFixed(1)}" y="${(yIndex * cellHeight + cellHeight / 2 + 7).toFixed(1)}" text-anchor="middle" fill="${(value - domain[0]) / (domain[1] - domain[0]) >= 0.5 ? tokens.color.surface : tokens.color.ink}" font-family="${tokens.font.body}" font-size="${tokens.type.label}" font-weight="700">${value}${escapeXml(unit)}</text>`;
       })
       .join("\n")}
   </g>`;
@@ -822,9 +845,9 @@ function renderWaterfall(rows, unit) {
         const x = 250 + index * width;
         const y = Math.min(yAt(step.start), yAt(step.end));
         const height = Math.max(3, Math.abs(yAt(step.start) - yAt(step.end)));
-        const color = step.value >= 0 ? tokens.color.mint : tokens.color.coral;
-        return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(width - 18).toFixed(1)}" height="${height.toFixed(1)}" fill="${color}" stroke="${tokens.color.ink}" stroke-width="${tokens.stroke.hairline}"/>
-        <text x="${(x + (width - 18) / 2).toFixed(1)}" y="${Math.max(230, y - 10).toFixed(1)}" text-anchor="middle" fill="${tokens.color.ink}" font-family="${tokens.font.numeric}" font-size="${tokens.type.caption}" font-weight="700">${step.value > 0 ? "+" : ""}${step.value}${escapeXml(unit)}</text>
+        const color = step.value >= 0 ? tokens.color.primary : tokens.color.coral;
+        return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(width - 18).toFixed(1)}" height="${height.toFixed(1)}" fill="${color}" stroke="${tokens.color.rule}" stroke-width="${tokens.stroke.hairline}"/>
+        <text x="${(x + (width - 18) / 2).toFixed(1)}" y="${Math.max(230, y - 10).toFixed(1)}" text-anchor="middle" fill="${tokens.color.ink}" font-family="${tokens.font.body}" font-size="${tokens.type.caption}" font-weight="700">${step.value > 0 ? "+" : ""}${step.value}${escapeXml(unit)}</text>
         <text x="${(x + (width - 18) / 2).toFixed(1)}" y="555" text-anchor="middle" fill="${tokens.color.inkSub}" font-family="${tokens.font.body}" font-size="${tokens.type.caption}">${escapeXml(step.label)}</text>`;
       })
       .join("\n")}
@@ -846,10 +869,10 @@ function renderSmallMultiples(rows, unit) {
             return `${x.toFixed(1)},${y.toFixed(1)}`;
           })
           .join(" ");
-        return `<rect x="${panelX}" y="${panelY}" width="500" height="145" rx="18" fill="${tokens.color.surface}" stroke="${tokens.color.ink}" stroke-width="${tokens.stroke.hairline}"/>
+        return `<rect x="${panelX}" y="${panelY}" width="500" height="145" rx="18" fill="${tokens.color.surface}" stroke="${tokens.color.rule}" stroke-width="${tokens.stroke.hairline}"/>
         <text x="${panelX + 20}" y="${panelY + 28}" fill="${tokens.color.ink}" font-family="${tokens.font.heading}" font-size="${tokens.type.label}" font-weight="700">${escapeXml(series)}</text>
-        <polyline points="${points}" fill="none" stroke="${palette[groupIndex]}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-        <text x="${panelX + 475}" y="${panelY + 28}" text-anchor="end" fill="${palette[groupIndex]}" font-family="${tokens.font.numeric}" font-size="${tokens.type.caption}" font-weight="700">${escapeXml(items.at(-1).value)}${escapeXml(unit)}</text>`;
+        <polyline points="${points}" fill="none" stroke="${palette[groupIndex]}" stroke-width="4" stroke-dasharray="${seriesDashes[groupIndex]}" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="${panelX + 475}" y="${panelY + 28}" text-anchor="end" fill="${palette[groupIndex]}" font-family="${tokens.font.body}" font-size="${tokens.type.caption}" font-weight="700">${escapeXml(items.at(-1).value)}${escapeXml(unit)}</text>`;
       })
       .join("\n")}
   </g>`;
@@ -863,9 +886,9 @@ function renderProgress(rows, unit) {
         const value = Math.max(0, Math.min(100, finite(row.value, "value")));
         const y = index * 75;
         return `<text x="0" y="${y + 22}" fill="${tokens.color.ink}" font-family="${tokens.font.body}" font-size="${tokens.type.body}" font-weight="700">${escapeXml(rowLabel(row, index))}</text>
-        <rect x="220" y="${y}" width="740" height="34" rx="17" fill="${tokens.color.sunken}" stroke="${tokens.color.ink}" stroke-width="${tokens.stroke.hairline}"/>
+        <rect x="220" y="${y}" width="740" height="34" rx="17" fill="${tokens.color.sunken}" stroke="${tokens.color.rule}" stroke-width="${tokens.stroke.hairline}"/>
         <rect x="220" y="${y}" width="${(740 * value / 100).toFixed(1)}" height="34" rx="17" fill="${palette[index % palette.length]}"/>
-        <text x="980" y="${y + 24}" fill="${tokens.color.ink}" font-family="${tokens.font.numeric}" font-size="${tokens.type.body}" font-weight="700">${value}${escapeXml(unit || "%")}</text>`;
+        <text x="980" y="${y + 24}" fill="${tokens.color.ink}" font-family="${tokens.font.body}" font-size="${tokens.type.body}" font-weight="700">${value}${escapeXml(unit || "%")}</text>`;
       })
       .join("\n")}
   </g>`;
@@ -942,10 +965,10 @@ export function renderGantt(brief) {
     ]),
   );
   const colors = {
-    planned: [tokens.color.violet, tokens.color.violetWash],
+    planned: [tokens.color.inkMute, tokens.color.sunken],
     active: [tokens.color.primary, tokens.color.primaryWash],
     blocked: [tokens.color.coral, tokens.color.coralWash],
-    done: [tokens.color.mint, tokens.color.mintWash],
+    done: [tokens.color.primaryDark, tokens.color.primaryWash],
   };
   const statusLabels = {
     planned: "予定",
@@ -1003,7 +1026,7 @@ export function renderGantt(brief) {
   <desc id="desc">${escapeXml(brief.accessibility.alt)}</desc>
   <rect width="1200" height="675" fill="${tokens.color.canvas}"/>
   <rect x="64" y="54" width="120" height="36" rx="18" fill="${tokens.color.wine}"/>
-  <text data-slot="eyebrow" x="124" y="79" text-anchor="middle" fill="${tokens.color.surface}" font-family="${tokens.font.numeric}" font-size="${tokens.type.label}" font-weight="700">GANTT</text>
+  <text data-slot="eyebrow" x="124" y="79" text-anchor="middle" fill="${tokens.color.surface}" font-family="${tokens.font.body}" font-size="${tokens.type.label}" font-weight="700">GANTT</text>
   <text data-slot="title" x="64" y="144" fill="${tokens.color.ink}" font-family="${tokens.font.heading}" font-size="${tokens.type.title}" font-weight="700">${title}</text>
   <text data-slot="subtitle" x="66" y="183" fill="${tokens.color.inkSub}" font-family="${tokens.font.body}" font-size="${tokens.type.body}">${subtitle}</text>
 
@@ -1013,7 +1036,7 @@ export function renderGantt(brief) {
     .map(
       (tick) =>
         `<line x1="${tick.x.toFixed(1)}" y1="238" x2="${tick.x.toFixed(1)}" y2="570" stroke="${tokens.color.rule}" stroke-width="${tokens.stroke.hairline}"/>
-  <text x="${tick.x.toFixed(1)}" y="232" text-anchor="middle" fill="${tokens.color.inkSub}" font-family="${tokens.font.numeric}" font-size="${tokens.type.caption}">${escapeXml(tick.label)}</text>`,
+  <text x="${tick.x.toFixed(1)}" y="232" text-anchor="middle" fill="${tokens.color.inkSub}" font-family="${tokens.font.body}" font-size="${tokens.type.caption}">${escapeXml(tick.label)}</text>`,
     )
     .join("\n")}
   ${rows
@@ -1042,12 +1065,12 @@ export function renderGantt(brief) {
       const bar =
         isMilestone
           ? `<polygon points="${xAt(end).toFixed(1)},${y + 2} ${(xAt(end) + 12).toFixed(1)},${y + 14} ${xAt(end).toFixed(1)},${y + 26} ${(xAt(end) - 12).toFixed(1)},${y + 14}" fill="${strong}" stroke="${tokens.color.ink}" stroke-width="${tokens.stroke.hairline}"/>`
-          : `<rect x="${barX.toFixed(1)}" y="${y + 3}" width="${barWidth.toFixed(1)}" height="23" rx="9" fill="${wash}" stroke="${tokens.color.ink}" stroke-width="${tokens.stroke.hairline}"/>
+          : `<rect x="${barX.toFixed(1)}" y="${y + 3}" width="${barWidth.toFixed(1)}" height="23" rx="9" fill="${wash}" stroke="${tokens.color.rule}" stroke-width="${tokens.stroke.hairline}"/>
         ${progressWidth > 0 ? `<rect x="${barX.toFixed(1)}" y="${y + 3}" width="${progressWidth.toFixed(1)}" height="23" rx="9" fill="${strong}"/>` : ""}`;
       return `<text x="64" y="${y + 21}" fill="${tokens.color.ink}" font-family="${tokens.font.body}" font-size="${tokens.type.label}" font-weight="700">${escapeXml(String(row.task))}</text>
       <text x="282" y="${y + 21}" fill="${tokens.color.inkSub}" font-family="${tokens.font.body}" font-size="${tokens.type.caption}">${escapeXml(String(row.owner ?? "—"))}</text>
       ${bar}
-      <text x="1128" y="${y + 21}" text-anchor="end" fill="${strong}" font-family="${tokens.font.body}" font-size="${tokens.type.caption}" font-weight="700">${statusLabels[status]} ${progress}%</text>`;
+      <text x="1128" y="${y + 21}" text-anchor="end" fill="${tokens.color.ink}" font-family="${tokens.font.body}" font-size="${tokens.type.caption}" font-weight="700">${statusLabels[status]} ${progress}%</text>`;
     })
     .join("\n")}
   ${todayLine}
@@ -1055,7 +1078,7 @@ export function renderGantt(brief) {
     ${Object.entries(statusLabels)
       .map(
         ([status, label], index) =>
-          `<rect x="${index * 108}" y="-8" width="14" height="14" rx="4" fill="${colors[status][0]}" stroke="${tokens.color.ink}" stroke-width="${tokens.stroke.hairline}"/><text x="${index * 108 + 22}" y="4" fill="${tokens.color.inkSub}">${label}</text>`,
+          `<rect x="${index * 108}" y="-8" width="14" height="14" rx="4" fill="${colors[status][0]}" stroke="${tokens.color.rule}" stroke-width="${tokens.stroke.hairline}"/><text x="${index * 108 + 22}" y="4" fill="${tokens.color.inkSub}">${label}</text>`,
       )
       .join("\n")}
   </g>

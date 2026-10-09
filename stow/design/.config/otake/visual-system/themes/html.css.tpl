@@ -53,16 +53,6 @@ h1 {
   font-size: 2.4rem;
 }
 
-h1::after {
-  display: block;
-  width: 96px;
-  height: 7px;
-  margin-top: 18px;
-  content: "";
-  background: var(--ovs-primary);
-  border-radius: {{radius.pill}};
-}
-
 h2 {
   margin-top: 2.2em;
   color: var(--ovs-primary-dark);
@@ -79,7 +69,7 @@ a {
 }
 
 strong {
-  color: var(--ovs-wine);
+  color: inherit;
 }
 
 code {
@@ -94,9 +84,8 @@ pre,
 blockquote,
 table {
   background: var(--ovs-surface);
-  border: {{stroke.rule}} solid var(--ovs-ink);
+  border: {{stroke.rule}} solid var(--ovs-rule);
   border-radius: {{radius.card}};
-  box-shadow: {{shadow.smallX}} {{shadow.smallY}} 0 var(--ovs-ink);
 }
 
 pre {
@@ -114,7 +103,7 @@ blockquote {
   margin-inline: 0;
   padding: 0.75em 1.2em;
   background: var(--ovs-primary-wash);
-  border-left: 10px solid var(--ovs-primary);
+  border-left: 6px solid var(--ovs-primary);
 }
 
 table {
@@ -139,9 +128,8 @@ th {
   margin: 2.5em 0;
   overflow: hidden;
   background: var(--ovs-surface);
-  border: {{stroke.rule}} solid var(--ovs-ink);
+  border: {{stroke.rule}} solid var(--ovs-rule);
   border-radius: {{radius.card}};
-  box-shadow: {{shadow.x}} {{shadow.y}} 0 var(--ovs-ink);
 }
 
 .ovs-diagram > img {

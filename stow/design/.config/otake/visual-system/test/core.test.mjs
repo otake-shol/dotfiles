@@ -194,6 +194,24 @@ test("全チャート種の寸法を実データから計算できる", () => {
   }
 });
 
+test("ヒートマップの濃色セルは非ゼロ・負数・同値のデータでも読める文字色になる", () => {
+  for (const values of [[40, 60, 80], [-80, -60, -40], [5, 5, 5]]) {
+    const fixture = brief("chart");
+    fixture.data = {
+      type: "heatmap", unit: "", period: "検証",
+      rows: values.map((value, index) => ({ x: String(index), y: "値", value })),
+    };
+    const svg = renderBrief(fixture);
+    const cells = [...svg.matchAll(/<rect[^>]*fill="(#[\da-f]+)"[^>]*\/>\s*<text[^>]*fill="(#[\da-f]+)"[^>]*>[-\d]+<\/text>/gi)];
+    assert.equal(cells.length, values.length);
+    const colors = JSON.parse(readFileSync(resolve(rootDir, "tokens.json"), "utf8")).color;
+    for (const [, background, foreground] of cells) {
+      const dark = [colors.primary, colors.primaryDark].includes(background);
+      assert.equal(foreground, dark ? colors.surface : colors.ink);
+    }
+  }
+});
+
 test("全媒体プロファイルへ正しいSVG寸法で変換できる", () => {
   const svg = renderBrief(brief("cover"));
   for (const [target, profile] of Object.entries(profiles)) {

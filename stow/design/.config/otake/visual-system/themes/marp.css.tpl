@@ -1,11 +1,4 @@
-/*
- * @theme otake-visual
- * @auto-scaling true
- * @size 16:9 1280px 720px
- * Generated from OVS tokens.json.
- */
-
-@import "default";
+/* OVS components and legacy class adapters. Standard theme is prepended by build.mjs. */
 
 :root {
   --ovs-canvas: {{color.canvas}};
@@ -30,146 +23,6 @@
   --ovs-violet-wash: {{color.violetWash}};
 }
 
-section {
-  box-sizing: border-box;
-  width: 1280px;
-  height: 720px;
-  padding: 56px 72px;
-  color: var(--ovs-ink);
-  background: var(--ovs-canvas);
-  font-family: {{font.body}};
-  font-size: 28px;
-  line-height: 1.55;
-}
-
-h1,
-h2,
-h3 {
-  color: var(--ovs-ink);
-  font-family: {{font.heading}};
-}
-
-/*
- * 日本語の改行。front matterの lang: ja で有効になる。
- * 文節で折り返し（BudouX）、見出しは行の長さをそろえ、本文は最終行の孤立を避ける。
- */
-h1,
-h2,
-h3 {
-  word-break: auto-phrase;
-  text-wrap: balance;
-}
-
-p,
-li,
-td,
-th,
-blockquote,
-figcaption {
-  word-break: auto-phrase;
-  text-wrap: pretty;
-  overflow-wrap: break-word;
-}
-
-h1 {
-  margin: 0 0 0.65em;
-  font-size: 1.75em;
-  line-height: 1.25;
-}
-
-h1::after {
-  display: block;
-  width: 96px;
-  height: 7px;
-  margin-top: 16px;
-  content: "";
-  background: var(--ovs-primary);
-  border-radius: 999px;
-}
-
-h2 {
-  color: var(--ovs-primary-dark);
-  font-size: 1.35em;
-}
-
-h3 {
-  color: var(--ovs-wine);
-  font-size: 1.05em;
-}
-
-a {
-  color: var(--ovs-primary-dark);
-  text-decoration-thickness: 2px;
-}
-
-strong {
-  color: var(--ovs-wine);
-}
-
-mark {
-  padding: 0.08em 0.3em;
-  color: var(--ovs-ink);
-  background: {{color.yellow}};
-  border-radius: {{radius.control}};
-}
-
-code {
-  padding: 0.1em 0.35em;
-  color: var(--ovs-primary-dark);
-  background: var(--ovs-primary-wash);
-  border-radius: 6px;
-  font-family: {{font.mono}};
-}
-
-pre {
-  padding: 0.8em 1em;
-  background: var(--ovs-surface);
-  border: {{stroke.rule}} solid var(--ovs-ink);
-  border-radius: {{radius.card}};
-  box-shadow: {{shadow.x}} {{shadow.y}} 0 var(--ovs-ink);
-}
-
-pre code {
-  padding: 0;
-  color: var(--ovs-ink);
-  background: transparent;
-}
-
-blockquote {
-  padding: 0.75em 1em;
-  color: var(--ovs-ink);
-  background: var(--ovs-primary-wash);
-  border: {{stroke.rule}} solid var(--ovs-ink);
-  border-left: 10px solid var(--ovs-primary);
-  border-radius: {{radius.card}};
-}
-
-table {
-  display: table;
-  width: 100%;
-  overflow: hidden;
-  background: var(--ovs-surface);
-  border: {{stroke.rule}} solid var(--ovs-ink);
-  border-collapse: separate;
-  border-spacing: 0;
-  border-radius: {{radius.card}};
-  box-shadow: {{shadow.smallX}} {{shadow.smallY}} 0 var(--ovs-ink);
-}
-
-th,
-td {
-  padding: 0.45em 0.65em;
-  border-color: var(--ovs-rule);
-}
-
-th {
-  color: var(--ovs-primary-dark);
-  background: var(--ovs-primary-wash);
-}
-
-li::marker {
-  color: var(--ovs-primary);
-}
 
 section.lead {
   display: flex;
@@ -177,10 +30,12 @@ section.lead {
   align-items: flex-start;
   justify-content: center;
   padding-right: 16%;
+  background: var(--ovs-primary);
+  color: var(--ovs-surface);
 }
 
 section.lead h1 {
-  font-size: 2.15em;
+  font-size: 52pt;
 }
 
 /* 表紙の発表情報。名前・肩書とイベント名・日付を左下に固定する */
@@ -188,11 +43,9 @@ section.lead .meta {
   position: absolute;
   left: 72px;
   bottom: 56px;
-  padding-left: 20px;
-  color: var(--ovs-ink-sub);
+  color: var(--ovs-primary-wash);
   font-size: 0.78em;
   line-height: 1.6;
-  border-left: {{stroke.emphasis}} solid var(--ovs-primary);
 }
 
 section.lead .meta p {
@@ -200,7 +53,7 @@ section.lead .meta p {
 }
 
 section.lead .meta strong {
-  color: var(--ovs-ink);
+  color: var(--ovs-surface);
 }
 
 /* 自己紹介。左に人物（.who）と連絡先（.links）、右に本文（.body）を置く */
@@ -247,9 +100,8 @@ section.profile > .who img {
   width: 180px;
   height: 180px;
   object-fit: cover;
-  border: {{stroke.rule}} solid var(--ovs-ink);
+  border: {{stroke.rule}} solid var(--ovs-rule);
   border-radius: 50%;
-  box-shadow: {{shadow.smallX}} {{shadow.smallY}} 0 var(--ovs-ink);
 }
 
 section.profile > .who.is-mark img {
@@ -258,7 +110,6 @@ section.profile > .who.is-mark img {
   object-fit: contain;
   border: 0;
   border-radius: 0;
-  box-shadow: none;
 }
 
 section.profile > .who p {
@@ -273,8 +124,8 @@ section.profile > .links img {
   width: 136px;
   height: 136px;
   padding: 8px;
-  background: #FFFFFF;
-  border: {{stroke.rule}} solid var(--ovs-ink);
+  background: var(--ovs-surface);
+  border: {{stroke.rule}} solid var(--ovs-rule);
   border-radius: {{radius.control}};
 }
 
@@ -303,9 +154,8 @@ section.profile > .body {
   padding: 28px 32px;
   font-size: 0.92em;
   background: var(--ovs-surface);
-  border: {{stroke.rule}} solid var(--ovs-ink);
+  border: {{stroke.rule}} solid var(--ovs-rule);
   border-radius: {{radius.card}};
-  box-shadow: {{shadow.smallX}} {{shadow.smallY}} 0 var(--ovs-ink);
 }
 
 section.profile > .body li + li {
@@ -338,6 +188,10 @@ section.invert strong {
 }
 
 section.quote {
+  margin: 0;
+  padding: 56px 72px;
+  border: 0;
+  background: var(--ovs-canvas);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -346,8 +200,8 @@ section.quote {
 section.quote blockquote {
   max-width: 85%;
   font-family: {{font.heading}};
-  font-size: 1.35em;
-  text-align: center;
+  font-size: 24pt;
+  text-align: left;
 }
 
 section.columns {
@@ -374,18 +228,16 @@ section.timeline .step,
 section.metric .card {
   flex: 1;
   padding: 20px;
-  background: var(--ovs-surface);
-  border: {{stroke.rule}} solid var(--ovs-ink);
+  background: var(--ovs-sunken);
+  border: 0;
   border-radius: {{radius.card}};
-  box-shadow: {{shadow.smallX}} {{shadow.smallY}} 0 var(--ovs-ink);
 }
 
 /* 例外・変化・行動の一か所だけに使う。本文色にはしない */
 section.timeline .step.is-accent,
 section.metric .card.is-accent {
   background: var(--ovs-coral-wash);
-  border-color: var(--ovs-coral);
-  box-shadow: {{shadow.smallX}} {{shadow.smallY}} 0 var(--ovs-coral);
+  border-left: 6px solid var(--ovs-coral);
 }
 
 section.timeline .date {
@@ -394,8 +246,8 @@ section.timeline .date {
   color: var(--ovs-surface);
   background: var(--ovs-primary);
   border-radius: {{radius.pill}};
-  font-family: {{font.numeric}};
-  font-size: 0.75em;
+  font-family: {{font.heading}};
+  font-size: 16pt;
   font-weight: 700;
 }
 
@@ -407,7 +259,7 @@ section.metric .value {
 }
 
 section.metric .change {
-  color: var(--ovs-mint);
+  color: var(--ovs-primary-dark);
   font-weight: 700;
 }
 
@@ -415,9 +267,8 @@ section.metric .change {
   margin: 0;
   overflow: hidden;
   background: var(--ovs-surface);
-  border: {{stroke.rule}} solid var(--ovs-ink);
+  border: {{stroke.rule}} solid var(--ovs-rule);
   border-radius: {{radius.card}};
-  box-shadow: {{shadow.x}} {{shadow.y}} 0 var(--ovs-ink);
 }
 
 .ovs-diagram > img {
@@ -495,62 +346,46 @@ section.metric .change {
   height: 64px;
   margin: 8px 0 20px;
   overflow: hidden;
-  border: {{stroke.rule}} solid var(--ovs-ink);
+  border: {{stroke.rule}} solid var(--ovs-rule);
   border-radius: {{radius.control}};
 }
 
 .ovs-balance > .canvas { background: var(--ovs-canvas); }
 .ovs-balance > .primary { background: var(--ovs-primary); }
-.ovs-balance > .deep { background: var(--ovs-ink); }
+.ovs-balance > .deep { background: var(--ovs-primary-dark); }
 .ovs-balance > .soft { background: var(--ovs-primary-wash); }
 .ovs-balance > .accent { background: var(--ovs-coral); }
 
-/* 章の現在地。_header に章名を並べ、現在の章だけを **太字** にする */
-header {
-  top: 20px;
-  left: 72px;
-  right: 72px;
-  color: var(--ovs-ink-mute);
-  font-size: 20px;
-  letter-spacing: 0.04em;
-}
-
-header strong {
+/* Quotes and legacy navigation use the same Standard surface and type roles. */
+blockquote {
+  margin: 0 0 16px;
+  padding: 16px 24px;
+  border-left: 6px solid var(--ovs-primary);
+  background: var(--ovs-sunken);
   color: var(--ovs-ink);
-  font-weight: 700;
+}
+
+header:not(.n01) strong {
+  color: var(--ovs-primary);
   text-decoration: underline;
-  text-decoration-thickness: 3px;
-  text-underline-offset: 6px;
+  text-underline-offset: 4px;
 }
 
-section.invert header {
-  color: {{color.rule}};
+section.lead > p,
+section.lead > footer,
+section.lead > header:not(.n01),
+section.lead[data-marpit-pagination]::after,
+section.invert > footer,
+section.invert > header:not(.n01),
+section.invert[data-marpit-pagination]::after {
+  color: var(--ovs-primary-wash);
 }
 
-section.invert header strong {
-  color: {{color.nightInk}};
+section.invert a,
+section.invert header:not(.n01) strong {
+  color: var(--ovs-surface);
 }
 
-footer,
-section::after {
-  color: var(--ovs-ink-mute);
-  font-size: 0.58em;
-}
-
-/* 出典（フッター）とページ番号は本文と章表示の左右端（72px）にそろえる */
-footer {
-  left: 72px;
-  right: 72px;
-  bottom: 20px;
-}
-
-section::after {
-  right: 72px;
-  bottom: 20px;
-}
-
-/* 濃色背景ではink-muteのコントラストが3.8:1に落ちるため明るい罫線色にする */
-section.invert footer,
-section.invert::after {
-  color: {{color.rule}};
+section.metric .value .unit {
+  font-family: {{font.heading}};
 }

@@ -41,18 +41,23 @@ theme: otake-visual
 `lang: ja` は必須。省くとhtml要素が `en-US` になり、文節での改行（`word-break: auto-phrase`）が効かず、読み上げも英語になる。
 
 寸法の目安は1280×720、左右72px・上下56pxの余白、8pxグリッド。
-文字はスライドタイトル35〜42pt、本文18〜22pt、出典・注記などの補助情報は12〜14pt。
-本文は短く、結論を先に置く。OVSの色・フォントは `tokens.json` 由来のテーマに任せ、スライドごとに追加しない。
+文字はスライドタイトル35〜42pt、本文18〜22pt、出典・注記などの補助情報は10〜13pt。
+本文は短く、結論を先に置く。色・フォントはcreate-story-slidesのStandardテーマに任せ、スライドごとに追加しない。
 
 ## テーマの解決
 
 テーマは `${XDG_CONFIG_HOME:-$HOME/.config}/otake/visual-system/generated/marp.css`。
 dotfilesで未インストールの内容を検証するときはリポジトリ内の
 `stow/design/.config/otake/visual-system/generated/marp.css` を使う。
-生成済みCSSは直接編集しない（`themes/marp.css.tpl` を直して `node scripts/build.mjs` で再生成する）。
+生成済みCSSは直接編集しない。ビルドはcreate-story-slidesの `assets/story-slides.css` に
+OVS固有部品と既存クラスの互換定義（`themes/marp.css.tpl`）を連結する。
+共通デザインはスライド側、互換クラスだけはOVS側で変更し、`node scripts/build.mjs` で再生成する。
 どちらにもなければテーマ未導入を伝え、一時的にMarp標準テーマで内容の草稿を作り、OVS確認済みとは報告しない。
 
 ## 実装済みのクラス
+
+新規資料には [StandardのL01〜L18とN01](../../create-story-slides/references/marp-output.md)も使える。
+以下は既存OVS資料のために維持するクラス。同じStandard配色・書体で描画する。
 
 | 配置 | 実装済みクラス | 用途と注意点 |
 | --- | --- | --- |
@@ -83,12 +88,13 @@ HTMLタグを含むスライドの変換では `--html` を付ける。
 ```
 
 - 色はクラスに任せ、スライド内で `style` に色を書かない。比率など数値の指定だけを許容する。
-- 役割別の型（事例、二つのレーン、状態付きプロセスなど）の専用クラスは未実装。既存クラスと表・図解で組む。
+- 役割別の型はStandardのレイアウトを使う。既存OVSクラスだけで組む場合は表・図解も使う。
 - `org-chart` はOVSテーマに未実装。組織図はOVS図解として生成して配置する。
 
 ## 表紙のテンプレート
 
-表紙はOVSの `lead` で組む。中央に題名と副題、左下の `.meta` に発表情報を置く。
+表紙はOVSの `lead` またはStandardの `l01` で組む。どちらもPrimary Blueに白い題名を置く。
+以下は既存の `lead` 用テンプレート。左揃えの題名と副題、左下の `.meta` に発表情報を置く。
 
 - 題名は体言止めで短くし、改行位置はテーマに任せる（文節で折り返し、行の長さをそろえる）。
   意味の切れ目で必ず改行したい場合だけ `<br>` を使う。
@@ -96,7 +102,7 @@ HTMLタグを含むスライドの変換では `--html` を付ける。
 - `.meta` の1行目は `**〈表示名〉**` だけにする。肩書は自己紹介スライドに任せ、表紙には載せない。
   2行目は `〈イベント名〉・〈発表日 YYYY-MM-DD〉`。
   社内資料など、イベント名がなければ発表日だけにする。〈〉の差し替え漏れは `ovs deck lint` がerrorにする。
-- 色・位置は書かない。`.meta` の配置と縦線はテーマが付ける。
+- 色・位置は書かない。`.meta` の配置はテーマが付ける。
 
 ```markdown
 <!-- _class: lead -->

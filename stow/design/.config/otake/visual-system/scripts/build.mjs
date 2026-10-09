@@ -240,11 +240,16 @@ for (const icon of icons.icons) {
   emit(`icons/${icon.name}.svg`, renderIcon(icon));
 }
 
+// Reuse the Standard slide theme so layout and typography cannot drift.
+const storyTheme = readFileSync(
+  resolve(rootDir, "../../../.agents/skills/create-story-slides/assets/story-slides.css"),
+  "utf8",
+).replace("@theme story-slides", "@theme otake-visual");
 const themeSource = readFileSync(
   resolve(rootDir, "themes", "marp.css.tpl"),
   "utf8",
 );
-emit("marp.css", renderTokenSource(themeSource, "marp.css.tpl"));
+emit("marp.css", `${storyTheme}\n${renderTokenSource(themeSource, "marp.css.tpl")}`);
 
 const htmlThemeSource = readFileSync(
   resolve(rootDir, "themes", "html.css.tpl"),
@@ -264,24 +269,24 @@ emit(
         background: tokens.color.canvas,
         primaryColor: tokens.color.primaryWash,
         primaryTextColor: tokens.color.ink,
-        primaryBorderColor: tokens.color.ink,
+        primaryBorderColor: tokens.color.primary,
         secondaryColor: tokens.color.wineWash,
         secondaryTextColor: tokens.color.ink,
-        secondaryBorderColor: tokens.color.wine,
-        tertiaryColor: tokens.color.mangoWash,
+        secondaryBorderColor: tokens.color.rule,
+        tertiaryColor: tokens.color.sunken,
         tertiaryTextColor: tokens.color.ink,
-        tertiaryBorderColor: tokens.color.mango,
+        tertiaryBorderColor: tokens.color.rule,
         lineColor: tokens.color.primaryDark,
         textColor: tokens.color.ink,
         mainBkg: tokens.color.surface,
         secondBkg: tokens.color.primaryWash,
-        border1: tokens.color.ink,
+        border1: tokens.color.rule,
         border2: tokens.color.primaryDark,
         noteBkgColor: tokens.color.mangoWash,
         noteTextColor: tokens.color.ink,
-        noteBorderColor: tokens.color.mango,
+        noteBorderColor: tokens.color.rule,
         actorBkg: tokens.color.surface,
-        actorBorder: tokens.color.ink,
+        actorBorder: tokens.color.rule,
         actorTextColor: tokens.color.ink,
         actorLineColor: tokens.color.inkSub,
         signalColor: tokens.color.primaryDark,

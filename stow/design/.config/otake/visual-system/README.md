@@ -3,7 +3,7 @@
 記事、スライド、OGP、SNSの図解を「otake-sholの図」と分かる品質で、
 MarkdownまたはJSONから繰り返し生成する個人デザインシステム。
 
-Version 1.1.0 · Visual concept: **Warm Technical Pop**
+Version 1.2.0 · Visual concept: **Standard — navy, blue, warm canvas**
 
 ## 最短の使い方
 
@@ -30,7 +30,7 @@ ovs preview design-system-article/dist
 | レシピ | 技術解説、比較・選定、データストーリー、振り返り、プロジェクト計画、週次ステータス |
 | 出力先 | blog、Hatena、OGP、X、正方形、縦長、スライド、サムネイル |
 | AI連携 | Claude `/visual`、Codex `$otake-visual` |
-| スライド | OVSトークンから生成するMarpテーマと、描画を実測する検査（`ovs deck`） |
+| スライド | create-story-slidesのStandard CSSを共有するMarpテーマと、描画を実測する検査（`ovs deck`） |
 | ドキュメント | Markdown内のMermaidを共通SVGへ変換し、HTMLとMarpへ出力 |
 
 パーツの判断基準は[PARTS.md](./PARTS.md)、見本は[EXAMPLES.md](./EXAMPLES.md)。
@@ -196,8 +196,8 @@ dist/
 ```
 
 Mermaidは`generated/mermaid.json`、通常HTMLは`generated/html.css`、
-Marpは`generated/marp.css`を使う。3つとも`tokens.json`から生成するため、
-色とフォントを個別管理しない。Mermaid SVGには`securityLevel: strict`を適用し、
+Marpは`generated/marp.css`を使う。図とHTMLの色・書体は`tokens.json`、Marpの共通デザインはcreate-story-slidesのCSSを使う。
+両者の一致を`make design-check`で検査する。Mermaid SVGには`securityLevel: strict`を適用し、
 外部参照、スクリプト、`foreignObject`、イベント属性を出力前に拒否する。
 Mermaid内のfront matter／設定directiveによるテーマ上書きと、Markdown本文の
 危険な生HTML、front matter／MarpコメントからのCSS注入も拒否する。
@@ -231,16 +231,18 @@ ovs export visual.svg --target hatena,ogp,x,square,vertical,slide,thumbnail
 
 ## 視覚文法
 
-`shindanshi-app`と`my-portfolio`の設計資産を、記事用に統合している。
+[create-story-slidesのStandard仕様](../../../.agents/skills/create-story-slides/references/design-system.md)を全媒体のデザインの正本とする。
 
-1. 温かいクリームの紙面と、純黒ではない濃紺
-2. 2.5pxの輪郭と、ぼかさない右下オフセットシャドウ
-3. Zen Maru Gothicの見出し、Plus Jakarta Sansの数字、可読性優先の本文
-4. Recruit Blueを主張、wineを署名、coral/mint/mango/violetを意味色に使う
-5. 右下の小さな鍵盤マーカーと`otake-shol / visual note`
+1. Warm Canvasの本文面、Primary Blueの表紙、Deep Navyの結論
+2. Mist Grayの細い境界と余白。太い輪郭・オフセットシャドウ・装飾の見出し線は使わない
+3. Zen Maru Gothicの見出し、Noto Sans JPの本文・チャート、Plus Jakarta Sansの主要数値
+4. オレンジは例外・変化・行動だけ。通常の系列・進捗は青・濃紺とラベルで示す
+5. 図の出典・altと右下の小さな鍵盤マーカーを保持
 
-参考ブログから継承するのは、同じ視覚文法を反復して作者性を作る考え方だけ。
-黒板、チョーク、手描き線など相手固有の表現は模倣しない。
+`tokens.json`の旧色名（wine、mint、mango、violetなど）は互換用。
+現在はStandardの11色へ対応し、旧配色は出力しない。
+図の基準座標1200×675と媒体別サイズを保ち、スライドは1280×720へ出力する。
+図の文字サイズは媒体別の密度に合わせ、スライド全体の文字階層はStandardのCSSで管理する。
 
 ## CLI
 
@@ -269,7 +271,7 @@ tokens.json
 icons.json
 components/*.svg.tpl
 templates/*.svg.tpl
-themes/marp.css.tpl
+create-story-slides/assets/story-slides.css + themes/marp.css.tpl
 themes/html.css.tpl
 recipes/*.json
 schemas/brief.schema.json
@@ -280,7 +282,8 @@ schemas/brief.schema.json
              └─ SVG + PNG + alt + gallery + HTML/Marp document
 ```
 
-ブランド色とフォントは`tokens.json`以外へ追加しない。アイコンは`icons.json`、
+ブランドの変更はStandard仕様とCSSに反映してから`tokens.json`を同期する。
+生成物へ色・フォントを直接追加しない。アイコンは`icons.json`、
 テンプレート構造は`templates/*.svg.tpl`、描画判断はCLIへ集約する。
 
 ## 検証
@@ -292,7 +295,7 @@ node --test test/*.test.mjs
 make design-check
 ```
 
-`make design-check`はトークン同期、JSON briefからの18パーツ生成、10チャート、
+`make design-check`はStandardとの配色・フォント一致、トークン同期、JSON briefからの18パーツ生成、10チャート、
 データ駆動ガント、SVG XML、安全属性、320px描画、Marpテーマを確認する。
 
 公開前の受け入れ基準:

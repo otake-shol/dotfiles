@@ -3,24 +3,24 @@
   <desc id="desc">3つの主体間で起きる4つのやり取りを上から下へ示す。</desc>
   <defs><marker id="arrow" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto"><path d="M1 1L10 5.5L1 10Z" fill="{{color.ink}}"/></marker></defs>
   <rect width="1200" height="675" fill="{{color.canvas}}"/>
-  <rect x="64" y="54" width="150" height="36" rx="18" fill="{{color.wine}}"/>
-  <text data-slot="eyebrow" x="139" y="79" text-anchor="middle" fill="{{color.surface}}" font-family="{{font.numeric}}" font-size="{{type.label}}" font-weight="700">SEQUENCE</text>
+  <rect x="64" y="54" width="150" height="36" rx="4" fill="{{color.primaryDark}}"/>
+  <text data-slot="eyebrow" x="139" y="79" text-anchor="middle" fill="{{color.surface}}" font-family="{{font.heading}}" font-size="{{type.label}}" font-weight="700">SEQUENCE</text>
   <text data-slot="title" x="64" y="144" fill="{{color.ink}}" font-family="{{font.heading}}" font-size="{{type.title}}" font-weight="700">主体間のやり取りを、順番で追う</text>
   <text data-slot="subtitle" x="66" y="183" fill="{{color.inkSub}}" font-family="{{font.body}}" font-size="{{type.body}}">時間は上から下。矢印には動詞を書く。</text>
 
   <g font-family="{{font.body}}">
     <g>
-      <rect x="120" y="220" width="220" height="58" rx="18" fill="{{color.primaryWash}}" stroke="{{color.ink}}" stroke-width="{{stroke.rule}}"/>
+      <rect x="120" y="220" width="220" height="58" rx="4" fill="{{color.primaryWash}}" stroke="{{color.rule}}" stroke-width="{{stroke.rule}}"/>
       <text data-slot="actor-1" x="230" y="257" text-anchor="middle" fill="{{color.ink}}" font-size="{{type.body}}" font-weight="700">Author</text>
       <line x1="230" y1="278" x2="230" y2="548" stroke="{{color.inkMute}}" stroke-width="{{stroke.hairline}}" stroke-dasharray="6 8"/>
     </g>
     <g>
-      <rect x="490" y="220" width="220" height="58" rx="18" fill="{{color.mangoWash}}" stroke="{{color.ink}}" stroke-width="{{stroke.rule}}"/>
+      <rect x="490" y="220" width="220" height="58" rx="4" fill="{{color.sunken}}" stroke="{{color.rule}}" stroke-width="{{stroke.rule}}"/>
       <text data-slot="actor-2" x="600" y="257" text-anchor="middle" fill="{{color.ink}}" font-size="{{type.body}}" font-weight="700">OVS CLI</text>
       <line x1="600" y1="278" x2="600" y2="548" stroke="{{color.inkMute}}" stroke-width="{{stroke.hairline}}" stroke-dasharray="6 8"/>
     </g>
     <g>
-      <rect x="860" y="220" width="220" height="58" rx="18" fill="{{color.mintWash}}" stroke="{{color.ink}}" stroke-width="{{stroke.rule}}"/>
+      <rect x="860" y="220" width="220" height="58" rx="4" fill="{{color.sunken}}" stroke="{{color.rule}}" stroke-width="{{stroke.rule}}"/>
       <text data-slot="actor-3" x="970" y="257" text-anchor="middle" fill="{{color.ink}}" font-size="{{type.body}}" font-weight="700">Media</text>
       <line x1="970" y1="278" x2="970" y2="548" stroke="{{color.inkMute}}" stroke-width="{{stroke.hairline}}" stroke-dasharray="6 8"/>
     </g>

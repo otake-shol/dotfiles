@@ -5,6 +5,8 @@ description: Turn articles, technical explanations, comparisons, retrospectives,
 
 # Otake Visual
 
+Use the Standard profile in [create-story-slides](../create-story-slides/references/design-system.md) as the visual authority for all OVS media. The OVS Marp build reuses that skill’s CSS; tokens.json adapts its colors and fonts for diagrams and HTML.
+
 Use the OVS CLI as the only rendering path. Edit JSON briefs; never hand-edit generated SVG.
 
 For Markdown/Marp deck creation or slide layout work, first read

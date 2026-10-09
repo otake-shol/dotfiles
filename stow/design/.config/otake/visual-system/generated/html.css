@@ -5,20 +5,20 @@
 
 :root {
   color-scheme: light;
-  --ovs-canvas: #FFFBF5;
+  --ovs-canvas: #FAF8F3;
   --ovs-surface: #FFFFFF;
-  --ovs-sunken: #F0F4F8;
-  --ovs-ink: #1B2438;
-  --ovs-ink-sub: #55617A;
-  --ovs-ink-mute: #687389;
-  --ovs-rule: #DDE5F0;
-  --ovs-primary: #1479BE;
-  --ovs-primary-dark: #0F5F99;
-  --ovs-primary-wash: #E8F3FA;
-  --ovs-wine: #85023E;
-  --ovs-wine-wash: #F5E7EC;
-  --ovs-mango: #FFA61E;
-  --ovs-mango-wash: #FFF3DF;
+  --ovs-sunken: #ECF2F9;
+  --ovs-ink: #17202A;
+  --ovs-ink-sub: #65717E;
+  --ovs-ink-mute: #65717E;
+  --ovs-rule: #D5DDE6;
+  --ovs-primary: #2C63B4;
+  --ovs-primary-dark: #123858;
+  --ovs-primary-wash: #DCE8F6;
+  --ovs-wine: #123858;
+  --ovs-wine-wash: #ECF2F9;
+  --ovs-mango: #DCE8F6;
+  --ovs-mango-wash: #ECF2F9;
 }
 
 * {
@@ -35,7 +35,7 @@ body {
   padding: 64px 32px 96px;
   color: var(--ovs-ink);
   background: var(--ovs-canvas);
-  font-family: 'Noto Sans JP', 'Hiragino Sans', sans-serif;
+  font-family: 'Noto Sans JP', 'Yu Gothic', sans-serif;
   font-size: 18px;
   line-height: 1.8;
 }
@@ -44,23 +44,13 @@ h1,
 h2,
 h3 {
   color: var(--ovs-ink);
-  font-family: 'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif;
+  font-family: 'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif;
   line-height: 1.35;
 }
 
 h1 {
   margin: 0 0 1.25em;
   font-size: 2.4rem;
-}
-
-h1::after {
-  display: block;
-  width: 96px;
-  height: 7px;
-  margin-top: 18px;
-  content: "";
-  background: var(--ovs-primary);
-  border-radius: 999px;
 }
 
 h2 {
@@ -79,7 +69,7 @@ a {
 }
 
 strong {
-  color: var(--ovs-wine);
+  color: inherit;
 }
 
 code {
@@ -87,16 +77,15 @@ code {
   color: var(--ovs-primary-dark);
   background: var(--ovs-primary-wash);
   border-radius: 6px;
-  font-family: 'Space Mono', 'SFMono-Regular', monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
 }
 
 pre,
 blockquote,
 table {
   background: var(--ovs-surface);
-  border: 2.5px solid var(--ovs-ink);
-  border-radius: 18px;
-  box-shadow: 3px 3px 0 var(--ovs-ink);
+  border: 1px solid var(--ovs-rule);
+  border-radius: 0px;
 }
 
 pre {
@@ -114,7 +103,7 @@ blockquote {
   margin-inline: 0;
   padding: 0.75em 1.2em;
   background: var(--ovs-primary-wash);
-  border-left: 10px solid var(--ovs-primary);
+  border-left: 6px solid var(--ovs-primary);
 }
 
 table {
@@ -139,9 +128,8 @@ th {
   margin: 2.5em 0;
   overflow: hidden;
   background: var(--ovs-surface);
-  border: 2.5px solid var(--ovs-ink);
-  border-radius: 18px;
-  box-shadow: 6px 6px 0 var(--ovs-ink);
+  border: 1px solid var(--ovs-rule);
+  border-radius: 0px;
 }
 
 .ovs-diagram > img {
@@ -161,7 +149,7 @@ th {
   padding: 12px 18px;
   color: var(--ovs-ink-sub);
   background: var(--ovs-sunken);
-  border-top: 1.5px solid var(--ovs-rule);
+  border-top: 1px solid var(--ovs-rule);
   font-size: 0.78rem;
 }
 
@@ -172,7 +160,7 @@ th {
 
 .ovs-diagram-title {
   color: var(--ovs-ink);
-  font-family: 'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif;
+  font-family: 'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif;
   font-size: 0.92rem;
 }
 
@@ -182,7 +170,7 @@ th {
   gap: 8px;
   align-items: center;
   color: var(--ovs-wine);
-  font-family: 'Plus Jakarta Sans', 'Avenir Next', sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Noto Sans JP', sans-serif;
   font-weight: 700;
   white-space: nowrap;
 }

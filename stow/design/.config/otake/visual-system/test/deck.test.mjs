@@ -263,7 +263,7 @@ test(
         file,
         deckOf(
           [
-            "# 枠からはみ出す要素の例\n\n<div style=\"height:900px\">高さ900pxの箱</div>",
+            "# 枠からはみ出す要素の例\n\n<div style=\"min-height:900px\">最小高さ900pxの箱</div>",
             "# 読み込めない画像の例\n\n<img src=\"missing.png\" alt=\"存在しない画像\">",
             "# 薄い文字の例\n\n<p style=\"color: rgb(200, 200, 200)\">背景に溶ける薄い灰色の本文</p>",
           ],

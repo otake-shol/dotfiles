@@ -7,18 +7,18 @@
     </marker>
   </defs>
   <rect width="1200" height="675" fill="{{color.canvas}}"/>
-  <rect x="64" y="54" width="132" height="36" rx="18" fill="{{color.violet}}"/>
-  <text data-slot="eyebrow" x="130" y="79" text-anchor="middle" fill="{{color.surface}}" font-family="{{font.numeric}}" font-size="{{type.label}}" font-weight="700">MATRIX</text>
+  <rect x="64" y="54" width="132" height="36" rx="4" fill="{{color.primary}}"/>
+  <text data-slot="eyebrow" x="130" y="79" text-anchor="middle" fill="{{color.surface}}" font-family="{{font.heading}}" font-size="{{type.label}}" font-weight="700">MATRIX</text>
   <text data-slot="title" x="64" y="144" fill="{{color.ink}}" font-family="{{font.heading}}" font-size="{{type.title}}" font-weight="700">2つの軸で、優先する領域を見つける</text>
 
   <g transform="translate(250 210)">
-    <rect x="6" y="6" width="720" height="360" rx="18" fill="{{color.ink}}"/>
-    <rect width="720" height="360" rx="18" fill="{{color.surface}}" stroke="{{color.ink}}" stroke-width="{{stroke.rule}}"/>
+
+    <rect width="720" height="360" rx="4" fill="{{color.surface}}" stroke="{{color.rule}}" stroke-width="{{stroke.rule}}"/>
     <path d="M0 180H720M360 0V360" stroke="{{color.ink}}" stroke-width="{{stroke.hairline}}"/>
     <path d="M0 0H360V180H0Z" fill="{{color.primaryWash}}"/>
-    <path d="M360 0H720V180H360Z" fill="{{color.mintWash}}"/>
+    <path d="M360 0H720V180H360Z" fill="{{color.sunken}}"/>
     <path d="M0 180H360V360H0Z" fill="{{color.sunken}}"/>
-    <path d="M360 180H720V360H360Z" fill="{{color.mangoWash}}"/>
+    <path d="M360 180H720V360H360Z" fill="{{color.sunken}}"/>
     <path d="M0 180H720M360 0V360" stroke="{{color.ink}}" stroke-width="{{stroke.hairline}}"/>
 
     <text data-slot="label-quadrant-1" x="28" y="38" fill="{{color.primaryDark}}" font-family="{{font.heading}}" font-size="{{type.label}}" font-weight="700">計画して育てる</text>
@@ -27,21 +27,21 @@
     <text data-slot="label-quadrant-4" x="388" y="218" fill="{{color.ink}}" font-family="{{font.heading}}" font-size="{{type.label}}" font-weight="700">小さく試す</text>
 
     <g data-slot="point-1">
-      <circle cx="548" cy="86" r="19" fill="{{color.mint}}" stroke="{{color.ink}}" stroke-width="{{stroke.rule}}"/>
-      <rect x="574" y="68" width="112" height="36" rx="18" fill="{{color.surface}}" stroke="{{color.ink}}" stroke-width="{{stroke.hairline}}"/>
+      <circle cx="548" cy="86" r="19" fill="{{color.primaryWash}}" stroke="{{color.ink}}" stroke-width="{{stroke.rule}}"/>
+      <rect x="574" y="68" width="112" height="36" rx="4" fill="{{color.surface}}" stroke="{{color.rule}}" stroke-width="{{stroke.hairline}}"/>
       <text data-slot="point-label-1" x="630" y="92" text-anchor="middle" fill="{{color.ink}}" font-family="{{font.body}}" font-size="{{type.label}}" font-weight="700">施策 A</text>
     </g>
     <g data-slot="point-2">
       <circle cx="438" cy="138" r="17" fill="{{color.primary}}" stroke="{{color.ink}}" stroke-width="{{stroke.rule}}"/>
-      <text data-slot="point-label-2" x="438" y="144" text-anchor="middle" fill="{{color.surface}}" font-family="{{font.numeric}}" font-size="{{type.label}}" font-weight="700">B</text>
+      <text data-slot="point-label-2" x="438" y="144" text-anchor="middle" fill="{{color.surface}}" font-family="{{font.heading}}" font-size="{{type.label}}" font-weight="700">B</text>
     </g>
     <g data-slot="point-3">
-      <circle cx="518" cy="278" r="17" fill="{{color.mango}}" stroke="{{color.ink}}" stroke-width="{{stroke.rule}}"/>
-      <text data-slot="point-label-3" x="518" y="284" text-anchor="middle" fill="{{color.ink}}" font-family="{{font.numeric}}" font-size="{{type.label}}" font-weight="700">C</text>
+      <circle cx="518" cy="278" r="17" fill="{{color.primaryWash}}" stroke="{{color.ink}}" stroke-width="{{stroke.rule}}"/>
+      <text data-slot="point-label-3" x="518" y="284" text-anchor="middle" fill="{{color.ink}}" font-family="{{font.heading}}" font-size="{{type.label}}" font-weight="700">C</text>
     </g>
     <g data-slot="point-4">
-      <circle cx="204" cy="112" r="17" fill="{{color.violet}}" stroke="{{color.ink}}" stroke-width="{{stroke.rule}}"/>
-      <text data-slot="point-label-4" x="204" y="118" text-anchor="middle" fill="{{color.surface}}" font-family="{{font.numeric}}" font-size="{{type.label}}" font-weight="700">D</text>
+      <circle cx="204" cy="112" r="17" fill="{{color.primary}}" stroke="{{color.ink}}" stroke-width="{{stroke.rule}}"/>
+      <text data-slot="point-label-4" x="204" y="118" text-anchor="middle" fill="{{color.surface}}" font-family="{{font.heading}}" font-size="{{type.label}}" font-weight="700">D</text>
     </g>
   </g>
 

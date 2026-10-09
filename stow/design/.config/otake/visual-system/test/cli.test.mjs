@@ -529,7 +529,7 @@ test(
 test("Marpテーマが章の現在地・面積配分・強調カードの部品を持つ", () => {
   const css = readFileSync(resolve(rootDir, "generated", "marp.css"), "utf8");
   for (const selector of [
-    "header strong",
+    "header:not(.n01) strong",
     ".ovs-balance > .accent",
     "section.timeline .step.is-accent",
     "section.metric .card.is-accent",
@@ -537,9 +537,9 @@ test("Marpテーマが章の現在地・面積配分・強調カードの部品�
     assert.ok(css.includes(selector), `${selector} がありません`);
   }
   // 章の現在地は色だけに頼らず下線でも示す
-  assert.match(css, /header strong \{[^}]*text-decoration: underline/);
+  assert.match(css, /header:not\(\.n01\) strong \{[^}]*text-decoration: underline/);
   // 強調色は背景とのコントラスト不足のため本文色に使わない
   assert.doesNotMatch(css, /(^|[;{\s])color: var\(--ovs-coral\)/m);
-  // 表は枠いっぱいに広げる（Marp標準の display: block を上書き）
-  assert.match(css, /table \{\s*display: table;/);
+  // Standardテーマの表はページの幅に合わせる。
+  assert.match(css, /table \{\s*width: 100%;/);
 });

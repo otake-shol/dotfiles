@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "id": "__ID__",
+  "status": "seed",
+  "created_at": "__DATE__",
+  "updated_at": "__DATE__",
+  "topic": {
+    "slug": "__SLUG__",
+    "working_title": "",
+    "user_intent": "",
+    "target_audience": "",
+    "viewer_problem": "",
+    "promise": "",
+    "angle": "",
+    "exclusions": []
+  },
+  "sources": [],
+  "claims": [],
+  "outline": [],
+  "script": {
+    "estimated_minutes": null,
+    "lines": []
+  },
+  "visuals": [],
+  "learning_target": null,
+  "packages": {
+    "long": {
+      "title_candidates": [],
+      "selected_title": "",
+      "description": "",
+      "thumbnail": {
+        "copy": [],
+        "background_asset": "",
+        "layout_id": "",
+        "qa_status": "pending"
+      },
+      "chapters": []
+    },
+    "shorts": []
+  },
+  "localization": {
+    "source_language": "ja",
+    "target_languages": [],
+    "status": "not_started"
+  },
+  "reviews": [],
+  "human_gates": {
+    "concept": "pending",
+    "outline": "pending",
+    "master_script": "pending",
+    "thumbnail": "pending",
+    "publish": "pending"
+  },
+  "publication": {
+    "platform": "youtube",
+    "url": "",
+    "published_at": ""
+  },
+  "metrics": {
+    "captured_at": "",
+    "window": "",
+    "impressions": null,
+    "click_through_rate": null,
+    "retention_30_seconds": null,
+    "average_view_duration_seconds": null,
+    "average_percentage_viewed": null,
+    "watch_time_hours": null,
+    "subscriber_change": null,
+    "traffic_sources": {},
+    "repeated_questions": []
+  },
+  "correction_log_ids": []
+}

@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "channel": {
+    "name": "",
+    "promise": "",
+    "primary_language": "ja",
+    "audiences": [],
+    "pillars": [],
+    "exclusions": []
+  },
+  "editorial": {
+    "voice": [],
+    "title_rules": [
+      "対象の固有名詞または視聴者が検索する語を入れる",
+      "内容で証明できない最上級表現を使わない"
+    ],
+    "prohibited_expressions": [],
+    "source_policy": [
+      "変化しやすい情報を公開直前に分野に合う一次資料で再確認する",
+      "事実、観測結果、推測、意見を区別する"
+    ],
+    "publishing_cadence": ""
+  },
+  "characters": [],
+  "visual_system": {
+    "long_aspect_ratio": "16:9",
+    "short_aspect_ratio": "9:16",
+    "template_ids": [
+      "hook",
+      "question",
+      "hero",
+      "comparison",
+      "quote",
+      "stat",
+      "timeline",
+      "map",
+      "diagram",
+      "steps",
+      "source",
+      "demo",
+      "photo",
+      "clip",
+      "illustration",
+      "code",
+      "terminal"
+    ],
+    "brand_tokens": {
+      "colors": {},
+      "typography": {},
+      "spacing": {},
+      "motion": {}
+    }
+  },
+  "integrations": [],
+  "human_gates": [
+    "concept",
+    "outline",
+    "master_script",
+    "thumbnail",
+    "publish"
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "YouTube運営システム"
+  short_description: "YouTube動画の企画・調査・制作・展開・改善を一貫運用"
+  default_prompt: "$youtube-opsを使って、YouTube動画の企画から公開後レビューまで進めてください。"

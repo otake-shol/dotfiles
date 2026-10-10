@@ -187,7 +187,7 @@ graph TB
 | **zsh** | シェル設定（モジュール分割・遅延読み込み・67エイリアス・OMZ 6プラグイン） | `.zshrc`, `.zsh/{core,plugins,lazy,tools}.zsh` |
 | **git** | Git設定（28エイリアス・delta・git-secrets 8パターン） | `.gitconfig`, `.gitignore_global`, `.commit-template.txt`, `.editorconfig` |
 | **claude** | Claude Code（4 hookスクリプト・10コマンド・権限制御） | `.claude/settings.json`, `hooks/`, `commands/` |
-| **codex** | Codex CLI（config・AGENTS・hook・MCP・技術ブログ執筆・レビュースキル） | `.codex/config.toml`, `.codex/AGENTS.md`, `.codex/hooks/`, `.agents/skills/{technical-blog-writing,tech-review,article-review}/` |
+| **codex** | Codex CLI（config・AGENTS・hook・MCP・技術ブログ執筆・レビュー・YouTube運営スキル） | `.codex/config.toml`, `.codex/AGENTS.md`, `.codex/hooks/`, `.agents/skills/{technical-blog-writing,tech-review,article-review,youtube-ops}/` |
 | **design** | OVS図解・チャート・媒体別画像・アプリデザイン・ELI5視覚説明・物語型スライド | `.config/otake/visual-system/`, `.local/bin/ovs`, `.agents/design/`, `.agents/skills/{otake-visual,exam-app-design-system,eli5,create-story-slides,lt-deck}/` |
 | **ghostty** | GPUターミナル（TokyoNight・透過80%・JetBrains Mono） | `.config/ghostty/config` |
 | **cmux** | ワークスペース管理（5プリセット・色分け） | `.config/cmux/cmux.json` |
@@ -383,6 +383,7 @@ codex-commit-push "fix: ..." README.md Makefile  # 指定ファイルだけcommi
 プロンプトで`$eli5 なぜ空は青いの`と指定すると、大きな図と少ない言葉による初心者向けの視覚説明を生成する。
 技術記事の構成、執筆、推敲、公開前の自己確認には`$technical-blog-writing`を指定する。読者の課題、一次情報、動作確認、制約を軸に日本語記事を組み立てる。
 技術的正確性の確認には`$tech-review`、構成・文法・表記の確認には`$article-review`を指定する。どちらも既定では原稿を変更せず、修正依頼がある場合だけ編集する。
+YouTubeの企画、調査、構造化台本、ビジュアル、Shorts、公開後改善の一貫運用には`$youtube-ops`を指定する。ジャンルを問わず人間の承認点を残しながら、反復作業と品質検査を仕組み化する。コアQ連携のMVPはGit管理外の`~/.agents/youtube/coreq/`で管理し、教材ID、図解ID、Deep Linkを`shindanshi-app`の正本と照合する。
 対話セッションの起動時、アクティブなセッションが20件以上なら24時間に1回だけ整理するか確認する。整理対象は `fzf` で複数選択し、最終確認後にRemote経由で完全削除する。閾値は `CODEX_SESSION_CLEANUP_THRESHOLD`、確認間隔（時間）は `CODEX_SESSION_CLEANUP_INTERVAL_HOURS`、自動確認の無効化は `CODEX_SESSION_CLEANUP_ENABLED=0` で変更できる。
 
 | agent | model | 用途 |

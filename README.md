@@ -90,6 +90,16 @@ Claudeの個人設定は `~/.config/dotfiles-local/claude/` に保存する（`X
 [project-planning](stow/agents/.agents/skills/project-planning/SKILL.md)で目的・完了条件・担当・依存関係・リスクを整理し、スライドが必要なら既存の `create-story-slides` へ渡す。共通の手順と空の雛形をdotfilesに置き、入力済み計画は各プロジェクトで管理する。
 [計画スライドの雛形](templates/project-plan-slides/README.md)に18枚のMarp原稿、入力項目、書き出し・検証手順を用意している。
 
+## コアQのセット制作
+
+[coreq-production](stow/agents/.agents/skills/coreq-production/SKILL.md)で科目・問題番号から既存動画と不足する媒体を調べ、1セットずつ制作を再開する。`make install-agents`で配置する。基礎編の再利用、Sol制作→Astraレビュー、Shorts・TikTok共用動画、X文章＋図解、公開準備の手順をまとめている。実際の投稿は別操作として扱う。
+
+```text
+$coreq-production 財務・会計002の既存成果物を確認し、不足する媒体の制作から再開して
+```
+
+読み取り専用の`inspect-set.mjs`は台本・生成ジョブの版と素材の存在を確認する。原典の正確性や本人の試聴完了を自動判定しない。使い方と再開時の記録項目はスキル本文を参照。
+
 ## ディレクトリ構造
 
 ```

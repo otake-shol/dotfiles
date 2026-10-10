@@ -1,0 +1,4 @@
+interface:
+  display_name: "コアQのセット制作"
+  short_description: "問題番号から既存教材を確認し、動画・短尺・X・公開準備を1セットずつ制作"
+  default_prompt: "$coreq-production で財務・会計002の既存成果物を確認し、不足する媒体の制作から再開して。"

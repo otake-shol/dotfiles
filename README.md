@@ -100,6 +100,20 @@ $coreq-production 財務・会計002の既存成果物を確認し、不足す�
 
 読み取り専用の`inspect-set.mjs`は台本・生成ジョブの版と素材の存在を確認する。原典の正確性や本人の試聴完了を自動判定しない。使い方と再開時の記録項目はスキル本文を参照。
 
+## パーソナルエージェント
+
+[personal-agent](stow/agents/.agents/skills/personal-agent/SKILL.md)で個人のObsidian Vaultを参照し、相談、判断の記録、振り返りを行う。`make install-agents` でスキルを配置する。個人の事実と判断はVaultに保存する。
+
+Vaultの指定順は会話で指定した場所、環境変数 `PERSONAL_KNOWLEDGE_VAULT`、既定の `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/obsidian`。`00_meta/personal-agent.md` があれば入口に使い、なければ既存の構成資料とMOCから参照する。
+
+```text
+$personal-agent 個人開発の記録を読んで次に進めることを整理して
+$personal-agent 今の会話で決めた内容と理由を記録して
+$personal-agent 直近7日の個人開発を振り返って
+```
+
+相談のみの依頼では記録を変更しない。記録依頼では既存の配置・テンプレート・スキーマに従い、根拠と未確認事項を残す。
+
 ## ディレクトリ構造
 
 ```

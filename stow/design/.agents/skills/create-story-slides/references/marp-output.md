@@ -67,7 +67,7 @@ Set exactly one layout class per slide with `_class`, matching the layout ID in 
 | L10 | `l10` | `.bars` with one `.bar.hl` and the rest muted, `--v` as the bar length, `<p class="annotation">` on the decisive point, and `_footer` for the source |
 | L11 | `l11` | `<div class="lanes">` with two `.lane` blocks, `.lane.main` for the main path, and `<p class="loop">` for the central feedback loop |
 | L12 | `l12`, or `l12 dark` | `<ol class="takeaways">` with up to three `<li><b>takeaway</b><span>detail</span></li>` |
-| L13 | `l13` | `<ol class="rail">` at a fixed position with the stage marked `active`, and details in `<div class="detail">`. Keep the stages and labels identical on every L13 slide |
+| L13 | `l13` | `<ol class="rail">` at a fixed position with the stage marked `active`, and details in `<div class="detail">`. Keep the stages and labels identical on every L13 slide. Put every image inside `.detail` too: the rail and `.detail` are absolutely positioned, so an image placed between them is hidden behind the rail, and the render check does not flag it. `.detail` has about 240 px of height |
 | L14 | `l14`, optional `dark` | `# one sentence or question`, or `<p class="kpi"><span class="fig">60%</span><span class="label">…</span></p>` |
 | L15 | `l15` | `<div class="wwh">` with three rows of `<div><b>WHY</b><p>…</p></div>` |
 | L16 | `l16` | `_header` carries the exact problem label; `<div class="pr">` with `.problem`, `.response`, and `.effect`, and the remaining cost or boundary in `<small>` |

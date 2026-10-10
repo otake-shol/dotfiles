@@ -295,6 +295,8 @@ React Native（Expo）の資格試験アプリでは、Codexの
 
 `Brewfile` は新しいMacを普段使いできる状態に近づけるため、CLIだけでなくGUIアプリも含める。`Core CLI Tools` と `Core GUI Applications` は常用前提、`Optional CLI Tools` と `Optional GUI Applications` は作業内容に応じた追加ツールとして扱う。
 
+BlenderもBrewfileの導入対象に含む。既存のMacでBlenderだけを追加する場合は `brew install --cask blender`、Brewfile全体を反映する場合は `brew bundle --file=Brewfile --no-upgrade` を実行する。共同制作で特定バージョンが必要な場合は、相手の使用バージョンを確認してから導入する。
+
 OpenAI CodexはHomebrewの `cask "codex"` がCLIを提供する。Codex DesktopはHomebrew caskとは別物のため、`bootstrap.sh` が公式DMGをApple Silicon / Intelに応じて導入する。Remote Controlを使う場合は、固定パスのapp-serverを含む公式standalone版も `~/.codex/packages/standalone/` に導入する。
 
 軽量セットアップにしたい場合は `bash bootstrap.sh --skip-apps` でBrewfile全体の導入を飛ばす。この場合でもStowリンク作成に必要な `stow` だけはHomebrewで確保する。必要なStowリンクだけを入れたい場合は `make install-PKG` を使う。

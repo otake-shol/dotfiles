@@ -18,6 +18,13 @@ const fixture = (body, background = '<rect width="500" height="220" fill="#FFFFF
 
 test("危険なSVGはChrome起動前に拒否する", async () => {
   await assert.rejects(checkSvgContrasts([{ name: "unsafe", svg: fixture('<script>alert(1)</script>') }]), /script/);
+  for (const body of [
+    '<text x="20" y="50" opacity="0.2">○</text>',
+    '<text x="20" y="50" fill-opacity="0.2">○</text>',
+    '<g opacity="0.2"><text x="20" y="50">○</text></g>',
+  ]) {
+    await assert.rejects(checkSvgContrasts([{ name: "unsupported-opacity", svg: fixture(body) }]), /許可されていないSVG属性/);
+  }
 });
 
 test("字形の背景を継承色・変形・tspan・描画順から測定する", renderOptions, async () => {
@@ -31,6 +38,9 @@ test("字形の背景を継承色・変形・tspan・描画順から測定する
     { name: "opacity", svg: fixture('<text x="20" y="50" fill="rgba(23,32,42,0.2)">Faint</text>') },
     { name: "repaint", svg: fixture('<rect x="10" y="20" width="200" height="60" fill="#123858"/><rect x="10" y="20" width="200" height="60" fill="#FFFFFF"/><text x="20" y="50" fill="#FFFFFF">Last background</text>') },
     { name: "covered", svg: fixture('<text x="20" y="50" fill="#FFFFFF">Covered</text><rect x="10" y="20" width="200" height="60" fill="#123858"/>') },
+    { name: "thin", svg: fixture('<text x="20" y="50" font-size="2" fill="#17202A">○</text>') },
+    { name: "thin-same", svg: fixture('<text x="20" y="50" font-size="2" fill="#FFFFFF">○</text>') },
+    { name: "thin-covered", svg: fixture('<text x="20" y="50" font-size="2" fill="#FFFFFF">○</text><rect x="10" y="20" width="200" height="60" fill="#123858"/>') },
   ];
   const reports = await checkSvgContrasts(inputs);
   const issues = (name) => reports.find((report) => report.name === name).results.filter((r) => r.issue);
@@ -43,6 +53,9 @@ test("字形の背景を継承色・変形・tspan・描画順から測定する
   assert.equal(issues("opacity")[0]?.issue, "contrast");
   assert.equal(issues("repaint")[0]?.ratio, 1);
   assert.equal(issues("covered")[0]?.issue, "unmeasured");
+  assert.equal(reports.find((report) => report.name === "thin").results[0].issue, null);
+  assert.equal(issues("thin-same")[0]?.issue, "contrast");
+  assert.equal(issues("thin-covered")[0]?.issue, "unmeasured");
   assert.match(contrastIssues(reports).join("\n"), /Invisible.*1.00:1/);
 });
 

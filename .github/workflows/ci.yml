@@ -124,7 +124,8 @@ jobs:
       - name: Stow install (dry-run)
         run: |
           brew install stow
-          make check-conflicts
+          STOW_TEST_HOME="$(mktemp -d)"
+          make check-conflicts HOME="$STOW_TEST_HOME"
 
   versions-audit:
     name: asdf versions audit (informational)

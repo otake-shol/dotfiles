@@ -120,6 +120,17 @@ async function measureContrast(source) {
     const cropWidth = Math.min(width - left, Math.ceil(rect.x + rect.width) - left);
     const cropHeight = Math.min(height - top, Math.ceil(rect.y + rect.height) - top);
     const maskPixels = context.getImageData(left, top, cropWidth, cropHeight).data;
+    // Thin glyphs (e.g. ○ on Linux) may have no fully opaque pixel.
+    // Use their most-covered pixels, but keep comparing specified ink, not AA colors.
+    let peakCoverage = 0;
+    for (let pixel = 3; pixel < maskPixels.length; pixel += 4) {
+      peakCoverage = Math.max(peakCoverage, maskPixels[pixel]);
+    }
+    if (peakCoverage === 0) {
+      record.issue = "unmeasured";
+      continue;
+    }
+    const coverageThreshold = Math.min(250, peakCoverage);
     // A shape painted after this run is an occluder, not its backdrop.
     // Keep defs for markers, and retain all transforms and paint alpha.
     const overlay = svg.cloneNode(true);
@@ -143,7 +154,7 @@ async function measureContrast(source) {
     for (let y = 0; y < cropHeight; y += 1) {
       for (let x = 0; x < cropWidth; x += 1) {
         // Ignore antialiased glyph edges; compare specified ink with the actual backdrop.
-        if (maskPixels[(y * cropWidth + x) * 4 + 3] < 250) continue;
+        if (maskPixels[(y * cropWidth + x) * 4 + 3] < coverageThreshold) continue;
         if (overlayPixels[(y * cropWidth + x) * 4 + 3] > 0) obscured = true;
         const offset = ((y + top) * width + x + left) * 4;
         if (pixels[offset + 3] !== 255) {

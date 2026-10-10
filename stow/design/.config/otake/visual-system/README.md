@@ -107,6 +107,7 @@ ovs preview assets --out assets/gallery.html
 大きさは出力寸法と変形を反映し、24px以上または太字18.67px以上で判定する。
 根拠は[WCAGのContrast Minimum](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)。
 アンチエイリアスの縁を除いた字形内部で最も低い比率を採用する。
+細い記号などで不透明な画素がない場合は、字形の被覆率が最も高い画素を使う。
 
 透明な背景、画面外の文字、文字の輪郭線などで測定できない場合も終了コード1を返す。
 後から描かれた図形が文字を覆う場合も、図形と字形マスクの重なりとして失敗させる。

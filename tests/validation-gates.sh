@@ -30,6 +30,13 @@ expect_failure "validate-node-syntax checks every file" \
     make -s -C "$REPO_DIR" validate-node-syntax \
     NODE_SYNTAX_FILES="$TEST_DIR/valid.mjs $TEST_DIR/invalid.mjs"
 
+# A clean install target must pass; a pre-existing file must stop Stow.
+mkdir "$TEST_DIR/stow-home"
+make -s -C "$REPO_DIR" check-conflicts PACKAGES=git HOME="$TEST_DIR/stow-home"
+touch "$TEST_DIR/stow-home/.gitconfig"
+expect_failure "check-conflicts rejects an existing target" \
+    make -s -C "$REPO_DIR" check-conflicts PACKAGES=git HOME="$TEST_DIR/stow-home"
+
 VISUAL_DIR="$TEST_DIR/visual-system"
 FIND_BIN_DIR="$TEST_DIR/bin"
 mkdir -p "$VISUAL_DIR/generated/templates" "$VISUAL_DIR/examples" "$FIND_BIN_DIR"

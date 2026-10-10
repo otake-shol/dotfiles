@@ -335,11 +335,14 @@ GitHub Actionsで以下を自動検証:
 - ShellCheck（bootstrap.sh + bin + Claude/Codex hooks）
 - bootstrapのStow競合安全性テスト
 - 個人設定の移行・公開検査テスト、ステージ済み内容の公開検査
-- Codex MCP JavaScript構文チェック
-- OVS全パーツ・チャート・SVG安全性・PNG寸法・Marpテーマ・スライドの静的検査
+- 追跡中の全`.mjs`ファイルの構文チェック（各ファイルを個別に検査）
+- OVS全パーツ・チャート・SVG安全性・PNG寸法・Marpテーマ・スライドの静的検査と描画実測、検査器のミューテーションテスト
 - Stow競合検出（全パッケージのドライラン）
 - Zsh構文チェック
 - Brewfile構文とformula・caskの取得可否（定義済みtapを準備して検証）
+
+Linuxの描画検査には日本語フォント（Noto CJK）を導入し、Chrome・Marp・フォントの存在を事前確認する。
+CIでもスライドの描画テストを実行し、必要なツールの不足をスキップで隠さない。
 
 ## キーバインド
 

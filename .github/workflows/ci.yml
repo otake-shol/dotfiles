@@ -27,8 +27,19 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y stow shellcheck zsh libxml2-utils librsvg2-bin
+          sudo apt-get install -y stow shellcheck zsh libxml2-utils librsvg2-bin fonts-noto-cjk
           npm install --global @marp-team/marp-cli@4.4.0
+
+      - name: Verify rendering dependencies
+        run: |
+          node --input-type=module -e '
+            import { browserExecutable } from "./stow/design/.config/otake/visual-system/scripts/browser.mjs";
+            const executable = browserExecutable();
+            if (!executable) throw new Error("Chrome is required for CI rendering tests");
+            console.log(`Chrome: ${executable}`);
+          '
+          marp --version
+          fc-match -f '%{family}\n' 'Noto Sans CJK JP' | grep -Fx 'Noto Sans CJK JP'
 
       - name: ShellCheck
         run: make lint
@@ -40,7 +51,7 @@ jobs:
         run: make check-conflicts
 
       - name: Zsh syntax check
-        run: find stow/zsh -type f -name '*.zsh' -exec zsh -n {} +
+        run: find stow/zsh -type f -name '*.zsh' -print0 | xargs -0 -n 1 zsh -n
 
       - name: Validate (TOML/JSON/absolute-path/local-state)
         run: make validate
@@ -113,7 +124,7 @@ jobs:
       - name: Stow install (dry-run)
         run: |
           brew install stow
-          make check
+          make check-conflicts
 
   versions-audit:
     name: asdf versions audit (informational)

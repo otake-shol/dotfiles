@@ -15,12 +15,14 @@ PACKAGES := zsh git nvim ghostty bat atuin claude codex yazi direnv cmux asdf ss
 TOOL_VERSIONS := stow/asdf/.tool-versions
 VISUAL_SYSTEM_DIR := stow/design/.config/otake/visual-system
 DESIGN_TESTS ?= $(VISUAL_SYSTEM_DIR)/test/*.test.mjs
+CODEX_MJS_FILES ?= $(wildcard stow/codex/.codex/bin/*.mjs)
+NODE_SYNTAX_FILES ?= $(shell git ls-files stow | grep -E '\.mjs$$')
 DOCTOR_LINK_DIRS := "$$HOME" "$$HOME/.config" "$$HOME/.claude" "$$HOME/.codex" "$$HOME/.agents" "$$HOME/.docker" "$$HOME/.gnupg" "$$HOME/Library/Application Support/com.mitchellh.ghostty" "$$HOME/Library/LaunchAgents"
 SNAPSHOT_DIR := .snapshot/$(shell date +%Y%m%d-%H%M%S)
 # tomllib (Python 3.11+) が使える python を検出。macOSのシステムpython3は3.9なのでbrewのpython@3.xを優先。
 TOML_PYTHON := $(shell for p in python3.14 python3.13 python3.12 python3.11 python3; do if command -v $$p >/dev/null 2>&1 && $$p -c 'import tomllib' >/dev/null 2>&1; then echo $$p; break; fi; done)
 
-.PHONY: help install uninstall check check-strict check-conflicts bootstrap lint test-bootstrap design-check clean install-% uninstall-% packages stats readme-check readme-sync runtimes-install versions-audit doctor doctor-plan doctor-clean-broken setup-fastlane-env validate snapshot new-mac macos-defaults
+.PHONY: help install uninstall check check-strict check-conflicts bootstrap lint lint-node-syntax test-bootstrap test-validation-gates design-check design-json-check design-svg-check design-render-check design-marp-check clean install-% uninstall-% packages stats readme-check readme-sync runtimes-install versions-audit doctor doctor-plan doctor-clean-broken setup-fastlane-env validate validate-node-syntax snapshot new-mac macos-defaults
 .PHONY: setup-claude-local setup-privacy-hook privacy-check test-privacy test-orca orca-plan orca-apply design-contrast design-test design-mutation
 
 help:
@@ -156,7 +158,7 @@ setup-fastlane-env:
 macos-defaults:
 	@bash ./bin/apply-macos-defaults
 
-validate: lint test-bootstrap test-privacy test-orca privacy-check readme-check design-check
+validate: lint test-validation-gates test-bootstrap test-privacy test-orca privacy-check readme-check design-check
 	@if [ "$${CI:-}" = "true" ]; then \
 	  $(MAKE) check-conflicts; \
 	else \
@@ -180,12 +182,7 @@ validate: lint test-bootstrap test-privacy test-orca privacy-check readme-check 
 	  && echo "  ✓ JSON"
 	@echo "▶ .mjs 構文チェック"
 	@if command -v node >/dev/null 2>&1; then \
-	  files=$$(git ls-files stow | grep -E '\.mjs$$'); \
-	  if [ -n "$$files" ]; then \
-	    echo "$$files" | xargs node --check && echo "  ✓ Node syntax"; \
-	  else \
-	    echo "  ✓ Node syntax (対象なし)"; \
-	  fi \
+	  $(MAKE) validate-node-syntax; \
 	else \
 	  echo "  ⚠ node 未導入（スキップ）"; \
 	fi
@@ -334,22 +331,37 @@ bootstrap:
 SHELLCHECK_TARGETS := bootstrap.sh \
 	.githooks/pre-push \
 	bin/setup-fastlane-env bin/setup-codex-config bin/apply-macos-defaults \
-	tests/bootstrap-safety.sh \
+	tests/bootstrap-safety.sh tests/validation-gates.sh \
 	$(wildcard stow/claude/.claude/hooks/*.sh) \
 	$(wildcard stow/codex/.codex/hooks/*.sh) \
 	$(wildcard stow/codex/.codex/bin/*.sh) \
 	$(wildcard stow/design/.local/bin/*)
 
-lint:
+lint: lint-node-syntax
 	@shellcheck -S warning $(SHELLCHECK_TARGETS)
+
+lint-node-syntax:
 	@if command -v node >/dev/null 2>&1; then \
-		node --check stow/codex/.codex/bin/*.mjs; \
+		for file in $(CODEX_MJS_FILES); do \
+			[ -f "$$file" ] || continue; \
+			node --check "$$file" || exit $$?; \
+		done; \
 	else \
-		echo "node not found; skipping .mjs syntax check"; \
+		echo "node not found; skipping Codex .mjs syntax check"; \
 	fi
+
+validate-node-syntax:
+	@for file in $(NODE_SYNTAX_FILES); do \
+		[ -f "$$file" ] || continue; \
+		node --check "$$file" || exit $$?; \
+	done; \
+	echo "  ✓ Node syntax"
 
 test-bootstrap:
 	@bash tests/bootstrap-safety.sh
+
+test-validation-gates:
+	@bash tests/validation-gates.sh
 
 setup-claude-local:
 	@python3 bin/setup-claude-local
@@ -387,37 +399,54 @@ design-check:
 	@node --check $(VISUAL_SYSTEM_DIR)/scripts/svg-contrast.mjs
 	@node --check $(VISUAL_SYSTEM_DIR)/scripts/contrast-mutation.mjs
 	@node $(VISUAL_SYSTEM_DIR)/scripts/build.mjs --check
-	@for json in $$(find $(VISUAL_SYSTEM_DIR) -name '*.json' -type f); do \
-		node -e 'JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8"))' "$$json"; \
-	done
+	@$(MAKE) design-json-check
 	@node --test $(VISUAL_SYSTEM_DIR)/test/*.test.mjs
 	@$(MAKE) design-mutation
 	@$(MAKE) design-contrast
 	@node $(VISUAL_SYSTEM_DIR)/scripts/ovs.mjs deck lint $(VISUAL_SYSTEM_DIR)/examples/slide.md >/dev/null
 	@echo "✓ visual-system slide lint"
+	@$(MAKE) design-svg-check
+	@$(MAKE) design-render-check
+	@$(MAKE) design-marp-check
+
+design-json-check:
+	@[ -d "$(VISUAL_SYSTEM_DIR)" ] || { echo "visual-system directory not found: $(VISUAL_SYSTEM_DIR)"; exit 1; }
+	@while IFS= read -r -d '' json; do \
+		node -e 'JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8"))' "$$json" || exit $$?; \
+	done < <(find $(VISUAL_SYSTEM_DIR) -name '*.json' -type f -print0)
+
+design-svg-check:
+	@[ -d "$(VISUAL_SYSTEM_DIR)/generated" ] || { echo "generated directory not found: $(VISUAL_SYSTEM_DIR)/generated"; exit 1; }
 	@if command -v xmllint >/dev/null 2>&1; then \
-		for svg in $(VISUAL_SYSTEM_DIR)/generated/templates/*.svg $(VISUAL_SYSTEM_DIR)/generated/icons/*.svg; do \
-			xmllint --noout "$$svg"; \
-		done; \
+		while IFS= read -r -d '' svg; do \
+			xmllint --noout "$$svg" || exit $$?; \
+		done < <(find $(VISUAL_SYSTEM_DIR)/generated -name '*.svg' -type f -print0); \
 		echo "✓ visual-system SVG"; \
 	else \
 		echo "xmllint not found; skipping visual-system SVG syntax check"; \
 	fi
+
+design-render-check:
+	@[ -d "$(VISUAL_SYSTEM_DIR)/generated/templates" ] || { echo "template directory not found: $(VISUAL_SYSTEM_DIR)/generated/templates"; exit 1; }
 	@if command -v rsvg-convert >/dev/null 2>&1; then \
 		tmp_png=$$(mktemp "$${TMPDIR:-/tmp}/ovs-render.XXXXXX"); \
 		trap 'rm -f "$$tmp_png"' EXIT; \
-		for svg in $(VISUAL_SYSTEM_DIR)/generated/templates/*.svg; do \
-			rsvg-convert --width 320 --output "$$tmp_png" "$$svg"; \
-		done; \
+		while IFS= read -r -d '' svg; do \
+			rsvg-convert --width 320 --output "$$tmp_png" "$$svg" || exit $$?; \
+		done < <(find $(VISUAL_SYSTEM_DIR)/generated/templates -name '*.svg' -type f -print0); \
 		echo "✓ visual-system 320px render"; \
 	else \
 		echo "rsvg-convert not found; skipping visual-system render check"; \
 	fi
-	@if command -v marp >/dev/null 2>&1; then \
+
+design-marp-check:
+	@[ -f "$(VISUAL_SYSTEM_DIR)/generated/marp.css" ] || { echo "Marp theme not found: $(VISUAL_SYSTEM_DIR)/generated/marp.css"; exit 1; }
+	@[ -f "$(VISUAL_SYSTEM_DIR)/examples/slide.md" ] || { echo "slide example not found: $(VISUAL_SYSTEM_DIR)/examples/slide.md"; exit 1; }
+	@if command -v $${MARP_BIN:-marp} >/dev/null 2>&1; then \
 		tmp_html=$$(mktemp "$${TMPDIR:-/tmp}/ovs-marp.XXXXXX"); \
 		trap 'rm -f "$$tmp_html"' EXIT; \
-		marp --no-stdin --html --theme $(VISUAL_SYSTEM_DIR)/generated/marp.css \
-			$(VISUAL_SYSTEM_DIR)/examples/slide.md --output "$$tmp_html" >/dev/null; \
+		$${MARP_BIN:-marp} --no-stdin --html --theme $(VISUAL_SYSTEM_DIR)/generated/marp.css \
+			$(VISUAL_SYSTEM_DIR)/examples/slide.md --output "$$tmp_html" >/dev/null || exit $$?; \
 		echo "✓ visual-system Marp theme"; \
 	else \
 		echo "marp not found; skipping visual-system theme check"; \

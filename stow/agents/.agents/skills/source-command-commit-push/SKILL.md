@@ -22,6 +22,7 @@ Use this skill when the user asks to run the migrated source command `commit-pus
 5. `git add` で変更をステージング
 6. `git commit` でコミット
 7. `git push` でプッシュ
+8. CIがある場合はプッシュしたコミットSHAの実行結果を確認する。GitHub Actionsなら `gh run list --commit <SHA>` で実行を特定し、完了まで追跡する。失敗した場合はログから原因を調べ、今回の変更に起因する問題を修正・検証して再プッシュする。実行待ちや取得不能ならCI成功と報告せず、その状態を明記する。
 
 ## コミットメッセージ規則
 

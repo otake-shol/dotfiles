@@ -204,5 +204,5 @@ Use a mark only when it lets the audience recognize an item before reading its l
 - Confirm that every screenshot annotation and every table cell needed for the argument is readable at fit-to-window size.
 - Confirm that every logo has its product named in the same item, uses official unmodified artwork, and has its source recorded.
 - Confirm that concept icons come from one family, map one-to-one to labeled items, share one size per role on each slide, and stay off L01, L03, L12, L14, L17, and L18.
-- For a presented deck, confirm that exactly one L18 follows L12 and adds no new content.
+- For a new presented Standard deck, confirm that exactly one L18 follows L12 and adds no new content. Preserve existing decks' structure unless migration is requested.
 - Confirm that draft prompts, empty section pages, asset-library pages, and duplicate agenda slides are not present in the audience-facing deck.

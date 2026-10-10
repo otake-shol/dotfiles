@@ -185,6 +185,37 @@ test("本文の量・alt・色の直書き・手書きSVG・フッターURLを�
   assert.ok(!rulesOf(deckOf([background])).includes("slide/image-alt"));
 });
 
+test("Standardと既存OVSのテーマを許容し、人物紹介と内容の数値を区別する", () => {
+  for (const theme of ["story-slides", "otake-visual"]) {
+    const front = `marp: true\ntheme: ${theme}\nlang: ja`;
+    for (const role of ["l01 event", "l17 lt", "l18 event"]) {
+      const slide = `<!-- _class: ${role} -->\n\n# 開発運用の紹介\n\n20名のチームを担当\n\n<!-- 話す -->`;
+      const rules = rulesOf(deckOf([slide], front));
+      assert.ok(!rules.includes("deck/theme"), theme);
+      assert.ok(!rules.includes("slide/source"), role);
+    }
+    const claim = "<!-- _class: l10 -->\n\n# 応答時間の半減\n\n改善率50%\n\n<!-- 話す -->";
+    assert.ok(rulesOf(deckOf([claim], front)).includes("slide/source"), theme);
+  }
+  assert.ok(rulesOf(deckOf(["# 題名"], "theme: custom\nlang: ja")).includes("deck/theme"));
+});
+
+test("結論を伴うStandardの終了ページだけを挨拶の警告から除外する", () => {
+  const conclusion = "<!-- _class: l12 dark -->\n\n# 来週の試行開始\n\n- 当番表を共有し、次回の会議で結果を確認\n\n<!-- 話す -->";
+  const end = "<!-- _class: l18 event -->\n\n# ご清聴ありがとう<br>ございました\n\n<!-- 話す -->";
+  for (const theme of ["story-slides", "otake-visual"]) {
+    const front = `theme: ${theme}\nlang: ja`;
+    const rules = rulesOf(deckOf([conclusion, end], front));
+    assert.ok(!rules.includes("deck/closing"), theme);
+    assert.ok(!rules.includes("slide/topic-title"), theme);
+    assert.ok(!rules.includes("slide/title-taigen"), theme);
+    for (const slides of [[end], ["# 単なる説明", end], ["<!-- _class: l12 -->\n\n# 結論", end], [conclusion, end, end]]) {
+      assert.ok(rulesOf(deckOf(slides, front)).includes("deck/closing"));
+    }
+  }
+  assert.ok(rulesOf(deckOf([conclusion, end], "theme: custom\nlang: ja")).includes("deck/closing"));
+});
+
 test("同じレイアウトの3連続と、挨拶だけの最終スライドを検出する", () => {
   const table = (title) => `# ${title}\n\n| 項目 | 値 |\n| --- | --- |\n| 甲 | 乙 |\n\n<!-- 話す -->`;
   const rules = rulesOf(deckOf([table("一つ目の表の主張"), table("二つ目の表の主張"), table("三つ目の表の主張"), "# ご清聴ありがとうございました"]));
@@ -247,13 +278,14 @@ test("CLIのlintはerrorがあると終了コード1を返す", () => {
   }
 });
 
-// 実測はフォントと描画環境に依存するため、ブラウザとmarpがあるローカル環境だけで確認する
+// CIにも日本語フォント・Chrome・Marpを用意し、同じ描画検査を実行する。
 const marpAvailable = spawnSync("marp", ["--version"], { encoding: "utf8" }).status === 0;
-const canRender = Boolean(browserExecutable()) && marpAvailable && process.env.CI !== "true";
+const canRender = Boolean(browserExecutable()) && marpAvailable;
+if (process.env.CI === "true") assert.ok(canRender, "CIの描画検査にはChrome系ブラウザとmarpが必須です");
 
 test(
   "描画してはみ出し・画像切れ・コントラスト・言語を検出し、画像を保存する",
-  { skip: canRender ? false : "Chrome系ブラウザとmarpが必要（CIでは省略）" },
+  { skip: canRender ? false : "Chrome系ブラウザとmarpが必要" },
   async () => {
     const { checkDeck } = await import("../scripts/deck-check.mjs");
     const tempDir = mkdtempSync(resolve(tmpdir(), "ovs-deck-check-"));

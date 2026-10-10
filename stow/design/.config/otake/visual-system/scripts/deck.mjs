@@ -1,6 +1,6 @@
 // Marp/OVSスライドの静的検査（lint）とアウトライン抽出。
 // ブラウザを使わない純粋関数だけを置き、表示の実測は deck-browser.mjs に分ける。
-// 閾値は根拠と一緒に定義し、スライド指針（references/slides-*.md）と同じ値を使う。
+// 閾値は根拠と一緒に定義し、create-story-slidesの参照仕様に合わせる。
 
 /** 聞き取りやすい日本語の発話速度。NHKの目安「1分300字」 */
 export const SPEAKING_CHARS_PER_MINUTE = 300;
@@ -129,8 +129,8 @@ export const deckRules = {
   },
   "deck/theme": {
     severity: "info",
-    summary: "OVSテーマ（otake-visual）を使っていない",
-    why: "指定テンプレートがある場合は正しい。指定がなければOVSを使う",
+    summary: "Standardまたは既存OVSのテーマを使っていない",
+    why: "新規はstory-slides、既存OVSはotake-visual。指定テンプレートがある場合は維持する",
   },
   "deck/repeat-layout": {
     severity: "warn",
@@ -145,7 +145,7 @@ export const deckRules = {
   "deck/closing": {
     severity: "info",
     summary: "最後のスライドが挨拶だけ",
-    why: "質疑の間も表示され続ける。持ち帰る一文と次の行動を置く",
+    why: "持ち帰る一文と次の行動が必要。Standardの結論L12に続く終了L18は許容する",
   },
   "slide/placeholder": {
     severity: "error",
@@ -643,13 +643,22 @@ export function lintDeck(deck, options = {}) {
   }
   const issues = [];
   const { frontMatter, slides } = deck;
+  const standardTheme = ["story-slides", "otake-visual"].includes(frontMatter.theme);
+  const mainSlides = slides.filter((slide) => !slide.appendix);
+  const last = mainSlides.at(-1);
+  const conclusion = mainSlides.at(-2);
+  const hasClass = (slide, name) => slide?.className.split(/\s+/).includes(name);
+  // Standardでは結論L12の後に終了L18を置く。結論を省いた挨拶だけの資料は免除しない。
+  const standardEndSlide = standardTheme && hasClass(last, "l18") &&
+    hasClass(conclusion, "l12") && conclusion.bodyText.trim() &&
+    mainSlides.filter((slide) => hasClass(slide, "l18")).length === 1 ? last : null;
 
   if (!String(frontMatter.lang ?? "").toLowerCase().startsWith("ja")) {
     issues.push(issue("deck/lang", null, "front matterに `lang: ja` を追加する"));
   }
-  if (frontMatter.theme !== "otake-visual") {
+  if (!standardTheme) {
     issues.push(
-      issue("deck/theme", null, `theme: ${frontMatter.theme ?? "（未指定）"}。指定テンプレートがなければ otake-visual を使う`),
+      issue("deck/theme", null, `theme: ${frontMatter.theme ?? "（未指定）"}。新規資料は story-slides、既存OVS資料は otake-visual を使う。指定テーマは維持する`),
     );
   }
 
@@ -676,7 +685,7 @@ export function lintDeck(deck, options = {}) {
       }
     } else {
       const key = normalizeKey(slide.title);
-      if (TOPIC_ONLY_TITLES.has(key)) {
+      if (TOPIC_ONLY_TITLES.has(key) && slide !== standardEndSlide) {
         issues.push(issue("slide/topic-title", slide, `${label}: 話題名ではなく主張にする（例: 「現状」→「問い合わせ対応の属人化」）`));
       }
       const width = displayWidth(slide.title);
@@ -690,7 +699,7 @@ export function lintDeck(deck, options = {}) {
         issues.push(issue("slide/title-period", slide, `${label}: 句点を外して体言止めにする`));
       }
       const ending = slide.title.replace(/[」』）)\]！!…]+$/, "");
-      if (!/[？?]$/.test(ending) && PREDICATE_ENDING.test(ending)) {
+      if (slide !== standardEndSlide && !/[？?]$/.test(ending) && PREDICATE_ENDING.test(ending)) {
         issues.push(issue("slide/title-taigen", slide, `${label}: 体言止めを検討する`));
       }
     }
@@ -735,7 +744,9 @@ export function lintDeck(deck, options = {}) {
 
     // 表紙と自己紹介の数値は発表者自身の情報なので出典を求めない
     const classes = slide.className.split(/\s+/);
-    if (!slide.appendix && !classes.includes("lead") && !classes.includes("profile")) {
+    const presenterSlide = classes.includes("lead") || classes.includes("profile") ||
+      (standardTheme && classes.some((name) => ["l01", "l17", "l18"].includes(name)));
+    if (!slide.appendix && !presenterSlide) {
       const claim = `${slide.title}\n${slide.bodyText}`;
       const quantity = claim.match(QUANTITY);
       if (quantity && !SOURCE_MARK.test(`${slide.footer}\n${slide.bodyText}`)) {
@@ -757,9 +768,7 @@ export function lintDeck(deck, options = {}) {
     }
   }
 
-  const mainSlides = slides.filter((slide) => !slide.appendix);
-  const last = mainSlides.at(-1);
-  if (last && CLOSING_TITLE.test(last.title)) {
+  if (last && last !== standardEndSlide && CLOSING_TITLE.test(last.title)) {
     issues.push(issue("deck/closing", last, `「${truncate(last.title, 18)}」: 持ち帰る一文と次の行動を最後に置く`));
   }
 

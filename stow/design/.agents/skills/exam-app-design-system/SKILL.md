@@ -15,7 +15,7 @@ description: Audit, introduce, migrate, or review the shared React Native (Expo)
    `exam-app-template`、OVSの所在と責務を確定する。
 3. `exam-app-template/DESIGN-SYSTEM.md` と対象アプリの
    `docs/design-system.md` を読む。プロフィールが無ければテンプレートから作成する。
-   [意図と利用者負担の共通レビュー](../otake-visual/references/design-intent.md) も読み、
+   [意図と利用者負担の共通レビュー](../../design/design-intent.md) も読み、
    学習者の作業、優先する情報・操作、構成の選択理由を既存プロフィールへ短く残す。
    共通レビューをUIトークンの正本にはしない。
 4. [acceptance-checklist.md](references/acceptance-checklist.md) に従って現状を監査し、

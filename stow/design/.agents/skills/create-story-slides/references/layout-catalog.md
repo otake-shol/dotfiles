@@ -26,7 +26,7 @@ Choose one primary archetype per slide. Variants may change image placement or d
 ## Selection rules
 
 - Use L01 once at the opening and L12 once at the close.
-- End every presented deck with one L18 after L12, so that the audience can see the talk is over. Omit L18 when nobody presents the deck (R5 in `SKILL.md`), and count it toward the length range. When gratitude is the purpose of the talk, such as a farewell or thank-you LT, let the L18 sentence carry the thanks; do not add a second thanks slide.
+- End every new presented Standard deck with one L18 after L12, so that the audience can see the talk is over. Preserve an existing deck's structure unless migration is requested. Omit L18 when nobody presents the deck (R5 in `SKILL.md`), and count it toward the length range. When gratitude is the purpose of the talk, such as a farewell or thank-you LT, let the L18 sentence carry the thanks; do not add a second thanks slide.
 - Use L03 only for meaningful chapter changes, and count every L03 toward the length range:
   - Lightning decks need none.
   - When the main story has three or more top-level parts that each change the lens, and the talk lasts about 10 minutes or longer (or, when the time is unknown, the main story has about 12 slides or more), open every part with one L03. Do not skip a part, and keep the composition and coordinates identical across them.

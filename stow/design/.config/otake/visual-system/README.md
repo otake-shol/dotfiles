@@ -37,8 +37,9 @@ ovs preview design-system-article/dist
 
 Markdownスライド制作はClaude `/slides` とCodex `source-command-slides` で共通化。
 構成、テーマ、出力形式、表示確認は
-[`otake-visual` の共通指針](../../../.agents/skills/otake-visual/references/slides.md)で管理する。
-形式の指定がなければMarkdownとHTMLを生成する。
+[`create-story-slides`](../../../.agents/skills/create-story-slides/SKILL.md)で管理する。
+新規資料はMarkdownとPDFを既定とし、既存OVS資料はテーマと形式を維持する。
+媒体共通の原則は [デザインレビュー](../../../.agents/design/design-intent.md) を参照する。
 
 ## スライドを検査する
 

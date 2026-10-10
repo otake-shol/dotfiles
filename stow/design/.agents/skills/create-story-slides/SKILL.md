@@ -1,11 +1,18 @@
 ---
 name: create-story-slides
-description: Create clear Japanese business presentations with one-message-per-slide storytelling, a restrained navy-blue-orange visual system, and proposal, planning, review, or case-study modes at short or long length. Decide per deck whether to add a presenter self-introduction (自己紹介) slide or a presenter line on the cover, filling it from a local presenter profile when one exists. Use when turning a memo, project plan, strategy, operational proposal, technical explanation, retrospective, case study, LT, or conference-talk content into a slide outline or a Marp deck exported to PDF, or when the user asks for a standalone self-introduction slide.
+description: Create, edit, and review Japanese Markdown/Marp presentations with one-message-per-slide storytelling and the Standard visual system. Own narrative, presenter introduction, layouts, export, and QA for proposals, plans, reviews, case studies, LT, and talks, including existing OVS decks and /slides requests. Use for outlines, self-introduction slides, PDF or HTML decks, and presentation-time estimates. Route editable PowerPoint and native Google Slides work to their dedicated skills.
 ---
 
 # Create Story Slides
 
 Turn rough source material into a cumulative story that is easy to present and easy to scan. Default to Japanese copy. Choose the communication job before choosing the length; use a short proposal only when the audience needs a decision.
+
+This is the single authoring and review workflow for this skill, Claude `/slides`,
+and Codex `source-command-slides`. OVS supplies asset generation and inspection tools;
+its old slide guides are compatibility entrypoints, not another policy source.
+For review-only requests, inspect the existing deck and report findings without
+rewriting it. Preserve an existing deck's theme, format, and layout conventions unless
+the user requests migration; apply the presenter gate's continuing-deck rule.
 
 ## References
 
@@ -17,7 +24,7 @@ Read all four core references before planning a deck:
 - `references/reference-derived-patterns.md`: apply the reusable storytelling patterns and reject the common failure modes.
 
 Before choosing the composition, also read the shared
-[design intent and user burden guide](../otake-visual/references/design-intent.md).
+[design intent and user burden guide](../../design/design-intent.md).
 Record the audience's task, information priority, and composition rationale in the outline's
 production notes. Apply its final review to the rendered deck; preserve the selected visual profile.
 
@@ -29,9 +36,14 @@ Read `references/presenter-introduction.md` when the presenter introduction gate
 
 Read `references/marp-output.md` before authoring or rendering a deck. It maps every layout and N01 to the Marp theme in `assets/`, defines page chrome and speaker notes, and owns the build and QA commands.
 
+Read [review.md](references/review.md) before validation or a review-only task.
+For an existing `theme: otake-visual` deck, also read
+[ovs-compatibility.md](references/ovs-compatibility.md); it preserves old markup and exports.
+Read [sources.md](references/sources.md) only when updating the guidance itself.
+
 ## Visual profile
 
-Use the Standard profile for every deck: the default navy-blue-orange system and typography in `references/design-system.md`.
+Use the Standard profile for new decks: the default navy-blue-orange system and typography in `references/design-system.md`. Preserve the governing profile of existing or user-supplied decks.
 
 If a product, service, client, or another organization may have its own governing brand, do not imitate it from memory. Ask the user to identify or provide that brand's rules and approved assets, and apply them only to colors, typography, imagery, charts, and logos while keeping the narrative and layout rules from the other references.
 
@@ -72,10 +84,13 @@ Record the result in one line at the top of each outline and handoff, even for n
 
 ## Workflow
 
-1. Establish the communication job in one sentence: audience, desired outcome, and central takeaway.
+Use the full workflow for new decks. For edits, apply only the affected steps and
+preserve the existing deck's structure; a review-only request stops at findings.
+
+1. Establish the communication job in one sentence: audience, desired outcome, and central takeaway. Determine present/read mode and requested output using `story-modes.md` and `marp-output.md`.
 2. Extract only supported facts, claims, decisions, examples, and evidence from the supplied material. Never invent data, quotations, people, outcomes, or sources. Use an explicit placeholder when a necessary fact is missing.
 3. Choose a communication job and length using `story-modes.md`. Use a short proposal only when the audience needs a decision; otherwise select planning, review, or case-study mode explicitly.
-4. Resolve the visual profile: use the Standard profile unless the user supplied another governing brand's rules for this deck.
+4. Resolve the visual profile: inherit it for an existing deck; use Standard for a new deck unless the user supplied another governing brand's rules.
 5. Resolve the presenter introduction through its decision gate. For full, plan L17 as slide 2 unless `presenter-introduction.md` allows slide 3; for compact, add one compact line to L01; for none, add no presenter information.
 6. Decide whether a cross-slide navigation component applies. When N01 applies, define its ordered phase map once and assign one phase ID to every eligible slide; do not treat N01 as the slide's primary layout.
 7. Write the narrative as a sequence of questions and answers. Make each slide answer one question and create the need for the next slide.
@@ -84,7 +99,7 @@ Record the result in one line at the top of each outline and handoff, even for n
 9. Write takeaway-style titles in natural audience-facing language. Use a deliberate line break when a two-line title is necessary; never allow accidental wrapping.
 10. Apply `design-system.md` and `reference-derived-patterns.md`. Prefer one composition over card grids, reuse a stable anchor diagram across sections when it reduces reorientation, and keep diagrams simple. In the Standard profile, reserve orange for tension, change, exception, or action.
 11. If the user requests an outline, precede it with the 自己紹介 decision line, then provide a compact slide table with number, title, narrative job, evidence, and layout ID. Add `Navigator` and `Phase ID` only when a navigation component applies.
-12. If the user requests slides or a deck, author a Marp deck and export it to PDF as `references/marp-output.md` defines: one layout class per slide, speaker notes with sources, and `scripts/build.sh` for the render check, the PDF, and the notes file. Fix every render error and inspect every slide image. Keep simple diagrams editable as theme components or inline SVG in the Markdown. Generate or source imagery only when it materially improves understanding. In the handoff, give the PDF path, state the 自己紹介 decision, and list any remaining presenter placeholders.
+12. If the user requests a deck, author Marp Markdown and export the requested format using `references/marp-output.md`; default new decks to PDF. For Standard decks, use one layout class per slide and speaker notes with sources. Before expanding the deck, render the cover, densest slide, and one evidence slide to check the chosen layouts. Validate with `references/review.md`, fix every render error, and inspect every slide image. Keep simple diagrams editable as theme components or inline SVG. Generate or source imagery only when it materially improves understanding. In the handoff, link the requested output, state the 自己紹介 decision, and list any remaining presenter placeholders.
 
 ## Fast path
 
@@ -104,10 +119,10 @@ If the audience cannot be inferred as the presenter's own team, other internal t
 - Take presenter facts only from the sources that `presenter-introduction.md` allows, and never write real profile values into this skill or any repository.
 - Keep the excluded-by-default items listed in `presenter-introduction.md`, such as grade, evaluation, compensation, employee ID, and private contact details, out of presenter elements unless the user explicitly asks for that item in the current request. This does not restrict deck content that the user supplies as the subject.
 - Do not turn a source deck's project-management or technical claim into a universal rule merely because the slide presents it confidently. Separate communication technique from domain validity.
-- If `marp` or a Chrome-based browser is unavailable, complete the outline and the Marp source, state the PDF blocker plainly, and do not silently switch to another renderer. Produce PowerPoint only on explicit request, and say that Marp exports image-only slides that cannot be edited.
+- If `marp` or a Chrome-based browser is unavailable, follow the fallback in `marp-output.md` and state which exports or visual checks remain incomplete. Produce PowerPoint only on explicit request, and say that normal Marp PPTX exports image-only slides that cannot be edited.
 
 ## Completion check
 
 Confirm that the Visual pass ran, diagrams explain relationships without implying unmeasured results, real artifacts show the decisive region at readable size, and every used asset has traceable provenance, including the Lucide version and each logo's catalogue provenance. List any missing evidence assets in the handoff and keep capture instructions out of audience-facing slides.
 
-Before handing off an outline or deck, confirm that the opening establishes why the topic matters, the middle supports the central takeaway without repeated beats, and the closing resolves the opening with a decision, action, synthesis, or implication. For a presented deck, also confirm that one L18 end slide follows L12 so that the end of the talk is unmistakable. When a navigation component applies, also confirm that its phase map is stable and every eligible slide's rendered current phase matches the outline. Also confirm that the 自己紹介 decision line is recorded, any included introduction appears once at its documented position, and presenter elements show only sourced, scope-permitted facts or explicit placeholders.
+Before handing off an outline or deck, confirm that the opening establishes why the topic matters, the middle supports the central takeaway without repeated beats, and the closing resolves the opening with a decision, action, synthesis, or implication. For a new presented Standard deck, also confirm that one L18 end slide follows L12 so that the end of the talk is unmistakable; do not insert it into an existing deck merely to migrate its structure. When a navigation component applies, also confirm that its phase map is stable and every eligible slide's rendered current phase matches the outline. Also confirm that the 自己紹介 decision line is recorded, any included introduction appears once at its documented position, and presenter elements show only sourced, scope-permitted facts or explicit placeholders.

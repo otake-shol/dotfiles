@@ -1,4 +1,4 @@
 interface:
   display_name: "Story Slides"
-  short_description: "物語で組み立て、自己紹介の要否も判定する"
+  short_description: "物語とデザインを揃え、スライドの制作・編集・レビューを進める"
   default_prompt: "$create-story-slides を使って、このメモを目的に合う日本語スライド構成にしてください。"

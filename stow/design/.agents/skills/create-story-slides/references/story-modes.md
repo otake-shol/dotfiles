@@ -13,6 +13,16 @@
 
 ## Select two dimensions
 
+Establish the audience, desired outcome, central message, available time or slide count,
+and requested output from the conversation. Ask only for missing facts that materially
+change the result; do not restart intake for edits to an existing deck.
+
+Choose present or read mode independently of the story job and length. Default to present
+when the use is unclear. Present mode uses brief visible copy and spoken notes; read mode
+must carry the necessary explanation and evidence in the slide itself. For both uses,
+keep the presentation concise and add an appendix or separate reading version. Do not
+embed private speaker notes in a distributed PDF. Use the same mode in validation.
+
 Choose the communication job first and the length second. Do not infer the job from source length.
 
 | Job | Audience outcome | Default sequence |
@@ -152,3 +162,8 @@ When the deck needs more depth:
 ## Outline test
 
 Read only the slide titles in order. They should form a coherent argument without the body copy. If the title sequence reads like a list of topics, rewrite it as claims and consequences before authoring slides.
+
+State the central message in one sentence before the title sequence. For decision or
+reading decks, put a concise summary early and match its order to the supporting slides.
+Use Japanese noun-ending titles that express the claim, not just a topic name. Keep
+spoken transitions in the notes instead of adding explanatory prose to every slide.

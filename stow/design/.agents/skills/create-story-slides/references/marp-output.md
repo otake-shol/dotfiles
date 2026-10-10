@@ -1,6 +1,10 @@
 # Marp output
 
-Author every deck as Marp Markdown and export it to PDF. `assets/story-slides.css` implements the Standard profile in `design-system.md` and the coordinates in `cover-templates.md`, `presenter-introduction.md`, and `navigation-components.md`, so choose a layout class and its markup instead of restating positions in the deck. `assets/sample-deck.md` shows every layout and N01 in one story; `assets/sample-variants.md` shows the cover, presenter introduction, and end-slide variants.
+Author decks as Marp Markdown. Default new decks to PDF, honor explicitly requested formats,
+and inherit the format of an existing deck. `assets/story-slides.css` implements the Standard profile in `design-system.md` and the coordinates in `cover-templates.md`, `presenter-introduction.md`, and `navigation-components.md`, so choose a layout class and its markup instead of restating positions in the deck. `assets/sample-deck.md` shows every layout and N01 in one story; `assets/sample-variants.md` shows the cover, presenter introduction, and end-slide variants.
+
+For existing OVS decks, read [ovs-compatibility.md](ovs-compatibility.md) and keep their theme
+and markup. The commands below accept the resolved theme; the build script uses Standard only.
 
 ## Contents
 
@@ -11,7 +15,9 @@ Author every deck as Marp Markdown and export it to PDF. `assets/story-slides.cs
 - Surfaces, numbers, and emphasis
 - N01 markup
 - Diagrams and images
+- Sources and speaker notes
 - Build and QA
+- Other formats and existing themes
 - Handoff
 
 ## Deck file
@@ -104,22 +110,67 @@ Place N01 first on the slide, before the title:
 - Code blocks and inline code in tables render at 15 pt (20 px) to meet the body floor. Keep code excerpts to about five lines; put the rest in the speaker notes.
 - Local images load because the build allows local files.
 
-## Build and QA
+## Sources and speaker notes
 
-Run the build script in this skill's `scripts/` directory:
+Use a short source label with the work, version, or year in `_footer` for external facts,
+definitions, quotations, or measured values. Keep source URLs and access dates in notes
+or an appendix, and verify that each source supports its claim. For original measurements,
+record the repository or dataset, revision, period, and conditions. Do not invent missing evidence.
 
-```bash
-scripts/build.sh <deck.md> <output directory>
+In present mode, use notes for the spoken explanation and the transition to the next slide.
+The OVS time estimate excludes lines prefixed with `根拠:`, `メモ:`, or `出典:` and lines
+containing a URL. In read mode, keep necessary explanations in visible copy.
+
+```markdown
+<!--
+話す: このスライドで伝える一文と短い補足。
+つなぎ: 次のスライドで答える問い。
+根拠: 出典URL・確認日・計測条件
+メモ: デモへの切り替えなどの段取り
+-->
 ```
 
-1. `ovs deck check` renders the deck and measures overflow, clipping, collisions with the header, footer, or page number, overlaps, one- or two-character last lines, small text, contrast, broken images, and missing fonts. An error stops the build; fix every error. Treat each warning as a defect unless the referenced specification requires the flagged element, and state any warning that remains in the handoff.
-2. Inspect `<name>-check/contact-sheet.png` for the 25% thumbnail checks and every `<name>-check/slide-NN.png` at full size. Then apply the QA lists in `design-system.md` and the other references.
+## Build and QA
+
+For Standard PDF output, run the build script in this skill's `scripts/` directory.
+It preserves the two-argument form; the optional third argument selects present/read mode:
+
+```bash
+scripts/build.sh <deck.md> <output directory> [present|read]
+```
+
+1. `ovs deck verify` applies static lint and measures overflow, clipping, collisions, small text, contrast, broken images, and missing fonts. An error stops the build. Use [review.md](review.md) for warning handling, timing, and completion criteria.
+2. Inspect `<name>-check/contact-sheet.png` and every `<name>-check/slide-NN.png` using `review.md` and `design-system.md`.
 3. The build writes `<name>.pdf` with bookmarks and `<name>.notes.txt`. It never embeds speaker notes in the PDF, because recipients could read them.
 
-- Without `ovs`, the build writes slide PNGs instead of measuring them; inspect each one.
-- If `marp` or a Chrome-based browser is unavailable, stop at the outline and the Marp source and say that the PDF is blocked.
-- Produce PowerPoint only on explicit request: `marp --pptx` with the same `--theme`, `--html`, and `--allow-local-files` options writes image-only slides that cannot be edited. Say so in the handoff.
+- Without `ovs`, the build writes slide PNGs; inspect each one and report static and measurement checks as incomplete.
+- Without `marp`, complete the outline and Markdown and report export as blocked. Without Chrome, HTML export may still work, but PDF and rendered verification remain incomplete. Do not silently switch renderers or themes.
+
+## Other formats and existing themes
+
+Resolve `slide_theme` to `assets/story-slides.css` for Standard, or the existing deck's CSS.
+Use the output directory requested by the user; otherwise use the deck's directory.
+Validate with [review.md](review.md) and run only the exports the user requested:
+
+```bash
+# Run alongside slide.md; set slide_theme to the resolved CSS path first.
+marp --no-stdin --html --theme "$slide_theme" slide.md -o slide.html
+marp --no-stdin --html --allow-local-files --theme "$slide_theme" --pdf --pdf-outlines slide.md -o slide.pdf
+marp --no-stdin --theme "$slide_theme" --notes slide.md -o slide.notes.txt
+```
+
+Keep HTML and referenced assets together with relative paths. Use `--allow-local-files`
+only after checking that local references point to the intended assets. Do not embed
+speaker notes in distributed PDFs. HTML contains presentation notes; inspect them for
+the delivery audience before sharing the HTML, even when the PDF omits them.
+For HTML presentations, `*` or `1)` lists support progressive display and `p` opens the
+presenter view; PDF and images show the whole list.
+
+Produce PowerPoint only on explicit request. Normal `marp --pptx` with the same theme
+and local-asset options exports image-only slides; disclose that limitation. Route
+editable PowerPoint or native Google Slides requests to the dedicated presentation skill.
 
 ## Handoff
 
-Give the PDF path and the notes path, the 自己紹介 decision line, every remaining placeholder, any font substitution, and any remaining warning with its reason.
+Give the requested output paths and any notes path, the 自己紹介 decision line,
+every remaining placeholder, any font substitution, and any remaining warning with its reason.

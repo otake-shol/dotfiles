@@ -8,6 +8,7 @@ input=$(cat)
 eval "$(echo "$input" | jq -r '
   @sh "dir_full=\(.workspace.current_dir // "~")",
   @sh "model=\(.model.display_name // "Claude")",
+  @sh "model_id=\(.model.id // "")",
   @sh "used_pct=\(.context_window.used_percentage // 0 | floor)",
   @sh "ctx_size=\(.context_window.context_window_size // 200000)",
   @sh "cost=\(.cost.total_cost_usd // 0)",
@@ -37,6 +38,8 @@ eval "$(echo "$input" | jq -r '
   @sh "pc_warm=\(.prompt_cache.warm // false)",
   @sh "pc_hit=\(.prompt_cache.hit_ratio // "")",
   @sh "pc_expires=\(.prompt_cache.expires_at // "")",
+  @sh "pc_ttl=\(.prompt_cache.ttl // "")",
+  @sh "pc_recache=\(.prompt_cache.recache_tokens_if_cold // "")",
   @sh "pc_misses=\(.prompt_cache.misses // 0)",
   @sh "pc_miss_cause=\(.prompt_cache.last_miss_cause.causes[0]? // "")",
   @sh "total_in_tok=\(.context_window.total_input_tokens // 0)",
@@ -374,13 +377,27 @@ if [ "$fast_mode" = "true" ]; then
     output+=" ${YELLOW}${BOLD}${ICON_FAST}FAST${RESET}"
 fi
 
-# effort: 常用値の xhigh 以外の時だけ表示（= 異常時のみ目立つ）
-if [ -n "$effort_level" ] && [ "$effort_level" != "xhigh" ]; then
-    case "$effort_level" in
-        max)        EFFORT_COLOR=$RED ;;      # 常用しない想定
-        low|medium) EFFORT_COLOR=$YELLOW ;;   # 品質を落としている状態
-        *)          EFFORT_COLOR=$DIM ;;
+# effort: モデルの既定値と違う時だけ表示（= 異常時のみ目立つ）
+# 既定値は公式の Model configuration に従う: Opus/Sonnet/Haiku 5.5 は medium、
+# Opus 4.7 は xhigh、それ以外の effort 対応モデルは high
+_effort_rank() {
+    case "$1" in
+        low) echo 1 ;; medium) echo 2 ;; high) echo 3 ;; xhigh) echo 4 ;; max) echo 5 ;; *) echo 0 ;;
     esac
+}
+case "${model_id}${model}" in
+    *opus-5-5*|*sonnet-5-5*|*haiku-5-5*|*"Opus 5.5"*|*"Sonnet 5.5"*|*"Haiku 5.5"*) effort_default="medium" ;;
+    *opus-4-7*|*"Opus 4.7"*) effort_default="xhigh" ;;
+    *) effort_default="high" ;;
+esac
+if [ -n "$effort_level" ] && [ "$effort_level" != "$effort_default" ]; then
+    if [ "$effort_level" = "max" ]; then
+        EFFORT_COLOR=$RED       # 常用しない想定
+    elif [ "$(_effort_rank "$effort_level")" -lt "$(_effort_rank "$effort_default")" ]; then
+        EFFORT_COLOR=$YELLOW    # 既定より下げている
+    else
+        EFFORT_COLOR=$DIM       # 既定より上げている
+    fi
     output+=" ${EFFORT_COLOR}${effort_level}${RESET}"
 fi
 
@@ -478,14 +495,27 @@ if [ -n "$pc_present" ] && [ "$pc_observed" = "true" ]; then
             CACHE_COLOR=$RED
         fi
         line2+="  ${CACHE_COLOR}${ICON_CACHE}${cache_pct}%${RESET}"
+        # TTL（5m / 1h）。冷えた後の再書き込みは 5m なら1.25x、1h なら2x
+        [ -n "$pc_ttl" ] && line2+="${DIM}·${pc_ttl}${RESET}"
     fi
     if [ "$pc_warm" = "true" ] && [ -n "$pc_expires" ]; then
-        # 冷えると次の送信で全コンテキスト再書き込み（1.25x）になるので残り時間を出す
+        # 冷えると次の送信で全コンテキスト再書き込みになるので、残り時間と書き直す量を出す
         cold_in=$((pc_expires - now_epoch))
-        if [ "$cold_in" -le 60 ]; then
-            line2+=" ${YELLOW}${BOLD}あと${cold_in}sで冷却${RESET}"
+        recache_label=""
+        if [ -n "$pc_recache" ] && [ "$pc_recache" -gt 0 ] 2>/dev/null; then
+            if [ "$pc_recache" -ge 1000000 ]; then
+                recache_label="$((pc_recache / 1000000)).$(( (pc_recache % 1000000) / 100000 ))M"
+            else
+                recache_label="$((pc_recache / 1000))K"
+            fi
+        fi
+        if [ "$cold_in" -le 0 ]; then
+            # 期限を過ぎていれば、warm が更新される前でも冷えた扱いにする
+            line2+=" ${RED}${BOLD}❄cold${RESET}"
+        elif [ "$cold_in" -le 60 ]; then
+            line2+=" ${YELLOW}${BOLD}あと${cold_in}sで冷却${recache_label:+（${recache_label}書き直し）}${RESET}"
         else
-            line2+=" ${DIM}$(_format_relative_reset "$pc_expires")${RESET}"
+            line2+=" ${DIM}$(_format_relative_reset "$pc_expires")${recache_label:+（冷えたら${recache_label}）}${RESET}"
         fi
     else
         line2+=" ${RED}${BOLD}❄cold${RESET}"

@@ -123,7 +123,18 @@ During slide planning, choose the representation that best supports the claim:
 
 Record a compact visual plan with slide number, representation, purpose, asset source or capture conditions, and status (available / to create / missing). Keep it in the outline or deck README. Inspect existing project assets first. When evidence is missing, finish independent diagrams and copy, then request only the material needed for the claim; do not invent an interface, screenshot, output, or measurement.
 
-For an observed UI change, prefer comparable before/after captures and record the version, operation, and session conditions. A documentation screenshot supports the documented rule, not proof that the user reproduced it. Clearly distinguish real captures, schematic diagrams, and measured results. Do not draw rising performance curves without measured data. Use no minimum number of images per deck.
+For an observed UI change, prefer comparable before/after captures and record the version, operation, and session conditions. A documentation screenshot supports the documented rule, not proof that the user reproduced it. Clearly distinguish real captures, schematic diagrams, and measured results. Do not draw rising performance curves without measured data.
+
+### Visual pass
+
+Do not impose an image quota, but after the copy is drafted, review every content slide that is still text only and ask which non-text element could carry or prove its claim:
+
+1. **Real artifact first:** the presenter's own repository, terminal output, settings file, issue, or documentation page whose exact appearance or wording is evidence. Prefer it over a rebuilt mock.
+2. **Chart from real data:** counts, trends, or shares that the presenter can recompute from a source such as git history. One highlighted series, values labelled on the bars.
+3. **Editable diagram:** a relationship, boundary, or mechanism, such as how a link points to its target or how parts connect.
+4. **Concept icons:** three to five parallel items, steps, or roles whose labels each map to one icon.
+
+Keep a slide text only when it is a premise, a question, a synthesis, or a tension beat where a visual would add no relationship or evidence. In a presented deck, most content slides between the presenter introduction and L12 should end up with one of the four elements above. Record the result of the pass in the visual plan.
 
 - Use diagrams only when relationships, sequence, boundaries, or tradeoffs are clearer visually.
 - Prefer flat rectangles, wedge arrows, straight connectors, lanes, and one highlighted exception.
@@ -152,6 +163,7 @@ Use a mark only when it lets the audience recognize an item before reading its l
 - **One family, one size, one color rule:** use one icon family for the whole deck, such as Lucide (ISC). On one slide, give every mark in the same role the same displayed size, usually 20-36 px, and align it with its label. Draw concept icons in the profile's primary blue on light surfaces and in White on primary-blue or dark fills; keep logos in their own brand colors.
 - **Density:** keep to about five or six marks per slide. Do not add icons to every bullet of a long list, to dense tables, or to slide titles.
 - **Slides without marks:** keep L01, L03, L12, L14, L17, and L18 free of concept icons and third-party logos.
+- **How to obtain marks:** fetch concept icons with `scripts/fetch-icons.sh <assets-dir> <name>...`, which downloads the current `lucide-static` package, recolors the stroke to Primary Blue (or White with `ICON_COLOR=#FFFFFF`), and copies only the named icons into `<assets-dir>/icons`. Export product logos with `node scripts/export-brand-marks.mjs <assets-dir> <id>...`, which writes the archify catalogue entry unchanged into `<assets-dir>/logos` and prints its provenance. Record the Lucide version and each logo's provenance in the deck README. Delete fetched icons the deck does not use.
 - **Sources and integrity:** prefer assets already in the project, then a vetted local catalogue that records provenance, such as the brand-mark catalogue bundled with the archify skill, then the owner's official media kit. Do not recolor, crop, stretch, outline, or redraw a logo, and follow the owner's brand guidelines. When no licensed source is available, omit the mark instead of drawing an imitation. Use SVG directly; when only a raster source exists, use one of at least four times the displayed size. Give every mark alt text, and record logo and icon sources in the speaker notes or the deck README.
 - **Organization logos:** add an organization's own logo only when the user supplies it with its brand rules for the deck, and never pair it with third-party logos, which identify tools only.
 
@@ -164,11 +176,14 @@ Use a mark only when it lets the audience recognize an item before reading its l
 - Add the source in speaker notes and, when audience-relevant, a small visible source line.
 - Prefer one decisive metric, comparison, or inflection per slide. Move full KPI tables to the appendix unless the audience must inspect the table to decide.
 - Distinguish observation, interpretation, and causal claim. Use cautious language when the evidence shows correlation or timing but not causality.
+- Build charts from real data in the theme's `.bars` component (horizontal comparison) or as an inline SVG generated from the data (time series). Label values directly on the marks, mute the context bars in Primary Soft, and record the query or command that produced the numbers in the speaker notes. Recompute the numbers just before the talk and keep the as-of date in the source line.
 
 ## Screenshots and reference artifacts
 
 - Never shrink a full schedule, spreadsheet, chat thread, code editor, architecture canvas, or web screen and expect the audience to read it.
 - Crop to the decisive region, enlarge it, and add one annotation that explains what to notice.
+- Capture web pages in a logged-out browser at deviceScaleFactor 2. When the decisive region is a list or table inside a wide page, narrow the viewport (about 760 px) so the page reflows and the text becomes large relative to the crop; then crop the rows that carry the claim. At its displayed size on the slide, body text in the capture should read at about 18 px or larger; if it does not, crop fewer rows or columns instead of shrinking.
+- Reuse captures the presenter already published, such as screenshots attached to their own issue or pull request, before staging a new capture. Record where they came from.
 - Preserve the source meaning when cropping or annotating. Keep the original capture separately and record the URL or supplied file, capture date, and relevant version or conditions in notes or the deck README. Keep annotation text separate from the source image so it remains editable.
 - When both overview and detail matter, use an overview slide followed by a zoom slide or use one overview thumbnail plus one readable crop.
 - Rebuild small tables and simple flows with Markdown tables or theme components. Use a raw screenshot only when authenticity is evidence.

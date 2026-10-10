@@ -100,6 +100,8 @@ Place N01 first on the slide, before the title:
 
 - Build simple diagrams from the components above. For anything else, write an inline SVG in the Markdown with the token colors from `design-system.md`, `Zen Maru Gothic` for labels, `Noto Sans JP` for text, and at least 22 px type. Draw connectors before nodes so that lines stay behind objects.
 - Give every image and inline SVG alt text, with `alt` or `aria-label`. Use SVG for icons and logos directly; rasterize only when a source is raster-only.
+- Mark up marks and captures with the theme classes instead of inline styles: `<img class="ico" src="assets/icons/<name>.svg" alt="…">` before a label (30 px), `<img class="logo" src="assets/logos/<id>.svg" alt="<製品名>のロゴ">` next to the product name (26 px), `<img class="ico-lg" …>` at the top of a `.cols` column (56 px), and `<img class="shot" src="assets/<capture>.png" alt="…">` for a cropped screenshot (full width, at most 360 px high; override `max-height` inline only when the layout needs it).
+- Code blocks and inline code in tables render at 15 pt (20 px) to meet the body floor. Keep code excerpts to about five lines; put the rest in the speaker notes.
 - Local images load because the build allows local files.
 
 ## Build and QA

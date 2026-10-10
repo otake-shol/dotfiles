@@ -238,6 +238,7 @@ Claudeは`/visual`、Codexは`$otake-visual`から同じJSON briefとCLIを使�
 Claudeは`/create-story-slides`、Codexは`$create-story-slides`から使う。
 提案・計画・振り返り・事例の型、自己紹介スライドの要否、L01〜L18のレイアウトを決める。
 配色は紺・青・オレンジの専用テーマで、OVSの`/slides`とは使い分ける。
+LTを素早く作るときは`lt-deck`（Claude `/lt-deck`、Codex `$lt-deck`）が段取りを持つ。材料集め→`scripts/new-lt.sh`で雛形→`create-story-slides`で作成→検査→共有用PDFの順に進め、自己紹介は非公開の`self-intro.md`から差し込む。
 
 ```bash
 ~/.agents/skills/create-story-slides/scripts/build.sh slide.md out/   # 描画検査→PDF→発表メモ

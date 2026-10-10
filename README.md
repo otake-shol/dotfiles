@@ -80,6 +80,10 @@ make runtimes-install      # Java/Node/Python/Terraform が必要になった時
 
 Claudeの個人設定は `~/.config/dotfiles-local/claude/` に保存する（`XDG_CONFIG_HOME`指定時はその配下）。`make setup-claude-local` でプロフィールと個人向けの記録スキルを既存内容のまま移し、`stow/claude/.claude/profile.local.md` と `skills/fact` にGit管理外のsymlinkを作成する。プロフィールを `CLAUDE.md` から参照し、スキルの利用方法も維持する。新PCでは外部の非公開設定を復元して `make setup-claude-local install-claude setup-privacy-hook` を実行する。移行元と移行先の両方にファイルがある場合は上書きせず停止する。
 
+## 業務用テンプレート
+
+[プロダクト着任時のキャッチアップキット](templates/product-onboarding/README.md)に、アカウント入力欄、MCP・コネクター接続台帳、情報の関係表、初回調査プロンプトを用意している。勤務先で許可された非公開の作業領域へコピーして利用する。
+
 ## プロジェクト管理ツール
 
 [プロジェクト管理の入口](docs/project-management/README.md)に、既存スキル・ツールの用途、リポジトリ台帳、計画からスライドまでの流れをまとめている。

@@ -154,7 +154,7 @@ graph TB
 | **git** | Git設定（28エイリアス・delta・git-secrets 8パターン） | `.gitconfig`, `.gitignore_global`, `.commit-template.txt`, `.editorconfig` |
 | **claude** | Claude Code（4 hookスクリプト・10コマンド・権限制御） | `.claude/settings.json`, `hooks/`, `commands/` |
 | **codex** | Codex CLI（config・AGENTS・hook・MCP・技術ブログ執筆・レビュースキル） | `.codex/config.toml`, `.codex/AGENTS.md`, `.codex/hooks/`, `.agents/skills/{technical-blog-writing,tech-review,article-review}/` |
-| **design** | OVS図解・チャート・媒体別画像・アプリデザイン・ELI5視覚説明・物語型スライド | `.config/otake/visual-system/`, `.local/bin/ovs`, `.agents/skills/{otake-visual,exam-app-design-system,eli5,create-story-slides}/` |
+| **design** | OVS図解・チャート・媒体別画像・アプリデザイン・ELI5視覚説明・物語型スライド | `.config/otake/visual-system/`, `.local/bin/ovs`, `.agents/skills/{otake-visual,exam-app-design-system,eli5,create-story-slides,lt-deck}/` |
 | **ghostty** | GPUターミナル（TokyoNight・透過80%・JetBrains Mono） | `.config/ghostty/config` |
 | **cmux** | ワークスペース管理（5プリセット・色分け） | `.config/cmux/cmux.json` |
 | **nvim** | 軽量エディタ（プラグインなし・git commit用） | `.config/nvim/init.lua` |

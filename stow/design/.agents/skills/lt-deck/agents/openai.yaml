@@ -1,0 +1,4 @@
+interface:
+  display_name: "LT Deck"
+  short_description: "ネタからLTスライドを素早く作り、検査して共有まで進める"
+  default_prompt: "$lt-deck を使って、このネタで10分のLTスライドを作ってください。"

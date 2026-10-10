@@ -16,6 +16,11 @@ Read all four core references before planning a deck:
 - `references/layout-catalog.md`: map every slide to one of the supported layout archetypes.
 - `references/reference-derived-patterns.md`: apply the reusable storytelling patterns and reject the common failure modes.
 
+Before choosing the composition, also read the shared
+[design intent and user burden guide](../otake-visual/references/design-intent.md).
+Record the audience's task, information priority, and composition rationale in the outline's
+production notes. Apply its final review to the rendered deck; preserve the selected visual profile.
+
 Also read `references/navigation-components.md` when the story spans three or more stable phases, the user requests persistent current-position context, or a reference deck uses a repeated phase navigator. It defines cross-slide components separately from primary layout IDs.
 
 Read `references/cover-templates.md` before planning or authoring the cover; it defines the Standard and Event cover templates.

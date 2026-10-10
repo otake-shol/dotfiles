@@ -9,6 +9,11 @@ Use the Standard profile in [create-story-slides](../create-story-slides/referen
 
 Use the OVS CLI as the only rendering path. Edit JSON briefs; never hand-edit generated SVG.
 
+Before selecting a composition, read [design intent and user burden](references/design-intent.md).
+Record the audience's task, information priority, and the reason for the chosen form in the
+existing planning notes; do not add unsupported fields to the JSON brief. Apply its final
+review to the rendered output alongside the checks below.
+
 For Markdown/Marp deck creation or slide layout work, first read
 [the shared slide guide](references/slides.md). It owns deck structure, theme
 resolution, export selection, and visual review for both Claude `/slides` and

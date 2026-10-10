@@ -12,7 +12,7 @@
       <rect width="250" height="282" rx="4" fill="{{color.coralWash}}" stroke="{{color.rule}}" stroke-width="{{stroke.rule}}"/>
       <circle cx="34" cy="34" r="12" fill="{{color.coral}}"/><text data-slot="label-1" x="58" y="41" fill="{{color.ink}}" font-family="{{font.heading}}" font-size="{{type.body}}" font-weight="700">Risk</text>
       <text data-slot="body-1" x="24" y="104" fill="{{color.ink}}" font-size="{{type.body}}" font-weight="700">納期の遅延可能性</text>
-      <text x="24" y="150" fill="{{color.inkSub}}" font-size="{{type.label}}">影響と発生確率を確認</text>
+      <text x="24" y="150" fill="{{color.primaryDark}}" font-size="{{type.label}}">影響と発生確率を確認</text>
       <rect x="24" y="218" width="202" height="38" rx="12" fill="{{color.surface}}" stroke="{{color.rule}}" stroke-width="{{stroke.hairline}}"/>
       <text data-slot="owner-1" x="125" y="243" text-anchor="middle" fill="{{color.ink}}" font-size="{{type.caption}}" font-weight="700">Owner: PM</text>
     </g>
@@ -21,7 +21,7 @@
       <rect width="250" height="282" rx="4" fill="{{color.sunken}}" stroke="{{color.rule}}" stroke-width="{{stroke.rule}}"/>
       <circle cx="34" cy="34" r="12" fill="{{color.primaryWash}}"/><text data-slot="label-2" x="58" y="41" fill="{{color.ink}}" font-family="{{font.heading}}" font-size="{{type.body}}" font-weight="700">Assumption</text>
       <text data-slot="body-2" x="24" y="104" fill="{{color.ink}}" font-size="{{type.body}}" font-weight="700">既存基盤を再利用</text>
-      <text x="24" y="150" fill="{{color.inkSub}}" font-size="{{type.label}}">検証日を決めて仮説化</text>
+      <text x="24" y="150" fill="{{color.primaryDark}}" font-size="{{type.label}}">検証日を決めて仮説化</text>
       <rect x="24" y="218" width="202" height="38" rx="12" fill="{{color.surface}}" stroke="{{color.rule}}" stroke-width="{{stroke.hairline}}"/>
       <text data-slot="owner-2" x="125" y="243" text-anchor="middle" fill="{{color.ink}}" font-size="{{type.caption}}" font-weight="700">確認: 8/05</text>
     </g>
@@ -30,7 +30,7 @@
       <rect width="250" height="282" rx="4" fill="{{color.sunken}}" stroke="{{color.rule}}" stroke-width="{{stroke.rule}}"/>
       <circle cx="34" cy="34" r="12" fill="{{color.primaryDark}}"/><text data-slot="label-3" x="58" y="41" fill="{{color.ink}}" font-family="{{font.heading}}" font-size="{{type.body}}" font-weight="700">Issue</text>
       <text data-slot="body-3" x="24" y="104" fill="{{color.ink}}" font-size="{{type.body}}" font-weight="700">仕様が一部未確定</text>
-      <text x="24" y="150" fill="{{color.inkSub}}" font-size="{{type.label}}">解消条件と担当を明記</text>
+      <text x="24" y="150" fill="{{color.primaryDark}}" font-size="{{type.label}}">解消条件と担当を明記</text>
       <rect x="24" y="218" width="202" height="38" rx="12" fill="{{color.surface}}" stroke="{{color.rule}}" stroke-width="{{stroke.hairline}}"/>
       <text data-slot="owner-3" x="125" y="243" text-anchor="middle" fill="{{color.ink}}" font-size="{{type.caption}}" font-weight="700">Owner: Product</text>
     </g>
@@ -39,7 +39,7 @@
       <rect width="250" height="282" rx="4" fill="{{color.sunken}}" stroke="{{color.rule}}" stroke-width="{{stroke.rule}}"/>
       <circle cx="34" cy="34" r="12" fill="{{color.primary}}"/><text data-slot="label-4" x="58" y="41" fill="{{color.ink}}" font-family="{{font.heading}}" font-size="{{type.body}}" font-weight="700">Dependency</text>
       <text data-slot="body-4" x="24" y="104" fill="{{color.ink}}" font-size="{{type.body}}" font-weight="700">外部APIの公開待ち</text>
-      <text x="24" y="150" fill="{{color.inkSub}}" font-size="{{type.label}}">前後関係と代替案を確認</text>
+      <text x="24" y="150" fill="{{color.primaryDark}}" font-size="{{type.label}}">前後関係と代替案を確認</text>
       <rect x="24" y="218" width="202" height="38" rx="12" fill="{{color.surface}}" stroke="{{color.rule}}" stroke-width="{{stroke.hairline}}"/>
       <text data-slot="owner-4" x="125" y="243" text-anchor="middle" fill="{{color.ink}}" font-size="{{type.caption}}" font-weight="700">確認: 8/12</text>
     </g>

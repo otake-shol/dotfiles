@@ -15,7 +15,7 @@
       <rect x="24" y="22" width="94" height="32" rx="16" fill="#2C63B4"/>
       <text data-slot="period-1" x="71" y="44" text-anchor="middle" fill="#FFFFFF" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="14px" font-weight="700">NOW</text>
       <text data-slot="label-1" x="24" y="104" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="24px" font-weight="700">課題を絞る</text>
-      <text data-slot="body-1" x="24" y="146" fill="#65717E" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">仮説と成功条件を定義</text>
+      <text data-slot="body-1" x="24" y="146" fill="#123858" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">仮説と成功条件を定義</text>
       <circle cx="42" cy="208" r="9" fill="#2C63B4"/><text x="62" y="215" fill="#17202A" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="16px">検証可能な状態</text>
       <circle cx="42" cy="246" r="9" fill="#2C63B4"/><text x="62" y="253" fill="#17202A" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="16px">最優先の成果</text>
     </g>
@@ -25,7 +25,7 @@
       <rect x="24" y="22" width="94" height="32" rx="16" fill="#DCE8F6"/>
       <text data-slot="period-2" x="71" y="44" text-anchor="middle" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="14px" font-weight="700">NEXT</text>
       <text data-slot="label-2" x="24" y="104" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="24px" font-weight="700">価値を届ける</text>
-      <text data-slot="body-2" x="24" y="146" fill="#65717E" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">実装・検証・改善</text>
+      <text data-slot="body-2" x="24" y="146" fill="#123858" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">実装・検証・改善</text>
       <circle cx="42" cy="208" r="9" fill="#DCE8F6"/><text x="62" y="215" fill="#17202A" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="16px">利用者へ公開</text>
       <circle cx="42" cy="246" r="9" fill="#DCE8F6"/><text x="62" y="253" fill="#17202A" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="16px">学習を反映</text>
     </g>
@@ -35,7 +35,7 @@
       <rect x="24" y="22" width="94" height="32" rx="16" fill="#2C63B4"/>
       <text data-slot="period-3" x="71" y="44" text-anchor="middle" fill="#FFFFFF" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="14px" font-weight="700">LATER</text>
       <text data-slot="label-3" x="24" y="104" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="24px" font-weight="700">仕組みにする</text>
-      <text data-slot="body-3" x="24" y="146" fill="#65717E" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">展開と運用を標準化</text>
+      <text data-slot="body-3" x="24" y="146" fill="#123858" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">展開と運用を標準化</text>
       <circle cx="42" cy="208" r="9" fill="#2C63B4"/><text x="62" y="215" fill="#17202A" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="16px">適用範囲を拡大</text>
       <circle cx="42" cy="246" r="9" fill="#2C63B4"/><text x="62" y="253" fill="#17202A" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="16px">継続運用へ移行</text>
     </g>

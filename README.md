@@ -185,6 +185,8 @@ make doctor-plan       # 修復候補を表示（変更なし）
 make lint              # ShellCheck
 make test-bootstrap    # bootstrapのStow競合安全性テスト
 make design-check      # ビジュアルシステム生成物・SVG構文チェック
+make design-test       # OVSテストのみ（DESIGN_TESTSで対象を指定可能）
+make design-mutation   # 検査器の意図的な改変を回帰テストで検出
 make clean             # バックアップファイル・.DS_Store削除
 make packages          # パッケージ一覧表示
 make stats             # Stow/Brewfile件数を表示
@@ -199,6 +201,10 @@ make macos-defaults    # macOS defaults を再適用
 ```
 
 macOS defaults は `bootstrap.sh` の初回実行時に `~/.dotfiles-macos-defaults-applied` を目印として一度だけ自動適用される。後から再適用したい場合は `make macos-defaults`。実装は `bin/apply-macos-defaults`。
+
+編集中は変更箇所に絞った検証を使い、コミット前は `make validate` を実行する。
+OVSの例は [検証手順](stow/design/.config/otake/visual-system/README.md#検証)を参照。
+成功後に変更や未解決の懸念がなければ同じ検証を繰り返さず、結果とスキップの有無を報告する。
 
 `make runtimes-install` は `stow/asdf/.tool-versions` を読み、未追加の asdf plugin を追加してから固定版を導入する。OVS等の基盤用NodeはBrewfileから自動導入し、プロジェクト用のJava/Node/Python/Terraform固定版は時間とネットワーク依存が大きいため、必要な時だけ`make runtimes-install`で追加する。
 

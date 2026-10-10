@@ -89,11 +89,30 @@ cp templates/brief.json topic.brief.json
 ```bash
 ovs render topic.brief.json --out assets
 ovs lint assets
+ovs contrast assets
 ovs preview assets --out assets/gallery.html
 ```
 
 同名ファイルがある場合は安全のため停止する。内容を確認して更新する場合だけ
 `--force`を付ける。シンボリックリンクは`--force`でも上書きしない。
+
+## 図解のコントラスト検査
+
+`ovs contrast <SVG|DIR>` はChromeでSVGを描画し、文字の字形がある画素の背景と文字色を比較する。
+継承色、入れ子の変形、`tspan`、複数の背景面を扱い、問題の文字・座標・比率を報告する。
+`--json` では背景色・文字色・判定基準も取得できる。入力と生成物は変更しない。
+
+通常文字は4.5:1、大きな文字は3:1を基準とする。
+大きさは出力寸法と変形を反映し、24px以上または太字18.67px以上で判定する。
+根拠は[WCAGのContrast Minimum](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)。
+アンチエイリアスの縁を除いた字形内部で最も低い比率を採用する。
+
+透明な背景、画面外の文字、文字の輪郭線などで測定できない場合も終了コード1を返す。
+後から描かれた図形が文字を覆う場合も、図形と字形マスクの重なりとして失敗させる。
+背景を白と仮定して合格にしない。検査対象は安全性検証を通過したOVSネイティブSVGだけ。
+Mermaid SVG、画像内の文字、文字同士の重なり、フォント代替の妥当性は検査対象外。
+結果は実行環境のフォントに依存し、目視確認を置き換えるものではない。
+Chrome系ブラウザが必須。`PUPPETEER_EXECUTABLE_PATH` でも実行ファイルを指定できる。
 
 ## データからチャートを作る
 
@@ -256,6 +275,7 @@ ovs document <file.md>         MermaidをHTML・Marpで共有
 ovs export <file.svg>          媒体別サイズへ展開
 ovs preview [dir]              HTMLギャラリーを生成
 ovs lint <svg|dir>             安全性・構文・altを検証
+ovs contrast <svg|dir>         文字と背景のコントラストを実測
 ovs list <kind>                パーツ等の一覧を表示
 ovs deck <outline|lint|check|verify|rules> <slide.md>   Marpスライドを検査
 ```
@@ -289,14 +309,33 @@ schemas/brief.schema.json
 ## 検証
 
 ```bash
+# visual-systemディレクトリで生成物を更新
 node scripts/build.mjs
 node scripts/build.mjs --check
-node --test test/*.test.mjs
+
+# 以下はdotfilesリポジトリルートで実行
+make design-test DESIGN_TESTS=stow/design/.config/otake/visual-system/test/contrast.test.mjs
+make design-mutation
 make design-check
+make validate
 ```
+
+編集中は`make design-test`でテストだけを実行し、`DESIGN_TESTS`で変更に対応するファイルへ絞る。
+この短い検証では生成物の同期や18テンプレートの実測まで完了したとは扱わない。
+コミット前は必ず`make validate`を実行する。全体検証は`DESIGN_TESTS`を指定しても対象を縮小しない。
+成功後に変更・失敗・未解決の懸念がなければ再実行せず、未実行やスキップを成功と区別して報告する。
 
 `make design-check`はStandardとの配色・フォント一致、トークン同期、JSON briefからの18パーツ生成、10チャート、
 データ駆動ガント、SVG XML、安全属性、320px描画、Marpテーマを確認する。
+さらに`make design-contrast`を実行し、18テンプレートの文字と背景を実測する。
+Chromeがなければ検証を失敗させる。全10チャートとデータ駆動ガントも描画テストの対象。
+
+`make design-mutation`は一時ディレクトリの検査器に、コントラスト判定の無効化、
+文字サイズによる基準の逆転、文字を覆う図形の見逃しを1つずつ加える。
+改変前の回帰テストが成功し、3種類の改変それぞれで既存テストのアサーションが失敗することを確認する。
+構文エラー・Chrome起動失敗・タイムアウトを検出成功と扱わず、改変を見逃した場合も失敗する。
+元ファイルは変更しない。検査器やそのテストの編集時に実行し、`make design-check`経由の全体検証にも含める。
+対象はこの3種類の回帰であり、検査器全体のミューテーションスコアではない。
 
 公開前の受け入れ基準:
 

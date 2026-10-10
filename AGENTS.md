@@ -24,6 +24,9 @@ make doctor      # stow 同期＋壊れリンク検出
 make validate    # lint＋README整合＋構文＋絶対パス/local-state混入検査
 ```
 
+編集中は変更に対応する最小の検証を使う。OVSでは `make design-test DESIGN_TESTS=stow/design/.config/otake/visual-system/test/contrast.test.mjs` のように対象を絞れる。検査器の判定やテストを変更した場合は `make design-mutation` も実行する。
+コミット前は対象を絞らず `make validate` を通す。必須チェックが成功した後は新しい変更・失敗・未解決の懸念がない限り再実行しない。スキップは成功と区別して報告する。
+
 ## 規約
 
 - **シェルスクリプト**: `#!/bin/bash` + `set -euo pipefail`、`local` 宣言、ShellCheck 準拠

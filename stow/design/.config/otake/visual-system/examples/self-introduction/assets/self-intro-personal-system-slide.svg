@@ -23,7 +23,7 @@
     <circle cx="116" cy="316" r="22" fill="#2C63B4"/>
     <text x="116" y="323" text-anchor="middle" fill="#FFFFFF" font-family="'Plus Jakarta Sans', 'Noto Sans JP', sans-serif" font-size="20px" font-weight="700">1</text>
     <text data-slot="label-1" x="154" y="323" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="24px" font-weight="700">プロダクトを作る</text>
-    <text data-slot="body-1" x="104" y="376" fill="#65717E" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">学習アプリを公開</text>
+    <text data-slot="body-1" x="104" y="376" fill="#123858" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">学習アプリを公開</text>
   </g>
 
   <g data-slot="node-2">
@@ -32,7 +32,7 @@
     <circle cx="500" cy="316" r="22" fill="#DCE8F6"/>
     <text x="500" y="323" text-anchor="middle" fill="#17202A" font-family="'Plus Jakarta Sans', 'Noto Sans JP', sans-serif" font-size="20px" font-weight="700">2</text>
     <text data-slot="label-2" x="538" y="323" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="24px" font-weight="700">価値を伝える</text>
-    <text data-slot="body-2" x="488" y="376" fill="#65717E" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">ポートフォリオ・記事</text>
+    <text data-slot="body-2" x="488" y="376" fill="#123858" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">ポートフォリオ・記事</text>
   </g>
 
   <g data-slot="node-3">
@@ -41,7 +41,7 @@
     <circle cx="884" cy="316" r="22" fill="#DCE8F6"/>
     <text x="884" y="323" text-anchor="middle" fill="#17202A" font-family="'Plus Jakarta Sans', 'Noto Sans JP', sans-serif" font-size="20px" font-weight="700">3</text>
     <text data-slot="label-3" x="922" y="323" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="24px" font-weight="700">仕組みへ残す</text>
-    <text data-slot="body-3" x="872" y="376" fill="#65717E" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">dotfiles・OVS・自動検証</text>
+    <text data-slot="body-3" x="872" y="376" fill="#123858" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">dotfiles・OVS・自動検証</text>
   </g>
 
   <text data-slot="source" x="64" y="620" fill="#65717E" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="14px">筆者作成</text>

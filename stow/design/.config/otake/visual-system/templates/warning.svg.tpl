@@ -13,7 +13,7 @@
     <path d="M92 44 145 142H39Z" fill="{{color.primaryWash}}" stroke="{{color.ink}}" stroke-width="{{stroke.rule}}"/>
     <path d="M92 78v30M92 124h.1" fill="none" stroke="{{color.ink}}" stroke-width="7" stroke-linecap="round"/>
     <text data-slot="message" x="184" y="90" fill="{{color.ink}}" font-family="{{font.heading}}" font-size="{{type.heading}}" font-weight="700">データなしでチャートを作らない</text>
-    <text data-slot="body-1" x="184" y="136" fill="{{color.inkSub}}" font-family="{{font.body}}" font-size="{{type.body}}">装飾用の疑似データは、読者の判断を誤らせる。</text>
+    <text data-slot="body-1" x="184" y="136" fill="{{color.primaryDark}}" font-family="{{font.body}}" font-size="{{type.body}}">装飾用の疑似データは、読者の判断を誤らせる。</text>
     <rect x="184" y="174" width="130" height="38" rx="19" fill="{{color.ink}}"/>
     <text x="249" y="200" text-anchor="middle" fill="{{color.surface}}" font-family="{{font.body}}" font-size="{{type.label}}" font-weight="700">AVOID</text>
     <text data-slot="action" x="336" y="200" fill="{{color.ink}}" font-family="{{font.body}}" font-size="{{type.body}}" font-weight="700">出典を確認するまで公開を保留する</text>

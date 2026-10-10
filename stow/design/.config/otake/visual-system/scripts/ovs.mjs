@@ -37,6 +37,7 @@ import {
   validateSvg,
 } from "./core.mjs";
 import { browserExecutable } from "./browser.mjs";
+import { checkSvgContrasts, contrastIssues } from "./svg-contrast.mjs";
 import { checkDeck, formatRenderIssues, renderRules } from "./deck-check.mjs";
 import {
   deckModes,
@@ -187,6 +188,7 @@ function help() {
   ovs export <file.svg> --target ogp,square [--out DIR] [--force]
   ovs preview [DIR] [--out gallery.html] [--force]
   ovs lint <SVG|DIR>
+  ovs contrast <SVG|DIR> [--json]   SVGの文字と背景をChromeで実測
   ovs list [parts|charts|pm|recipes|targets|icons]
 
 スライド（Marp）の検査:
@@ -992,6 +994,24 @@ function lint(values) {
   console.log(`✓ ${files.length} SVG: 構文・安全性・altを確認`);
 }
 
+async function contrast(values) {
+  const { positional, options } = parseOptions(values);
+  if (!positional[0]) throw new Error("SVGまたはディレクトリを指定してください");
+  const files = findSvgFiles(resolve(positional[0]));
+  if (!files.length) throw new Error("SVGが見つかりません");
+  const reports = await checkSvgContrasts(files.map((name) => ({
+    name, svg: readFileSync(name, "utf8"),
+  })));
+  const issues = contrastIssues(reports);
+  if (options.json) {
+    console.log(JSON.stringify(reports, null, 2));
+  } else {
+    for (const issue of issues) console.error(issue);
+    console.log(`${issues.length ? "✗" : "✓"} ${files.length} SVG / ${reports.reduce((sum, r) => sum + r.checked, 0)}文字列: コントラスト問題 ${issues.length}件`);
+  }
+  if (issues.length) process.exitCode = 1;
+}
+
 function htmlEscape(value) {
   return escapeXml(value);
 }
@@ -1795,6 +1815,8 @@ try {
     exportSvg(args);
   } else if (command === "lint") {
     lint(args);
+  } else if (command === "contrast") {
+    await contrast(args);
   } else if (command === "preview") {
     preview(args);
   } else if (command === "list") {

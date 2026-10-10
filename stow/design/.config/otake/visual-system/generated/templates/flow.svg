@@ -22,7 +22,7 @@
     <circle cx="116" cy="316" r="22" fill="#2C63B4"/>
     <text x="116" y="323" text-anchor="middle" fill="#FFFFFF" font-family="'Plus Jakarta Sans', 'Noto Sans JP', sans-serif" font-size="20px" font-weight="700">1</text>
     <text data-slot="label-1" x="154" y="323" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="24px" font-weight="700">入力を揃える</text>
-    <text data-slot="body-1" x="104" y="376" fill="#65717E" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">
+    <text data-slot="body-1" x="104" y="376" fill="#123858" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">
       <tspan x="104" dy="0">事実と前提を分け、</tspan>
       <tspan x="104" dy="34">比較可能な形にする</tspan>
     </text>
@@ -34,7 +34,7 @@
     <circle cx="500" cy="316" r="22" fill="#DCE8F6"/>
     <text x="500" y="323" text-anchor="middle" fill="#17202A" font-family="'Plus Jakarta Sans', 'Noto Sans JP', sans-serif" font-size="20px" font-weight="700">2</text>
     <text data-slot="label-2" x="538" y="323" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="24px" font-weight="700">判断する</text>
-    <text data-slot="body-2" x="488" y="376" fill="#65717E" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">
+    <text data-slot="body-2" x="488" y="376" fill="#123858" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">
       <tspan x="488" dy="0">軸を1つに絞り、</tspan>
       <tspan x="488" dy="34">違いの理由を示す</tspan>
     </text>
@@ -46,7 +46,7 @@
     <circle cx="884" cy="316" r="22" fill="#DCE8F6"/>
     <text x="884" y="323" text-anchor="middle" fill="#17202A" font-family="'Plus Jakarta Sans', 'Noto Sans JP', sans-serif" font-size="20px" font-weight="700">3</text>
     <text data-slot="label-3" x="922" y="323" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="24px" font-weight="700">行動へ変える</text>
-    <text data-slot="body-3" x="872" y="376" fill="#65717E" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">
+    <text data-slot="body-3" x="872" y="376" fill="#123858" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">
       <tspan x="872" dy="0">次に取る行動を、</tspan>
       <tspan x="872" dy="34">具体的に残す</tspan>
     </text>

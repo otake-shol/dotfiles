@@ -14,15 +14,15 @@
     <path d="M286 0V300" stroke="#17202A" stroke-width="1px"/>
     <text x="32" y="52" fill="#2C63B4" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="16px" font-weight="700">TERM</text>
     <text data-slot="term" x="32" y="112" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="36px" font-weight="700">OVS</text>
-    <text data-slot="reading" x="34" y="152" fill="#65717E" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="16px">Otake Visual System</text>
+    <text data-slot="reading" x="34" y="152" fill="#123858" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="16px">Otake Visual System</text>
     <text data-slot="definition" x="330" y="78" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="24px" font-weight="700">意図から一貫した図を生成する個人用の仕組み</text>
     <line x1="330" y1="112" x2="944" y2="112" stroke="#D5DDE6" stroke-width="1px"/>
     <rect x="330" y="146" width="104" height="34" rx="17" fill="#DCE8F6"/>
     <text x="382" y="169" text-anchor="middle" fill="#17202A" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="14px" font-weight="700">含む</text>
-    <text data-slot="includes" x="454" y="170" fill="#65717E" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">brief・SVG・alt・検証</text>
+    <text data-slot="includes" x="454" y="170" fill="#123858" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">brief・SVG・alt・検証</text>
     <rect x="330" y="210" width="104" height="34" rx="17" fill="#2C63B4"/>
-    <text x="382" y="233" text-anchor="middle" fill="#17202A" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="14px" font-weight="700">含まない</text>
-    <text data-slot="excludes" x="454" y="234" fill="#65717E" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">記事本文の代わりになる装飾</text>
+    <text x="382" y="233" text-anchor="middle" fill="#FFFFFF" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="14px" font-weight="700">含まない</text>
+    <text data-slot="excludes" x="454" y="234" fill="#123858" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">記事本文の代わりになる装飾</text>
   </g>
 
   <text data-slot="source" x="64" y="620" fill="#65717E" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="14px">筆者作成</text>

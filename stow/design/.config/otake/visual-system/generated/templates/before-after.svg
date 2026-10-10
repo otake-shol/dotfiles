@@ -16,12 +16,12 @@
     <rect x="28" y="26" width="112" height="36" rx="4" fill="#E86A50"/>
     <text x="84" y="51" text-anchor="middle" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="16px" font-weight="700">BEFORE</text>
     <text data-slot="label-1" x="30" y="112" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="24px" font-weight="700">情報が散らばる</text>
-    <text data-slot="body-1" x="30" y="158" fill="#65717E" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px"><tspan x="30">判断の根拠と制作物が</tspan><tspan x="30" dy="32">別々に管理される</tspan></text>
+    <text data-slot="body-1" x="30" y="158" fill="#123858" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px"><tspan x="30">判断の根拠と制作物が</tspan><tspan x="30" dy="32">別々に管理される</tspan></text>
     <text data-slot="note-1" x="30" y="242" fill="#123858" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="16px" font-weight="700">毎回ゼロから調整</text>
   </g>
 
   <line x1="518" y1="382" x2="678" y2="382" stroke="#17202A" stroke-width="2px" marker-end="url(#arrow)"/>
-  <text data-slot="change-label" x="598" y="356" text-anchor="middle" fill="#65717E" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="16px" font-weight="700">仕組み化</text>
+  <text data-slot="change-label" x="598" y="356" text-anchor="middle" fill="#123858" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="16px" font-weight="700">仕組み化</text>
 
   <g transform="translate(700 242)">
 
@@ -29,7 +29,7 @@
     <rect x="28" y="26" width="100" height="36" rx="4" fill="#DCE8F6"/>
     <text x="78" y="51" text-anchor="middle" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="16px" font-weight="700">AFTER</text>
     <text data-slot="label-2" x="30" y="112" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="24px" font-weight="700">一つのbriefから生成</text>
-    <text data-slot="body-2" x="30" y="158" fill="#65717E" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px"><tspan x="30">判断、図、alt、媒体別画像を</tspan><tspan x="30" dy="32">同じ入力から作る</tspan></text>
+    <text data-slot="body-2" x="30" y="158" fill="#123858" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px"><tspan x="30">判断、図、alt、媒体別画像を</tspan><tspan x="30" dy="32">同じ入力から作る</tspan></text>
     <text data-slot="note-2" x="30" y="242" fill="#123858" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="16px" font-weight="700">再利用できる品質へ</text>
   </g>
 

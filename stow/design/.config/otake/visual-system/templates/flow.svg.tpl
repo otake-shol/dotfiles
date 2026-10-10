@@ -22,7 +22,7 @@
     <circle cx="116" cy="316" r="22" fill="{{color.primary}}"/>
     <text x="116" y="323" text-anchor="middle" fill="{{color.surface}}" font-family="{{font.numeric}}" font-size="{{type.body}}" font-weight="700">1</text>
     <text data-slot="label-1" x="154" y="323" fill="{{color.ink}}" font-family="{{font.heading}}" font-size="{{type.heading}}" font-weight="700">入力を揃える</text>
-    <text data-slot="body-1" x="104" y="376" fill="{{color.inkSub}}" font-family="{{font.body}}" font-size="{{type.body}}">
+    <text data-slot="body-1" x="104" y="376" fill="{{color.primaryDark}}" font-family="{{font.body}}" font-size="{{type.body}}">
       <tspan x="104" dy="0">事実と前提を分け、</tspan>
       <tspan x="104" dy="34">比較可能な形にする</tspan>
     </text>
@@ -34,7 +34,7 @@
     <circle cx="500" cy="316" r="22" fill="{{color.primaryWash}}"/>
     <text x="500" y="323" text-anchor="middle" fill="{{color.ink}}" font-family="{{font.numeric}}" font-size="{{type.body}}" font-weight="700">2</text>
     <text data-slot="label-2" x="538" y="323" fill="{{color.ink}}" font-family="{{font.heading}}" font-size="{{type.heading}}" font-weight="700">判断する</text>
-    <text data-slot="body-2" x="488" y="376" fill="{{color.inkSub}}" font-family="{{font.body}}" font-size="{{type.body}}">
+    <text data-slot="body-2" x="488" y="376" fill="{{color.primaryDark}}" font-family="{{font.body}}" font-size="{{type.body}}">
       <tspan x="488" dy="0">軸を1つに絞り、</tspan>
       <tspan x="488" dy="34">違いの理由を示す</tspan>
     </text>
@@ -46,7 +46,7 @@
     <circle cx="884" cy="316" r="22" fill="{{color.primaryWash}}"/>
     <text x="884" y="323" text-anchor="middle" fill="{{color.ink}}" font-family="{{font.numeric}}" font-size="{{type.body}}" font-weight="700">3</text>
     <text data-slot="label-3" x="922" y="323" fill="{{color.ink}}" font-family="{{font.heading}}" font-size="{{type.heading}}" font-weight="700">行動へ変える</text>
-    <text data-slot="body-3" x="872" y="376" fill="{{color.inkSub}}" font-family="{{font.body}}" font-size="{{type.body}}">
+    <text data-slot="body-3" x="872" y="376" fill="{{color.primaryDark}}" font-family="{{font.body}}" font-size="{{type.body}}">
       <tspan x="872" dy="0">次に取る行動を、</tspan>
       <tspan x="872" dy="34">具体的に残す</tspan>
     </text>

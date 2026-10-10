@@ -15,7 +15,7 @@
       <rect x="24" y="22" width="94" height="32" rx="16" fill="{{color.primary}}"/>
       <text data-slot="period-1" x="71" y="44" text-anchor="middle" fill="{{color.surface}}" font-family="{{font.heading}}" font-size="{{type.caption}}" font-weight="700">NOW</text>
       <text data-slot="label-1" x="24" y="104" fill="{{color.ink}}" font-family="{{font.heading}}" font-size="{{type.heading}}" font-weight="700">課題を絞る</text>
-      <text data-slot="body-1" x="24" y="146" fill="{{color.inkSub}}" font-family="{{font.body}}" font-size="{{type.body}}">仮説と成功条件を定義</text>
+      <text data-slot="body-1" x="24" y="146" fill="{{color.primaryDark}}" font-family="{{font.body}}" font-size="{{type.body}}">仮説と成功条件を定義</text>
       <circle cx="42" cy="208" r="9" fill="{{color.primary}}"/><text x="62" y="215" fill="{{color.ink}}" font-family="{{font.body}}" font-size="{{type.label}}">検証可能な状態</text>
       <circle cx="42" cy="246" r="9" fill="{{color.primary}}"/><text x="62" y="253" fill="{{color.ink}}" font-family="{{font.body}}" font-size="{{type.label}}">最優先の成果</text>
     </g>
@@ -25,7 +25,7 @@
       <rect x="24" y="22" width="94" height="32" rx="16" fill="{{color.primaryWash}}"/>
       <text data-slot="period-2" x="71" y="44" text-anchor="middle" fill="{{color.ink}}" font-family="{{font.heading}}" font-size="{{type.caption}}" font-weight="700">NEXT</text>
       <text data-slot="label-2" x="24" y="104" fill="{{color.ink}}" font-family="{{font.heading}}" font-size="{{type.heading}}" font-weight="700">価値を届ける</text>
-      <text data-slot="body-2" x="24" y="146" fill="{{color.inkSub}}" font-family="{{font.body}}" font-size="{{type.body}}">実装・検証・改善</text>
+      <text data-slot="body-2" x="24" y="146" fill="{{color.primaryDark}}" font-family="{{font.body}}" font-size="{{type.body}}">実装・検証・改善</text>
       <circle cx="42" cy="208" r="9" fill="{{color.primaryWash}}"/><text x="62" y="215" fill="{{color.ink}}" font-family="{{font.body}}" font-size="{{type.label}}">利用者へ公開</text>
       <circle cx="42" cy="246" r="9" fill="{{color.primaryWash}}"/><text x="62" y="253" fill="{{color.ink}}" font-family="{{font.body}}" font-size="{{type.label}}">学習を反映</text>
     </g>
@@ -35,7 +35,7 @@
       <rect x="24" y="22" width="94" height="32" rx="16" fill="{{color.primary}}"/>
       <text data-slot="period-3" x="71" y="44" text-anchor="middle" fill="{{color.surface}}" font-family="{{font.heading}}" font-size="{{type.caption}}" font-weight="700">LATER</text>
       <text data-slot="label-3" x="24" y="104" fill="{{color.ink}}" font-family="{{font.heading}}" font-size="{{type.heading}}" font-weight="700">仕組みにする</text>
-      <text data-slot="body-3" x="24" y="146" fill="{{color.inkSub}}" font-family="{{font.body}}" font-size="{{type.body}}">展開と運用を標準化</text>
+      <text data-slot="body-3" x="24" y="146" fill="{{color.primaryDark}}" font-family="{{font.body}}" font-size="{{type.body}}">展開と運用を標準化</text>
       <circle cx="42" cy="208" r="9" fill="{{color.primary}}"/><text x="62" y="215" fill="{{color.ink}}" font-family="{{font.body}}" font-size="{{type.label}}">適用範囲を拡大</text>
       <circle cx="42" cy="246" r="9" fill="{{color.primary}}"/><text x="62" y="253" fill="{{color.ink}}" font-family="{{font.body}}" font-size="{{type.label}}">継続運用へ移行</text>
     </g>

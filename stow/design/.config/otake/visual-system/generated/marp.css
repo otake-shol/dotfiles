@@ -162,13 +162,57 @@ pre {
   padding: 16px 20px;
   border: 1px solid var(--mist-gray);
   background: var(--white);
-  font-size: 14pt;
+  font-size: 15pt;
   line-height: 1.5;
 }
 
-pre code {
+/* コードも本文の下限（20px＝15pt）を守る。表の中のインラインコードも同じ */
+pre code,
+td code {
   padding: 0;
   background: none;
+  font-size: 1em;
+}
+
+td code {
+  padding: 0 6px;
+  background: var(--pale-blue);
+}
+
+/* ---------- アイコン・ロゴ・実画面 ---------- */
+/* 概念アイコン（Lucide を Primary Blue に着色したSVG）。ラベルの直前に置く */
+img.ico {
+  width: 30px;
+  height: 30px;
+  margin-right: 8px;
+  vertical-align: -6px;
+}
+
+/* 製品ロゴ。必ず製品名と並べる */
+img.logo {
+  width: 26px;
+  height: 26px;
+  margin: 0 6px 0 2px;
+  vertical-align: -5px;
+}
+
+/* 項目の見出しとして大きく置くアイコン（.cols の各列の先頭など） */
+img.ico-lg {
+  display: block;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 16px;
+}
+
+/* 実画面（スクリーンショット）。決定的な部分を切り抜いた画像を左寄せで置く */
+img.shot {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  max-height: 360px;
+  margin: 4px 0 12px;
+  object-fit: contain;
+  object-position: left;
 }
 
 /* ---------- ページの付属情報 ---------- */

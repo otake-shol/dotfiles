@@ -11,7 +11,7 @@
     <rect width="1072" height="336" rx="4" fill="{{color.surface}}" stroke="{{color.rule}}" stroke-width="{{stroke.rule}}"/>
     <rect x="0" y="0" width="1072" height="68" rx="4" fill="{{color.sunken}}"/>
     <path d="M296 0V336M490 0V336M684 0V336M878 0V336M0 68H1072M0 135H1072M0 202H1072M0 269H1072" stroke="{{color.ink}}" stroke-width="{{stroke.hairline}}"/>
-    <text x="26" y="43" fill="{{color.inkSub}}" font-family="{{font.heading}}" font-size="{{type.label}}" font-weight="700">DELIVERABLE</text>
+    <text x="26" y="43" fill="{{color.primaryDark}}" font-family="{{font.heading}}" font-size="{{type.label}}" font-weight="700">DELIVERABLE</text>
     <text data-slot="role-1" x="393" y="43" text-anchor="middle" fill="{{color.ink}}" font-weight="700">PM</text>
     <text data-slot="role-2" x="587" y="43" text-anchor="middle" fill="{{color.ink}}" font-weight="700">Design</text>
     <text data-slot="role-3" x="781" y="43" text-anchor="middle" fill="{{color.ink}}" font-weight="700">Dev</text>
@@ -27,15 +27,15 @@
       <circle cx="975" cy="101" r="22" fill="{{color.primaryWash}}"/><text x="975" y="108" fill="{{color.ink}}">A</text>
       <circle cx="393" cy="168" r="22" fill="{{color.sunken}}"/><text x="393" y="175" fill="{{color.primary}}">C</text>
       <circle cx="587" cy="168" r="22" fill="{{color.primary}}"/><text x="587" y="175" fill="{{color.surface}}">R</text>
-      <circle cx="781" cy="168" r="22" fill="{{color.sunken}}"/><text x="781" y="175" fill="{{color.inkSub}}">I</text>
+      <circle cx="781" cy="168" r="22" fill="{{color.sunken}}"/><text x="781" y="175" fill="{{color.primaryDark}}">I</text>
       <circle cx="975" cy="168" r="22" fill="{{color.primaryWash}}"/><text x="975" y="175" fill="{{color.ink}}">A</text>
       <circle cx="393" cy="235" r="22" fill="{{color.sunken}}"/><text x="393" y="242" fill="{{color.primary}}">C</text>
       <circle cx="587" cy="235" r="22" fill="{{color.sunken}}"/><text x="587" y="242" fill="{{color.primary}}">C</text>
       <circle cx="781" cy="235" r="22" fill="{{color.primary}}"/><text x="781" y="242" fill="{{color.surface}}">R</text>
       <circle cx="975" cy="235" r="22" fill="{{color.primaryWash}}"/><text x="975" y="242" fill="{{color.ink}}">A</text>
       <circle cx="393" cy="302" r="22" fill="{{color.primary}}"/><text x="393" y="309" fill="{{color.surface}}">R</text>
-      <circle cx="587" cy="302" r="22" fill="{{color.sunken}}"/><text x="587" y="309" fill="{{color.inkSub}}">I</text>
-      <circle cx="781" cy="302" r="22" fill="{{color.sunken}}"/><text x="781" y="309" fill="{{color.inkSub}}">I</text>
+      <circle cx="587" cy="302" r="22" fill="{{color.sunken}}"/><text x="587" y="309" fill="{{color.primaryDark}}">I</text>
+      <circle cx="781" cy="302" r="22" fill="{{color.sunken}}"/><text x="781" y="309" fill="{{color.primaryDark}}">I</text>
       <circle cx="975" cy="302" r="22" fill="{{color.primaryWash}}"/><text x="975" y="309" fill="{{color.ink}}">A</text>
     </g>
   </g>

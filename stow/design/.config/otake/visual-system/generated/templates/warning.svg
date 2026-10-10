@@ -13,7 +13,7 @@
     <path d="M92 44 145 142H39Z" fill="#DCE8F6" stroke="#17202A" stroke-width="1px"/>
     <path d="M92 78v30M92 124h.1" fill="none" stroke="#17202A" stroke-width="7" stroke-linecap="round"/>
     <text data-slot="message" x="184" y="90" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="24px" font-weight="700">データなしでチャートを作らない</text>
-    <text data-slot="body-1" x="184" y="136" fill="#65717E" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">装飾用の疑似データは、読者の判断を誤らせる。</text>
+    <text data-slot="body-1" x="184" y="136" fill="#123858" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px">装飾用の疑似データは、読者の判断を誤らせる。</text>
     <rect x="184" y="174" width="130" height="38" rx="19" fill="#17202A"/>
     <text x="249" y="200" text-anchor="middle" fill="#FFFFFF" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="16px" font-weight="700">AVOID</text>
     <text data-slot="action" x="336" y="200" fill="#17202A" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px" font-weight="700">出典を確認するまで公開を保留する</text>

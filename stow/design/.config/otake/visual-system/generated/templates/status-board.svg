@@ -10,28 +10,28 @@
     <g>
 
       <rect width="310" height="132" rx="4" fill="#ECF2F9" stroke="#D5DDE6" stroke-width="1px"/>
-      <text x="24" y="34" fill="#65717E" font-size="14px" font-weight="700">OVERALL</text>
+      <text x="24" y="34" fill="#123858" font-size="14px" font-weight="700">OVERALL</text>
       <text data-slot="overall" x="24" y="82" fill="#123858" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="24px" font-weight="700">ON TRACK</text>
       <text data-slot="health" x="24" y="112" fill="#17202A" font-size="16px">予定どおり</text>
     </g>
     <g transform="translate(334 0)">
 
       <rect width="264" height="132" rx="4" fill="#DCE8F6" stroke="#D5DDE6" stroke-width="1px"/>
-      <text x="24" y="34" fill="#65717E" font-size="14px" font-weight="700">PROGRESS</text>
+      <text x="24" y="34" fill="#123858" font-size="14px" font-weight="700">PROGRESS</text>
       <text data-slot="progress" x="24" y="89" fill="#2C63B4" font-family="'Plus Jakarta Sans', 'Noto Sans JP', sans-serif" font-size="48px" font-weight="700">68%</text>
-      <rect x="112" y="66" width="124" height="20" rx="10" fill="#FFFFFF" stroke="#D5DDE6" stroke-width="1px"/>
-      <rect x="112" y="66" width="84" height="20" rx="10" fill="#2C63B4"/>
+      <rect x="24" y="105" width="212" height="8" rx="4" fill="#FFFFFF" stroke="#D5DDE6" stroke-width="1px"/>
+      <rect x="24" y="105" width="144" height="8" rx="4" fill="#2C63B4"/>
     </g>
     <g transform="translate(622 0)">
 
       <rect width="450" height="132" rx="4" fill="#FFFFFF" stroke="#D5DDE6" stroke-width="1px"/>
-      <text x="24" y="34" fill="#65717E" font-size="14px" font-weight="700">MILESTONES</text>
+      <text x="24" y="34" fill="#123858" font-size="14px" font-weight="700">MILESTONES</text>
       <polygon points="34,58 44,68 34,78 24,68" fill="#DCE8F6" stroke="#17202A" stroke-width="1px"/>
       <text data-slot="milestone-1" x="58" y="75" fill="#17202A" font-size="16px" font-weight="700">デザイン確定</text>
-      <text data-slot="date-1" x="420" y="75" text-anchor="end" fill="#65717E" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="14px">8/07</text>
+      <text data-slot="date-1" x="420" y="75" text-anchor="end" fill="#123858" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="14px">8/07</text>
       <polygon points="34,96 44,106 34,116 24,106" fill="#2C63B4" stroke="#17202A" stroke-width="1px"/>
       <text data-slot="milestone-2" x="58" y="113" fill="#17202A" font-size="16px" font-weight="700">β版リリース</text>
-      <text data-slot="date-2" x="420" y="113" text-anchor="end" fill="#65717E" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="14px">8/21</text>
+      <text data-slot="date-2" x="420" y="113" text-anchor="end" fill="#123858" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="14px">8/21</text>
     </g>
     <g transform="translate(0 166)">
 
@@ -39,7 +39,7 @@
       <rect x="24" y="22" width="96" height="30" rx="15" fill="#E86A50"/>
       <text x="72" y="43" text-anchor="middle" fill="#17202A" font-size="14px" font-weight="700">BLOCKER</text>
       <text data-slot="blocker" x="24" y="98" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px" font-weight="700">外部APIの仕様確定待ち</text>
-      <text x="24" y="132" fill="#65717E" font-size="16px">依頼: 8/12までに判断</text>
+      <text x="24" y="132" fill="#123858" font-size="16px">依頼: 8/12までに判断</text>
     </g>
     <g transform="translate(548 166)">
 
@@ -47,7 +47,7 @@
       <rect x="24" y="22" width="118" height="30" rx="15" fill="#2C63B4"/>
       <text x="83" y="43" text-anchor="middle" fill="#FFFFFF" font-size="14px" font-weight="700">NEXT WEEK</text>
       <text data-slot="next" x="24" y="98" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px" font-weight="700">結合テストと公開準備</text>
-      <text x="24" y="132" fill="#65717E" font-size="16px">Owner: PM / Dev</text>
+      <text x="24" y="132" fill="#123858" font-size="16px">Owner: PM / Dev</text>
     </g>
   </g>
   <text data-slot="source" x="64" y="620" fill="#65717E" font-family="'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="14px">筆者作成</text>

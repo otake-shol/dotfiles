@@ -12,25 +12,25 @@
 
     <rect width="940" height="66" rx="4" fill="{{color.primaryWash}}" stroke="{{color.rule}}" stroke-width="{{stroke.rule}}"/>
     <text data-slot="layer-1" x="30" y="42" fill="{{color.ink}}" font-size="{{type.body}}" font-weight="700">Reader / Author</text>
-    <text data-slot="body-1" x="360" y="42" fill="{{color.inkSub}}" font-size="{{type.label}}">記事を読み、briefへ意図を書く</text>
+    <text data-slot="body-1" x="360" y="42" fill="{{color.primaryDark}}" font-size="{{type.label}}">記事を読み、briefへ意図を書く</text>
 
     <line x1="470" y1="76" x2="470" y2="102" stroke="{{color.ink}}" stroke-width="{{stroke.rule}}" marker-end="url(#arrow)"/>
 
     <rect y="110" width="940" height="66" rx="4" fill="{{color.sunken}}" stroke="{{color.rule}}" stroke-width="{{stroke.rule}}"/>
     <text data-slot="layer-2" x="30" y="152" fill="{{color.ink}}" font-size="{{type.body}}" font-weight="700">Claude / Codex</text>
-    <text data-slot="body-2" x="360" y="152" fill="{{color.inkSub}}" font-size="{{type.label}}">構成を提案し、JSONだけを編集する</text>
+    <text data-slot="body-2" x="360" y="152" fill="{{color.primaryDark}}" font-size="{{type.label}}">構成を提案し、JSONだけを編集する</text>
 
     <line x1="470" y1="186" x2="470" y2="212" stroke="{{color.ink}}" stroke-width="{{stroke.rule}}" marker-end="url(#arrow)"/>
 
     <rect y="220" width="940" height="66" rx="4" fill="{{color.sunken}}" stroke="{{color.rule}}" stroke-width="{{stroke.rule}}"/>
     <text data-slot="layer-3" x="30" y="262" fill="{{color.ink}}" font-size="{{type.body}}" font-weight="700">OVS CLI</text>
-    <text data-slot="body-3" x="360" y="262" fill="{{color.inkSub}}" font-size="{{type.label}}">検証してSVG・PNG・altを生成する</text>
+    <text data-slot="body-3" x="360" y="262" fill="{{color.primaryDark}}" font-size="{{type.label}}">検証してSVG・PNG・altを生成する</text>
 
     <line x1="470" y1="296" x2="470" y2="322" stroke="{{color.ink}}" stroke-width="{{stroke.rule}}" marker-end="url(#arrow)"/>
 
     <rect y="330" width="940" height="66" rx="4" fill="{{color.sunken}}" stroke="{{color.rule}}" stroke-width="{{stroke.rule}}"/>
     <text data-slot="layer-4" x="30" y="372" fill="{{color.ink}}" font-size="{{type.body}}" font-weight="700">Published assets</text>
-    <text data-slot="body-4" x="360" y="372" fill="{{color.inkSub}}" font-size="{{type.label}}">ブログ・スライド・SNSで再利用する</text>
+    <text data-slot="body-4" x="360" y="372" fill="{{color.primaryDark}}" font-size="{{type.label}}">ブログ・スライド・SNSで再利用する</text>
   </g>
 
   <text data-slot="source" x="64" y="650" fill="{{color.inkMute}}" font-family="{{font.body}}" font-size="{{type.caption}}">筆者作成</text>

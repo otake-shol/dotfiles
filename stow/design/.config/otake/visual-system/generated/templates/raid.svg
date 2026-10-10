@@ -12,7 +12,7 @@
       <rect width="250" height="282" rx="4" fill="#FBECE7" stroke="#D5DDE6" stroke-width="1px"/>
       <circle cx="34" cy="34" r="12" fill="#E86A50"/><text data-slot="label-1" x="58" y="41" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px" font-weight="700">Risk</text>
       <text data-slot="body-1" x="24" y="104" fill="#17202A" font-size="20px" font-weight="700">納期の遅延可能性</text>
-      <text x="24" y="150" fill="#65717E" font-size="16px">影響と発生確率を確認</text>
+      <text x="24" y="150" fill="#123858" font-size="16px">影響と発生確率を確認</text>
       <rect x="24" y="218" width="202" height="38" rx="12" fill="#FFFFFF" stroke="#D5DDE6" stroke-width="1px"/>
       <text data-slot="owner-1" x="125" y="243" text-anchor="middle" fill="#17202A" font-size="14px" font-weight="700">Owner: PM</text>
     </g>
@@ -21,7 +21,7 @@
       <rect width="250" height="282" rx="4" fill="#ECF2F9" stroke="#D5DDE6" stroke-width="1px"/>
       <circle cx="34" cy="34" r="12" fill="#DCE8F6"/><text data-slot="label-2" x="58" y="41" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px" font-weight="700">Assumption</text>
       <text data-slot="body-2" x="24" y="104" fill="#17202A" font-size="20px" font-weight="700">既存基盤を再利用</text>
-      <text x="24" y="150" fill="#65717E" font-size="16px">検証日を決めて仮説化</text>
+      <text x="24" y="150" fill="#123858" font-size="16px">検証日を決めて仮説化</text>
       <rect x="24" y="218" width="202" height="38" rx="12" fill="#FFFFFF" stroke="#D5DDE6" stroke-width="1px"/>
       <text data-slot="owner-2" x="125" y="243" text-anchor="middle" fill="#17202A" font-size="14px" font-weight="700">確認: 8/05</text>
     </g>
@@ -30,7 +30,7 @@
       <rect width="250" height="282" rx="4" fill="#ECF2F9" stroke="#D5DDE6" stroke-width="1px"/>
       <circle cx="34" cy="34" r="12" fill="#123858"/><text data-slot="label-3" x="58" y="41" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px" font-weight="700">Issue</text>
       <text data-slot="body-3" x="24" y="104" fill="#17202A" font-size="20px" font-weight="700">仕様が一部未確定</text>
-      <text x="24" y="150" fill="#65717E" font-size="16px">解消条件と担当を明記</text>
+      <text x="24" y="150" fill="#123858" font-size="16px">解消条件と担当を明記</text>
       <rect x="24" y="218" width="202" height="38" rx="12" fill="#FFFFFF" stroke="#D5DDE6" stroke-width="1px"/>
       <text data-slot="owner-3" x="125" y="243" text-anchor="middle" fill="#17202A" font-size="14px" font-weight="700">Owner: Product</text>
     </g>
@@ -39,7 +39,7 @@
       <rect width="250" height="282" rx="4" fill="#ECF2F9" stroke="#D5DDE6" stroke-width="1px"/>
       <circle cx="34" cy="34" r="12" fill="#2C63B4"/><text data-slot="label-4" x="58" y="41" fill="#17202A" font-family="'Zen Maru Gothic', 'Noto Sans JP', 'Yu Gothic', sans-serif" font-size="20px" font-weight="700">Dependency</text>
       <text data-slot="body-4" x="24" y="104" fill="#17202A" font-size="20px" font-weight="700">外部APIの公開待ち</text>
-      <text x="24" y="150" fill="#65717E" font-size="16px">前後関係と代替案を確認</text>
+      <text x="24" y="150" fill="#123858" font-size="16px">前後関係と代替案を確認</text>
       <rect x="24" y="218" width="202" height="38" rx="12" fill="#FFFFFF" stroke="#D5DDE6" stroke-width="1px"/>
       <text data-slot="owner-4" x="125" y="243" text-anchor="middle" fill="#17202A" font-size="14px" font-weight="700">確認: 8/12</text>
     </g>

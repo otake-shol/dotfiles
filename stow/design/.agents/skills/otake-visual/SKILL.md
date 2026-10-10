@@ -91,11 +91,15 @@ render measurement with annotated screenshots).
    ```bash
    ovs render topic.brief.json --out assets
    ovs lint assets
+   ovs contrast assets
    ovs preview assets --out assets/gallery.html
    ```
 
    If owned outputs already exist, inspect the exact paths before rerunning with `--force`.
    Never force-write through a symbolic link.
+   For native OVS SVG, contrast checks measure rendered glyph backgrounds in Chrome.
+   Fix low-contrast or unmeasurable text before delivery; if Chrome is unavailable,
+   report the contrast check as incomplete. Keep visual review for overlap and font substitutions.
 
 9. Report the selected recipe, generated files, source status, and verification result.
 

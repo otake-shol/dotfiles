@@ -14,13 +14,14 @@ STOW_SIMULATE_FLAGS := --target=$(HOME) --dir=$(STOW_DIR) $(STOW_IGNORE_FLAGS)
 PACKAGES := zsh git nvim ghostty bat atuin claude codex yazi direnv cmux asdf ssh design agents
 TOOL_VERSIONS := stow/asdf/.tool-versions
 VISUAL_SYSTEM_DIR := stow/design/.config/otake/visual-system
+DESIGN_TESTS ?= $(VISUAL_SYSTEM_DIR)/test/*.test.mjs
 DOCTOR_LINK_DIRS := "$$HOME" "$$HOME/.config" "$$HOME/.claude" "$$HOME/.codex" "$$HOME/.agents" "$$HOME/.docker" "$$HOME/.gnupg" "$$HOME/Library/Application Support/com.mitchellh.ghostty" "$$HOME/Library/LaunchAgents"
 SNAPSHOT_DIR := .snapshot/$(shell date +%Y%m%d-%H%M%S)
 # tomllib (Python 3.11+) が使える python を検出。macOSのシステムpython3は3.9なのでbrewのpython@3.xを優先。
 TOML_PYTHON := $(shell for p in python3.14 python3.13 python3.12 python3.11 python3; do if command -v $$p >/dev/null 2>&1 && $$p -c 'import tomllib' >/dev/null 2>&1; then echo $$p; break; fi; done)
 
 .PHONY: help install uninstall check check-strict check-conflicts bootstrap lint test-bootstrap design-check clean install-% uninstall-% packages stats readme-check readme-sync runtimes-install versions-audit doctor doctor-plan doctor-clean-broken setup-fastlane-env validate snapshot new-mac macos-defaults
-.PHONY: setup-claude-local setup-privacy-hook privacy-check test-privacy test-orca orca-plan orca-apply
+.PHONY: setup-claude-local setup-privacy-hook privacy-check test-privacy test-orca orca-plan orca-apply design-contrast design-test design-mutation
 
 help:
 	@echo "Usage:"
@@ -36,6 +37,9 @@ help:
 	@echo "  make lint             ShellCheck"
 	@echo "  make test-bootstrap   bootstrapのStow競合安全性テスト"
 	@echo "  make design-check     ビジュアルシステム生成物・SVG構文チェック"
+	@echo "  make design-test      OVSテストのみ（DESIGN_TESTSで対象を指定可能）"
+	@echo "  make design-mutation  コントラスト検査器の改変をテストで検出（Chrome必須）"
+	@echo "  make design-contrast  SVGの文字と背景のコントラスト検査（Chrome必須）"
 	@echo "  make clean            バックアップファイル削除"
 	@echo "  make stats            パッケージ数を表示"
 	@echo "  make readme-check     README内の件数が実体と一致するか確認"
@@ -380,11 +384,15 @@ design-check:
 	@node --check $(VISUAL_SYSTEM_DIR)/scripts/browser.mjs
 	@node --check $(VISUAL_SYSTEM_DIR)/scripts/deck.mjs
 	@node --check $(VISUAL_SYSTEM_DIR)/scripts/deck-check.mjs
+	@node --check $(VISUAL_SYSTEM_DIR)/scripts/svg-contrast.mjs
+	@node --check $(VISUAL_SYSTEM_DIR)/scripts/contrast-mutation.mjs
 	@node $(VISUAL_SYSTEM_DIR)/scripts/build.mjs --check
 	@for json in $$(find $(VISUAL_SYSTEM_DIR) -name '*.json' -type f); do \
 		node -e 'JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8"))' "$$json"; \
 	done
 	@node --test $(VISUAL_SYSTEM_DIR)/test/*.test.mjs
+	@$(MAKE) design-mutation
+	@$(MAKE) design-contrast
 	@node $(VISUAL_SYSTEM_DIR)/scripts/ovs.mjs deck lint $(VISUAL_SYSTEM_DIR)/examples/slide.md >/dev/null
 	@echo "✓ visual-system slide lint"
 	@if command -v xmllint >/dev/null 2>&1; then \
@@ -414,6 +422,15 @@ design-check:
 	else \
 		echo "marp not found; skipping visual-system theme check"; \
 	fi
+
+design-test:
+	@node --test $(DESIGN_TESTS)
+
+design-mutation:
+	@node $(VISUAL_SYSTEM_DIR)/scripts/contrast-mutation.mjs
+
+design-contrast:
+	@node $(VISUAL_SYSTEM_DIR)/scripts/ovs.mjs contrast $(VISUAL_SYSTEM_DIR)/generated/templates
 
 clean:
 	@find . -name "*.backup.*" -delete

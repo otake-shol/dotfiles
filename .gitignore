@@ -56,6 +56,13 @@ stow/claude/.claude/session-env/
 stow/claude/.claude/stats-cache.json
 stow/claude/.claude/scheduled_tasks.lock
 stow/claude/.claude/teams/
+stow/claude/.claude/skills/.trash/
+stow/claude/.claude/skills/synced/
+stow/claude/.claude/plugins/synced/
+stow/claude/.claude/plugins/store/
+stow/claude/.claude/plugins/plugin-directory-cache-v2.json
+stow/claude/.claude/feedback/
+stow/claude/.claude/state/
 
 # Codex runtime state generated when validating the stow package
 stow/codex/.codex/installation_id
@@ -74,6 +81,7 @@ stow/codex/.codex/log/
 stow/codex/.codex/logs/
 stow/codex/.codex/memories/
 stow/codex/.codex/sessions/
+stow/codex/.codex/archived_sessions/
 stow/codex/.codex/shell_snapshots/
 stow/codex/.codex/skills/
 stow/codex/.codex/state/
@@ -114,3 +122,9 @@ Library/
 
 # Orca automations（個人用の定義は公開リポに含めない）
 orca/automations/local/
+
+# エージェントが作業中に書き出す成果物（各プロジェクトで管理する）
+/output/
+
+# YouTube運営の作品データ（youtube-opsの作業領域。公開リポに含めない）
+stow/agents/.agents/youtube/

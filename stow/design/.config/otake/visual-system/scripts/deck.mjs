@@ -234,8 +234,8 @@ export const deckRules = {
   },
   "slide/notes": {
     severity: "info",
-    summary: "発表者ノートがない",
-    why: "発表用はノートに話す内容とつなぎを書く",
+    summary: "時間推定の元になる発表者ノートがない",
+    why: "--minutes指定時だけ確認する。ノートなしの推定値は仮置きであり、台本の新規作成は求めない",
   },
   "slide/comma": {
     severity: "info",
@@ -646,6 +646,19 @@ function issue(rule, slide, message) {
   };
 }
 
+// L17のLT版は氏名と主張で構成し、見出しを置かない。空の枠やコメントは完成扱いにしない。
+function hasLtIntroductionContent(slide) {
+  if (slide.codeLines > 0) return false;
+  const visible = slide.raw.replace(/<!--[\s\S]*?-->/g, "");
+  const filled = new Set();
+  for (const paragraph of visible.matchAll(/<p\b([^>]*)>([\s\S]*?)<\/p\s*>/gi)) {
+    const classes = paragraph[1].match(/(?:^|\s)class\s*=\s*(?:"([^"]*)"|'([^']*)')/i);
+    if (!classes || !inlineText(paragraph[2])) continue;
+    for (const name of (classes[1] ?? classes[2]).split(/\s+/)) filled.add(name);
+  }
+  return filled.has("name") && filled.has("claim");
+}
+
 /**
  * 構成と文面の静的検査。
  * @param {{frontMatter: object, slides: object[]}} deck parseDeckの結果
@@ -695,7 +708,9 @@ export function lintDeck(deck, options = {}) {
     }
 
     if (!slide.title) {
-      if (!slide.images.some((image) => image.background)) {
+      const ltIntroduction = standardTheme && hasClass(slide, "l17") &&
+        hasClass(slide, "lt") && hasLtIntroductionContent(slide);
+      if (!ltIntroduction && !slide.images.some((image) => image.background)) {
         issues.push(issue("slide/no-title", slide, `${slide.index}枚目: 主張を述べる見出しを置く`));
       }
     } else {
@@ -774,8 +789,8 @@ export function lintDeck(deck, options = {}) {
     if (/https?:\/\//.test(slide.footer)) {
       issues.push(issue("slide/footer-url", slide, `${label}: URLは参考資料スライドへ移し、フッターは資料名・年にする`));
     }
-    if (mode === "present" && !slide.appendix && slide.notesChars === 0) {
-      issues.push(issue("slide/notes", slide, `${label}: 話す内容と次へのつなぎをノートに書く`));
+    if (options.minutes !== undefined && mode === "present" && !slide.appendix && slide.notesChars === 0) {
+      issues.push(issue("slide/notes", slide, `${label}: 時間推定の元になるノートがない。推定は仮置きのため実時間とは扱わない`));
     }
     const commas = [...`${slide.bodyText}`.matchAll(PARTICLE_COMMA)].map((match) => match[0]);
     if (commas.length) {

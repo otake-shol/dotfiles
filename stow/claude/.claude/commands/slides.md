@@ -1,5 +1,5 @@
 ---
-description: create-story-slidesの共通手順でMarkdown（Marp）スライドを構成・生成・検証する。LT・登壇・提案・計画・報告・振り返り、既存OVS資料の編集・レビュー、発表時間の見積もりに使う
+description: create-story-slidesの共通手順でMarkdown（Marp）スライドを構成・生成・検証する。LT・登壇・提案・計画・報告・振り返り、既存OVS資料の編集・レビューに使う
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash(marp *), Bash(ovs *), Bash(node *), Bash(mkdir *), Bash(open *)
 ---
 
@@ -15,4 +15,4 @@ dotfiles内の未インストールの内容は `stow/design/.agents/skills/crea
 図解素材を生成するときだけ `~/.agents/skills/otake-visual/SKILL.md` を併用する。
 
 このコマンドの許可範囲で `build.sh` を呼べない場合は、正本の `review.md` と
-`marp-output.md` に従って同じテーマの `ovs deck verify`、`marp` のPDF・ノート出力を直接実行する。
+`marp-output.md` に従って同じテーマの `ovs deck verify` と要求された形式の `marp` 出力を直接実行する。

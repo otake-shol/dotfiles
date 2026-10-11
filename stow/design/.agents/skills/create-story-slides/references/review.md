@@ -9,20 +9,19 @@
 テーマと出力形式は [marp-output.md](marp-output.md) で解決する。
 新規StandardデッキのPDF生成には `scripts/build.sh` を使う。内部で
 `ovs deck verify`（静的lint＋描画check）を実行するため、同じ検査を別に繰り返さない。
-持ち時間が指定された場合は `scripts/build.sh slide.md out present --minutes N`
-で推定時間もまとめて検査し、9割超の警告を確認する。warnは出力を止めないため、
-警告が残った状態でビルドが成功しても発表準備の完了とは扱わない。
-時間だけを見直す場合は静的検査だけを再実行し、描画検査を繰り返さない。
+通常は `scripts/build.sh slide.md out present` を実行する。
+持ち時間は構成と枚数の目安に使い、台本やノート換算の時間を完成条件にしない。
 レビュー、HTML出力、既存テーマのデッキでは次を使う。
 
 ```bash
 # slide_themeには実際のデッキで使うCSSを指定
-ovs deck outline slide.md --minutes 10
-ovs deck verify slide.md --theme "$slide_theme" --mode present --minutes 10 --shots /tmp/slide-check
+ovs deck verify slide.md --theme "$slide_theme" --mode present --shots /tmp/slide-check
 ovs deck rules
 ```
 
-配布資料には `--mode read` を使う。時間指定がなければ `--minutes` を省く。
+配布資料には `--mode read` を使う。
+既存ノートからの時間推定を明示的に依頼された場合だけ `--minutes N` を付ける。
+ノートがなければ仮置きの推定になるため、実時間の検証とは扱わない。
 `ovs` がなければ `node "${XDG_CONFIG_HOME:-$HOME/.config}/otake/visual-system/scripts/ovs.mjs"`
 を確認する。どちらも使えなければMarpの画像出力で目視確認し、機械検査を未実施と報告する。
 
@@ -63,11 +62,8 @@ lintはこの形式の人数・件数の割当や、`目標: 継続率80%` の�
 
 ## 発表準備と報告
 
-- 発表用ではノートを台本として読み、持ち時間の9割を目安に収める。
-  `ovs deck outline` の推定と声に出した実測を区別する。超過は内容を整理して直す。
-  短い要点メモだけの推定を、指定分数の台本が完成した根拠にしない。
-  指定時間より大幅に短い場合は説明・操作・質疑への時間配分を確認し、
-  素材不足や台本未完成ならその状態を報告する。枠を埋めるために事実を創作しない。
+- 発表用では中心メッセージ、説明順、枚数が指定枠に適しているかを確認する。
+  台本の作成や読み上げは標準工程に含めず、発表時間を実測したとは報告しない。
 - 意思決定の資料には想定質問の補足を付録に用意する。
 - 成果物、自己紹介の判定、検査結果、目視したページ、残したwarnの理由を報告する。
 - レビュー依頼では重大な問題から並べ、推定と実測、見た目の好みと利用上の不具合を区別する。

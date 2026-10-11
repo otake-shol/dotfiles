@@ -1,6 +1,6 @@
 ---
 name: source-command-slides
-description: /slides互換の入口としてcreate-story-slidesの共通手順でMarkdown・Marpスライドを構成、生成、検証する。LT・登壇・提案・計画・報告・振り返り、既存OVS資料の編集・レビュー、発表時間の見積もりに使う。編集可能なPowerPointや既存Google Slidesは専用スキルへ渡す。
+description: /slides互換の入口としてcreate-story-slidesの共通手順でMarkdown・Marpスライドを構成、生成、検証する。LT・登壇・提案・計画・報告・振り返り、既存OVS資料の編集・レビューに使う。編集可能なPowerPointや既存Google Slidesは専用スキルへ渡す。
 ---
 
 # Markdownスライド制作

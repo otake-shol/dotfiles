@@ -220,6 +220,36 @@ test("Standardと既存OVSのテーマを許容し、人物紹介と内容の数
   assert.ok(rulesOf(deckOf(["# 題名"], "theme: custom\nlang: ja")).includes("deck/theme"));
 });
 
+test("氏名と主張があるLT用自己紹介では、仕様どおり見出しを省略できる", () => {
+  const content = '<p class="name">検証用人物<small>（架空）</small></p>\n<p class="affil">開発担当</p>\n<p class="claim">小さく変更する手順の紹介</p>';
+  const intro = `<!-- _class: l17 lt -->\n\n${content}`;
+  for (const theme of ["story-slides", "otake-visual"]) {
+    const front = `theme: ${theme}\nlang: ja`;
+    assert.ok(!rulesOf(deckOf([intro], front)).includes("slide/no-title"), theme);
+    const alternate = intro.replace('class="name"', "class='name extra'").replace('class="claim"', "class='extra claim'");
+    assert.ok(!rulesOf(deckOf([alternate], front)).includes("slide/no-title"));
+    for (const invalid of [
+      intro.replace("l17 lt", "l17"),
+      intro.replace("l17 lt", "l02 lt"),
+      intro.replace("l17 lt", "l17 lt-other"),
+      '<!-- _class: l17 lt -->',
+      '<!-- _class: l17 lt -->\n<p class="name">検証用人物</p>',
+      '<!-- _class: l17 lt -->\n<p class="name"></p>\n<p class="claim">主張</p>',
+      '<!-- _class: l17 lt -->\n<p class="name">検証用人物</p>\n<p class="claim"> &nbsp;<br> </p>',
+      `<!-- _class: l17 lt -->\n<!-- ${content} -->`,
+      intro.replace('class="name"', 'data-class="name"'),
+      `<!-- _class: l17 lt -->\n\n\`\`\`html\n${content}\n\`\`\``,
+    ]) {
+      assert.ok(rulesOf(deckOf([invalid], front)).includes("slide/no-title"), invalid);
+    }
+    const placeholder = intro.replace("検証用人物", "〈氏名〉");
+    assert.ok(rulesOf(deckOf([placeholder], front)).includes("slide/placeholder"));
+    const adjacent = lintDeck(parseDeck(deckOf([intro, '<!-- _class: l02 -->\n\n通常ページの本文'], front)));
+    assert.deepEqual(adjacent.issues.filter((entry) => entry.rule === "slide/no-title").map((entry) => entry.slide), [2]);
+  }
+  assert.ok(rulesOf(deckOf([intro], "theme: custom\nlang: ja")).includes("slide/no-title"));
+});
+
 test("結論を伴うStandardの終了ページだけを挨拶の警告から除外する", () => {
   const conclusion = "<!-- _class: l12 dark -->\n\n# 来週の試行開始\n\n- 当番表を共有し、次回の会議で結果を確認\n\n<!-- 話す -->";
   const end = "<!-- _class: l18 event -->\n\n# ご清聴ありがとう<br>ございました\n\n<!-- 話す -->";
@@ -241,6 +271,15 @@ test("同じレイアウトの3連続と、挨拶だけの最終スライドを�
   const rules = rulesOf(deckOf([table("一つ目の表の主張"), table("二つ目の表の主張"), table("三つ目の表の主張"), "# ご清聴ありがとうございました"]));
   assert.ok(rules.includes("deck/repeat-layout"));
   assert.ok(rules.includes("deck/closing"));
+});
+
+test("通常の発表用検査では台本を要求せず、時間推定を指定した場合だけ未記入を知らせる", () => {
+  const deck = deckOf(["# 次の検証\n\n提案: 当番を1人決める\n\n<!-- 根拠: 依頼内容 -->"]);
+  assert.ok(!rulesOf(deck).includes("slide/notes"));
+  assert.ok(rulesOf(deck, { minutes: 5 }).includes("slide/notes"));
+  assert.ok(!rulesOf(deck, { mode: "read", minutes: 5 }).includes("slide/notes"));
+  assert.ok(!rulesOf(deckOf(["# 次の検証\n\n<!-- 提供された発表者ノート -->"]), { minutes: 5 }).includes("slide/notes"));
+  assert.ok(rulesOf(deckOf(["# 参考となる実績\n\n実測で30%改善"])).includes("slide/source"));
 });
 
 test("ノートの推定時間が持ち時間の9割を超えると警告する", () => {

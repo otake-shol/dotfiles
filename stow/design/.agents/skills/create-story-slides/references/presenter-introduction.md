@@ -80,7 +80,11 @@ Title rules:
 | Claim band | 72, 472, 1136 x 120 | Pale Blue |
 | Claim | 112, 512, 1060, 44 | Title role, 26 pt, Ink, one line of about 30 full-width characters or fewer |
 
-The claim replaces the title: one sentence that links the presenter to this talk, such as `今日は、〇〇の話をします`. Shorten it rather than wrapping it. The LT variant has no photo and no points.
+The claim replaces the title: one sentence that links the presenter to this talk, such as `今日は〇〇の話をします`. Shorten it rather than wrapping it. The LT variant has no photo and no points.
+Use `l17 lt` with nonempty `<p class="name">` and `<p class="claim">` elements.
+Static lint permits this combination without a heading; an ordinary content slide
+or an empty introduction still needs correction. `自己紹介` is the section label,
+not an extra heading for this variant.
 
 ### Relationship variant
 
@@ -113,7 +117,7 @@ Make the title one sentence on why this team is presenting this topic. For four 
 - **Missing facts:** write each missing field as `［要入力：<項目>］`, for example `［要入力：氏名］`, `［要入力：所属・役割］`, `［要入力：この話題との関わり］`, `［要入力：大事にしていること］`, or `［要入力：チームとしてこの話をする理由］`.
 - **English deck:** use `About me` or `Speakers` as the section label, translate the placeholders, keep the title within about 12 words, and keep each point to one line of about 8 words.
 - **Optional footer:** a one-line disclaimer at 10-13 pt in Muted Ink, only when the user or the profile supplies one, typically for an external talk given in a personal capacity.
-- **Speaker notes:** write a 15-30 second self-introduction script per presenter that uses only facts shown on the slide. Cite the source as `依頼内容`, `提供資料`, or `登壇者プロフィール`; never write file paths or rule numbers.
+- **Source metadata:** cite the source as `依頼内容`, `提供資料`, or `登壇者プロフィール` in the production notes. Preserve existing speaker notes without drafting a self-introduction script; never expose file paths or rule numbers in audience-facing material.
 
 ## Compact lines
 
@@ -230,6 +234,7 @@ SKILL.md defines the 自己紹介 decision line, its source labels, and the over
 - **Standalone request:** when the user asks only for a presenter introduction slide, for example for an event organizer or onboarding, skip the deck workflow and the gate and produce one L17 under the same content, data-source, and confidentiality rules. Use the external scope unless the user states that every recipient is internal.
 - **Someone else presents:** keep the gate outcome and never read the local profile for the presenter; the profile may still supply the requesting user's author fields.
 - **Traditional title requested:** when the user explicitly asks for `自己紹介` as the title, use it and keep the other L17 rules.
+- **Existing introduction or selected template:** preserve its heading and layout when the task calls for that source. This includes the `lt-deck` profile block; it does not change the full / compact / none gate or public-scope checks. Do not copy that heading into a new Standard LT variant.
 - **N01:** follow the L17 exception in `navigation-components.md`.
 
 ## QA
@@ -240,7 +245,7 @@ Apply these checks to presenter elements written in the current task. Keep a sup
 - For full, confirm exactly one L17 at slide 2, or at slide 3 after a single opening hook, and none after the first L03, in L12, or in the appendix.
 - For compact, confirm that there is no L17 and exactly one compact line of the right type: a presenter line of about 28 full-width characters or fewer on one line (two lines only for four or more presenters), a presenter and author line, an author line without personal contacts, or a placeholder line. Confirm that it avoids the illustration.
 - For none, confirm that no presenter information appears beyond what the user requested.
-- Confirm that the L17 title is a claim, that `自己紹介` appears only as the section label unless the user asked for a traditional title, and that each point ties to the central takeaway or the audience relationship.
+- For newly authored L17, confirm that the title is a claim except in the titleless LT variant. Keep `自己紹介` as the section label unless the user requested a traditional title or an existing template is being preserved. Each point must tie to the central takeaway or the audience relationship.
 - Confirm that every presenter fact traces to the conversation, supplied material, or local profile, and that missing facts are `［要入力：…］` placeholders rather than guessed years or numbers.
 - In the external scope, including an unknown audience, confirm that only the name, `external` facts, and facts approved for public use appear, and that neither slides nor notes contain internal names or file paths.
 - Confirm that L17 uses the variant the selection table requires and matches its coordinates, type sizes, and colors.

@@ -39,9 +39,21 @@ test("Standardのビルドは従来の1・2引数と配布モードで検証し�
     assert.deepEqual(result.calls.slice(0, 3), ["ovs", "deck", "verify"]);
     assert.equal(result.calls[result.calls.indexOf("--mode") + 1], mode ?? "present");
     assert.ok(result.calls.includes("--pdf"));
-    assert.ok(result.calls.includes("--notes"));
+    assert.ok(!result.calls.includes("--notes"));
+    assert.ok(!result.stdout.includes(".notes.txt"));
     assert.ok(!result.calls.includes("--pdf-notes"));
   }
+});
+
+test("既存ノートの書き出しは明示指定した場合だけ行う", () => {
+  const result = runBuild("present", "0", ["--notes", "--minutes", "5"]);
+  assert.equal(result.status, 0, result.stderr);
+  assert.ok(result.calls.includes("--notes"));
+  assert.match(result.stdout, /既存ノート: .*\.notes\.txt/);
+  assert.ok(!result.calls.includes("--pdf-notes"));
+  const failed = runBuild("present", "1", ["--notes"]);
+  assert.equal(failed.status, 1);
+  assert.ok(!failed.calls.includes("marp"));
 });
 
 test("検証失敗や不正なモードではPDFとノートを出力しない", () => {

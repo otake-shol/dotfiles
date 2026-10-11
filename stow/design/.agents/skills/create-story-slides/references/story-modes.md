@@ -18,7 +18,7 @@ and requested output from the conversation. Ask only for missing facts that mate
 change the result; do not restart intake for edits to an existing deck.
 
 Choose present or read mode independently of the story job and length. Default to present
-when the use is unclear. Present mode uses brief visible copy and spoken notes; read mode
+when the use is unclear. Present mode uses brief visible copy; speaker notes are optional. Read mode
 must carry the necessary explanation and evidence in the slide itself. For both uses,
 keep the presentation concise and add an appendix or separate reading version. Do not
 embed private speaker notes in a distributed PDF. Use the same mode in validation.
@@ -35,6 +35,11 @@ Choose the communication job first and the length second. Do not infer the job f
 If a deck mixes jobs, choose the job that governs the final audience action. Use the other material as evidence or appendix content.
 
 Choose a length with the first rule that applies:
+
+For a new ten-minute deck made through `lt-deck`, apply its documented slide-count
+default before this table only when no count is specified. The user's stated count
+always wins. Other durations use the rules below. Existing decks retain their
+structure unless the edit requests a change; do not resize them just to match a default.
 
 1. **Stated count:** use the slide count the user states.
 2. **Known time:** size the main story by the time the presenter speaks; exclude Q&A and hands-on time.
@@ -165,5 +170,5 @@ Read only the slide titles in order. They should form a coherent argument withou
 
 State the central message in one sentence before the title sequence. For decision or
 reading decks, put a concise summary early and match its order to the supporting slides.
-Use Japanese noun-ending titles that express the claim, not just a topic name. Keep
-spoken transitions in the notes instead of adding explanatory prose to every slide.
+Use Japanese noun-ending titles that express the claim, not just a topic name.
+Keep the narrative connection clear in the title sequence without drafting spoken transitions.

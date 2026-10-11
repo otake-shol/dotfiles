@@ -1,11 +1,16 @@
 ---
 name: create-story-slides
-description: Create, edit, and review Japanese Markdown/Marp presentations with one-message-per-slide storytelling and the Standard visual system. Own narrative, presenter introduction, layouts, export, and QA for proposals, plans, reviews, case studies, LT, and talks, including existing OVS decks and /slides requests. Use for outlines, self-introduction slides, PDF or HTML decks, and presentation-time estimates. Route editable PowerPoint and native Google Slides work to their dedicated skills.
+description: Create, edit, and review Japanese Markdown/Marp presentations with one-message-per-slide storytelling and the Standard visual system. Own narrative, presenter introduction, layouts, export, and QA for proposals, plans, reviews, case studies, LT, and talks, including existing OVS decks and /slides requests. Use for outlines, self-introduction slides, and PDF or HTML decks. Route editable PowerPoint and native Google Slides work to their dedicated skills.
 ---
 
 # Create Story Slides
 
 Turn rough source material into a cumulative story that is easy to present and easy to scan. Default to Japanese copy. Choose the communication job before choosing the length; use a short proposal only when the audience needs a decision.
+
+Focus on the slides. Do not generate a spoken script or require speaker notes or a
+note-derived duration for completion. Use the requested time to size the story and
+slide count. Preserve existing notes and keep source metadata traceable; a request
+to write a script is a separate task.
 
 This is the single authoring and review workflow for this skill, Claude `/slides`,
 and Codex `source-command-slides`. OVS supplies asset generation and inspection tools;
@@ -13,6 +18,13 @@ its old slide guides are compatibility entrypoints, not another policy source.
 For review-only requests, inspect the existing deck and report findings without
 rewriting it. Preserve an existing deck's theme, format, and layout conventions unless
 the user requests migration; apply the presenter gate's continuing-deck rule.
+
+For a specialized entrypoint such as `lt-deck`, apply the user's explicit request
+first, then preserve the supplied deck or template where editing requires it,
+then use the entrypoint's documented defaults for its stated scope. Use this skill's
+defaults for everything else. Entrypoint defaults do not override the presenter
+decision gate, confidentiality, evidence requirements, or readability checks.
+Record any specialized default used in the outline's production notes.
 
 ## References
 
@@ -101,7 +113,7 @@ preserve the existing deck's structure; a review-only request stops at findings.
 9. Write takeaway-style titles in natural audience-facing language. Use a deliberate line break when a two-line title is necessary; never allow accidental wrapping.
 10. Apply `design-system.md` and `reference-derived-patterns.md`. Prefer one composition over card grids, reuse a stable anchor diagram across sections when it reduces reorientation, and keep diagrams simple. In the Standard profile, reserve orange for tension, change, exception, or action.
 11. If the user requests an outline, precede it with the 自己紹介 decision line, then provide a compact slide table with number, title, narrative job, evidence, and layout ID. Add `Navigator` and `Phase ID` only when a navigation component applies.
-12. If the user requests a deck, author Marp Markdown and export the requested format using `references/marp-output.md`; default new decks to PDF. For Standard decks, use one layout class per slide and speaker notes with sources. Before expanding the deck, render the cover, densest slide, and one evidence slide to check the chosen layouts. Validate with `references/review.md`, fix every render error, and inspect every slide image. Keep simple diagrams editable as theme components or inline SVG. Generate or source imagery only when it materially improves understanding. In the handoff, link the requested output, state the 自己紹介 decision, and list any remaining presenter placeholders.
+12. If the user requests a deck, author Marp Markdown and export the requested format using `references/marp-output.md`; default new decks to PDF. For Standard decks, use one layout class per slide and record sources in comments, an appendix, or the deck README. Before expanding the deck, render the cover, densest slide, and one evidence slide to check the chosen layouts. Validate with `references/review.md`, fix every render error, and inspect every slide image. Keep simple diagrams editable as theme components or inline SVG. Generate or source imagery only when it materially improves understanding. In the handoff, link the requested output, state the 自己紹介 decision, and list any remaining presenter placeholders.
 
 ## Fast path
 

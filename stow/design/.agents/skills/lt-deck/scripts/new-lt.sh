@@ -52,8 +52,6 @@ author: ${presenter%%（*}
 <p class="presenter-name">${presenter}</p>
 
 <!--
-【T】
-話す: 〈最初の一言〉
 メモ: LT 10分。中心メッセージは「〈主張と、聞き手にとっての意味〉」。
 メモ: 流れは〈章1〉→〈章2〉→〈章3〉→〈章4〉。
 根拠: 〈数値の出典と集計日〉
@@ -75,7 +73,6 @@ ${profile}
 
 # ご清聴<br>ありがとうございました
 
-<!-- 【T】ありがとうございました。 -->
 DECK
 
   cat >"${dir}/README.md" <<README
@@ -88,7 +85,7 @@ DECK
 ## 発表設計
 
 - 中心メッセージ：〈〉
-- 時間：10分・本編〈N〉枚（推定〈m:ss〉、ノート300字/分換算）。
+- 想定枠：10分・本編〈N〉枚。台本作成と実時間の検証は対象外。
 - テーマ：story-slides。章の現在地（N01）：〈章1〉｜〈章2〉｜〈章3〉｜〈章4〉。
 - 数値：〈出典・集計日〉
 - 未定：表紙と終幕の発表日（\`〈YYYY-MM-DD〉\`のまま）。
@@ -107,7 +104,7 @@ DECK
 \`\`\`bash
 npm run build:${slug}
 ovs deck check slides/${name}/deck.md --theme themes/story-slides.css
-ovs deck lint slides/${name}/deck.md --minutes 10
+ovs deck lint slides/${name}/deck.md
 \`\`\`
 
 ## 検証

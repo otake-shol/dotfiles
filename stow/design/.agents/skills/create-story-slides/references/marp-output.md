@@ -53,7 +53,7 @@ title: <deck title>
 | Section label | `<!-- _header: 現状 -->` on each slide that needs one | Top left at 12 pt. Hidden on L01, L03, and L18, and replaced by N01 when N01 is present |
 | Page number | `paginate: true` in the front matter | Top right; hidden on L01, L03, and L18; moved to the bottom right when N01 is present |
 | Source line | `<!-- _footer: 出典: … -->` | Bottom left at 11 pt. Also record the source in the speaker notes |
-| Speaker notes | A non-directive HTML comment | Written to `<name>.notes.txt` by the build; never embedded in the PDF |
+| Existing notes or source metadata | A non-directive HTML comment | Preserved in the source; exported only on request, never embedded in the PDF |
 
 ## Layout markup
 
@@ -117,23 +117,20 @@ definitions, quotations, or measured values. Keep source URLs and access dates i
 or an appendix, and verify that each source supports its claim. For original measurements,
 record the repository or dataset, revision, period, and conditions. Do not invent missing evidence.
 
-In present mode, use notes for the spoken explanation and the transition to the next slide.
-The OVS time estimate excludes lines prefixed with `根拠:`, `メモ:`, or `出典:` and lines
-containing a URL. In read mode, keep necessary explanations in visible copy.
+Do not draft a spoken script or transitions as part of slide creation. Source metadata
+may go in comments, an appendix, or the deck README. Preserve existing speaker notes.
+In read mode, keep necessary explanations in visible copy.
 Keep Marp directives such as `_footer:` in their own HTML comment, separate from
 spoken notes. Quote values containing a colon. Mixing directives and prose in one
 comment can hide the intended visible citation.
-Put spoken text and source metadata on separate lines so time estimates count only
-the spoken explanation. Confirm the footer in the rendered slide.
+Keep source metadata on separate lines from any existing spoken text. Confirm the
+footer in the rendered slide.
 
 ```markdown
 <!-- _footer: '出典: 提供データ（2026-09）' -->
 
 <!--
-話す: このスライドで伝える一文と短い補足。
-つなぎ: 次のスライドで答える問い。
 根拠: 出典URL・確認日・計測条件
-メモ: デモへの切り替えなどの段取り
 -->
 ```
 
@@ -141,17 +138,18 @@ the spoken explanation. Confirm the footer in the rendered slide.
 
 For Standard PDF output, run the build script in this skill's `scripts/` directory.
 It preserves the two-argument form; the optional third argument selects present/read mode.
-When the talk has a time limit, pass `--minutes N` (a positive decimal number):
+The default output is PDF and verification images. Existing notes are exported only
+with `--notes`; this does not generate a script. Use `--minutes N` only when the user
+asks to estimate time from existing notes, not merely because the talk has a time limit:
 
 ```bash
-scripts/build.sh <deck.md> <output directory> [present|read] [--minutes N]
-# Example: a five-minute talk
-scripts/build.sh deck.md out present --minutes 5
+scripts/build.sh <deck.md> <output directory> [present|read] [--minutes N] [--notes]
+scripts/build.sh deck.md out present
 ```
 
 1. `ovs deck verify` applies static lint and measures overflow, clipping, collisions, small text, contrast, broken images, and missing fonts. An error stops the build. Use [review.md](review.md) for warning handling, timing, and completion criteria.
 2. Inspect `<name>-check/contact-sheet.png` and every `<name>-check/slide-NN.png` using `review.md` and `design-system.md`.
-3. The build writes `<name>.pdf` with bookmarks and `<name>.notes.txt`. It never embeds speaker notes in the PDF, because recipients could read them.
+3. The build writes `<name>.pdf` with bookmarks. `--notes` also writes `<name>.notes.txt` from existing comments. It never embeds speaker notes in the PDF, because recipients could read them.
 
 - Without `ovs`, the build writes slide PNGs; inspect each one and report static, timing, and measurement checks as incomplete.
 - Without `marp`, complete the outline and Markdown and report export as blocked. Without Chrome, HTML export may still work, but PDF and rendered verification remain incomplete. Do not silently switch renderers or themes.
@@ -166,8 +164,10 @@ Validate with [review.md](review.md) and run only the exports the user requested
 # Run alongside slide.md; set slide_theme to the resolved CSS path first.
 marp --no-stdin --html --theme "$slide_theme" slide.md -o slide.html
 marp --no-stdin --html --allow-local-files --theme "$slide_theme" --pdf --pdf-outlines slide.md -o slide.pdf
-marp --no-stdin --theme "$slide_theme" --notes slide.md -o slide.notes.txt
 ```
+
+Only when an existing-notes export is requested, use
+`marp --no-stdin --theme "$slide_theme" --notes slide.md -o slide.notes.txt`.
 
 Keep HTML and referenced assets together with relative paths. Use `--allow-local-files`
 only after checking that local references point to the intended assets. Do not embed

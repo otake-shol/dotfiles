@@ -120,8 +120,15 @@ record the repository or dataset, revision, period, and conditions. Do not inven
 In present mode, use notes for the spoken explanation and the transition to the next slide.
 The OVS time estimate excludes lines prefixed with `根拠:`, `メモ:`, or `出典:` and lines
 containing a URL. In read mode, keep necessary explanations in visible copy.
+Keep Marp directives such as `_footer:` in their own HTML comment, separate from
+spoken notes. Quote values containing a colon. Mixing directives and prose in one
+comment can hide the intended visible citation.
+Put spoken text and source metadata on separate lines so time estimates count only
+the spoken explanation. Confirm the footer in the rendered slide.
 
 ```markdown
+<!-- _footer: '出典: 提供データ（2026-09）' -->
+
 <!--
 話す: このスライドで伝える一文と短い補足。
 つなぎ: 次のスライドで答える問い。
@@ -133,17 +140,20 @@ containing a URL. In read mode, keep necessary explanations in visible copy.
 ## Build and QA
 
 For Standard PDF output, run the build script in this skill's `scripts/` directory.
-It preserves the two-argument form; the optional third argument selects present/read mode:
+It preserves the two-argument form; the optional third argument selects present/read mode.
+When the talk has a time limit, pass `--minutes N` (a positive decimal number):
 
 ```bash
-scripts/build.sh <deck.md> <output directory> [present|read]
+scripts/build.sh <deck.md> <output directory> [present|read] [--minutes N]
+# Example: a five-minute talk
+scripts/build.sh deck.md out present --minutes 5
 ```
 
 1. `ovs deck verify` applies static lint and measures overflow, clipping, collisions, small text, contrast, broken images, and missing fonts. An error stops the build. Use [review.md](review.md) for warning handling, timing, and completion criteria.
 2. Inspect `<name>-check/contact-sheet.png` and every `<name>-check/slide-NN.png` using `review.md` and `design-system.md`.
 3. The build writes `<name>.pdf` with bookmarks and `<name>.notes.txt`. It never embeds speaker notes in the PDF, because recipients could read them.
 
-- Without `ovs`, the build writes slide PNGs; inspect each one and report static and measurement checks as incomplete.
+- Without `ovs`, the build writes slide PNGs; inspect each one and report static, timing, and measurement checks as incomplete.
 - Without `marp`, complete the outline and Markdown and report export as blocked. Without Chrome, HTML export may still work, but PDF and rendered verification remain incomplete. Do not silently switch renderers or themes.
 
 ## Other formats and existing themes

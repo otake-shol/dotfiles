@@ -119,7 +119,7 @@ During slide planning, choose the representation that best supports the claim:
 | Relationship, branching, boundary, or mechanism | Editable diagram | The audience needs to see how parts connect |
 | Quantity, trend, or measured comparison | Chart or small table | Supported data and comparable conditions are available |
 | UI operation, observed behavior, or an exact documented statement | Real screenshot or artifact | The actual appearance or wording is evidence |
-| A premise, personal question, or synthesis | Concise text | A visual would add no useful relationship or evidence |
+| A definition, premise, question, instruction, or synthesis | Concise text | The audience can understand it directly; a visual would add no useful relationship or evidence |
 
 Record a compact visual plan with slide number, representation, purpose, asset source or capture conditions, and status (available / to create / missing). Keep it in the outline or deck README. Inspect existing project assets first. When evidence is missing, finish independent diagrams and copy, then request only the material needed for the claim; do not invent an interface, screenshot, output, or measurement.
 
@@ -127,14 +127,14 @@ For an observed UI change, prefer comparable before/after captures and record th
 
 ### Visual pass
 
-Do not impose an image quota, but after the copy is drafted, review every content slide that is still text only and ask which non-text element could carry or prove its claim:
+After drafting, review every content slide's representation. Choose a visual only when it makes a relationship easier to understand, supplies evidence, or helps identify the subject. Use these options according to the claim, not as a mandatory ranking:
 
 1. **Real artifact first:** the presenter's own repository, terminal output, settings file, issue, or documentation page whose exact appearance or wording is evidence. Prefer it over a rebuilt mock.
 2. **Chart from real data:** counts, trends, or shares that the presenter can recompute from a source such as git history. One highlighted series, values labelled on the bars.
 3. **Editable diagram:** a relationship, boundary, or mechanism, such as how a link points to its target or how parts connect.
-4. **Concept icons:** three to five parallel items, steps, or roles whose labels each map to one icon.
+4. **Concept icons:** familiar marks that help distinguish parallel roles or items. Omit icons that merely repeat clear labels.
 
-Keep a slide text only when it is a premise, a question, a synthesis, or a tension beat where a visual would add no relationship or evidence. In a presented deck, most content slides between the presenter introduction and L12 should end up with one of the four elements above. Record the result of the pass in the visual plan.
+Keep concise text when it communicates the claim directly, including definitions and instructions. There is no minimum number or proportion of slides with images or diagrams. Record the chosen representation and its reason in the visual plan; a text-only choice is a valid completed pass. Review existing visuals too: remove decoration and retain diagrams only when the relationships carry meaning. Missing evidence calls for narrowing the claim or recording the gap, not inventing an asset.
 
 - Use diagrams only when relationships, sequence, boundaries, or tradeoffs are clearer visually.
 - Prefer flat rectangles, wedge arrows, straight connectors, lanes, and one highlighted exception.

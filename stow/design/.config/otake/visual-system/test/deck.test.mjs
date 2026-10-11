@@ -172,6 +172,26 @@ test("数値の出典はフッターで判定し、表紙・自己紹介・参�
   assert.ok(!rulesOf(deckOf([references])).includes("slide/source"));
 });
 
+test("明示した提案の割当・目標値と、同居する実績値を区別する", () => {
+  const sourceIssues = (body) => lintDeck(parseDeck(deckOf([`# 次の検証\n\n${body}\n\n<!-- 話す -->`]))).issues.filter((issue) => issue.rule === "slide/source");
+  for (const proposal of ["提案: 当番を1日1人決める", "提案：担当を2名配置する。", "提案: 次のPRを1件記録する", "目標: 継続率80%", "目標：月10件"]) {
+    assert.equal(sourceIssues(proposal).length, 0, proposal);
+  }
+  for (const claim of [
+    "当番を1日1人決めた", // 過去の実績
+    "提案: 当番を1日1人決める。実績は20件",
+    "提案: 当番を1日1人決める\n\n実績は20件",
+    "提案: 前年20件だったので当番を1人配置する",
+    "提案: 当番を1人配置すると効率が30%向上する",
+    "目標: 継続率80%\n\n現状は60%",
+    "目標: 現状60%から80%への改善",
+    "# 提案\n\n継続率80%", // 見出しだけで全ページを免除しない
+  ]) {
+    assert.equal(sourceIssues(claim).length, 1, claim);
+  }
+  assert.match(sourceIssues("提案: 当番を1日1人決める。実績は20件")[0].message, /20件/);
+});
+
 test("本文の量・alt・色の直書き・手書きSVG・フッターURLを検出する", () => {
   const dense = `# 量が多いスライドの例\n\n${"あ".repeat(BODY_CHARS.present + 1)}\n\n<!-- 話す -->`;
   assert.ok(rulesOf(deckOf([dense])).includes("slide/dense"));
@@ -227,7 +247,11 @@ test("ノートの推定時間が持ち時間の9割を超えると警告する"
   const long = `# 話す量の多いスライド\n\n- 要点\n\n<!-- ${"あ".repeat(SPEAKING_CHARS_PER_MINUTE * 2)} -->`;
   assert.ok(rulesOf(deckOf([long]), { minutes: 2 }).includes("deck/timing"));
   assert.ok(!rulesOf(deckOf([long]), { minutes: 3 }).includes("deck/timing"));
-  assert.throws(() => lintDeck(parseDeck(deckOf([long])), { minutes: "abc" }), /正の数/);
+  for (const minutes of ["abc", 0, "0", -1, true, false, Infinity, ""]) {
+    assert.throws(() => lintDeck(parseDeck(deckOf([long])), { minutes }), /正の数/);
+  }
+  assert.ok(!rulesOf(deckOf([long]), { minutes: 2 / 0.9 }).includes("deck/timing"));
+  assert.ok(rulesOf(deckOf([long]), { minutes: 2.1 }).includes("deck/timing"));
 });
 
 test("見出しの用言止めは問いかけを除いて知らせる", () => {

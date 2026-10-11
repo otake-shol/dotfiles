@@ -1,7 +1,7 @@
 #!/bin/bash
 # create-story-slides: Marp デッキを描画検査してから PDF と発表メモを書き出す
 #
-# 使い方: build.sh <deck.md> [出力先ディレクトリ] [present|read]
+# 使い方: build.sh <deck.md> [出力先ディレクトリ] [present|read] [--minutes N]
 #   1. ovs deck verify で静的検査と描画実測を行う。error があれば終了コード1で止める
 #      （ovs がない環境では各スライドの PNG を書き出し、目視の確認に回す）
 #   2. しおり付きの PDF を書き出す。発表者ノートは配布先に見えるため PDF に埋め込まない
@@ -13,15 +13,35 @@ readonly skill_dir
 readonly theme="$skill_dir/assets/story-slides.css"
 
 usage() {
-	echo "使い方: $(basename "$0") <deck.md> [出力先ディレクトリ] [present|read]" >&2
+	echo "使い方: $(basename "$0") <deck.md> [出力先ディレクトリ] [present|read] [--minutes N]" >&2
 	exit 2
 }
 
 main() {
-	[[ $# -ge 1 && $# -le 3 ]] || usage
+	[[ $# -ge 1 ]] || usage
 	local deck=$1
-	local out_dir=${2:-$(dirname "$deck")}
-	local mode=${3:-present}
+	shift
+	local out_dir mode=present minutes=""
+	local -a positional=() timing_args=()
+	while [[ $# -gt 0 ]]; do
+		case "$1" in
+		--minutes)
+			[[ $# -ge 2 && -z $minutes ]] || usage
+			minutes=$2
+			if [[ ! $minutes =~ ^[0-9]+([.][0-9]+)?$ || ! $minutes =~ [1-9] ]]; then
+				echo "--minutes は正の数で指定してください" >&2
+				exit 2
+			fi
+			timing_args=(--minutes "$minutes")
+			shift 2
+			;;
+		--*) usage ;;
+		*) positional+=("$1"); shift ;;
+		esac
+	done
+	[[ ${#positional[@]} -le 2 ]] || usage
+	out_dir=${positional[0]:-$(dirname "$deck")}
+	mode=${positional[1]:-present}
 	[[ $mode == present || $mode == read ]] || usage
 	local name shots
 	name=$(basename "$deck" .md)
@@ -38,8 +58,11 @@ main() {
 	mkdir -p "$out_dir"
 
 	if command -v ovs >/dev/null; then
-		ovs deck verify "$deck" --mode "$mode" --theme "$theme" --shots "$shots"
+		ovs deck verify "$deck" --mode "$mode" --theme "$theme" --shots "$shots" ${timing_args[@]+"${timing_args[@]}"}
 	else
+		if [[ -n $minutes ]]; then
+			echo "ovs がないため持ち時間 ${minutes} 分の検査は未実施です" >&2
+		fi
 		echo "ovs がないため静的検査と実測は未実施です。$shots の PNG を1枚ずつ目視で確認してください" >&2
 		mkdir -p "$shots"
 		marp --no-stdin --html --allow-local-files --theme "$theme" --images png "$deck" -o "$shots/$name.png"

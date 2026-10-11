@@ -110,6 +110,21 @@ const PLACEHOLDER = /〈[^〈〉\n]{1,40}〉|\bTODO\b|\bTBD\b|\bFIXME\b|\bXXX\b|
 const QUANTITY =
   /\d+(?:\.\d+)?\s*(?:%|％|倍|pt\b|ポイント)|[$¥€£]\s?\d|\d{1,3}(?:,\d{3})+|\d+(?:\.\d+)?\s*(?:件|人|名|社|円|万|億|兆|ドル|USD|MB|GB|TB|ms)/;
 const SOURCE_MARK = /出典|引用|source|参考[:：]/i;
+
+// 出典を要する実績と、提案した割当・目標値を分ける。スライド全体は免除しない。
+// ラベルと値が同じ文にある明示的な形式だけを扱い、不明な文脈は警告に残す。
+function sourceQuantity(claim) {
+  const facts = claim.split(/([。！？\n])/).map((part) => {
+    if (/^\s*提案[:：]/.test(part)) {
+      return part.replace(/\d+\s*(?:人|名|件)(?:ずつ)?(?:を)?(?:決める|配置する|割り当てる|記録する)\s*$/u, "");
+    }
+    if (/^\s*目標[:：][^\d]*\d+(?:\.\d+)?\s*(?:%|％|件|人|名|円|時間|分)\s*$/.test(part)) {
+      return "";
+    }
+    return part;
+  }).join("");
+  return facts.match(QUANTITY);
+}
 // 体言止めにしていない見出しの語尾（ユーザーの資料文体ルール）。
 // 動詞の終止形（なる・変わる・続く・示す・進む・防ぐ・選ぶ・使う）も拾い、「どう」「そう」などは除く
 const PREDICATE_ENDING =
@@ -748,7 +763,7 @@ export function lintDeck(deck, options = {}) {
       (standardTheme && classes.some((name) => ["l01", "l17", "l18"].includes(name)));
     if (!slide.appendix && !presenterSlide) {
       const claim = `${slide.title}\n${slide.bodyText}`;
-      const quantity = claim.match(QUANTITY);
+      const quantity = sourceQuantity(claim);
       if (quantity && !SOURCE_MARK.test(`${slide.footer}\n${slide.bodyText}`)) {
         const inNotes = SOURCE_MARK.test(slide.notes) || /https?:\/\//.test(slide.notes);
         issues.push(
@@ -773,9 +788,9 @@ export function lintDeck(deck, options = {}) {
   }
 
   const seconds = mainSlides.reduce((sum, slide) => sum + estimateSeconds(slide), 0);
-  if (options.minutes) {
+  if (options.minutes !== undefined) {
     const limit = Number(options.minutes) * 60;
-    if (!Number.isFinite(limit) || limit <= 0) {
+    if (typeof options.minutes === "boolean" || !Number.isFinite(limit) || limit <= 0) {
       throw new Error("--minutes は正の数で指定してください");
     }
     if (seconds > limit * 0.9) {

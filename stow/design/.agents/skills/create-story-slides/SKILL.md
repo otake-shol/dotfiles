@@ -40,6 +40,8 @@ Read [review.md](references/review.md) before validation or a review-only task.
 For an existing `theme: otake-visual` deck, also read
 [ovs-compatibility.md](references/ovs-compatibility.md); it preserves old markup and exports.
 Read [sources.md](references/sources.md) only when updating the guidance itself.
+When changing the skill's behavior, use [evaluation.md](references/evaluation.md)
+for representative authoring requests and artifact-based checks.
 
 ## Visual profile
 
@@ -95,7 +97,7 @@ preserve the existing deck's structure; a review-only request stops at findings.
 6. Decide whether a cross-slide navigation component applies. When N01 applies, define its ordered phase map once and assign one phase ID to every eligible slide; do not treat N01 as the slide's primary layout.
 7. Write the narrative as a sequence of questions and answers. Make each slide answer one question and create the need for the next slide.
 8. Give every slide one narrative job, one primary claim, and one layout ID from `layout-catalog.md`. When N01 applies, also record its navigator ID and phase ID in planning metadata.
-   Before authoring, choose how the slide supports that claim: concise text, an editable diagram, a chart, or a real artifact. Record the visual's role, source or capture conditions, and asset status in the outline or deck README. Use `design-system.md`'s Visual evidence selection guidance; do not default every slide to text or impose an image quota. After drafting the copy, run the Visual pass in `design-system.md` on every text-only content slide.
+   Before authoring, choose how the slide supports that claim: concise text, an editable diagram, a chart, or a real artifact. Record the representation's role, source or capture conditions, and asset status in the outline or deck README. Use `design-system.md`'s Visual evidence selection guidance; do not default every slide to text or impose an image quota. After drafting the copy, run the Visual pass in `design-system.md` on every content slide.
 9. Write takeaway-style titles in natural audience-facing language. Use a deliberate line break when a two-line title is necessary; never allow accidental wrapping.
 10. Apply `design-system.md` and `reference-derived-patterns.md`. Prefer one composition over card grids, reuse a stable anchor diagram across sections when it reduces reorientation, and keep diagrams simple. In the Standard profile, reserve orange for tension, change, exception, or action.
 11. If the user requests an outline, precede it with the 自己紹介 decision line, then provide a compact slide table with number, title, narrative job, evidence, and layout ID. Add `Navigator` and `Phase ID` only when a navigation component applies.

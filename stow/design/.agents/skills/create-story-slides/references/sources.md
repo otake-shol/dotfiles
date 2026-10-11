@@ -12,6 +12,7 @@
 4. 機械で判定できる規則はOVSの `scripts/deck.mjs`（静的）か `scripts/deck-check.mjs`（実測）に実装し、
    OVSの `test/deck.test.mjs` にテストを書く。閾値は定数に根拠のコメントを付けて定義する。
 5. 過去の発表資料に `ovs deck verify` を実行し、誤検知が増えていないことを確かめる。
+   制作判断を変えた場合は [evaluation.md](evaluation.md) の実践評価も使う。
 6. `make validate` を通してからコミットする。
 
 ## 根拠の一覧（2026-10-02 確認）

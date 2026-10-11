@@ -83,7 +83,11 @@ stow/codex/.codex/memories/
 stow/codex/.codex/sessions/
 stow/codex/.codex/archived_sessions/
 stow/codex/.codex/shell_snapshots/
-stow/codex/.codex/skills/
+# Keep installed skills local except the maintained Codex grilling instructions.
+stow/codex/.codex/skills/*
+!stow/codex/.codex/skills/grilling/
+stow/codex/.codex/skills/grilling/*
+!stow/codex/.codex/skills/grilling/SKILL.md
 stow/codex/.codex/state/
 stow/codex/.codex/tmp/
 stow/codex/.codex/*.sqlite*

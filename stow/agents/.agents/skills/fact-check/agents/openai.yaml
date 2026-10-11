@@ -1,0 +1,4 @@
+interface:
+  display_name: "ファクトチェック"
+  short_description: "投稿・引用・画像の根拠と文脈を検証し、判定と未確認点を整理"
+  default_prompt: "$fact-check この情報の出所と根拠を調べ、確認できた事実と未確認点を分けてください。"

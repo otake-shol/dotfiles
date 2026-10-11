@@ -398,6 +398,7 @@ codex-commit-push "fix: ..." README.md Makefile  # 指定ファイルだけcommi
 プロンプトで`$eli5 なぜ空は青いの`と指定すると、大きな図と少ない言葉による初心者向けの視覚説明を生成する。
 技術記事の構成、執筆、推敲、公開前の自己確認には`$technical-blog-writing`を指定する。読者の課題、一次情報、動作確認、制約を軸に日本語記事を組み立てる。
 技術的正確性の確認には`$tech-review`、構成・文法・表記の確認には`$article-review`を指定する。どちらも既定では原稿を変更せず、修正依頼がある場合だけ編集する。
+投稿、引用、統計、画像・動画、AI回答の真偽や出所の確認には[`$fact-check`](stow/agents/.agents/skills/fact-check/SKILL.md)を指定する。主張ごとに原典、測定条件、反証、未確認点を整理し、文脈不足と誤りを区別する。`make install-agents`で配置する。
 YouTubeの企画、調査、構造化台本、ビジュアル、Shorts、公開後改善の一貫運用には`$youtube-ops`を指定する。ジャンルを問わず人間の承認点を残しながら、反復作業と品質検査を仕組み化する。コアQ連携のMVPはGit管理外の`~/.agents/youtube/coreq/`で管理し、教材ID、図解ID、Deep Linkを`shindanshi-app`の正本と照合する。
 対話セッションの起動時、アクティブなセッションが20件以上なら24時間に1回だけ整理するか確認する。整理対象は `fzf` で複数選択し、最終確認後にRemote経由で完全削除する。閾値は `CODEX_SESSION_CLEANUP_THRESHOLD`、確認間隔（時間）は `CODEX_SESSION_CLEANUP_INTERVAL_HOURS`、自動確認の無効化は `CODEX_SESSION_CLEANUP_ENABLED=0` で変更できる。
 

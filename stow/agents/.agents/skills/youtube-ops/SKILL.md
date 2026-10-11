@@ -70,11 +70,11 @@ node <skill-directory>/scripts/youtube_ops.mjs validate <episode-directory>
 node <skill-directory>/scripts/youtube_ops.mjs validate <episode-directory> --publish
 ```
 
-機械検査の成功を正確性の証明として扱わない。claimと出典の対応、説明の飛躍、観測条件、画面の可読性、タイトルと内容の一致を別途確認する。`--publish`は公開可能性を検査するだけで公開処理を行わない。
+機械検査の成功を正確性の証明として扱わない。claimと出典の対応、説明の飛躍、観測条件、画面の可読性を別途確認する。[編集システム](references/editorial-system.md)に沿ってタイトル・サムネイル・Shortsの単独視聴時の意味も確認し、claimとの対応を`review.md`に残す。`--publish`は公開可能性を検査するだけで公開処理を行わない。
 
 ### 公開後改善
 
-[改善ループ](references/improvement-loop.md)を読む。人間の修正、AIレビュー、公開後指標を混ぜずに記録する。単発の好みを恒久規則へ昇格させない。
+[改善ループ](references/improvement-loop.md)を読む。人間の修正、AIレビュー、公開後指標を混ぜずに記録する。事実訂正では影響する派生物を追跡し、ローカル修正と公開反映を区別する。単発の好みを恒久規則へ昇格させない。
 
 ## 完了条件
 

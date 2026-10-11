@@ -1,0 +1,68 @@
+name: Brewfile
+
+on:
+  push:
+    branches: [master, main]
+    paths:
+      - Brewfile
+      - .github/workflows/brewfile.yml
+  pull_request:
+    branches: [master, main]
+    paths:
+      - Brewfile
+      - .github/workflows/brewfile.yml
+  schedule:
+    - cron: '0 0 * * 1'  # 毎週月曜 00:00 UTC（日本時間09:00）
+  workflow_dispatch:
+
+jobs:
+  brewfile:
+    name: Brewfile validation
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # runnerイメージ内の古いformula一覧で改名済みパッケージを誤判定しない。
+      - name: Update Homebrew metadata
+        run: |
+          brew update
+          brew --version
+
+      - name: Verify Brewfile syntax
+        run: brew bundle list --all --file=Brewfile >/dev/null
+
+      - name: Set up Brewfile taps
+        run: |
+          brew bundle list --taps --file=Brewfile | while IFS= read -r tap; do
+            brew tap "$tap"
+          done
+
+      - name: Check Homebrew formulae and casks are available
+        run: |
+          errors=0
+          while IFS= read -r line; do
+            # tap行はスキップ
+            [[ "$line" =~ ^[[:space:]]*# ]] && continue
+            [[ -z "$line" ]] && continue
+
+            if [[ "$line" =~ ^brew\ \"([^\"]+)\" ]]; then
+              pkg="${BASH_REMATCH[1]}"
+              if ! output=$(brew info --formula "$pkg" 2>&1); then
+                printf '%s\n' "$output"
+                echo "::error::Formula lookup failed: $pkg"
+                errors=$((errors + 1))
+              fi
+            elif [[ "$line" =~ ^cask\ \"([^\"]+)\" ]]; then
+              pkg="${BASH_REMATCH[1]}"
+              if ! output=$(brew info --cask "$pkg" 2>&1); then
+                printf '%s\n' "$output"
+                echo "::error::Cask lookup failed: $pkg"
+                errors=$((errors + 1))
+              fi
+            fi
+          done < Brewfile
+          if [ "$errors" -gt 0 ]; then
+            echo "::error::$errors Homebrew package lookup(s) failed"
+            exit 1
+          fi
+          echo "✓ All Homebrew formulae and casks are available"

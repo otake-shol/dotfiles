@@ -5,8 +5,6 @@ on:
     branches: [master, main]
   pull_request:
     branches: [master, main]
-  schedule:
-    - cron: '0 0 * * 1'  # 毎週月曜 00:00 UTC（versions-audit のみ）
   workflow_dispatch:
 
 jobs:
@@ -41,71 +39,11 @@ jobs:
           marp --version
           fc-match -f '%{family}\n' 'Noto Sans CJK JP' | grep -Fx 'Noto Sans CJK JP'
 
-      - name: ShellCheck
-        run: make lint
-
-      - name: README stats check
-        run: make readme-check
-
-      - name: Stow conflict detection (dry run)
-        run: make check-conflicts
-
       - name: Zsh syntax check
         run: find stow/zsh -type f -name '*.zsh' -print0 | xargs -0 -n 1 zsh -n
 
       - name: Validate (TOML/JSON/absolute-path/local-state)
         run: make validate
-
-  brewfile:
-    name: Brewfile validation
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      # runnerイメージ内の古いformula一覧で改名済みパッケージを誤判定しない。
-      - name: Update Homebrew metadata
-        run: |
-          brew update
-          brew --version
-
-      - name: Verify Brewfile syntax
-        run: brew bundle list --all --file=Brewfile >/dev/null
-
-      - name: Set up Brewfile taps
-        run: |
-          brew bundle list --taps --file=Brewfile | while IFS= read -r tap; do
-            brew tap "$tap"
-          done
-
-      - name: Check Homebrew formulae and casks are available
-        run: |
-          errors=0
-          while IFS= read -r line; do
-            # tap行はスキップ
-            [[ "$line" =~ ^[[:space:]]*# ]] && continue
-            [[ -z "$line" ]] && continue
-
-            if [[ "$line" =~ ^brew\ \"([^\"]+)\" ]]; then
-              pkg="${BASH_REMATCH[1]}"
-              if ! output=$(brew info --formula "$pkg" 2>&1); then
-                printf '%s\n' "$output"
-                echo "::error::Formula lookup failed: $pkg"
-                errors=$((errors + 1))
-              fi
-            elif [[ "$line" =~ ^cask\ \"([^\"]+)\" ]]; then
-              pkg="${BASH_REMATCH[1]}"
-              if ! output=$(brew info --cask "$pkg" 2>&1); then
-                printf '%s\n' "$output"
-                echo "::error::Cask lookup failed: $pkg"
-                errors=$((errors + 1))
-              fi
-            fi
-          done < Brewfile
-          if [ "$errors" -gt 0 ]; then
-            echo "::error::$errors Homebrew package lookup(s) failed"
-            exit 1
-          fi
-          echo "✓ All Homebrew formulae and casks are available"
 
   bootstrap:
     name: Bootstrap dry-run
@@ -126,29 +64,3 @@ jobs:
           brew install stow
           STOW_TEST_HOME="$(mktemp -d)"
           make check-conflicts HOME="$STOW_TEST_HOME"
-
-  versions-audit:
-    name: asdf versions audit (informational)
-    runs-on: ubuntu-latest
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install asdf
-        run: |
-          git clone https://github.com/asdf-vm/asdf.git "$HOME/.asdf" --branch v0.14.1 --depth 1
-          echo "$HOME/.asdf/bin" >> "$GITHUB_PATH"
-          echo "$HOME/.asdf/shims" >> "$GITHUB_PATH"
-
-      - name: Add asdf plugins
-        continue-on-error: true
-        run: |
-          while read -r tool _ _; do
-            [ -z "$tool" ] && continue
-            case "$tool" in \#*) continue ;; esac
-            asdf plugin add "$tool" 2>/dev/null || true
-          done < stow/asdf/.tool-versions
-
-      - name: Versions audit (informational, never fails CI)
-        continue-on-error: true
-        run: make versions-audit

@@ -1,6 +1,7 @@
 # dotfiles
 
 [![CI](https://github.com/otake-shol/dotfiles/actions/workflows/ci.yml/badge.svg)](https://github.com/otake-shol/dotfiles/actions/workflows/ci.yml)
+[![Brewfile](https://github.com/otake-shol/dotfiles/actions/workflows/brewfile.yml/badge.svg)](https://github.com/otake-shol/dotfiles/actions/workflows/brewfile.yml)
 
 Orcaを主要エディタ・IDEとするmacOS向けの個人開発環境設定ファイル。GNU Stowによるモジュール管理とワンコマンドセットアップに対応。
 
@@ -332,6 +333,11 @@ bin/orca-automations export    # 未管理のAutomationをlocal/へ書き出し
 
 GitHub Actionsで以下を自動検証:
 
+- `CI`: master/mainへのpushとPR、手動実行。`make validate`に共通検証を集約し、Zsh構文とmacOSのセットアップ検査を併せて実行する。
+- `Brewfile`: `Brewfile`または検査ワークフローの変更時、毎週月曜09:00（日本時間）、手動実行。パッケージの廃止などコード変更がなくても発生する問題を確認する。
+
+共通検証の対象:
+
 - ShellCheck（bootstrap.sh + bin + Claude/Codex hooks）
 - bootstrapのStow競合安全性テスト
 - 個人設定の移行・公開検査テスト、ステージ済み内容の公開検査
@@ -339,7 +345,9 @@ GitHub Actionsで以下を自動検証:
 - OVS全パーツ・チャート・SVG安全性・PNG寸法・Marpテーマ・スライドの静的検査と描画実測、検査器のミューテーションテスト
 - Stow競合検出（全パッケージのドライラン）
 - Zsh構文チェック
-- Brewfile構文とformula・caskの取得可否（定義済みtapを準備して検証）
+
+Brewfile検査では構文とformula・caskの取得可否を確認する（定義済みtapを準備して検証）。
+asdfのバージョン監査は自動実行せず、必要な時に`make versions-audit`で確認する。
 
 Linuxの描画検査には日本語フォント（Noto CJK）を導入し、Chrome・Marp・フォントの存在を事前確認する。
 CIでもスライドの描画テストを実行し、必要なツールの不足をスキップで隠さない。

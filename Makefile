@@ -158,7 +158,7 @@ setup-fastlane-env:
 macos-defaults:
 	@bash ./bin/apply-macos-defaults
 
-validate: lint test-validation-gates test-bootstrap test-privacy test-orca privacy-check readme-check design-check
+validate: lint test-validation-gates test-bootstrap test-privacy test-orca test-worktree privacy-check readme-check design-check
 	@if [ "$${CI:-}" = "true" ]; then \
 	  $(MAKE) check-conflicts; \
 	else \
@@ -378,6 +378,10 @@ test-privacy:
 
 test-orca:
 	@python3 -B -m unittest discover -s tests -p 'test_orca_*.py'
+
+.PHONY: test-worktree
+test-worktree:
+	@python3 -B -m unittest discover -s tests -p 'test_worktree_*.py'
 
 orca-plan:
 	@bin/orca-automations plan

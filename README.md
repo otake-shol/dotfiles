@@ -373,6 +373,8 @@ cls                    # セッション一覧
 
 カスタムコマンド: `/verify`, `/commit-push`, `/spec`, `/review`, `/test`, `/worktree`, `/slides`, `/visual`, `/pc-checkup`, `/release-ios`
 
+`/worktree` の[共通スキル](stow/agents/.agents/skills/source-command-worktree/SKILL.md)には不要候補の読み取り専用診断を含む。`python3 ~/.agents/skills/source-command-worktree/scripts/diagnose.py --parent ~/projects` で親ディレクトリ直下のリポジトリを棚卸しできる。未追跡・ignoredファイルや使用中の兆候は保留し、fetch・削除は行わない。診断テストは `make test-worktree`。
+
 ## Codex
 
 ```bash

@@ -452,7 +452,8 @@ function marpOutput(markdownPath, deck, workDir, themeOption) {
     if (!existsSync(theme)) {
       throw new Error(`テーマが見つかりません: ${theme}`);
     }
-    args.push("--theme", theme);
+    // 同じフォルダのテーマを @import で継承できるように、フォルダごとテーマセットに入れる
+    args.push("--theme-set", dirname(theme), "--theme", theme);
   }
   args.push(markdownPath, "--output", output);
   const result = spawnSync("marp", args, { encoding: "utf8" });

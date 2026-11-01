@@ -1,0 +1,4 @@
+interface:
+  display_name: "Claude Training Deck"
+  short_description: "Claudeの使い方研修キット（スライド・演習・講師ガイド・ワークシート）を再現できる形で作る"
+  default_prompt: "$claude-training-deck を使って、Claudeの研修資料を作ってください。"

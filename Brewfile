@@ -36,7 +36,7 @@ brew "fd"                          # find代替: 高速+.gitignore尊重
 brew "ripgrep"                     # grep代替: 高速+Unicode対応
 brew "btop"                        # top代替: GPU監視+マウス操作
 brew "glow"                        # Markdownレンダリング表示
-brew "tldr"                        # manページ簡易版
+brew "tlrc"                        # manページ簡易版
 brew "trash"                       # rm代替: ゴミ箱へ移動
 brew "curl"                        # macOS標準より新しいバージョン
 brew "jq"                          # JSON処理

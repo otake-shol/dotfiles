@@ -4,11 +4,24 @@
 #   scripts/new-claude-training.sh <slug> "<題名>" [--minutes 60] [--subtitle "<副題>"]
 #   scripts/new-claude-training.sh <slug> "<題名>" --from slides/2026-claude-first-step-lt
 #     例: scripts/new-claude-training.sh claude-work-basics "Claudeを仕事の<br>相棒にしよう" --minutes 90
-# 作るもの: slides/<年>-<slug>/{training.md,worksheet.md,facilitator-guide.md,README.md,assets/icons}、
+# 作るもの: slides/<年>-<slug>/{training.md,extras.md,feedback.md,worksheet.md,facilitator-guide.md,README.md,assets/icons}、
 #   package.json の build:<slug> スクリプト、ルート README の一覧の行
-# --from は既存キットの原稿と素材を複製する（ビルド済みの PDF・HTML は複製しない）。
+# --from は既存キットの原稿と素材を複製する（ビルド済みの PDF・HTML は複製しない）。困りごとログは雛形から新しく作る。
 # 自己紹介は空欄のまま作る。公開リポジトリ（dotfiles）に個人情報を書かない。
 set -euo pipefail
+
+# 雛形の {{KEY}} を環境変数の値に置き換えて書き出す
+render_template() {
+  local src="$1" dst="$2"
+  python3 - "${src}" "${dst}" <<'PY'
+import os, sys
+src, dst = sys.argv[1], sys.argv[2]
+text = open(src, encoding="utf-8").read()
+for key in ("TITLE_PLAIN", "TITLE", "SUBTITLE", "MINUTES", "SLUG", "DIR"):
+    text = text.replace("{{" + key + "}}", os.environ[key])
+open(dst, "w", encoding="utf-8").write(text)
+PY
+}
 
 usage() {
   echo "usage: $0 <slug> <title> [--minutes N] [--subtitle TEXT] [--from DIR]" >&2
@@ -36,6 +49,7 @@ main() {
   dir="slides/${name}"
   title_plain="${title//<br>/}"
   [[ -n "${subtitle}" ]] || subtitle="Claudeハンズオン（${minutes}分）"
+  export TITLE="${title}" TITLE_PLAIN="${title_plain}" SUBTITLE="${subtitle}" MINUTES="${minutes}" SLUG="${slug}" DIR="${dir}"
 
   [[ -d "${repo}/slides" ]] || { echo "slides リポジトリが見つからない: ${repo}" >&2; exit 1; }
   [[ ! -e "${repo}/${dir}" ]] || { echo "既に存在する: ${repo}/${dir}" >&2; exit 1; }
@@ -48,23 +62,16 @@ main() {
     [[ -f "${src}/training.md" ]] || { echo "複製元に training.md がない: ${src}" >&2; exit 1; }
     mkdir -p "${repo}/${dir}"
     local f
-    for f in training.md worksheet.md facilitator-guide.md deck.md README.md; do
-      [[ -f "${src}/${f}" ]] && cp "${src}/${f}" "${repo}/${dir}/${f}"
+    for f in training.md extras.md worksheet.md facilitator-guide.md deck.md README.md; do
+      if [[ -f "${src}/${f}" ]]; then cp "${src}/${f}" "${repo}/${dir}/${f}"; fi
     done
-    [[ -d "${src}/assets" ]] && cp -R "${src}/assets" "${repo}/${dir}/assets"
+    if [[ -d "${src}/assets" ]]; then cp -R "${src}/assets" "${repo}/${dir}/assets"; fi
+    render_template "${skill_dir}/assets/templates/feedback.md" "${repo}/${dir}/feedback.md"
   else
     mkdir -p "${repo}/${dir}/assets"
     local f
-    for f in training.md worksheet.md facilitator-guide.md README.md; do
-      TITLE="${title}" TITLE_PLAIN="${title_plain}" SUBTITLE="${subtitle}" MINUTES="${minutes}" \
-        SLUG="${slug}" DIR="${dir}" python3 - "${skill_dir}/assets/templates/${f}" "${repo}/${dir}/${f}" <<'PY'
-import os, sys
-src, dst = sys.argv[1], sys.argv[2]
-text = open(src, encoding="utf-8").read()
-for key in ("TITLE_PLAIN", "TITLE", "SUBTITLE", "MINUTES", "SLUG", "DIR"):
-    text = text.replace("{{" + key + "}}", os.environ[key])
-open(dst, "w", encoding="utf-8").write(text)
-PY
+    for f in training.md extras.md feedback.md worksheet.md facilitator-guide.md README.md; do
+      render_template "${skill_dir}/assets/templates/${f}" "${repo}/${dir}/${f}"
     done
     ICON_COLOR='#B0502C' "${HOME}/.agents/skills/create-story-slides/scripts/fetch-icons.sh" \
       "${repo}/${dir}/assets" compass log-in shield-check circle-check shield-alert
@@ -81,6 +88,7 @@ const steps = [
   `${marp} --pdf --pdf-outlines ${DIR}/training.md -o ${DIR}/training.pdf`,
   `${marp} --pdf ${DIR}/worksheet.md -o ${DIR}/worksheet.pdf`,
 ];
+if (fs.existsSync(`${DIR}/extras.md`)) steps.push(`${marp} --pdf ${DIR}/extras.md -o ${DIR}/extras.pdf`);
 if (fs.existsSync(`${DIR}/deck.md`)) {
   steps.push(`${marp} ${DIR}/deck.md -o ${DIR}/deck.html`, `${marp} --pdf --pdf-outlines ${DIR}/deck.md -o ${DIR}/deck.pdf`);
 }

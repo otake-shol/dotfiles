@@ -5,12 +5,12 @@ lang: ja
 paginate: true
 size: 16:9
 title: {{TITLE_PLAIN}} ワークシート
-description: 「{{TITLE_PLAIN}}」ハンズオンの受講者用ワークシート（頼み方の型・演習・困ったとき）
+description: 「{{TITLE_PLAIN}}」ハンズオンの受講者用ワークシート（頼み方の型・演習・困ったとき・今日の困りごと）
 author: 〈作成者〉
 ---
 
 <!-- _class: l02 -->
-<!-- _header: ワークシート 1/2 -->
+<!-- _header: ワークシート 1/3 -->
 
 # 頼み方の型と<br>今日の演習
 
@@ -46,7 +46,7 @@ author: 〈作成者〉
 ---
 
 <!-- _class: l06 -->
-<!-- _header: ワークシート 2/2 -->
+<!-- _header: ワークシート 2/3 -->
 
 # 困ったときと<br>入れる前の確認
 
@@ -59,6 +59,7 @@ author: 〈作成者〉
 - **上限に達した**：時間をおいてから再開
 - **返事が長すぎる**：「3行で」と注文する
 - **答えが怪しい**：「出典は？」と聞き、元の情報で確認
+- **続きを読みたい**：公式ヘルプ（日本語）support.claude.com/ja
 
 </div>
 <div class="hl">
@@ -75,8 +76,27 @@ author: 〈作成者〉
 </div>
 </div>
 
-<!-- _footer: 出典：[Claudeの料金](https://claude.com/pricing)・[Is my data used for model training?](https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training) -->
+<!-- _footer: 出典：[Claudeを始める](https://support.claude.com/ja/articles/8114491-claudeを始める)・[モデル改善のプライバシー設定](https://privacy.claude.com/ja/articles/12109829-モデル改善のプライバシー設定を変更するにはどうすればよいですか) -->
 
 <!--
 根拠: 〈利用上限と学習の設定を facts.md の手順で確かめ、確認日を書く〉
+-->
+
+---
+
+<!-- _class: l02 -->
+<!-- _header: ワークシート 3/3 -->
+
+# 今日の困りごとを<br>次の研修へ
+
+<div class="cols three">
+<div><b>手が止まったところ</b><p>どの演習の、どこで迷ったか</p><div style="height:200px;margin-top:16px;border:2px solid var(--mist-gray);border-radius:8px;background:var(--warm-canvas)"></div></div>
+<div><b>もっと知りたいこと</b><p>次に聞いてみたいこと</p><div style="height:200px;margin-top:16px;border:2px solid var(--mist-gray);border-radius:8px;background:var(--warm-canvas)"></div></div>
+<div><b>明日試すお題</b><p>1つだけ書く</p><div style="height:200px;margin-top:16px;border:2px solid var(--mist-gray);border-radius:8px;background:var(--warm-canvas)"></div></div>
+</div>
+
+<p class="band soft">書いた内容は次の研修づくりに使います。名前は書かなくて大丈夫です</p>
+
+<!--
+メモ: 回収して、講師がその日のうちに feedback.md に一般化して記録する。クライアント向けの回の原本は研修用の非公開リポジトリで保管する。
 -->

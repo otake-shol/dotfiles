@@ -375,6 +375,8 @@ cls                    # セッション一覧
 
 `/worktree` の[共通スキル](stow/agents/.agents/skills/source-command-worktree/SKILL.md)には不要候補の読み取り専用診断を含む。`python3 ~/.agents/skills/source-command-worktree/scripts/diagnose.py --parent ~/projects` で親ディレクトリ直下のリポジトリを棚卸しできる。未追跡・ignoredファイルや使用中の兆候は保留し、fetch・削除は行わない。診断テストは `make test-worktree`。
 
+自作スキル（Claude Code・Codex 共通）の作り方は[スキル設計規約](docs/skill-design.md)にまとめている。配置、ディレクトリの役割、AIとスクリプトの分担、外部に出る操作の承認、回帰テストと試運転の規約を定める。
+
 ## Codex
 
 ```bash

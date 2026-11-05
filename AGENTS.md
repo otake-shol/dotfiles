@@ -33,6 +33,7 @@ make validate    # lint＋README整合＋構文＋絶対パス/local-state混入
 - **コミット**: Conventional Commits（`feat`, `fix`, `docs`, `refactor`, `chore` 等）。日本語本文OK
 - **ブランチ**: `master` 直接コミット可（個人リポジトリ）
 - **フォーマッタ**: shfmt（シェル）、Prettier（JSON/MD）
+- **スキル**: 新規作成・手順や判断基準の改修の前に [docs/skill-design.md](docs/skill-design.md) を読む
 
 ## 変更時のルール（コミット前に必ず）
 

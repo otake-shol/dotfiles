@@ -17,6 +17,14 @@
 
 ---
 
+## 知識ドキュメントの書き方（OKF）
+
+- AIエージェントに読ませる知識ドキュメント（規約・手順書・仕様の要約）は OKF（Open Knowledge Format）で書く。1概念1ファイルにし、先頭の frontmatter に `type`（必須）・`title`・`description` を書く。
+- OKF を採用したディレクトリ（dotfiles の `docs/` など）では、概念を追加・変更したら `index.md` と `log.md` も更新し、`okf` スキルの検査スクリプトでエラー0を確認する。
+- README・CLAUDE.md・AGENTS.md・SKILL.md は各ツールの形式を優先し、OKF に変えない。Obsidian Vault は Vault のスキーマを優先する。
+
+---
+
 ## 運用原則（委譲・自律・検証）— モデル非依存
 
 旧前提（逐次指示・常時監視・手動運用）→ 新前提（**委譲・自律実行・検証付き運用**）。

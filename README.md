@@ -377,6 +377,8 @@ cls                    # セッション一覧
 
 自作スキル（Claude Code・Codex 共通）の作り方は[スキル設計規約](docs/skill-design.md)にまとめている。配置、ディレクトリの役割、AIとスクリプトの分担、外部に出る操作の承認、回帰テストと試運転の規約を定める。
 
+`docs/` は [OKF（Open Knowledge Format）](https://github.com/GoogleCloudPlatform/open-knowledge-format)のバンドルとして管理する。1概念1ファイルで先頭の frontmatter に `type` を書き、一覧を `docs/index.md`、更新履歴を `docs/log.md` に置く。書き方は [`okf` スキル](stow/agents/.agents/skills/okf/SKILL.md)、検査は `make docs-check`（`make validate` に含まれる）。
+
 ## Codex
 
 ```bash

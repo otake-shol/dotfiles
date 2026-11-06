@@ -53,6 +53,7 @@ help:
 	@echo "  make setup-privacy-hook プッシュ前の公開検査を有効化"
 	@echo "  make privacy-check    ステージ済み内容の公開検査"
 	@echo "  make validate         移行可能性を機械検証（lint+readme+stow+toml+json+絶対パス）"
+	@echo "  make docs-check       docs/ の OKF 適合性を検査"
 	@echo "  make snapshot         現PCの状態を .snapshot/<ts>/ に記録（移行前の証拠）"
 	@echo "  make new-mac          新PC移行ガイドを表示"
 	@echo "  make macos-defaults   macOS defaults を再適用"
@@ -158,7 +159,7 @@ setup-fastlane-env:
 macos-defaults:
 	@bash ./bin/apply-macos-defaults
 
-validate: lint test-validation-gates test-bootstrap test-privacy test-orca test-worktree privacy-check readme-check design-check
+validate: lint test-validation-gates test-bootstrap test-privacy test-orca test-worktree docs-check privacy-check readme-check design-check
 	@if [ "$${CI:-}" = "true" ]; then \
 	  $(MAKE) check-conflicts; \
 	else \
@@ -382,6 +383,12 @@ test-orca:
 .PHONY: test-worktree
 test-worktree:
 	@python3 -B -m unittest discover -s tests -p 'test_worktree_*.py'
+
+# docs/ を OKF（Open Knowledge Format）バンドルとして検査する（okf スキル）
+.PHONY: docs-check
+docs-check:
+	@echo "▶ docs/ OKF チェック"
+	@node stow/agents/.agents/skills/okf/scripts/check-okf.mjs docs
 
 orca-plan:
 	@bin/orca-automations plan

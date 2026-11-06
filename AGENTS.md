@@ -34,6 +34,7 @@ make validate    # lint＋README整合＋構文＋絶対パス/local-state混入
 - **ブランチ**: `master` 直接コミット可（個人リポジトリ）
 - **フォーマッタ**: shfmt（シェル）、Prettier（JSON/MD）
 - **スキル**: 新規作成・手順や判断基準の改修の前に [docs/skill-design.md](docs/skill-design.md) を読む
+- **docs/**: OKF バンドル。新しい文書は1概念1ファイルで frontmatter に `type` を書き、`docs/index.md` と `docs/log.md` も更新する（手順は `okf` スキル、検査は `make docs-check`）
 
 ## 変更時のルール（コミット前に必ず）
 

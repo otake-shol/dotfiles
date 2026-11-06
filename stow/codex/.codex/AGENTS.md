@@ -12,6 +12,12 @@
 - 読点は意味の切れ、並列、長文の誤読防止に必要な場合のみ使用。
 - 出力前に「は、」「を、」「が、」「で、」「など、」を全件確認し、不要な読点を削除する。
 
+## 知識ドキュメントの書き方（OKF）
+
+- AIエージェントに読ませる知識ドキュメント（規約・手順書・仕様の要約）は OKF（Open Knowledge Format）で書く。1概念1ファイルにし、先頭の frontmatter に `type`（必須）・`title`・`description` を書く。
+- OKF を採用したディレクトリ（dotfiles の `docs/` など）では、概念を追加・変更したら `index.md` と `log.md` も更新し、`okf` スキルの検査スクリプトでエラー0を確認する。
+- README・CLAUDE.md・AGENTS.md・SKILL.md は各ツールの形式を優先し、OKF に変えない。Obsidian Vault は Vault のスキーマを優先する。
+
 ## Working Style
 
 - Read the local code and project instructions before making changes.

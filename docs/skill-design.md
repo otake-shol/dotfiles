@@ -1,3 +1,14 @@
+---
+type: Guide
+title: 自作スキルの設計規約
+description: このリポジトリで管理する Agent Skills（Claude Code・Codex 共通）の作り方と改修の規約。
+tags: [skills, agents]
+sources:
+  - id: kazaneya-agent-skills
+    resource: https://techblog.kazaneya.com/20261030-agent-skills/
+    title: AIエージェント向け業務手順書（Agent Skills）の設計方法
+---
+
 # 自作スキルの設計規約
 
 このリポジトリで管理する Agent Skills（Claude Code・Codex 共通）の作り方と改修の規約。新しいスキルを作るとき、既存スキルの手順や判断基準を変えるときに読む。

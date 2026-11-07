@@ -90,6 +90,7 @@ Claudeの個人設定は `~/.config/dotfiles-local/claude/` に保存する（`X
 [プロジェクト管理の入口](docs/project-management/README.md)に、既存スキル・ツールの用途、リポジトリ台帳、計画からスライドまでの流れをまとめている。
 [project-planning](stow/agents/.agents/skills/project-planning/SKILL.md)で目的・完了条件・担当・依存関係・リスクを整理し、スライドが必要なら既存の `create-story-slides` へ渡す。共通の手順と空の雛形をdotfilesに置き、入力済み計画は各プロジェクトで管理する。
 [計画スライドの雛形](templates/project-plan-slides/README.md)に18枚のMarp原稿、入力項目、書き出し・検証手順を用意している。
+WBSのID・親子・先行関係・日付・稼働日数はAIに数えさせず、`project-planning/scripts/check-wbs.mjs` で検査する（SheetsのCSV書き出しかseed JSONを入力。テストは `make test-skills`）。
 
 ## コアQのセット制作
 

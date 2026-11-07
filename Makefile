@@ -38,6 +38,7 @@ help:
 	@echo "  make bootstrap        完全セットアップ"
 	@echo "  make lint             ShellCheck"
 	@echo "  make test-bootstrap   bootstrapのStow競合安全性テスト"
+	@echo "  make test-skills      共有スキルのスクリプトのテスト（node:test）"
 	@echo "  make design-check     ビジュアルシステム生成物・SVG構文チェック"
 	@echo "  make design-test      OVSテストのみ（DESIGN_TESTSで対象を指定可能）"
 	@echo "  make design-mutation  コントラスト検査器の改変をテストで検出（Chrome必須）"
@@ -159,7 +160,7 @@ setup-fastlane-env:
 macos-defaults:
 	@bash ./bin/apply-macos-defaults
 
-validate: lint test-validation-gates test-bootstrap test-privacy test-orca test-worktree docs-check privacy-check readme-check design-check
+validate: lint test-validation-gates test-bootstrap test-privacy test-orca test-worktree test-skills docs-check privacy-check readme-check design-check
 	@if [ "$${CI:-}" = "true" ]; then \
 	  $(MAKE) check-conflicts; \
 	else \
@@ -383,6 +384,12 @@ test-orca:
 .PHONY: test-worktree
 test-worktree:
 	@python3 -B -m unittest discover -s tests -p 'test_worktree_*.py'
+
+# 共有スキルの scripts/*.test.mjs をまとめて実行する（docs/skill-design.md の回帰テスト）
+.PHONY: test-skills
+test-skills:
+	@files=$$(find stow -path '*/.agents/skills/*/scripts/*.test.mjs' -not -path '*/node_modules/*' | sort); \
+	if [ -z "$$files" ]; then echo "スキルのテストなし"; else node --test $$files; fi
 
 # docs/ を OKF（Open Knowledge Format）バンドルとして検査する（okf スキル）
 .PHONY: docs-check

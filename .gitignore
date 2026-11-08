@@ -132,3 +132,6 @@ orca/automations/local/
 
 # YouTube運営の作品データ（youtube-opsの作業領域。公開リポに含めない）
 stow/agents/.agents/youtube/
+
+# yomiyasu の検査記録（yomiyasu_check.py が git の最上位に作る）
+.yomiyasu/

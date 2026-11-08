@@ -378,6 +378,8 @@ cls                    # セッション一覧
 
 自作スキル（Claude Code・Codex 共通）の作り方は[スキル設計規約](docs/skill-design.md)にまとめている。配置、ディレクトリの役割、AIとスクリプトの分担、外部に出る操作の承認、回帰テストと試運転の規約を定める。
 
+日本語の推敲には外部スキル [yomiyasu](https://github.com/nanaism/yomiyasu)（MIT）を v2.5.0 に固定して入れている（`stow/agents/.agents/skills/yomiyasu/`、版は `.skill-lock.json`）。「yomiyasu で読みやすくして」「/yomiyasu」と名前を出したときだけ使い、CLAUDE.md で毎回使う設定と任意のフック（`yomiyasu_hook.py`）は入れていない。SKILL.md が約128KBあり、呼び出すたびに数万トークンを読み込むため。検査の記録は git の最上位の `.yomiyasu/` に作られ、Git管理外にしている。
+
 `docs/` は [OKF（Open Knowledge Format）](https://github.com/GoogleCloudPlatform/open-knowledge-format)のバンドルとして管理する。1概念1ファイルで先頭の frontmatter に `type` を書き、一覧を `docs/index.md`、更新履歴を `docs/log.md` に置く。書き方は [`okf` スキル](stow/agents/.agents/skills/okf/SKILL.md)、検査は `make docs-check`（`make validate` に含まれる）。
 
 ## Codex

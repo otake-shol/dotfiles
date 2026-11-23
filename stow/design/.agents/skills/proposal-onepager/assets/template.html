@@ -75,6 +75,11 @@
   .price .label { font-family: var(--font-title); font-weight: 700; font-size: 10.5pt; color: var(--white); }
   .price .big { display: block; font-family: var(--font-figure); font-weight: 700; font-size: 26pt; color: var(--white); line-height: 1.15; letter-spacing: .01em; margin: .5mm 0; }
   .price .tax { font-family: var(--font-title); font-size: 10pt; font-weight: 700; margin-left: 1.2mm; letter-spacing: 0; }
+  /* 割引：同じ中身の定価からの割引にだけ使う（review-checklist の 1）。Accent Soft は割引の目印 1 か所だけ */
+  .price del { font-family: var(--font-figure); font-weight: 700; font-size: 12pt; color: var(--primary-soft); text-decoration-thickness: 1.5px; }
+  .price .was-label { font-family: var(--font-title); font-weight: 500; color: var(--primary-soft); margin-right: 1.5mm; }
+  .price .badge { display: inline-block; background: #fbece7; color: var(--deep-navy); font-family: var(--font-title); font-weight: 700;
+    font-size: 9pt; line-height: 1.5; padding: .2mm 2.2mm; margin-left: 2.5mm; vertical-align: 1px; }
   .cond { border-left: 1px solid rgba(220, 232, 246, .35); padding-left: 6mm; }
   .cond p { font-family: var(--font-title); font-weight: 700; font-size: 9.5pt; color: var(--white); }
   .cond ul { list-style: none; margin-top: .8mm; }

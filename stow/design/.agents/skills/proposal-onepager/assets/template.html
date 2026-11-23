@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>$title$</title>
+<style>
+  /*
+   * A4 1 枚の提案資料。配色・書体の正本は create-story-slides の references/design-system.md（Standard）。
+   * ここには A4 印刷物としての差分だけを置く（references/print-profile.md）。
+   * 配色：Warm Canvas が主、Primary Blue が道筋と決定的な数字、Deep Navy は料金（判断の到着点）だけ。
+   * Accent Orange は例外・介入の合図なので使わない。
+   * 書体：見出し・ラベル＝Zen Maru Gothic／本文＝Noto Sans JP／数字そのもの＝Plus Jakarta Sans。
+   */
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary-blue: #2c63b4; --deep-navy: #123858; --primary-soft: #dce8f6; --pale-blue: #ecf2f9;
+    --warm-canvas: #faf8f3; --mist-gray: #d5dde6; --ink: #17202a; --muted-ink: #65717e; --white: #ffffff;
+    --body-ink: #2b3640;
+    --font-title: "Zen Maru Gothic", "Noto Sans JP", "Yu Gothic", sans-serif;
+    --font-body: "Noto Sans JP", "Yu Gothic", sans-serif;
+    --font-figure: "Plus Jakarta Sans", "Noto Sans JP", sans-serif;
+  }
+  html, body { width: 210mm; background: var(--warm-canvas); }
+  body {
+    font-family: var(--font-body); color: var(--ink); font-size: 9.5pt; line-height: 1.55;
+    padding: 0 14mm 3mm;
+    /* 内容が短いときもフッターをページの下端に置く */
+    min-height: 296mm; display: flex; flex-direction: column;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+
+  /* ヘッダー：表紙と同じ Primary Blue の帯 */
+  header { margin: 0 -14mm; padding: 5.5mm 14mm 4mm; background: var(--primary-blue); color: var(--white);
+    display: flex; justify-content: space-between; align-items: flex-end; }
+  .to { font-family: var(--font-title); font-weight: 500; font-size: 10pt; color: var(--primary-soft); }
+  h1 { font-family: var(--font-title); font-weight: 700; font-size: 22pt; line-height: 1.3; letter-spacing: .02em; margin-top: .5mm; }
+  .meta { text-align: right; font-size: 9pt; color: var(--primary-soft); line-height: 1.6; }
+  .meta strong { font-family: var(--font-title); font-weight: 700; font-size: 10pt; color: var(--white); }
+
+  /* 見出し：飾りの記号は付けず、細い区切り線だけ */
+  h2 { font-family: var(--font-title); font-weight: 700; font-size: 12pt; color: var(--deep-navy);
+    margin: 3.2mm 0 1.6mm; padding-bottom: .7mm; border-bottom: 1px solid var(--mist-gray); }
+
+  /* リード：メッセージは Pale Blue と 6px の Primary Blue の縦線 */
+  .lead { margin-top: 3.4mm; background: var(--pale-blue); border-left: 6px solid var(--primary-blue);
+    padding: 2.2mm 4.5mm; font-size: 9.8pt; }
+  .lead strong { color: var(--deep-navy); }
+
+  /* 並列の項目（2×2）：番号は付けず、細い縦線で区切る */
+  .grid4 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8mm 7mm; }
+  .item { border-left: 2px solid var(--primary-blue); padding-left: 3mm; }
+  .item p { font-size: 9.2pt; color: var(--body-ink); line-height: 1.5; }
+  .item p:first-child { font-family: var(--font-title); font-weight: 700; font-size: 10.5pt; color: var(--ink); margin-bottom: .3mm; }
+
+  /* 成果物：白い面と Mist Gray の境界（面で分けるのはここだけ） */
+  .band { background: var(--white); border: 1px solid var(--mist-gray); padding: 2.4mm 4mm; }
+  .band p { font-size: 9.3pt; color: var(--body-ink); line-height: 1.55; }
+  .band strong { font-family: var(--font-title); color: var(--deep-navy); font-size: 10.5pt; }
+
+  /* 流れ：Primary Blue の線を主経路として、番号つきで横に並べる（番号はページでここだけ） */
+  .flow { display: flex; gap: 4mm; counter-reset: s; }
+  .step { flex: 1; counter-increment: s; border-top: 2.5px solid var(--primary-blue); padding-top: 1.4mm; position: relative; }
+  .step:not(:last-child)::after { content: ""; position: absolute; top: -4.1px; right: -2.6mm;
+    border-left: 6px solid var(--primary-blue); border-top: 3.5px solid transparent; border-bottom: 3.5px solid transparent; }
+  .step p { font-size: 9.2pt; color: var(--body-ink); line-height: 1.5; }
+  .step p:nth-child(1) { font-size: 8.6pt; color: var(--muted-ink); }
+  .step p:nth-child(1)::before { content: counter(s) "  "; font-family: var(--font-figure); font-weight: 700; font-size: 11.5pt; color: var(--primary-blue); }
+  .step p:nth-child(2) { font-family: var(--font-title); font-size: 10.5pt; color: var(--ink); font-weight: 700; margin: .2mm 0 .4mm; }
+
+  /* 料金：判断の到着点なので Deep Navy の面に白文字。枠の中は今回の内容と価格だけ */
+  .price { display: grid; grid-template-columns: 1.2fr 1fr; gap: 6mm; align-items: center;
+    background: var(--deep-navy); color: var(--white); padding: 2.6mm 6mm; }
+  .price p { font-size: 9pt; color: var(--primary-soft); line-height: 1.5; }
+  .price .label { font-family: var(--font-title); font-weight: 700; font-size: 10.5pt; color: var(--white); }
+  .price .big { display: block; font-family: var(--font-figure); font-weight: 700; font-size: 26pt; color: var(--white); line-height: 1.15; letter-spacing: .01em; margin: .5mm 0; }
+  .price .tax { font-family: var(--font-title); font-size: 10pt; font-weight: 700; margin-left: 1.2mm; letter-spacing: 0; }
+  .cond { border-left: 1px solid rgba(220, 232, 246, .35); padding-left: 6mm; }
+  .cond p { font-family: var(--font-title); font-weight: 700; font-size: 9.5pt; color: var(--white); }
+  .cond ul { list-style: none; margin-top: .8mm; }
+  .cond li { font-size: 9pt; line-height: 1.6; color: var(--primary-soft); padding-left: 3.5mm; position: relative; }
+  .cond li::before { content: "・"; position: absolute; left: -.6mm; }
+
+  /* 枠の外の補足（比較の対象など）と、お願い */
+  .note p { font-size: 8.8pt; color: var(--body-ink); margin-top: 1.4mm; }
+  .ask p { font-size: 9pt; color: var(--deep-navy); margin-top: 1.2mm; padding-left: 3mm; border-left: 2px solid var(--primary-soft); }
+
+  /* 横並びの選択肢：箱にせず、細い線で分ける */
+  .cards { display: flex; }
+  .card { flex: 1; padding: .5mm 5mm; }
+  .card:first-child { padding-left: 0; border-right: 1px solid var(--mist-gray); }
+  .card p { font-size: 9.2pt; color: var(--body-ink); line-height: 1.5; }
+  .card p:first-child { font-family: var(--font-title); font-size: 10.5pt; color: var(--ink); font-weight: 700; margin-bottom: .5mm; }
+  .card p:first-child em { font-style: normal; font-size: 9.5pt; color: var(--primary-blue); margin-left: 2mm; }
+
+  /* 事務的な条件：最後にまとめる */
+  .terms ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: .6mm 7mm; }
+  .terms li { font-size: 8.8pt; color: var(--body-ink); line-height: 1.5; padding-left: 3.5mm; position: relative; }
+  .terms li::before { content: "・"; position: absolute; left: -.6mm; color: var(--muted-ink); }
+
+  footer { margin-top: auto; padding-top: 1.6mm; border-top: 1px solid var(--mist-gray);
+    display: flex; justify-content: space-between; font-size: 8.8pt; color: var(--muted-ink); }
+  footer span:last-child { font-family: var(--font-title); font-weight: 500; color: var(--deep-navy); }
+  main { margin-bottom: 2.4mm; }
+</style>
+</head>
+<body>
+  <header>
+    <div>
+      <div class="to">$to$</div>
+      <h1>$title$</h1>
+    </div>
+    <div class="meta">$date$<br><strong>$author$</strong></div>
+  </header>
+  <main>
+$body$
+  </main>
+  <footer>
+    <span>$footer-left$</span>
+    <span>$footer-right$</span>
+  </footer>
+</body>
+</html>

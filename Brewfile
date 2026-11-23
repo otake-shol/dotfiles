@@ -90,12 +90,12 @@ cask "tailscale-app"               # Orca Mobile・リモート接続用プラ�
 
 # --- ブラウザ・生産性 ---
 cask "google-chrome"               # メインブラウザ(縦タブ+Gemini+Google同期)
-cask "arc"                         # サブ/移行用に残置(Chromiumブラウザ)
 cask "readdle-spark"               # メールクライアント
 cask "ticktick"                    # ToDoリスト+ポモドーロ
 cask "obsidian"                    # Markdownナレッジベース(Vault設定は別管理)
 cask "slack"                       # チームコミュニケーション
 cask "discord"                     # コミュニティ・ボイスチャット
+cask "zoom"                        # Web会議(顧客ヒアリング・初回導入はsudo要=通常ターミナルで実行)
 mas "LINE", id: 539883307          # メッセージング(個人/家族・Mac App Store版・要mas)
 
 # --- デザイン・開発 ---

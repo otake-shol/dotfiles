@@ -3,8 +3,10 @@
 
 # --- asdf ---
 typeset -g _asdf_loaded=false
-_asdf_init() {
-  if [[ "$_asdf_loaded" = false ]]; then
+# 名前を _ で始めない: Claude Code の shell snapshot は _ 始まりの関数を保存しないため、
+# スタブから呼ぶと `!` 実行時に command not found になる
+asdf_lazy_init() {
+  if [[ "${_asdf_loaded:-false}" = false ]]; then
     _asdf_loaded=true
     # HOMEBREW_PREFIXを使用（brew shellenvで設定済み、未設定時はアーキテクチャから推測）
     local brew_prefix="${HOMEBREW_PREFIX:-$([[ $(uname -m) == "arm64" ]] && echo /opt/homebrew || echo /usr/local)}"
@@ -18,24 +20,23 @@ _asdf_init() {
 
 # asdfコマンドのラッパー（遅延読み込み）
 asdf() {
-  _asdf_init
+  asdf_lazy_init
   command asdf "$@"
 }
 
 # asdf管理ランタイム使用時に自動初期化（evalを避けて直接定義）
-node() { _asdf_init; unset -f node; command node "$@"; }
-npm() { _asdf_init; unset -f npm; command npm "$@"; }
-npx() { _asdf_init; unset -f npx; command npx "$@"; }
-claude() { _asdf_init; unset -f claude; command claude "$@"; }
-python3() { _asdf_init; unset -f python3; command python3 "$@"; }
-pip3() { _asdf_init; unset -f pip3; command pip3 "$@"; }
-java() { _asdf_init; unset -f java; command java "$@"; }
-javac() { _asdf_init; unset -f javac; command javac "$@"; }
-mvn() { _asdf_init; unset -f mvn; command mvn "$@"; }
-gradle() { _asdf_init; unset -f gradle; command gradle "$@"; }
-gws() { _asdf_init; unset -f gws; command gws "$@"; }
-vercel() { _asdf_init; unset -f vercel; command vercel "$@"; }
-terraform() { _asdf_init; unset -f terraform; command terraform "$@"; }
+node() { asdf_lazy_init; unset -f node; command node "$@"; }
+npm() { asdf_lazy_init; unset -f npm; command npm "$@"; }
+npx() { asdf_lazy_init; unset -f npx; command npx "$@"; }
+python3() { asdf_lazy_init; unset -f python3; command python3 "$@"; }
+pip3() { asdf_lazy_init; unset -f pip3; command pip3 "$@"; }
+java() { asdf_lazy_init; unset -f java; command java "$@"; }
+javac() { asdf_lazy_init; unset -f javac; command javac "$@"; }
+mvn() { asdf_lazy_init; unset -f mvn; command mvn "$@"; }
+gradle() { asdf_lazy_init; unset -f gradle; command gradle "$@"; }
+gws() { asdf_lazy_init; unset -f gws; command gws "$@"; }
+vercel() { asdf_lazy_init; unset -f vercel; command vercel "$@"; }
+terraform() { asdf_lazy_init; unset -f terraform; command terraform "$@"; }
 
 # --- direnv ---
 # hook登録は tools.zsh のキャッシュ版で一元管理（二重初期化を回避）

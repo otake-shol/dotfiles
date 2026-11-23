@@ -62,8 +62,7 @@ ZSH_CONFIG_DIR="${HOME}/.zsh"
 if [[ -n "${DEBUG_ZSH:-}" ]]; then
   _zsh_startup_check() {
     local missing=()
-    (( ! $+functions[_asdf_init] )) && missing+=("_asdf_init")
-    (( ! $+functions[claude] )) && missing+=("claude")
+    (( ! $+functions[asdf_lazy_init] )) && missing+=("asdf_lazy_init")
 
     if (( ${#missing} > 0 )); then
       echo "⚠️  zsh: 重要な関数が未定義: ${missing[*]}" >&2

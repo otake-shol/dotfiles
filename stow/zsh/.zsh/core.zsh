@@ -147,7 +147,7 @@ setopt share_history
 setopt inc_append_history
 setopt extended_history        # タイムスタンプを記録
 setopt correct                 # コマンドのスペルミスを修正
-CORRECT_IGNORE='_*|claude'     # claude は遅延読み込みのため除外
+CORRECT_IGNORE='_*|claude'     # claude は誤補正の対象外
 setopt complete_in_word        # 単語の途中でも補完
 
 # Ctrl+Z でfg/bgトグル
@@ -228,10 +228,9 @@ if [[ "$OSTYPE" == darwin* ]] && [[ -t 1 ]] && [[ -z "$CAFFEINATE_SHELL" ]] && [
     _caffeinate_watch $$ &!
 fi
 
-# --- iCloud等の同期フォルダからの claude/codex 起動を安全化するラッパー ---
+# --- iCloud等の同期フォルダからの codex 起動を安全化するラッパー ---
 # iCloud/Google Drive 等（FileProvider管理）を CWD にして起動すると、起動時の
 # Seatbelt サンドボックス初期化が EPERM で落ちる既知不具合がある。
-#   claude: anthropics/claude-code#71955（settings.json では無効化不可）
 #   codex : sandbox_mode=workspace-write のサンドボックス初期化が同様に失敗
 # CWD が同期フォルダ配下のときだけ $HOME から起動して回避。通常パスは素通し。
 # 実体は `command` で呼ぶ（関数の無限再帰を防止）。
@@ -239,16 +238,6 @@ _is_cloudsync_dir() {
     local p=${1:-$PWD}
     [[ "$p" == "$HOME/Library/Mobile Documents/"* ]] \
         || [[ "$p" == "$HOME/Library/CloudStorage/"* ]]
-}
-
-claude() {
-    if _is_cloudsync_dir; then
-        local here=$PWD
-        print -ru2 -- "⚠️  同期フォルダのため \$HOME から起動し '$here' を --add-dir で追加（#71955回避）"
-        ( builtin cd -- "$HOME" && command claude --add-dir "$here" "$@" )
-    else
-        command claude "$@"
-    fi
 }
 
 # Remote対応サブコマンドまたは通常の対話セッションなら成功を返す。

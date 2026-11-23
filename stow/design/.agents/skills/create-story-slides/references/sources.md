@@ -46,3 +46,11 @@ reviewは `review.md` に対応する。数値や媒体固有の条件は現在�
 | [Chen ほか (2026)「X+Slides」](https://arxiv.org/abs/2606.19256) | 聞き手に必要な情報の網羅と出典に基づく正確さを見た目と分けて評価する | review |
 | [Anthropic「Skill authoring best practices」](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) | 目次となる本体と1階層の参照、コピーして使うチェックリスト、検証と修正の繰り返し、決まった処理はスクリプトへ | 本指針の構成、`ovs deck` |
 | Anthropic pptx スキル・OpenAI Google Slides スキル・Figma Slides スキル（各社のAI向け手順書、2026-10時点） | 代表の数枚を先に作る。修正後の新しい画像で確かめる。同じ構造の反復・何でも枠で囲む表現・飾りの足し算を避ける | design、review |
+
+## 説明文の短縮に関する補強（2026-11-01 確認）
+
+| 出典 | 採用した考え方 | 反映先 |
+| --- | --- | --- |
+| [Kazuki Ota「AI の謎な説明文を直すスキル」](https://zenn.dev/microsoft/articles/explain-before-shorten) | 本文・キャプションの短縮後も動作・因果関係・重要な条件を確認し、禁止や例外の意味を保つ | review |
+
+既存の可読性確認を補強する。見出しの文体や字数の目安は維持し、筆者の実践上の提案を効果が実証された規則とは扱わない。

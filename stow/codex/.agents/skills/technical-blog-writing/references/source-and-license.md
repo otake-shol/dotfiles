@@ -27,3 +27,10 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+## 追加の参考資料（2026-11-01 確認）
+
+- [Kazuki Ota「AI の謎な説明文を直すスキル」](https://zenn.dev/microsoft/articles/explain-before-shorten): 説明内容を組み立ててから短縮し、動作・因果関係・条件を保つ観点。
+- [Martin Fowler「LLM Voice」](https://martinfowler.com/bliki/LLM-Voice.html)（[日本語訳](https://bliki-ja.github.io/LLM-Voice)）: 書く過程での思考と筆者の語り口を保つ観点。
+
+両記事を参考にこの環境向けの指示を独自に記述した。本文やスキル全文の転載ではなく、上記MITライセンスの対象資料とも区別する。AIによる下書きの一律禁止は採用せず、筆者の材料とAIからの提案を区別する。

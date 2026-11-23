@@ -9,6 +9,12 @@
         "ctrl+shift+c": "copy_last_response",
         "ctrl+shift+s": "copy_last_command"
       }
+    },
+    {
+      "context": "Chat",
+      "bindings": {
+        "ctrl+alt+g": "command:orca-agent-view"
+      }
     }
   ]
 }

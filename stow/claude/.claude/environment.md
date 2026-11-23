@@ -46,10 +46,14 @@ CLAUDE.md から分離した技術スタック、ツール設定、開発環境�
 
 ## パーミッション
 
-`Bash(*)` 全許可 + deny/askでゲート。詳細は `settings.json` を参照。
+`defaultMode: auto` ＋ Bash は**読み取り系だけ allow**（git status/log/diff/show、grep、sed -n、ls、cat、head、tail、wc など）＋ deny/ask でゲート。詳細は `settings.json` を参照。
+
+- `Bash(*)` は入れていない。入れると CLI でも Bash が auto mode の判定を通らなくなるため
+- SDK 経由のホスト（Orca など）では auto mode の判定が効かず、allow 外の Bash はすべて承認を求められる。読み取り系の allow はその対策（2026-11-03）
 
 - **deny**: .env/credentials/SSH鍵の読み取り、rm -rf、sudo、curl|sh
-- **ask**: git push --force/-f、git reset --hard/rebase/clean、curl/wget、npm publish（通常の git push は許可）
+- **ask**: git push --force/-f、git reset --hard/rebase/clean、wget、npm publish（通常の git push は許可）
+- curl は ask から外し、auto mode の判定に任せる（2026-11-14）
 
 ---
 

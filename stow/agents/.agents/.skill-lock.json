@@ -14,28 +14,31 @@
       "source": "stablyai/orca",
       "sourceType": "github",
       "sourceUrl": "https://github.com/stablyai/orca.git",
+      "ref": "a0cd1644f320f1327f7495650a816111b495f3cd",
       "skillPath": "skills/orchestration/SKILL.md",
-      "skillFolderHash": "4199ec6988801dd491631706cba62631b4bed8fb",
+      "skillFolderHash": "b0cd1d58b0c317cf7c3726fef7e6b1197c405246",
       "installedAt": "2026-09-04T12:20:09.143Z",
-      "updatedAt": "2026-09-04T12:20:09.143Z"
+      "updatedAt": "2026-10-18T05:44:17.884Z"
     },
     "computer-use": {
       "source": "stablyai/orca",
       "sourceType": "github",
       "sourceUrl": "https://github.com/stablyai/orca.git",
+      "ref": "a0cd1644f320f1327f7495650a816111b495f3cd",
       "skillPath": "skills/computer-use/SKILL.md",
-      "skillFolderHash": "f0561c41d1f709a953684aef5d5368f8c58d269f",
+      "skillFolderHash": "b59f27370a41225c22127e91da0c91cd2519f217",
       "installedAt": "2026-09-04T12:20:51.098Z",
-      "updatedAt": "2026-09-04T12:20:51.098Z"
+      "updatedAt": "2026-10-18T05:44:17.873Z"
     },
     "orca-cli": {
       "source": "stablyai/orca",
       "sourceType": "github",
       "sourceUrl": "https://github.com/stablyai/orca.git",
+      "ref": "a0cd1644f320f1327f7495650a816111b495f3cd",
       "skillPath": "skills/orca-cli/SKILL.md",
-      "skillFolderHash": "cdf89459f89dddf347ee2759ff884c369051f06a",
+      "skillFolderHash": "572f7952ac451a30a9c2451b472a639b125ee584",
       "installedAt": "2026-09-04T12:31:53.851Z",
-      "updatedAt": "2026-09-04T12:31:53.851Z"
+      "updatedAt": "2026-10-18T05:44:17.882Z"
     },
     "yomiyasu": {
       "source": "nanaism/yomiyasu",

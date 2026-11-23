@@ -69,6 +69,7 @@ make runtimes-install      # Java/Node/Python/Terraform が必要になった時
 - `claude login`
 - `codex login`
 - **Orca** を起動し、利用するリポジトリとAIエージェントを設定（[導入・確認手順](#orcaの導入確認)）
+- **Muse**（macOS 14以降）を[公式ダウンロードページ](https://ai.meta.com/muse/download/)からインストール。署名付きURLの制約で[Homebrewのcaskが無効化中](https://formulae.brew.sh/cask/muse)のため、`brew bundle` の対象外。
 - `p10k configure`（プロンプト初期化）
 - **Chrome 縦タブ**: `chrome://flags` → "vertical" 検索 → Vertical Tabs を **Enabled** → 再起動（flagsはGoogle同期対象外のため手動設定が必要）
 
@@ -87,7 +88,7 @@ Claudeの個人設定は `~/.config/dotfiles-local/claude/` に保存する（`X
 
 ## プロジェクト管理ツール
 
-[プロジェクト管理の入口](docs/project-management/README.md)に、既存スキル・ツールの用途、リポジトリ台帳、計画からスライドまでの流れをまとめている。
+[プロジェクト管理の入口](docs/project-management/README.md)に、既存スキル・ツールの用途、成果物とリポジトリの対応、正本と更新先、計画からスライドまでの流れをまとめている。
 [project-planning](stow/agents/.agents/skills/project-planning/SKILL.md)で目的・完了条件・担当・依存関係・リスクを整理し、スライドが必要なら既存の `create-story-slides` へ渡す。共通の手順と空の雛形をdotfilesに置き、入力済み計画は各プロジェクトで管理する。
 [計画スライドの雛形](templates/project-plan-slides/README.md)に18枚のMarp原稿、入力項目、書き出し・検証手順を用意している。
 WBSのID・親子・先行関係・日付・稼働日数はAIに数えさせず、`project-planning/scripts/check-wbs.mjs` で検査する（SheetsのCSV書き出しかseed JSONを入力。テストは `make test-skills`）。
@@ -148,7 +149,7 @@ dotfiles/
 graph TB
     subgraph bootstrap["bootstrap.sh（ワンコマンドセットアップ）"]
         B1[Homebrew]
-        B1 --> B2[Brewfile 69パッケージ]
+        B1 --> B2[Brewfile 70パッケージ]
         B2 --> B3[GNU Stow シンボリックリンク]
         B3 --> B4[Oh My Zsh + プラグイン]
         B4 --> B5[macOS設定]
@@ -378,7 +379,7 @@ cls                    # セッション一覧
 
 自作スキル（Claude Code・Codex 共通）の作り方は[スキル設計規約](docs/skill-design.md)にまとめている。配置、ディレクトリの役割、AIとスクリプトの分担、外部に出る操作の承認、回帰テストと試運転の規約を定める。
 
-日本語の推敲には外部スキル [yomiyasu](https://github.com/nanaism/yomiyasu)（MIT）を v2.5.0 に固定して入れている（`stow/agents/.agents/skills/yomiyasu/`、版は `.skill-lock.json`）。「yomiyasu で読みやすくして」「/yomiyasu」と名前を出したときだけ使い、CLAUDE.md で毎回使う設定と任意のフック（`yomiyasu_hook.py`）は入れていない。SKILL.md が約128KBあり、呼び出すたびに数万トークンを読み込むため。検査の記録は git の最上位の `.yomiyasu/` に作られ、Git管理外にしている。
+日本語の推敲には外部スキル [yomiyasu](https://github.com/nanaism/yomiyasu)（MIT）を v2.5.0 に固定して入れている（`stow/agents/.agents/skills/yomiyasu/`、版は `.skill-lock.json`）。「yomiyasu で読みやすくして」「/yomiyasu」と名前を出したときだけ使い、CLAUDE.md で毎回使う設定と任意のフック（`yomiyasu_hook.py`）は入れていない。SKILL.md が約128KBあり、呼び出すたびに数万トークンを読み込むため。検査の記録は git の最上位の `.yomiyasu/` に作られ、Git管理外にしている。このリポジトリで意味を決めて使う語（正本、台帳）は `.yomiyasu-words/allow.txt` で指摘から外している。
 
 `docs/` は [OKF（Open Knowledge Format）](https://github.com/GoogleCloudPlatform/open-knowledge-format)のバンドルとして管理する。1概念1ファイルで先頭の frontmatter に `type` を書き、一覧を `docs/index.md`、更新履歴を `docs/log.md` に置く。書き方は [`okf` スキル](stow/agents/.agents/skills/okf/SKILL.md)、検査は `make docs-check`（`make validate` に含まれる）。
 

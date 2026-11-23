@@ -281,6 +281,7 @@ new-mac:
 	  "  - Orcaを起動し、リポジトリとAIエージェントを設定（orca open --json）" \
 	  "  - orca status --json                          # Orcaの起動・接続確認" \
 	  "  - make orca-apply                             # Orca Automationsを定義から復元（local/は旧PCからコピー）" \
+	  "  - Muse（macOS 14以降）: https://ai.meta.com/muse/download/ から手動導入（Homebrew cask無効化中）" \
 	  "  - p10k configure                              # プロンプト初期化" \
 	  "" \
 	  "▶ 移行直後の確認" \

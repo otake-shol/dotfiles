@@ -7,19 +7,70 @@ tags: [project-management, skills]
 
 # プロジェクト管理ツールの入口
 
-目的に応じて既存のスキル・テンプレート・リポジトリを選ぶための一覧。確認日: 2026-10-08。
+目的に応じて既存のスキル・テンプレート・リポジトリを選ぶための一覧。初回確認日: 2026-10-08。成果物と保存先の対応を2026-10-12に更新。
 dotfilesで共通の手順と空の雛形を管理し、各プロジェクトで計画・課題・成果物を管理する。
+
+成果物の保存先は[成果物とリポジトリの対応](#成果物とリポジトリの対応)、変更時の更新先は[変更内容と更新先](#変更内容と更新先)、既存ツールの一覧は[リポジトリ台帳](#リポジトリ台帳)を参照する。
 
 ## 集約先と正本
 
 | 情報 | 正本 | この入口での管理 |
 | --- | --- | --- |
 | 共通スキル・ツール設定・空の雛形 | dotfiles | 用途、参照先、利用例 |
+| 既存ツールのコード・生成処理・専用雛形 | 各ツールのリポジトリ | 用途、更新先、利用手順への参照 |
 | プロジェクト計画・課題・進捗・成果物 | 各プロジェクトで選んだリポジトリや管理サービス | 参照先と役割 |
 | 個人の判断・活動記録 | 個人のObsidian Vault | 記録先の説明 |
 | 業務固有の情報・入力済み接続台帳 | 組織で許可された非公開の領域 | 共通の空の雛形のみ |
 
-現時点ではdotfilesに入口を追加する。複数人での利用や独立した配布・更新が必要になった時点で、専用リポジトリへの分離を検討する。スキルやテーマの実体は既存の配置を維持し、一覧から参照する。
+採用方針: dotfilesを共通の入口にし、ツール本体は各リポジトリ、入力済みの案件データは各案件の保存先で管理する。共通の定義・手順を一元管理し、既存ツールの実体を参照する。複数人への一式の配布や独立した更新が必要になった時点で、共通スキル・雛形・ガイドを専用PMリポジトリへ切り出すことを検討する。
+
+## 変更内容と更新先
+
+| 変更するもの | 更新先 |
+| --- | --- |
+| ツールの用途・選び方・参照先 | この入口 |
+| L0・L1・L2の共通定義と親IDの規則 | [スケジュール階層](../../stow/agents/.agents/skills/project-planning/references/schedule-levels.md) |
+| 計画の作成手順・共通入力項目 | [計画スキル](../../stow/agents/.agents/skills/project-planning/SKILL.md)とその参照雛形 |
+| WBSの検査規則（ID・親子・先行・日付・稼働日数） | [WBS検査の仕様](../../stow/agents/.agents/skills/project-planning/references/wbs-check.md)。判定を変えるときは仕様・`scripts/check-wbs.mjs`・テストを同時に更新 |
+| 共通の計画スライド | [スライド雛形](../../templates/project-plan-slides/README.md) |
+| Sheetsの生成処理・数式・専用雛形 | [project-portfolio-sheets](https://github.com/otake-shol/project-portfolio-sheets)。dotfilesには列対応と利用手順を記録 |
+| Planbaseの機能・データ形式 | [project-plan-workspace](https://github.com/otake-shol/project-plan-workspace) |
+| チーム運用ルール・半期計画ツール | [team-playbook](https://github.com/otake-shol/team-playbook) |
+| 案件の担当・日程・進捗・意思決定 | 案件で採用した正本。説明用スライドには元のID・版・確認日を継承 |
+
+共通ルールの変更時は利用先への影響と対応ガイドを確認する。参照先のツールに異なる定義がある場合はその差分を記録し、同期済みと推測しない。
+
+## 成果物とリポジトリの対応
+
+コード、入力済みデータ、説明用の出力を区別して更新先を選ぶ。ツール本体のリポジトリと、そのツールで作る案件データの保存先は別に定める。
+
+| 成果物・資産 | 管理先 | 正本と出力の関係 |
+| --- | --- | --- |
+| 共通の計画手順・スキル・空の雛形 | [dotfiles](../../README.md) | 共通定義を管理し、案件側から参照する |
+| Planbase本体・Schema・読込と出力の処理 | [project-plan-workspace](https://github.com/otake-shol/project-plan-workspace) | アプリとデータ形式の正本。入力済みの案件計画は各案件で管理する |
+| Planbaseで扱う計画 | 各案件の保存先にある `*.project-plan.json` | JSONが正本。ボード・ガント・Overview・XLSXは表示や出力。ブラウザの下書きは一時保存 |
+| Sheetsの生成コード・匿名サンプル・専用雛形 | [project-portfolio-sheets](https://github.com/otake-shol/project-portfolio-sheets) | 公開テンプレートの正本。実案件のデータや接続先は非公開側で管理する |
+| Sheetsの実データ・ビルド設定・運用台帳 | 案件の非公開データリポジトリと運用中のGoogle Sheets | 再生成用の入力と日々の運用台帳を区別する。GitとSheetsの相互同期は前提にしない |
+| GitHubのPM導入雛形 | [github-pm-baseline](https://github.com/otake-shol/github-pm-baseline) | 雛形を対象案件へ適用した後のIssue・Project・文書は対象リポジトリで管理する |
+| チーム運用の雛形・半期計画ツール | [team-playbook](https://github.com/otake-shol/team-playbook) | 再利用するルールと雛形を管理し、入力済みのチーム計画は採用先で管理する |
+| 登壇原稿・画像・閲覧用HTML・PDF | [slides](https://github.com/otake-shol/slides) | 各資料のMarkdownと画像を編集し、HTML・PDFを再生成する |
+| Zenn用の原稿・記事画像 | [zenn-content](https://github.com/otake-shol/zenn-content) | `articles/` と `images/` を管理する。公開状態はリポジトリへの反映とZennのデプロイを別々に確認する |
+| 個別の販売ツール・配布ファイル・販売記事 | 商品ごとに決める保存先 | ソース・配布版・記事を結び、対応する版と更新方法を残す |
+
+PlanbaseのJSONをSheets用に変換する経路は両リポジトリのREADMEに記載されている。変換後に編集する場合は以後の正本をどちらに置くか決める。変換機能の存在と、個別案件での変換・登録・同期の実施状況を区別する。
+
+### 端末内の集約台帳
+
+この端末の具体的な配置、入力済み計画、非公開リポジトリとの対応は `output/project-management/inventory.md` に集約する。ローカル用の台帳として扱い、`output/` 全体と同じくGit管理対象外とする。新しいcloneには含まれない。
+
+共通の入口には用途・公開リポジトリ・更新先を記録する。ローカル用の台帳には成果物ごとの実パス、管理リポジトリ、Git管理状態、実施済みの連携、未決の保存先、確認日を記録する。ローカル台帳にも認証情報を記載しない。
+
+### 台帳の更新契機
+
+1. 成果物の追加時に、編集する正本・生成物・公開先と管理リポジトリを記録する。
+2. 移動やリポジトリ分割の際に参照先を更新し、仮置き・Git管理・反映済みの状態を区別する。
+3. 読込・変換・公開を実行した後に実施日と結果を記録する。対応形式があるだけの状態を連携済みにしない。
+4. 保存先が未決なら未決のまま記録し、決まった時点で正本と更新先を揃える。
 
 ## 用途別のツール一覧
 
@@ -59,6 +110,7 @@ dotfilesで共通の手順と空の雛形を管理し、各プロジェクトで
 | [ai-dev-flow](https://github.com/otake-shol/ai-dev-flow) | AIを前提にした責務分担、委譲、レビュー、開発フロー | README確認済み。過去の制作履歴も確認 | 計画から実行への委譲項目の再利用 |
 | [knowledge-base](https://github.com/otake-shol/knowledge-base) | PM・チーム管理・開発プロセスの心得と雛形 | README確認済み。今回の共有対象との一致は未確認 | 現在も使う雛形と正本の確認 |
 | [slides](https://github.com/otake-shol/slides) | Marp原稿・テーマ・書き出しの成果物管理 | README確認済み。今回の共有対象との一致は未確認 | 汎用資料と案件内の資料の保存先の選択 |
+| [zenn-content](https://github.com/otake-shol/zenn-content) | Zenn記事の原稿・画像とGitHub連携 | ローカルのorigin・原稿・公開作業記録を2026-10-12に確認 | 更新時に公開版とローカル原稿の差分を照合 |
 
 2026-10-08に本人のGitHubリポジトリ一覧と過去のやり取りを照合した。主要5件には関連履歴がある。確認済みの範囲は上表の文書までで、各ツールのビルド・動作・現在の接続状態は未検証。会話ログの原文はこの入口へ転記しない。
 
@@ -102,6 +154,8 @@ $project-planning この計画をチームの合意形成用スライドにし�
 ```
 
 ## 整理の継続項目
+
+2026-10-12に計画スキル・計画書雛形・スライド・Sheets対応ガイドへ3点を反映。継続・縮小・中止の再判断条件、決定の前提と見直し条件、受け手による実行確認と残件の引受先を扱う。参照章は [計画書雛形の出典](../../stow/agents/.agents/skills/project-planning/references/project-plan.md#出典と変更記録)に記載。既存のGoogle Sheets本体は未変更。
 
 - 台帳の主要5件から現在使うツールを選び、対象案件の正本と既存設定を確認。
 - 実際のプロジェクト計画でスキルを試し、必要だった項目だけを雛形へ反映。

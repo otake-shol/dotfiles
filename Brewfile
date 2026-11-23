@@ -90,6 +90,7 @@ cask "tailscale-app"               # Orca Mobile・リモート接続用プラ�
 
 # --- ブラウザ・生産性 ---
 cask "google-chrome"               # メインブラウザ(縦タブ+Gemini+Google同期)
+cask "thebrowsercompany-dia"       # 試用中のAIブラウザ(The Browser Company製)
 cask "readdle-spark"               # メールクライアント
 cask "ticktick"                    # ToDoリスト+ポモドーロ
 cask "obsidian"                    # Markdownナレッジベース(Vault設定は別管理)
@@ -107,6 +108,9 @@ cask "claude"                      # Claudeデスクトップアプリ(公式チ
 cask "claude-code@latest"          # Claude Code CLI(公式cask・claudeバイナリ・即時最新)
 cask "codex"                       # OpenAI Codex CLI(デスクトップ版はbootstrapで導入)
 cask "google-gemini"               # Google純正Geminiデスクトップアプリ(arm64+macOS15以降)
+cask "grok-bot"                    # Grok Botデスクトップアプリ(AIエージェント)
+# cask "muse"                      # Meta Muse: 署名付きURLのためHomebrewで無効化中(2026-10-01)
+# 手動導入: https://ai.meta.com/muse/download/ (macOS 14以降)
 cask "orbstack"                    # Docker Desktop代替(軽量+高速)
 
 # --- フォント ---
